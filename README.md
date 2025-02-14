@@ -32,4 +32,5 @@ Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/ver
 
 [] Staging / prod envs
 [] Pipelines
+[] App version / sentry integration
 
