@@ -24,7 +24,7 @@ export default async function HomePage() {
     <main className="flex min-h-screen flex-col    bg-linear-to-b from-[#2e026d] to-[#15162c] text-white">
       <TopNav/>
       <h1>hello</h1>
-      {mockLocations.map(location => <div key={location.id}>{location.name}</div>)}
+      {posts.map(p => <div key={p.id}>{p.name}</div>)}
     </main>
   );
 }
