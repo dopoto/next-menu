@@ -1,3 +1,4 @@
+import { db } from "~/server/db";
 
 
 const mockLocations = [
@@ -16,7 +17,9 @@ function TopNav() {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const posts = await db.query.posts.findMany()
+  console.log(posts)
   return (
     <main className="flex min-h-screen flex-col    bg-linear-to-b from-[#2e026d] to-[#15162c] text-white">
       <TopNav/>
