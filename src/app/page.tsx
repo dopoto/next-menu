@@ -1,12 +1,9 @@
-import { db } from "~/server/db";
- 
+import { getLocations } from "~/server/queries";
+
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const items = await db.query.locations.findMany({
-    orderBy: (model, { desc }) => desc(model.name),
-  });
-
+  const items = await getLocations();
   return (
     <main>
       <h1>hello home page</h1>
