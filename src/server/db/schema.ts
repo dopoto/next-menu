@@ -22,15 +22,16 @@ export const locations = createTable(
   "location",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    userId: varchar("userId", { length: 256 }).notNull(),
     name: varchar("name", { length: 256 }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-      () => new Date()
+      () => new Date(),
     ),
   },
   (example) => ({
     nameIndex: index("name_idx").on(example.name),
-  })
+  }),
 );

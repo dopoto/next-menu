@@ -1,24 +1,24 @@
-import {
-  ClerkProvider,
-} from '@clerk/nextjs'
+import { ClerkProvider } from "@clerk/nextjs";
 import "~/styles/globals.css";
-
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
+import { TopNav } from "./_components/TopNav";
+import { type ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "The Menu",
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <ClerkProvider>
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <body>{children}</body>
-    </html>
+      <html lang="en" className={`${GeistSans.variable}`}>
+        <body>
+          <TopNav />
+          {children}
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
