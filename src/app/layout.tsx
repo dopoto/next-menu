@@ -10,13 +10,15 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default function RootLayout(props: { children: ReactNode , modal: ReactNode}) {
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
           <TopNav />
-          {children}
+          {props.children}
+          {props.modal}
+          <div id="modal-root" />
         </body>
       </html>
     </ClerkProvider>
