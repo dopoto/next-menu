@@ -1,12 +1,6 @@
 import { db } from "~/server/db";
 
-
-const mockLocations = [
-  {id: 1, name: "Location1"},
-  {id: 2, name: "Location2"},
-  {id: 3, name: "Location3"},
-]
-
+export const dynamic = "force-dynamic"
 
 function TopNav() {
   return (
@@ -18,13 +12,13 @@ function TopNav() {
 }
 
 export default async function HomePage() {
-  const posts = await db.query.posts.findMany()
-  console.log(posts)
+  const items = await db.query.locations.findMany({orderBy: (model, {desc}) => desc(model.name)})
+
   return (
     <main className="flex min-h-screen flex-col    bg-linear-to-b from-[#2e026d] to-[#15162c] text-white">
       <TopNav/>
       <h1>hello</h1>
-      {posts.map(p => <div key={p.id}>{p.name}</div>)}
+      {items.map(p => <div key={p.id}>{p.name}</div>)}
     </main>
   );
 }

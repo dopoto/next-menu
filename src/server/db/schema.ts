@@ -18,8 +18,8 @@ import {
  */
 export const createTable = pgTableCreator((name) => `next-menu_${name}`);
 
-export const posts = createTable(
-  "post",
+export const locations = createTable(
+  "location",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
