@@ -2,28 +2,38 @@
 
 import Link from "next/link";
 import { CollapsibleNavItem } from "./CollapsibleNavItem";
-import { usePathname, useRouter } from "next/navigation";
-import { buildBreadcrumbs, routes } from "../_domain/routes";
-import { findRoute } from "../_domain/routes";
+import { usePathname } from "next/navigation";
+import { buildBreadcrumbs } from "../_domain/routes";
+import { Fragment } from "react";
 
 export const ManagerTopNav = () => {
   const pathname = usePathname();
-  const currentRoute = findRoute(pathname);
-
-  const breadcrumbs = buildBreadcrumbs(pathname)
+  const breadcrumbs = buildBreadcrumbs(pathname);
 
   return (
     <nav className="flex flex-row items-center gap-2">
       <Link href="/">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src="./logo.svg"
+          src="/logo.svg"
           alt="Logo"
-          className="h-10 w-10 stroke-amber-400"
+          className="h-10 w-10"
         />
       </Link>
       <span>/</span>
-      <CollapsibleNavItem />[{currentRoute?.name}]
+
+      {breadcrumbs.map((b, index) => (
+        <Fragment key={b.level}>
+          <CollapsibleNavItem
+            activeRoute={{
+              ...b.activeRoute,
+              displayMode: index === breadcrumbs.length - 1 ? "text" : "link",
+            }}
+            siblings={b.siblingRoutes}
+          ></CollapsibleNavItem>
+          {index !== breadcrumbs.length - 1 && <>/</>}
+        </Fragment>
+      ))}
     </nav>
   );
 };
