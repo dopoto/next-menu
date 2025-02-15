@@ -1,4 +1,4 @@
-import ManagerTopNav from "./_components/manager-top-nav";
+import { ManagerTopNav } from "./_components/ManagerTopNav";
 
 export default function Layout({
   children,
