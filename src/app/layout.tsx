@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { TopNav } from "./_components/TopNav";
 import { type ReactNode } from "react";
+import { Toaster } from "~/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "The Menu",
@@ -19,6 +20,7 @@ export default function RootLayout(props: { children: ReactNode , modal: ReactNo
           {props.children}
           {props.modal}
           <div id="modal-root" />
+          <Toaster />
         </body>
       </html>
     </ClerkProvider>
