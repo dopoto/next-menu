@@ -2,7 +2,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
-import { TopNav } from "./_components/TopNav";
 import { type ReactNode } from "react";
 import { Toaster } from "~/components/ui/toaster";
 
@@ -16,7 +15,7 @@ export default function RootLayout(props: { children: ReactNode , modal: ReactNo
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <body>
-          <TopNav />
+          
           {props.children}
           {props.modal}
           <div id="modal-root" />
