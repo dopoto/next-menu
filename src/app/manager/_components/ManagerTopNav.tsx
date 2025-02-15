@@ -1,8 +1,17 @@
+"use client";
+
 import Link from "next/link";
 import { CollapsibleNavItem } from "./CollapsibleNavItem";
+import { usePathname, useRouter } from "next/navigation";
+import { buildBreadcrumbs, routes } from "../_domain/routes";
+import { findRoute } from "../_domain/routes";
 
- 
 export const ManagerTopNav = () => {
+  const pathname = usePathname();
+  const currentRoute = findRoute(pathname);
+
+  const breadcrumbs = buildBreadcrumbs(pathname)
+
   return (
     <nav className="flex flex-row items-center gap-2">
       <Link href="/">
@@ -14,8 +23,7 @@ export const ManagerTopNav = () => {
         />
       </Link>
       <span>/</span>
-      <CollapsibleNavItem />
+      <CollapsibleNavItem />[{currentRoute?.name}]
     </nav>
   );
 };
-
