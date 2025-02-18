@@ -13,6 +13,14 @@ const config: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+
+  webpack: (config: { cache: { type: string } }) => {
+    config.cache = {
+      type: "memory", // Use memory-based caching
+    };
+
+    return config;
+  },
 };
 
 export default withSentryConfig(config, {
