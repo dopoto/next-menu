@@ -17,18 +17,14 @@ export default function RootLayout(props: {
   return (
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <body className="bg-gray-100 min-h-screen">
-          <nav id="topbar" className="  h-8 z-10 w-full p-4 ">
-            top bar 
-          </nav>
-          <main className="flex justify-center p-4 min-h-[calc(100vh - 64px)] mt-8">
+        {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
+        <body className="bg-gray-100  ">
+          <main className="w-full">
             {props.children}
           </main>
           {props.modal}
           <div id="modal-root" />
           <Toaster />
-          <footer className="h-3">some footer</footer>
         </body>
       </html>
     </ClerkProvider>

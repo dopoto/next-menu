@@ -1,3 +1,5 @@
+'use client';
+
 import * as React from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
@@ -11,10 +13,11 @@ export default function OnboardingComponent() {
 
   const handleSubmit = async (formData: FormData) => {
     const res = await completeOnboarding(formData)
+    console.log(`DBG ${JSON.stringify(res)}`)
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload()
-      router.push('/')
+      router.push('/dashboard')
     }
     if (res?.error) {
       setError(res?.error)
@@ -25,15 +28,15 @@ export default function OnboardingComponent() {
       <h1>Welcome</h1>
       <form action={handleSubmit}>
         <div>
-          <label>Application Name</label>
-          <p>Enter the name of your application.</p>
-          <input type="text" name="applicationName" required />
+          <label>Location Name</label>
+          <p>Enter the name of your first location.</p>
+          <input type="text" name="locationName" required />
         </div>
 
         <div>
-          <label>Application Type</label>
-          <p>Describe the type of your application.</p>
-          <input type="text" name="applicationType" required />
+          <label>Menu Name</label>
+          <p>Describe the name of your first location.</p>
+          <input type="text" name="menuName" required />
         </div>
         {error && <p className="text-red-600">Error: {error}</p>}
         <button type="submit">Submit</button>
