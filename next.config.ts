@@ -16,7 +16,7 @@ const config: NextConfig = {
 
   webpack: (config: { cache: { type: string } }) => {
     config.cache = {
-      type: "memory", // Use memory-based caching
+      type: "memory", 
     };
 
     return config;

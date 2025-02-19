@@ -1,20 +1,24 @@
+import { SignedOut, SignInButton, SignUpButton, SignedIn, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { getLocations } from "~/server/queries";
-import { TopNav } from "./_components/TopNav";
+import { Button } from "~/components/ui/button";
 
-export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const items = await getLocations();
+  
   return (
-    <main>
-      <TopNav />
-      <h1>hello home page</h1>
-      {items.map((p) => (
-        <div key={p.id}>
-          <Link href={`/locations/${p.id}`}>{p.name}</Link>
-        </div>
-      ))}
+    <main>      
+      <h1>Home page</h1>
+      <SignedOut>
+        <SignInButton />
+        <SignUpButton />
+      </SignedOut>
+      <SignedIn>
+        You are signed in.
+        <br/><br/>
+        <Link href="/manager">
+        <Button>Go to Manager</Button>
+        </Link>
+      </SignedIn>
     </main>
   );
 }
