@@ -18,17 +18,17 @@ export default function RootLayout(props: {
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        {/* <body className="flex min-h-screen items-center justify-center bg-gray-50 p-4 overflow-auto" >
-          {props.children}
+        <body className="bg-gray-100 min-h-screen">
+          <nav id="topbar" className="  h-8 z-10 w-full p-4 ">
+            top bar 
+          </nav>
+          <main className="flex justify-center p-4 min-h-[calc(100vh - 64px)] mt-8">
+            {props.children}
+          </main>
           {props.modal}
           <div id="modal-root" />
           <Toaster />
-        </body> */}
-        <body className="flex min-h-screen items-center justify-center bg-gray-500 p-0 overflow-y-auto">
-          {props.children}
-          {props.modal}
-          <div id="modal-root" />
-          <Toaster />
+          <footer className="h-3">some footer</footer>
         </body>
       </html>
     </ClerkProvider>
