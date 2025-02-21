@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { completeOnboarding } from '../actions/completeOnboarding'
+import { PublicTopNav } from '../_components/PublicTopNav';
  
 
 export default function OnboardingComponent() {
@@ -24,7 +25,8 @@ export default function OnboardingComponent() {
     }
   }
   return (
-    <div>
+    <div className="flex flex-col flex-nowrap items-center justify-center">
+      <PublicTopNav />
       <h1>Welcome</h1>
       <form action={handleSubmit}>
         <div>

@@ -41,6 +41,10 @@ export default async function HomePage() {
           <Link href="/manager">
             <Button>Go to Manager</Button>
           </Link>
+          <br/>
+          <Link href="/dashboard">
+            <Button>Go to Dashboard</Button>
+          </Link>
         </SignedIn>
       </>
     </div>
