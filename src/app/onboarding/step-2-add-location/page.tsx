@@ -1,13 +1,11 @@
 'use client';
 
 import * as React from 'react'
-import { useUser } from '@clerk/nextjs'
+import {   useUser } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
-import { completeOnboarding } from '../actions/completeOnboarding'
-import { PublicTopNav } from '../_components/PublicTopNav';
- 
+import { completeOnboarding } from '../../actions/completeOnboarding'
 
-export default function OnboardingComponent() {
+export default function OnboardingPage() {
   const [error, setError] = React.useState('')
   const { user } = useUser()
   const router = useRouter()
@@ -18,7 +16,7 @@ export default function OnboardingComponent() {
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload()
-      router.push('/dashboard')
+      router.push('/onboarded')
     }
     if (res?.error) {
       setError(res?.error)
@@ -26,8 +24,9 @@ export default function OnboardingComponent() {
   }
   return (
     <div className="flex flex-col flex-nowrap items-center justify-center">
-      <PublicTopNav />
+       
       <h1>Welcome</h1>
+      
       <form action={handleSubmit}>
         <div>
           <label>Location Name</label>

@@ -14,6 +14,16 @@ const config: NextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  async redirects() {
+    return [
+      {
+        source: '/onboarding',
+        destination: '/onboarding/step-1-add-org',
+        permanent: true,
+      },
+    ]
+  },
+
   webpack: (config: { cache: { type: string } }) => {
     config.cache = {
       type: "memory", 
