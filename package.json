@@ -71,7 +71,10 @@
     ],
     "onlyBuiltDependencies": [
       "@clerk/shared",
-      "@sentry/cli"
+      "@sentry/cli",
+      "bufferutil",
+      "esbuild",
+      "sharp"
     ]
   }
 }
