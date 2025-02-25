@@ -18,8 +18,8 @@ export default function RootLayout(props: {
     <ClerkProvider>
       <html lang="en" className={`${GeistSans.variable}`}>
         {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
-        <body className="bg-gray-100  ">
-          <main className="w-full">
+        <body  >
+          <main className="w-full h-full">
             {props.children}
           </main>
           {props.modal}
