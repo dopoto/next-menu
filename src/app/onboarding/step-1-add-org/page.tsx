@@ -1,11 +1,10 @@
-import * as React from "react";
 import { CreateOrganization } from "@clerk/nextjs";
-import { SplitScreenOnboard } from "~/app/_components/SplitScreenOnboard";
+import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
+import { OnboardMultiStepper } from "../_components/OnboardMultiStepper";
 
 export default async function OnboardingPage() {
   return (
-    <SplitScreenOnboard
-      step={2}
+    <SplitScreenContainer
       mainComponent={
         <CreateOrganization
           afterCreateOrganizationUrl={"/onboarding/step-2-add-location"}
@@ -13,6 +12,9 @@ export default async function OnboardingPage() {
           hideSlug={true}
         />
       }
-    ></SplitScreenOnboard>
+      secondaryComponent={<OnboardMultiStepper step={2} />}
+      title={"Let's get you onboarded!"}
+      subtitle={"This should just take a minute..."}
+    ></SplitScreenContainer>
   );
 }

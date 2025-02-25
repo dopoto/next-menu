@@ -1,12 +1,21 @@
 import { SignIn } from "@clerk/nextjs";
-import { PublicTopNav } from "~/app/_components/PublicTopNav";
- 
+import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 
 export default function Page() {
   return (
-    <div className="flex flex-col flex-nowrap items-center justify-center">
-      <PublicTopNav />
-      <SignIn />
-    </div>
+    <SplitScreenContainer
+      mainComponent={
+        <SignIn
+          appearance={{
+            elements: {
+              headerTitle: "hidden",
+              headerSubtitle: "hidden",
+            },
+          }}
+        />
+      }
+      title={"Welcome back!"}
+      subtitle={"Please sign in to continue"}
+    ></SplitScreenContainer>
   );
 }

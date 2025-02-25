@@ -38,13 +38,9 @@ export default async function HomePage() {
           <SignOutButton />
           <br />
           <br />
-          <Link href="/manager">
-            <Button>Go to Manager</Button>
-          </Link>
-          <br/>
-          <Link href="/dashboard">
-            <Button>Go to Dashboard</Button>
-          </Link>
+          <Link href="/my">
+            <Button>Go to Dash</Button>
+          </Link>           
         </SignedIn>
       </>
     </div>

@@ -1,14 +1,17 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { SplitScreenOnboard } from "../_components/SplitScreenOnboard";
+import { SplitScreenContainer } from "../_components/SplitScreenContainer";
 import { Onboarded } from "../onboarding/_components/Onboarded";
 
 export default async function OnboardedPage() {
-  if ((await auth()).sessionClaims?.metadata.onboardingComplete !== true) {
-    redirect("/onboarding");
-  }
+  // TODO Keep? or handled in middleware already?
+  // if ((await auth()).sessionClaims?.metadata.onboardingComplete !== true) {
+  //   redirect("/onboarding");
+  // }
 
   return (
-    <SplitScreenOnboard mainComponent={<Onboarded />}></SplitScreenOnboard>
+    <SplitScreenContainer
+      mainComponent={<Onboarded />}
+      title={"Welcome aboard!"}
+      subtitle={"Your onboarding is now completed"}
+    ></SplitScreenContainer>
   );
 }
