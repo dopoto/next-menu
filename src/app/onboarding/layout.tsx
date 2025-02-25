@@ -1,7 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { PublicTopNav } from "../_components/PublicTopNav";
-import { SignedIn, UserButton } from "@clerk/nextjs";
 
 export default async function RootLayout({
   children,
@@ -13,15 +11,6 @@ export default async function RootLayout({
   }
 
   return (
-    <>
-      <PublicTopNav>
-        <div className="ml-auto p-4">
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
-      </PublicTopNav>
-      {children}
-    </>
+    <>{children}</>
   );
 }

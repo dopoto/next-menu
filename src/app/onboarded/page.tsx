@@ -1,21 +1,14 @@
-"use client";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
+import { SplitScreenOnboard } from "../_components/SplitScreenOnboard";
+import { Onboarded } from "../onboarding/_components/Onboarded";
 
-import * as React from "react";
-import { PublicTopNav } from "../_components/PublicTopNav";
-import { SignedIn, UserButton } from "@clerk/nextjs";
+export default async function OnboardedPage() {
+  if ((await auth()).sessionClaims?.metadata.onboardingComplete !== true) {
+    redirect("/onboarding");
+  }
 
-export default function OnboardedPage() {
   return (
-    <div className="flex flex-col flex-nowrap items-center justify-center">
-      <PublicTopNav>
-        <div className="ml-auto">
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-        </div>
-      </PublicTopNav>
-      <h1>Welcome</h1>
-      <p>You are now onboarded</p>
-    </div>
+    <SplitScreenOnboard mainComponent={<Onboarded />}></SplitScreenOnboard>
   );
 }

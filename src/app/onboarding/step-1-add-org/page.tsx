@@ -1,11 +1,18 @@
-import * as React from 'react'
-import { CreateOrganization } from '@clerk/nextjs'
+import * as React from "react";
+import { CreateOrganization } from "@clerk/nextjs";
+import { SplitScreenOnboard } from "~/app/_components/SplitScreenOnboard";
 
-export default function OnboardingPage() { 
+export default async function OnboardingPage() {
   return (
-    <div className="flex flex-col flex-nowrap items-center justify-center">      
-      <h1>Welcome</h1>
-      <CreateOrganization afterCreateOrganizationUrl={'/onboarding/step-2-add-location'} hideSlug={true} />
-    </div>
-  )
+    <SplitScreenOnboard
+      step={2}
+      mainComponent={
+        <CreateOrganization
+          afterCreateOrganizationUrl={"/onboarding/step-2-add-location"}
+          skipInvitationScreen={true}
+          hideSlug={true}
+        />
+      }
+    ></SplitScreenOnboard>
+  );
 }

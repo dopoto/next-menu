@@ -9,7 +9,7 @@ export function MultiStepper(props: {
           key={step.title}
           className="group flex flex-1 gap-x-2 md:block md:shrink md:basis-0"
         >
-          <div className="flex min-h-7 min-w-7 flex-col items-center align-middle text-xs md:inline-flex md:w-full md:flex-row md:flex-wrap">
+          <div className="flex min-h-7 min-w-7 flex-col items-center align-middle text-xs font-bold md:inline-flex md:w-full md:flex-row md:flex-wrap">
             <span
               className={`${props.currentStep === index + 1 ? "bg-blue-700 text-gray-300" : "bg-gray-300 text-gray-800"} flex size-7 shrink-0 items-center justify-center rounded-full font-medium`}
             >
@@ -21,7 +21,7 @@ export function MultiStepper(props: {
             <span className="block text-sm font-medium text-gray-800">
               {step.title}
             </span>
-            <p className="text-sm text-gray-500">{step.subtitle}</p>
+            <p className="text-xs text-gray-500">{step.subtitle}</p>
           </div>
         </li>
       ))}

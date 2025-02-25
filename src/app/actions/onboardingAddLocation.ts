@@ -11,6 +11,9 @@ const formDataSchema = z.object({
       required_error: "Location Name is required",
       invalid_type_error: "Location Name must be a string",
     })
+    .min(5, {
+      message: "Location Name must be 5 or more characters long",
+    })
     .max(256, {
       message: "Location Name must be 256 or fewer characters long",
     }),
@@ -73,13 +76,16 @@ export const onboardingAddLocation = async (formData: FormData) => {
     //   },
     // });
 
-    const res = await client.users.updateUser(userId, {
-      publicMetadata: {
-        "onboarding-complete": true,
-        "org-name": orgName,
-        "current-location-id": insertedLocation?.id,
-        "current-location-name": validatedFormFields.data.locationName,
+    const customJwtSessionClaims: CustomJwtSessionClaims = {
+      metadata: {
+        onboardingComplete: true,
+        orgName,
+        currentLocationId: insertedLocation?.id.toString() ?? "",
+        currentLocationName: validatedFormFields.data.locationName,
       },
+    };
+    const res = await client.users.updateUser(userId, {
+      publicMetadata: customJwtSessionClaims.metadata,
     });
     return { message: res.publicMetadata };
   } catch {
