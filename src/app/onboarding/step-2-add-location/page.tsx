@@ -1,32 +1,32 @@
-'use client';
+"use client";
 
-import * as React from 'react'
-import {   useUser } from '@clerk/nextjs'
-import { useRouter } from 'next/navigation'
-import { completeOnboarding } from '../../actions/completeOnboarding'
+import * as React from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { onboardingAddLocation } from "../../actions/onboardingAddLocation";
+import { useState } from "react";
 
 export default function OnboardingPage() {
-  const [error, setError] = React.useState('')
-  const { user } = useUser()
-  const router = useRouter()
+  const [errors, setErrors] = useState<string[]>();
+  const { user } = useUser();
+  const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
-    const res = await completeOnboarding(formData)
-    console.log(`DBG ${JSON.stringify(res)}`)
+    const res = await onboardingAddLocation(formData);
+    console.log(`DBG ${JSON.stringify(res)}`);
     if (res?.message) {
       // Reloads the user's data from the Clerk API
-      await user?.reload()
-      router.push('/onboarded')
+      await user?.reload();
+      router.push("/onboarded");
     }
-    if (res?.error) {
-      setError(res?.error)
+    if (res?.errors) {
+      setErrors(res?.errors);
     }
-  }
+  };
   return (
     <div className="flex flex-col flex-nowrap items-center justify-center">
-       
       <h1>Welcome</h1>
-      
+
       <form action={handleSubmit}>
         <div>
           <label>Location Name</label>
@@ -34,14 +34,16 @@ export default function OnboardingPage() {
           <input type="text" name="locationName" required />
         </div>
 
-        <div>
-          <label>Menu Name</label>
-          <p>Describe the name of your first location.</p>
-          <input type="text" name="menuName" required />
-        </div>
-        {error && <p className="text-red-600">Error: {error}</p>}
+        {errors && errors.length > 0 && (
+          <div className="text-red-600">
+            Errors:
+            {errors.map((err) => (
+              <p key={err}>{err}</p>
+            ))}
+          </div>
+        )}
         <button type="submit">Submit</button>
       </form>
     </div>
-  )
+  );
 }

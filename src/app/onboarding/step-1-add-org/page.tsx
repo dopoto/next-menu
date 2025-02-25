@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { CreateOrganization } from '@clerk/nextjs'
- 
 
 export default function OnboardingPage() { 
   return (
