@@ -15,7 +15,7 @@ export default async function RootLayout({
   return (
     <>
       <PublicTopNav>
-        <div className="ml-auto">
+        <div className="ml-auto p-4">
           <SignedIn>
             <UserButton />
           </SignedIn>
