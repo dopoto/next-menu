@@ -15,11 +15,7 @@ import { NavUser } from "./NavUser";
 
 // This is sample data.
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+ 
   teams: [
     {
       name: "Acme Inc",
@@ -155,7 +151,7 @@ export function LocationSidebar({ ...props }: React.ComponentProps<typeof Sideba
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser  />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
