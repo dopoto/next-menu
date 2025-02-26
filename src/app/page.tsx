@@ -8,8 +8,9 @@ import {
 } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
-import SvgIcon from "./_components/SvgIcons";
 import { PublicTopNav } from "./_components/PublicTopNav";
+import { Card } from "~/components/ui/card";
+import { ThemeSwitch } from "./_components/ThemeSwitch";
 
 export default async function HomePage() {
   return (
@@ -25,7 +26,11 @@ export default async function HomePage() {
         </div>
       </PublicTopNav>
 
-      <h1>Home page</h1>
+      <h1 className="text-blue-300 dark:text-red-200">Home page</h1>
+
+      <Card >sdsd</Card>
+
+      
       <>
         <SignedOut>
           <SignInButton />
@@ -43,6 +48,8 @@ export default async function HomePage() {
           </Link>           
         </SignedIn>
       </>
+
+      <ThemeSwitch />
     </div>
   );
 }
