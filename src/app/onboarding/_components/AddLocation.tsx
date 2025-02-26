@@ -29,7 +29,6 @@ export function AddLocation({
 
   const handleSubmit = async (formData: FormData) => {
     const res = await onboardingAddLocation(formData);
-    console.log(`DBG ${JSON.stringify(res)}`);
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload();

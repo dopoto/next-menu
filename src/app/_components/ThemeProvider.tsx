@@ -14,7 +14,6 @@ const changeTheme = (theme: string) => {
   const htmlElement = document.documentElement;
   htmlElement.className = buildHtmlClass(theme);
   htmlElement.style.colorScheme = theme;
-  console.log(`DBG ${htmlElement.className}`);
 };
 
 const ThemeContext = createContext<{
@@ -37,12 +36,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
     const mediaQueryTheme = mediaQuery.matches ? "dark" : "light";
-    console.log(`DBG-mq ${mediaQueryTheme}`);
     changeTheme(mediaQueryTheme);
 
     function handleChange(e: MediaQueryListEvent) {
       const newTheme = e.matches ? "dark" : "light";
-      console.log(`DBG-hc ${newTheme}`);
       changeTheme(newTheme);
     }
 
