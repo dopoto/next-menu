@@ -33,7 +33,7 @@ export function SplitScreenContainer(props: {
           <div className="mt-auto ml-auto"><ThemeSwitch /></div>          
         </footer>
       </div>
-      <div className="relative hidden h-auto min-h-screen flex-auto items-center justify-center overflow-hidden bg-blue-900 p-16 lg:flex lg:px-28">
+      <div className="relative hidden h-auto min-h-screen flex-auto items-center justify-center overflow-hidden bg-blue-900 dark:bg-blue-950 p-16 lg:flex lg:px-28">
         <svg
           className="pointer-events-none absolute inset-0"
           viewBox="0 0 960 540"
