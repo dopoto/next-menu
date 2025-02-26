@@ -3,12 +3,12 @@ import { MultiStepper } from "~/app/_components/MultiStepper";
 
 export function OnboardMultiStepper(props: { step: number }) {
   return (
-    <div className="max-w-md">
+    <div className="max-w-[400px]">
       <MultiStepper
         steps={[
-          { title: "Sign up", subtitle: "Create your account" },
-          { title: "Add organization", subtitle: "A name and maybe a logo" },
-          { title: "Set up a location", subtitle: "Just choose a name" },
+          { title: "Sign up", },
+          { title: "Add organization", },
+          { title: "Set up a location", },
         ]}
         currentStep={props.step}
       />

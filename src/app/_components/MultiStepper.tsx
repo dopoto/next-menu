@@ -17,7 +17,7 @@ export function MultiStepper(props: {
             </span>
             <div className="mt-2 h-full w-px bg-gray-200 group-last:hidden md:ms-2 md:mt-0 md:h-px md:w-full md:flex-1"></div>
           </div>
-          <div className="grow pb-5 md:mt-3 md:grow-0">
+          <div className="grow md:mt-3 md:grow-0">
             <span className="block text-sm font-medium text-gray-800">
               {step.title}
             </span>
