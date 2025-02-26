@@ -11,8 +11,8 @@ export function SplitScreenContainer(props: {
   sideHeroComponent?: ReactNode;
 }) {
   return (
-    <div className="flex h-full w-full min-w-0 flex-auto flex-col   bg-amber-50 sm:flex-row sm:justify-center">
-      <div className="flex h-full w-full flex-col flex-nowrap gap-6 px-4 py-2 sm:h-auto sm:w-auto sm:p-6 md:min-w-[450px] md:p-6">
+    <div className="flex min-h-full w-full min-w-0 flex-auto flex-col bg-amber-50 sm:flex-row sm:justify-center">
+      <div id="mainContent" className="flex h-full w-full flex-col flex-nowrap gap-6 px-4 py-2 sm:h-auto sm:w-auto sm:p-6 md:min-w-[450px] md:p-6 relative">
         <div className="py-6">
           <PublicTopNav />
         </div>
@@ -24,8 +24,13 @@ export function SplitScreenContainer(props: {
         {props.secondaryComponent}
 
         {props.mainComponent}
+
+        <footer className="mt-auto pt-6 flex flex-row text-xs text-gray-400">
+          <div>v0.0.23</div>          
+          <div className="mt-auto ml-auto"></div>          
+        </footer>
       </div>
-      <div className="relative hidden h-full flex-auto items-center justify-center overflow-hidden bg-blue-900 p-16 lg:flex lg:px-28">
+      <div className="relative hidden h-auto min-h-screen flex-auto items-center justify-center overflow-hidden bg-blue-900 p-16 lg:flex lg:px-28">
         <svg
           className="pointer-events-none absolute inset-0"
           viewBox="0 0 960 540"
@@ -44,14 +49,8 @@ export function SplitScreenContainer(props: {
             <circle r="234" cx="790" cy="491"></circle>
           </g>
         </svg>
-
         {props.sideHeroComponent}
-
       </div>
-      <footer className="absolute bottom-6 left-6 flex flex-col text-sm text-gray-400">
-        <div>v0.0.23</div>
-        <div>© 2025 TheMenu. All rights reserved.</div>
-      </footer>
     </div>
   );
 }

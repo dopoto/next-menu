@@ -1,15 +1,20 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
-import { slugify } from "./app/_utils/link-utils";
 
 const isOnboardingRoute = createRouteMatcher(["/onboarding(.*)"]);
 const isMyRoute = createRouteMatcher(["/my"]);
-const isPublicRoute = createRouteMatcher(["/", "/sign-in(.*)", "/sign-up(.*)"]);
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
+  "/sign-out(.*)",
+]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId, sessionClaims, redirectToSignIn } = await auth();
-  const { onboardingComplete, orgName, currentLocationId } =
+  const { onboardingComplete, currentLocationId } =
     sessionClaims?.metadata ?? {};
+  const orgId = sessionClaims?.org_id;
 
   // For users visiting /onboarding, don't try to redirect
   if (userId && isOnboardingRoute(req)) {
@@ -30,17 +35,19 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     return NextResponse.redirect(onboardingUrl);
   }
 
-  // If the user is logged in and accessing the /my route, redirect them
+  // If the user is signed in and accessing the /my route, redirect them
   // to their actual dashboard URL if possible.
   if (userId && isMyRoute(req)) {
-    if (!currentLocationId || !orgName) {
+    if (!currentLocationId || !orgId) {
       console.log(`DBG-MIDDLEWARE Redirecting from /my to sign-in`);
-      return NextResponse.redirect(`/sign-in`);
+      const signInUrl = new URL("/sign-in", req.url);
+      return NextResponse.redirect(signInUrl);
     }
 
-    const myDashboardRoute = `/${slugify(orgName)}/${currentLocationId}/dashboard`;
+    const myDashboardRoute = `/${orgId}/${currentLocationId}/dashboard`;
     console.log(`DBG-MIDDLEWARE Redirecting from /my to ${myDashboardRoute}`);
-    return NextResponse.redirect(new URL(myDashboardRoute, req.url));
+    const myDashboardRouteUrl = new URL(myDashboardRoute, req.url);
+    return NextResponse.redirect(myDashboardRouteUrl);
   }
 
   // If the user is logged in and the route is protected, let them view.
