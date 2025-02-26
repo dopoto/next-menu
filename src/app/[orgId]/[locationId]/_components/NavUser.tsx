@@ -1,9 +1,8 @@
 "use client";
 
-import { useClerk, UserButton, useUser } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser, useOrganization } from "@clerk/nextjs";
 import { ChevronsUpDown } from "lucide-react";
 import {
-  useSidebar,
   SidebarMenu,
   SidebarMenuItem,
   SidebarMenuButton,
@@ -18,6 +17,8 @@ import {
 export function NavUser() {
   const { openUserProfile, signOut } = useClerk();
   const { user } = useUser();
+ 
+ // TODO const { organization } = useOrganization();
 
   if (!user) return null;
 

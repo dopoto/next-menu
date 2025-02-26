@@ -6,7 +6,6 @@ export default function Layout({
   return (
     <main>
       <div className="  mx-auto p-4">
-        
         {children}
       </div>
     </main>

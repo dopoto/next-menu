@@ -1,6 +1,14 @@
-"use client"
+"use client";
 
-import { AudioWaveform, BookOpen, Bot, Command, Frame, GalleryVerticalEnd, Map, PieChart, Settings2, SquareTerminal } from "lucide-react";
+import {
+  BookOpen,
+  Bot,
+  Frame,
+  Map,
+  PieChart,
+  Settings2,
+  SquareTerminal,
+} from "lucide-react";
 import {
   Sidebar,
   SidebarHeader,
@@ -8,31 +16,15 @@ import {
   SidebarFooter,
   SidebarRail,
 } from "~/components/ui/sidebar";
-import { TeamSwitcher } from "./TeamSwitcher";
+import { LocationManager } from "./LocationManager";
 import { NavMain } from "./NavMain";
 import { NavProjects } from "./NavProjects";
 import { NavUser } from "./NavUser";
+import Link from "next/link";
+import SvgIcon from "~/app/_components/SvgIcons";
 
 // This is sample data.
 const data = {
- 
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
       title: "Playground",
@@ -137,21 +129,28 @@ const data = {
       icon: Map,
     },
   ],
-}
- 
+};
 
-export function LocationSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function LocationSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
+      <div className="flex w-full flex-row p-2 pt-3 justify-center">
+        <Link href="/">
+          <SvgIcon kind="logo" size={"8"} className="fill-rose-700" />
+        </Link>
+        
+      </div>
       <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+        <LocationManager />
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser  />
+        <NavUser />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
