@@ -13,7 +13,7 @@ export type PriceTier = {
 
 export const priceTiers: Record<PriceTierId, PriceTier> = {
   start: {
-    name: "Start",
+    name: "Starter",
     description: "Get started in minutes",
     locations: 1,
     menus: 1,
