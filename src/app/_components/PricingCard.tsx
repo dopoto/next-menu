@@ -45,7 +45,7 @@ export function PricingCard(props: { tier: PriceTier }) {
     <Card className={`w-[350px] ${!isEnabled ? "opacity-50" : ""}`}>
       <CardHeader className={`relative`}>
         {!isEnabled && (
-          <div className="absolute top-5 right-0 z-10 rotate-6 transform bg-red-700 px-4 py-1 text-sm font-medium text-white shadow-md">
+          <div className="absolute top-5 -right-2 z-10 rotate-4 transform bg-red-700 px-2 py-1 text-sm font-medium text-white shadow-md">
             Coming soon!
           </div>
         )}
@@ -76,7 +76,7 @@ export function PricingCard(props: { tier: PriceTier }) {
       <CardFooter className="flex justify-between">
         {isEnabled ? (
           <Link href="/sign-up" className="w-full">
-            <Button className="w-full" variant="outline">
+            <Button className="w-full" variant="default">
               Get started
             </Button>
           </Link>
