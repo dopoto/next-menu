@@ -11,41 +11,43 @@ import { Button } from "~/components/ui/button";
 import { PublicTopNav } from "./_components/PublicTopNav";
 import { Card } from "~/components/ui/card";
 import { ThemeSwitch } from "./_components/ThemeSwitch";
+import { PageTitle } from "./_components/PageTitle";
+import { PageSubtitle } from "./_components/PageSubtitle";
 
 export default async function HomePage() {
   return (
-    <div className="flex flex-col flex-nowrap items-center justify-center">
+    <div className="flex flex-col flex-nowrap items-center justify-center gap-4 p-5">
       <PublicTopNav>
         <div className="ml-auto">
-          <SignedOut>
-            <SignInButton /> | <SignUpButton />
-          </SignedOut>
           <SignedIn>
             <UserButton />
           </SignedIn>
         </div>
       </PublicTopNav>
 
-      <h1 className="text-blue-300 dark:text-red-200">Home page</h1>
+      <SignedOut>
+      <PageTitle>Welcome!</PageTitle>
+      <PageSubtitle>
+        Please create an account or sign in to continue
+      </PageSubtitle>
+      </SignedOut>
 
-      <Card >sdsd</Card>
-
-      
       <>
         <SignedOut>
-          <SignInButton />
-          <SignUpButton />
+          <div className="flex w-full flex-col justify-center gap-3 align-middle">
+            <div className="text-center">
+              <SignInButton /> | <SignUpButton />
+            </div>
+          </div>
         </SignedOut>
         <SignedIn>
-          You are signed in.
-          <br />
-          <br />
-          <SignOutButton />
-          <br />
-          <br />
-          <Link href="/my">
-            <Button>Go to Dash</Button>
-          </Link>           
+          <div className="flex w-full flex-col justify-center gap-3 text-center align-middle">
+            <Link href="/my">
+              <Button>Go to Dashboard</Button>
+            </Link>
+            <SignOutButton />
+          </div>
+
         </SignedIn>
       </>
 
