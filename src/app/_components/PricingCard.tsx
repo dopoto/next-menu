@@ -13,25 +13,33 @@ import { type PriceTier } from "../_domain/price-tiers";
 import { PageTitle } from "./PageTitle";
 import { PageSubtitle } from "./PageSubtitle";
 
-const getFeatureText = (singularName: string, max: number) => {
+const getFeatureText = (singularName: string, pluralName: string, max: number) => {
   if (max === -1) return `Please contact us`;
-  return `${max} ${singularName}${max > 1 ? "s" : ""}`;
+  return `${max} ${max > 1 ? pluralName : singularName}`;
 };
 
 const getPrice = (monthlyUsdPrice: number) => {
-  
   if (monthlyUsdPrice === -1) return `__.__`;
   return (
     <div className="mt-2">
       <span className="text-4xl font-bold">${monthlyUsdPrice.toFixed(2)}</span>
-      <span className="text-muted-foreground ml-1 text-2xl font-light">/month</span>
+      <span className="text-muted-foreground ml-1 text-2xl font-light">
+        /month
+      </span>
     </div>
   );
 };
 
 export function PricingCard(props: { tier: PriceTier }) {
-  const { name, description, monthlyUsdPrice, locations, menus, isEnabled } =
-    props.tier;
+  const {
+    name,
+    description,
+    monthlyUsdPrice,
+    locations,
+    menus,
+    staffMembers,
+    isEnabled,
+  } = props.tier;
 
   return (
     <Card className={`w-[350px] ${!isEnabled ? "opacity-50" : ""}`}>
@@ -53,11 +61,15 @@ export function PricingCard(props: { tier: PriceTier }) {
         <div className="flex flex-col flex-nowrap gap-2 text-sm">
           <div className="flex flex-row items-center gap-1">
             <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-            <div>{getFeatureText("location", locations)}</div>
+            <div>{getFeatureText("location", "locations",locations)}</div>
           </div>
           <div className="flex flex-row items-center gap-1">
             <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-            <div>{getFeatureText("menu", menus)}</div>
+            <div>{getFeatureText("menu","menus", menus)}</div>
+          </div>
+          <div className="flex flex-row items-center gap-1">
+            <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
+            <div>{getFeatureText("staff members", "staff members", staffMembers)}</div>
           </div>
         </div>
       </CardContent>
