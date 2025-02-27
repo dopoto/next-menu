@@ -9,10 +9,10 @@ import {
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { PublicTopNav } from "./_components/PublicTopNav";
-import { Card } from "~/components/ui/card";
 import { ThemeSwitch } from "./_components/ThemeSwitch";
 import { PageTitle } from "./_components/PageTitle";
 import { PageSubtitle } from "./_components/PageSubtitle";
+import { Pricing } from "./_components/Pricing";
 
 export default async function HomePage() {
   return (
@@ -26,10 +26,10 @@ export default async function HomePage() {
       </PublicTopNav>
 
       <SignedOut>
-      <PageTitle>Welcome!</PageTitle>
-      <PageSubtitle>
-        Please create an account or sign in to continue
-      </PageSubtitle>
+        <PageTitle>Welcome!</PageTitle>
+        <PageSubtitle>
+          Please create an account or sign in to continue
+        </PageSubtitle>
       </SignedOut>
 
       <>
@@ -47,9 +47,10 @@ export default async function HomePage() {
             </Link>
             <SignOutButton />
           </div>
-
         </SignedIn>
       </>
+
+      <Pricing />
 
       <ThemeSwitch />
     </div>
