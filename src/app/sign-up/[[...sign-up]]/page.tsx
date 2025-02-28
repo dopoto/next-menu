@@ -24,6 +24,7 @@ export default async function SignUpPage(props: {
     <SplitScreenContainer
       mainComponent={
         <SignUp
+          fallbackRedirectUrl={`/onboarding/${parsedOrDefaultTier}/add-org`}
           appearance={{
             elements: {
               headerTitle: "hidden",

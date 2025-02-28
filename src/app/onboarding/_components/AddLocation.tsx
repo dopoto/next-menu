@@ -45,7 +45,7 @@ export function AddLocation({
         <CardHeader>
           <CardTitle className="text-2xl">Add a location</CardTitle>
           <CardDescription>
-            {"Enter the name of your restaurant, pub or bar. You'll be able to rename or customize it further, anytime later, from your account."}
+            {"Enter the name of your restaurant, pub or bar. This can be changed anytime later from your account."}
           </CardDescription>
         </CardHeader>
         <CardContent>
