@@ -1,16 +1,16 @@
 import * as React from "react";
 import { MultiStepper } from "~/app/_components/MultiStepper";
+import { type OnboardingStep } from "~/app/_domain/onboarding-steps";
 
-export function OnboardMultiStepper(props: { step: number }) {
+export function OnboardMultiStepper(props: {
+  steps: Array<OnboardingStep>;
+  currentStep: number;
+}) {
   return (
     <div className="max-w-[400px]">
       <MultiStepper
-        steps={[
-          { title: "Sign up", },
-          { title: "Add organization", },
-          { title: "Set up a location", },
-        ]}
-        currentStep={props.step}
+        steps={props.steps}
+        currentStep={props.currentStep}
       />
     </div>
   );

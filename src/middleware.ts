@@ -16,7 +16,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
     sessionClaims?.metadata ?? {};
   const orgId = sessionClaims?.org_id;
 
-  // For users visiting /onboarding, don't try to redirect
+  // If user is already signed up and visiting /onboarding/*, don't try to redirect
   if (userId && isOnboardingRoute(req)) {
     return NextResponse.next();
   }

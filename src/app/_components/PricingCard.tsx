@@ -32,6 +32,7 @@ const getPrice = (monthlyUsdPrice: number) => {
 
 export function PricingCard(props: { tier: PriceTier }) {
   const {
+    id,
     name,
     description,
     monthlyUsdPrice,
@@ -75,7 +76,7 @@ export function PricingCard(props: { tier: PriceTier }) {
       </CardContent>
       <CardFooter className="flex justify-between">
         {isEnabled ? (
-          <Link href="/sign-up" className="w-full">
+          <Link href={`/sign-up?tier=${id}`} className="w-full">
             <Button className="w-full" variant="default">
               Get started
             </Button>
