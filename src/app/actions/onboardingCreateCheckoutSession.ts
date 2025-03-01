@@ -15,7 +15,7 @@ export const onboardingCreateCheckoutSession = async ({
 }: NewSessionOptions) => {
   // TODO
   const returnUrl =
-    "http://localhost:3000/onboarding/pro/post-payment?session_id={CHECKOUT_SESSION_ID}";
+    `${env.NEXT_PUBLIC_APP_URL}/onboarding/pro/post-payment?session_id={CHECKOUT_SESSION_ID}`;
 
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded",

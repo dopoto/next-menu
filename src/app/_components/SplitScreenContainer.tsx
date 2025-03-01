@@ -29,7 +29,7 @@ export function SplitScreenContainer(props: {
 
         <footer className="mt-auto pt-6 flex flex-row text-xs text-gray-400  ">
           {/* TODO actual ver */}
-          <div className="my-auto">v0.0.24</div>          
+          <div className="my-auto">v0.0.25</div>          
           <div className="mt-auto ml-auto"><ThemeSwitch /></div>          
         </footer>
       </div>

@@ -9,7 +9,7 @@ import {
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
-import { PriceTierIdSchema, defaultTier, priceTiers } from "~/app/_domain/price-tiers";
+import { PriceTierIdSchema, defaultTier  } from "~/app/_domain/price-tiers";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);

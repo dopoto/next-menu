@@ -1,11 +1,9 @@
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { AddLocation } from "../../_components/AddLocation";
-import { OnboardMultiStepper } from "../../_components/OnboardMultiStepper";
-import { getOnboardingSteps } from "~/app/_utils/onboarding-utils";
 import { PriceTierIdSchema, defaultTier } from "~/app/_domain/price-tiers";
 import Stripe from "stripe";
 import { env } from "~/env";
-import { CompletedStepIcon, InProgressStepIcon, MultiStepper, UncompletedStepIcon } from "~/app/_components/MultiStepper";
+import { CompletedStepIcon, InProgressStepIcon, MultiStepper  } from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 
 const stripeApiKey =  env.STRIPE_SECRET_KEY;
