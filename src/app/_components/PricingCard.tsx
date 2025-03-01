@@ -77,6 +77,7 @@ export function PricingCard(props: { tier: PriceTier }) {
       <CardFooter className="flex justify-between">
         {isEnabled ? (
           <Link href={`/sign-up?tier=${id}`} className="w-full">
+            {/* TODO show different CTA if user is logged in already */}
             <Button className="w-full" variant="default">
               Get started
             </Button>
