@@ -11,7 +11,7 @@ export function MultiStepper(props: {
           title={step.title}
           isFirst={index === 0}
           isLast={index === props.steps.length - 1}
-          isActive={index < props.currentStep}
+          isActive={props.currentStep === index + 1}
           isCompleted={index < props.currentStep - 1}
         />
       ))}
@@ -32,15 +32,15 @@ const Step = (props: {
     <div className="flex gap-3">
       <div className="flex flex-col items-center">
         <div
-          className={`${props.isActive ? "bg-gray-300" : "bg-transparent"} rounded-full`}
+          className={`${props.isActive ? "bg-gray-300 animate-pulse" : "bg-transparent"} rounded-full `}
         >
           {props.isCompleted ? (
-            <div className="m-1 flex size-6 items-center justify-center rounded-full bg-black">
+            <div className="m-1 flex size-6 items-center justify-center rounded-full bg-black ">
               <CheckSVG />
             </div>
           ) : (
             <div
-              className={`size-6 rounded-full border-8 ${props.isActive ? "border-black" : "border-gray-300"} m-1 transition-all duration-300`}
+              className={`size-6 rounded-full border-8 ${props.isActive ? "border-black " : "border-gray-300"} m-1 transition-all duration-300`}
             />
           )}
         </div>
@@ -51,7 +51,7 @@ const Step = (props: {
         )}
       </div>
       <div>
-        <h3 className="mt-1 text-sm font-medium text-gray-800">
+        <h3 className={`mt-1 text-sm   text-gray-800 dark:text-gray-100 ${props.isActive ? "font-medium" : "font-light"} `}>         
           {props.title}
         </h3>
         <p className="mb-6 text-sm text-gray-500">{props.subtitle}</p>
