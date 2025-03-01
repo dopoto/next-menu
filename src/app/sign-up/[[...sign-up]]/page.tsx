@@ -1,9 +1,9 @@
 import { SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { OnboardMultiStepper } from "~/app/onboarding/_components/OnboardMultiStepper";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
 import { defaultTier, PriceTierIdSchema } from "~/app/_domain/price-tiers";
-import { getOnboardingSteps } from "~/app/_utils/onboarding-utils";
+import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
+import { InProgressStepIcon, MultiStepper, UncompletedStepIcon } from "~/app/_components/MultiStepper";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -18,7 +18,36 @@ export default async function SignUpPage(props: {
     ? parsedTier.data
     : defaultTier;
 
-  const steps = getOnboardingSteps(parsedOrDefaultTier);
+  const steps: OnboardingStep[] = [
+    {
+      id: "signup",
+      title: "Sign up",
+      isActive: true,
+      icon: <InProgressStepIcon />,
+    },
+    {
+      id: "addorg",
+      title: "Add organization",
+      isActive: false,
+      icon: <UncompletedStepIcon />,
+    },
+    ...(parsedOrDefaultTier !== "start"
+      ? [
+          {
+            id: "pay",
+            title: "Payment",
+            isActive: false,
+            icon: <UncompletedStepIcon />,
+          },
+        ]
+      : []),
+    {
+      id: "addloc",
+      title: "Set up a location",
+      isActive: false,
+      icon: <UncompletedStepIcon />,
+    },
+  ];
 
   return (
     <SplitScreenContainer
@@ -33,7 +62,7 @@ export default async function SignUpPage(props: {
           }}
         />
       }
-      secondaryComponent={<OnboardMultiStepper steps={steps} currentStep={1} />}
+      secondaryComponent={<MultiStepper steps={steps} />}
       sideHeroComponent={<SideHeroCarousel />}
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}

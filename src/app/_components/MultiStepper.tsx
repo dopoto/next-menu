@@ -1,18 +1,14 @@
-export function MultiStepper(props: {
-  steps: Array<{ title: string; subtitle?: string }>;
-  currentStep: number;
-}) {
+import { type OnboardingStep } from "../_domain/onboarding-steps";
+
+export function MultiStepper(props: { steps: Array<OnboardingStep> }) {
   return (
-    <div className="mx-auto grid max-w-2xl">
+    <div className="  grid max-w-2xl">
       {props.steps.map((step, index) => (
         <Step
-          key={step.title}
-          stepNumber={index + 1}
-          title={step.title}
+          key={step.id}
+          step={step}
           isFirst={index === 0}
           isLast={index === props.steps.length - 1}
-          isActive={props.currentStep === index + 1}
-          isCompleted={index < props.currentStep - 1}
         />
       ))}
     </div>
@@ -20,47 +16,49 @@ export function MultiStepper(props: {
 }
 
 const Step = (props: {
-  title: string;
-  subtitle?: string;
-  stepNumber: number;
-  isActive: boolean;
-  isCompleted: boolean;
+  step: OnboardingStep;
   isFirst: boolean;
   isLast: boolean;
 }) => {
   return (
     <div className="flex gap-3">
       <div className="flex flex-col items-center">
-        <div
-          className={`${props.isActive ? "bg-gray-300 animate-pulse" : "bg-transparent"} rounded-full `}
-        >
-          {props.isCompleted ? (
-            <div className="m-1 flex size-6 items-center justify-center rounded-full bg-black ">
-              <CheckSVG />
-            </div>
-          ) : (
-            <div
-              className={`size-6 rounded-full border-8 ${props.isActive ? "border-black " : "border-gray-300"} m-1 transition-all duration-300`}
-            />
-          )}
-        </div>
+        {props.step.icon}
         {!props.isLast && (
           <div
-            className={`border ${props.isCompleted ? "border-black" : "border-gray-300"} h-full transition-all duration-300`}
+            className={`border  border-gray-300  h-full transition-all duration-300`}
           />
         )}
       </div>
       <div>
-        <h3 className={`mt-1 text-sm   text-gray-800 dark:text-gray-100 ${props.isActive ? "font-medium" : "font-light"} `}>         
-          {props.title}
+        <h3
+          className={`mt-1 text-sm text-gray-800 dark:text-gray-100 ${props.step.isActive ? "font-medium" : "font-light"} `}
+        >
+          {props.step.title}
         </h3>
-        <p className="mb-6 text-sm text-gray-500">{props.subtitle}</p>
+        <p className="mb-6 text-sm text-gray-500">{props.step.subtitle}</p>
       </div>
     </div>
   );
 };
 
-const CheckSVG = () => (
+export const InProgressStepIcon = () => (
+  <div className={`animate-pulse rounded-full bg-gray-300`}>
+    <div
+      className={`m-1 size-6 rounded-full border-8 border-black transition-all duration-300`}
+    />
+  </div>
+);
+
+export const UncompletedStepIcon = () => (
+  <div className={`rounded-full bg-transparent`}>
+    <div
+      className={`m-1 size-6 rounded-full border-8 border-gray-300 transition-all duration-300`}
+    />
+  </div>
+);
+
+export const CheckSVG = () => (
   <svg
     width="13"
     height="11"
@@ -76,3 +74,18 @@ const CheckSVG = () => (
     />
   </svg>
 );
+/*
+<div
+className={`${props.isActive ? "animate-pulse bg-gray-300" : "bg-transparent"} rounded-full`}
+>
+{props.isCompleted ? (
+  <div className="m-1 flex size-6 items-center justify-center rounded-full bg-black">
+    <CheckSVG />
+  </div>
+) : (
+  <div
+    className={`size-6 rounded-full border-8 ${props.isActive ? "border-black" : "border-gray-300"} m-1 transition-all duration-300`}
+  />
+)}
+</div>
+*/
