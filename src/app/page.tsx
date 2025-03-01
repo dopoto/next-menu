@@ -28,7 +28,7 @@ export default async function HomePage() {
       <SignedOut>
         <PageTitle>Welcome!</PageTitle>
         <PageSubtitle>
-          Please create an account or sign in to continue
+          Please sign in or choose a tier to continue
         </PageSubtitle>
       </SignedOut>
 
@@ -36,7 +36,7 @@ export default async function HomePage() {
         <SignedOut>
           <div className="flex w-full flex-col justify-center gap-3 align-middle">
             <div className="text-center">
-              <SignInButton /> | <SignUpButton />
+              <SignInButton />  
             </div>
           </div>
         </SignedOut>
