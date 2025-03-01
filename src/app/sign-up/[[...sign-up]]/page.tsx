@@ -35,7 +35,7 @@ export default async function SignUpPage(props: {
       ? [
           {
             id: "pay",
-            title: "Payment",
+            title: "Pay with Stripe",
             isActive: false,
             icon: <UncompletedStepIcon />,
           },

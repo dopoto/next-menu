@@ -1,15 +1,15 @@
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { OnboardMultiStepper } from "../../_components/OnboardMultiStepper";
-import { getOnboardingSteps } from "~/app/_utils/onboarding-utils";
-import {
-  PriceTierIdSchema,
-  defaultTier,
-  priceTiers,
-} from "~/app/_domain/price-tiers";
-import { CheckoutForm } from "../../_components/CheckoutForm";
 import { env } from "~/env";
 import Stripe from "stripe";
 import { PostPayment } from "../../_components/PostPayment";
+import {
+  CompletedStepIcon,
+  InProgressStepIcon,
+  MultiStepper,
+  UncompletedStepIcon,
+} from "~/app/_components/MultiStepper";
+import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
+import { PriceTierIdSchema, defaultTier, priceTiers } from "~/app/_domain/price-tiers";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -24,39 +24,52 @@ export default async function OnboardingPaymentPage(props: {
   searchParams: SearchParams;
 }) {
   // Get the status of the Stripe payment
-  let stripePaymentStatus: Stripe.Checkout.Session.Status | "error" | null =
-    null;
   const searchParams = await props.searchParams;
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
-  if (!stripeSessionId?.length) {
-    stripePaymentStatus = "error";
-  }
   const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
-  stripePaymentStatus = session.status;
+
 
   const params = await props.params;
   const priceTierId = params.priceTierId;
+  const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
+  const parsedOrDefaultTier = parsedTier.success
+    ? parsedTier.data
+    : defaultTier;
+ 
 
-  // TODO Revisit
-  // const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
-  // const parsedOrDefaultTier = parsedTier.success
-  //   ? parsedTier.data
-  //   : defaultTier;
-  // const stripePriceId = priceTiers[parsedOrDefaultTier].stripePriceId ?? "";
+  const mainComponent = <PostPayment stripeSession={session} tierId={parsedOrDefaultTier} />;
 
-  const mainComponent = <PostPayment stripeSession={session} />
-  
-  const steps = [
-    { title: "Signed up" },
-    { title: "Added organization" },
-    { title: `Payment ${stripePaymentStatus}` },
-    { title: "Set up a location" },
+  const steps: OnboardingStep[] = [
+    {
+      id: "signup",
+      title: "Sign up completed",
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
+    {
+      id: "addorg",
+      icon: <CompletedStepIcon />,
+      title: "Added organization",
+      isActive: false,
+    },
+    {
+      id: "pay",
+      title: "Pay with Stripe",
+      isActive: true,
+      icon: <InProgressStepIcon />,
+    },
+    {
+      id: "addloc",
+      title: "Set up a location",
+      isActive: false,
+      icon: <UncompletedStepIcon />,
+    },
   ];
 
   return (
     <SplitScreenContainer
       mainComponent={mainComponent}
-      secondaryComponent={<OnboardMultiStepper steps={steps} currentStep={3} />}
+      secondaryComponent={<MultiStepper steps={steps} />}
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}
     ></SplitScreenContainer>

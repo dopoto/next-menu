@@ -5,6 +5,8 @@ import { getOnboardingSteps } from "~/app/_utils/onboarding-utils";
 import { PriceTierIdSchema, defaultTier } from "~/app/_domain/price-tiers";
 import Stripe from "stripe";
 import { env } from "~/env";
+import { CompletedStepIcon, InProgressStepIcon, MultiStepper, UncompletedStepIcon } from "~/app/_components/MultiStepper";
+import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 
 const stripeApiKey =  env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -37,20 +39,41 @@ export default async function OnboardingAddLocationPage(props: {
     ? parsedTier.data
     : defaultTier;
 
-  const steps = [
-    { title: "Sign up" },
-    { title: "Add organization" },
-    { title: `Payment ${stripePaymentStatus}` },
-    { title: "Set up a location" },
-  ]
-  const currentStep = parsedOrDefaultTier === "start" ? 3 : 4;
+  const steps: OnboardingStep[] = [
+    {
+      id: "signup",
+      title: "Sign up completed",
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
+    {
+      id: "addorg",
+      title: "Organization added",
+      isActive: false,
+      icon: <CompletedStepIcon />
+    },
+    ...(parsedOrDefaultTier !== "start"
+      ? [
+          {
+            id: "pay",
+            title: "Payment completed",
+            isActive: false,
+            icon: <CompletedStepIcon />,
+          },
+        ]
+      : []),
+    {
+      id: "addloc",
+      title: "Set up a location",
+      isActive: true,
+      icon: <InProgressStepIcon />,
+    },
+  ];
 
   return (
     <SplitScreenContainer
       mainComponent={<AddLocation />}
-      secondaryComponent={
-        <OnboardMultiStepper steps={steps} currentStep={currentStep} />
-      }
+      secondaryComponent={<MultiStepper steps={steps} />}
       title={"Let's get you onboarded!"}
       subtitle={"One last thing..."}
     ></SplitScreenContainer>

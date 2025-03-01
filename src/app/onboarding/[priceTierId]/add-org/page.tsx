@@ -1,21 +1,24 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import {
   CreateOrganization,
-  OrganizationList,
-  OrganizationProfile,
 } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { OnboardMultiStepper } from "../../_components/OnboardMultiStepper";
-import { getOnboardingSteps } from "~/app/_utils/onboarding-utils";
+ 
 import { PriceTierIdSchema, defaultTier } from "~/app/_domain/price-tiers";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Card } from "~/components/ui/card";
+import {
+  CompletedStepIcon,
+  InProgressStepIcon,
+  MultiStepper,
+  UncompletedStepIcon,
+} from "~/app/_components/MultiStepper";
+import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 
 export type Params = Promise<{ priceTierId: string }>;
 
 export default async function OnboardingAddOrgPage(props: { params: Params }) {
-
-  const params = await props.params;   
+  const params = await props.params;
   const priceTierId = params.priceTierId;
 
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
@@ -23,7 +26,36 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
     ? parsedTier.data
     : defaultTier;
 
-  const steps = getOnboardingSteps(parsedOrDefaultTier);
+  const steps: OnboardingStep[] = [
+    {
+      id: "signup",
+      title: "Sign up completed",
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
+    {
+      id: "addorg",
+      title: "Add organization",
+      isActive: true,
+      icon: <InProgressStepIcon />
+    },
+    ...(parsedOrDefaultTier !== "start"
+      ? [
+          {
+            id: "pay",
+            title: "Pay with Stripe",
+            isActive: false,
+            icon: <UncompletedStepIcon />,
+          },
+        ]
+      : []),
+    {
+      id: "addloc",
+      title: "Set up a location",
+      isActive: false,
+      icon: <UncompletedStepIcon />,
+    },
+  ];
 
   const nextStep =
     parsedOrDefaultTier === "start"
@@ -57,7 +89,7 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
       title={"Let's get you onboarded!"}
       subtitle={"Getting there..."}
       mainComponent={mainComponent}
-      secondaryComponent={<OnboardMultiStepper steps={steps} currentStep={2} />}
+      secondaryComponent={<MultiStepper steps={steps} />}
     ></SplitScreenContainer>
   );
 }
