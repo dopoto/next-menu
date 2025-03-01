@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { env } from "~/env";
 
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
@@ -13,6 +14,7 @@ export const defaultTier: PriceTierId = 'start'
 export type PriceTier = {
   id: PriceTierId,
   name: string;
+  stripePriceId?: string;
   description: string;
   monthlyUsdPrice: number;
   yearlyUsdPrice: number;
@@ -38,6 +40,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
   pro: {
     id: "pro",
     name: "Premium",
+    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_TIER,
     description: "Perfect for most",
     locations: 5,
     menus: 10,

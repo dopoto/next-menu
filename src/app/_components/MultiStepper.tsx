@@ -3,28 +3,76 @@ export function MultiStepper(props: {
   currentStep: number;
 }) {
   return (
-    <ul className="relative flex flex-col gap-2 md:flex-row">
+    <div className="mx-auto grid max-w-2xl">
       {props.steps.map((step, index) => (
-        <li
+        <Step
           key={step.title}
-          className="group flex-1 gap-x-2 md:block md:shrink md:basis-0 flex items-center"
-        >
-          <div className="flex min-h-7 min-w-7 flex-col items-center align-middle text-xs font-bold md:inline-flex md:w-full md:flex-row md:flex-wrap">
-            <span
-              className={`${props.currentStep === index + 1 ? "bg-blue-700 text-gray-300" : "bg-gray-300 dark:bg-gray-500 text-white"} flex size-7 shrink-0 items-center justify-center rounded-full font-medium`}
-            >
-              {index + 1}
-            </span>
-            <div className="hidden md:block mt-2 h-full w-px bg-gray-200 dark:bg-gray-700 group-last:hidden md:ms-2 md:mt-0 md:h-px md:w-full md:flex-1"></div>
-          </div>
-            <div className="grow md:mt-3 md:grow-0 flex items-center">
-            <span className={`block text-sm  text-gray-800 dark:text-gray-100 ${props.currentStep === index + 1 ? "font-medium" : "font-light"}`}>
-              {step.title}
-            </span>
-            {step.subtitle && <p className="text-xs text-gray-500">{step.subtitle}</p>}
-          </div>
-        </li>
+          stepNumber={index + 1}
+          title={step.title}
+          isFirst={index === 0}
+          isLast={index === props.steps.length - 1}
+          isActive={index < props.currentStep}
+          isCompleted={index < props.currentStep - 1}
+        />
       ))}
-    </ul>
+    </div>
   );
 }
+
+const Step = (props: {
+  title: string;
+  subtitle?: string;
+  stepNumber: number;
+  isActive: boolean;
+  isCompleted: boolean;
+  isFirst: boolean;
+  isLast: boolean;
+}) => {
+  return (
+    <div className="flex gap-3">
+      <div className="flex flex-col items-center">
+        <div
+          className={`${props.isActive ? "bg-gray-300" : "bg-transparent"} rounded-full`}
+        >
+          {props.isCompleted ? (
+            <div className="m-1 flex size-6 items-center justify-center rounded-full bg-black">
+              <CheckSVG />
+            </div>
+          ) : (
+            <div
+              className={`size-6 rounded-full border-8 ${props.isActive ? "border-black" : "border-gray-300"} m-1 transition-all duration-300`}
+            />
+          )}
+        </div>
+        {!props.isLast && (
+          <div
+            className={`border ${props.isCompleted ? "border-black" : "border-gray-300"} h-full transition-all duration-300`}
+          />
+        )}
+      </div>
+      <div>
+        <h3 className="mt-1 text-sm font-medium text-gray-800">
+          {props.title}
+        </h3>
+        <p className="mb-6 text-sm text-gray-500">{props.subtitle}</p>
+      </div>
+    </div>
+  );
+};
+
+const CheckSVG = () => (
+  <svg
+    width="13"
+    height="11"
+    viewBox="0 0 13 11"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M11.0964 0.390037L3.93638 7.30004L2.03638 5.27004C1.68638 4.94004 1.13638 4.92004 0.736381 5.20004C0.346381 5.49004 0.236381 6.00004 0.476381 6.41004L2.72638 10.07C2.94638 10.41 3.32638 10.62 3.75638 10.62C4.16638 10.62 4.55638 10.41 4.77638 10.07C5.13638 9.60004 12.0064 1.41004 12.0064 1.41004C12.9064 0.490037 11.8164 -0.319963 11.0964 0.380037V0.390037Z"
+      fill="white"
+    />
+  </svg>
+);

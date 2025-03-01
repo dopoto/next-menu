@@ -1,16 +1,17 @@
 import * as Sentry from "@sentry/nextjs";
+import { env } from "./env";
 
 export async function register() {
   if (
     process.env.NEXT_RUNTIME === "nodejs" &&
-    process.env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
+    env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
   ) {
     await import("../sentry.server.config");
   }
 
   if (
     process.env.NEXT_RUNTIME &&
-    process.env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
+    env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
   ) {
     await import("../sentry.edge.config");
   }
