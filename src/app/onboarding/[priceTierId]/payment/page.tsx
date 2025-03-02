@@ -1,13 +1,16 @@
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { OnboardMultiStepper } from "../../_components/OnboardMultiStepper";
-import { getOnboardingSteps } from "~/app/_utils/onboarding-utils";
 import {
   PriceTierIdSchema,
   defaultTier,
   priceTiers,
 } from "~/app/_domain/price-tiers";
 import { CheckoutForm } from "../../_components/CheckoutForm";
-import { CompletedStepIcon, InProgressStepIcon, MultiStepper, UncompletedStepIcon } from "~/app/_components/MultiStepper";
+import {
+  CompletedStepIcon,
+  InProgressStepIcon,
+  MultiStepper,
+  UncompletedStepIcon,
+} from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 
 export type Params = Promise<{ priceTierId: string }>;
@@ -32,6 +35,12 @@ export default async function OnboardingPaymentPage(props: { params: Params }) {
 
   const steps: OnboardingStep[] = [
     {
+      id: "tier",
+      title: `Chose ${priceTiers[parsedOrDefaultTier].name} tier`,
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
+    {
       id: "signup",
       title: "Sign up completed",
       isActive: false,
@@ -41,7 +50,7 @@ export default async function OnboardingPaymentPage(props: { params: Params }) {
       id: "addorg",
       title: "Organization added",
       isActive: false,
-      icon: <CompletedStepIcon />
+      icon: <CompletedStepIcon />,
     },
     ...(parsedOrDefaultTier !== "start"
       ? [

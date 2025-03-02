@@ -4,10 +4,8 @@ import * as React from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { onboardingAddLocation } from "../../actions/onboardingAddLocation";
-import { type ReactNode, useState } from "react";
-
+import { useState } from "react";
 import { cn } from "~/lib/utils";
-
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -18,11 +16,17 @@ import {
 } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
+import { type PriceTierId } from "~/app/_domain/price-tiers";
 
-export function AddLocation({
+export const AddLocation = ({
+  priceTierId,
+  stripeSessionId,
   className,
-  ...props
-}: React.ComponentPropsWithoutRef<"div">) {
+}: {
+  priceTierId: PriceTierId;
+  stripeSessionId?: string;
+  className?: string;
+}) => {
   const [errors, setErrors] = useState<string[]>();
   const { user } = useUser();
   const router = useRouter();
@@ -40,16 +44,24 @@ export function AddLocation({
   };
 
   return (
-    <div className={cn("flex flex-col gap-6 max-w-[400px]", className)} {...props}>
+    <div className={cn("flex max-w-[400px] flex-col gap-6", className)}>
       <Card>
         <CardHeader>
           <CardTitle className="text-2xl">Add a location</CardTitle>
           <CardDescription>
-            {"Enter the name of your restaurant, pub or bar. This can be changed anytime later from your account."}
+            {
+              "Enter the name of your restaurant, pub or bar. This can be changed anytime later from your account."
+            }
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form action={handleSubmit}>
+            <input type="hidden" name="priceTierId" value={priceTierId} />
+            <input
+              type="hidden"
+              name="stripeSessionId"
+              value={stripeSessionId}
+            />
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="locationName">Location Name</Label>
@@ -77,4 +89,4 @@ export function AddLocation({
       </Card>
     </div>
   );
-}
+};

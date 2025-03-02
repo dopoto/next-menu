@@ -4,6 +4,12 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { db } from "~/server/db";
 import { locations } from "~/server/db/schema";
+import { PriceTierIdSchema } from "../_domain/price-tiers";
+import Stripe from "stripe";
+import { env } from "~/env";
+
+const stripeApiKey = env.STRIPE_SECRET_KEY;
+const stripe = new Stripe(stripeApiKey);
 
 const formDataSchema = z.object({
   locationName: z
@@ -17,10 +23,12 @@ const formDataSchema = z.object({
     .max(256, {
       message: "Location Name must be 256 or fewer characters long",
     }),
+  priceTierId: PriceTierIdSchema,
+  stripeSessionId: z.string(),
 });
 
 export const onboardingAddLocation = async (formData: FormData) => {
-  const { userId, orgId, orgRole, orgSlug } = await auth();
+  const { userId, orgId } = await auth();
 
   // TODO Validate user role
 
@@ -30,6 +38,8 @@ export const onboardingAddLocation = async (formData: FormData) => {
 
   const validatedFormFields = formDataSchema.safeParse({
     locationName: formData.get("locationName"),
+    priceTierId: formData.get("priceTierId"),
+    stripeSessionId: formData.get("stripeSessionId"),
   });
 
   if (!validatedFormFields.success) {
@@ -40,6 +50,55 @@ export const onboardingAddLocation = async (formData: FormData) => {
     return {
       errors: errorMessages,
     };
+  }
+
+  // Validate Stripe payment
+  if (validatedFormFields.data.priceTierId !== "start") {
+    if (validatedFormFields.data.stripeSessionId?.length === 0) {
+      // TODO Log / Return error
+      // TODO CTAs
+      return {
+        errors: ["Stripe payment data not found. Please start over"],
+      };
+    } else {
+      try {
+        const session = await stripe.checkout.sessions.retrieve(
+          validatedFormFields.data.stripeSessionId,
+        );
+        switch (session.status) {
+          case "complete":
+            // The only happy path => continue
+            break;
+          case "expired":
+            // TODO Log / Return error
+            // TODO CTAs
+            return {
+              errors: ["Stripe payment data expired. Please start over"],
+            };
+          case "open":
+            // TODO Log / Return error
+            // TODO CTAs
+            // TODO Revisit / test
+            return {
+              errors: ["Stripe payment not completed."],
+            };
+          default:
+            // TODO Log / Return error
+            // TODO CTAs
+            // TODO Revisit / test
+            return {
+              errors: ["Unexpected Stripe payment data."],
+            };
+        }
+      } catch {
+        // TODO Log / Return error
+        // TODO CTAs
+        // TODO Revisit / test
+        return {
+          errors: ["An error occurred while processing your request."],
+        };
+      }
+    }
   }
 
   const client = await clerkClient();
@@ -78,6 +137,7 @@ export const onboardingAddLocation = async (formData: FormData) => {
 
     const customJwtSessionClaims: CustomJwtSessionClaims = {
       metadata: {
+        tier: validatedFormFields.data.priceTierId,
         onboardingComplete: true,
         orgName,
         currentLocationId: insertedLocation?.id.toString() ?? "",

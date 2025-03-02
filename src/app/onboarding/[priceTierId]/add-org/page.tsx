@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import {
-  CreateOrganization,
-} from "@clerk/nextjs";
+import { CreateOrganization } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
- 
-import { PriceTierIdSchema, defaultTier } from "~/app/_domain/price-tiers";
+
+import {
+  PriceTierIdSchema,
+  defaultTier,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { Card } from "~/components/ui/card";
 import {
@@ -28,6 +30,12 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
 
   const steps: OnboardingStep[] = [
     {
+      id: "tier",
+      title: `Chose ${priceTiers[parsedOrDefaultTier].name} tier`,
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
+    {
       id: "signup",
       title: "Sign up completed",
       isActive: false,
@@ -37,7 +45,7 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
       id: "addorg",
       title: "Add organization",
       isActive: true,
-      icon: <InProgressStepIcon />
+      icon: <InProgressStepIcon />,
     },
     ...(parsedOrDefaultTier !== "start"
       ? [

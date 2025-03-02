@@ -9,7 +9,11 @@ import {
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
-import { PriceTierIdSchema, defaultTier  } from "~/app/_domain/price-tiers";
+import {
+  PriceTierIdSchema,
+  defaultTier,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -28,18 +32,24 @@ export default async function OnboardingPaymentPage(props: {
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
   const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
 
-
   const params = await props.params;
   const priceTierId = params.priceTierId;
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
   const parsedOrDefaultTier = parsedTier.success
     ? parsedTier.data
     : defaultTier;
- 
 
-  const mainComponent = <PostPayment stripeSession={session} tierId={parsedOrDefaultTier} />;
+  const mainComponent = (
+    <PostPayment stripeSession={session} tierId={parsedOrDefaultTier} />
+  );
 
   const steps: OnboardingStep[] = [
+    {
+      id: "tier",
+      title: `Chose ${priceTiers[parsedOrDefaultTier].name} tier`,
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
     {
       id: "signup",
       title: "Sign up completed",

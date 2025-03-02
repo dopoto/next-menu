@@ -32,11 +32,10 @@ const Step = (props: {
       </div>
       <div>
         <h3
-          className={`mt-1 text-sm text-gray-800 dark:text-gray-100 ${props.step.isActive ? "font-medium" : "font-light"} `}
+          className={`mt-1 text-sm pb-3 text-gray-800 dark:text-gray-100 ${props.step.isActive ? "font-medium" : "font-light"} `}
         >
           {props.step.title}
         </h3>
-        <p className="mb-6 text-sm text-gray-500">{props.step.subtitle}</p>
       </div>
     </div>
   );

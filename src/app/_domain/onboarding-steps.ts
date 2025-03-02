@@ -4,6 +4,5 @@ export type OnboardingStep = {
   id: string;
   isActive: boolean;
   icon: ReactNode;
-  title: string | ReactNode;
-  subtitle?: string | ReactNode;
+  title: string | ReactNode;   
 };

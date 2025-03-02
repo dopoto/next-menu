@@ -1,9 +1,10 @@
 import { SignedIn, SignedOut, SignOutButton, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
-import { defaultTier, PriceTierIdSchema } from "~/app/_domain/price-tiers";
+import { defaultTier, PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 import {
+  CompletedStepIcon,
   InProgressStepIcon,
   MultiStepper,
   UncompletedStepIcon,
@@ -26,6 +27,12 @@ export default async function SignUpPage(props: {
     : defaultTier;
 
   const steps: OnboardingStep[] = [
+    {
+      id: "tier",
+      title: `Chose ${priceTiers[parsedOrDefaultTier].name} tier`,
+      isActive: false,
+      icon: <CompletedStepIcon />,
+    },
     {
       id: "signup",
       title: "Sign up",
