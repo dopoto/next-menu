@@ -1,4 +1,4 @@
-import { SignedIn, SignedOut, SignOutButton, SignUp, UserButton } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignOutButton, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
 import { defaultTier, PriceTierIdSchema } from "~/app/_domain/price-tiers";
@@ -8,7 +8,7 @@ import {
   MultiStepper,
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
-import { Card, CardContent, CardFooter, CardHeader } from "~/components/ui/card";
+import { Card, CardFooter, CardHeader } from "~/components/ui/card";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
@@ -60,18 +60,20 @@ export default async function SignUpPage(props: {
     <>
       <SignedOut>
         <SplitScreenContainer
-          mainComponent={
-            <>
-              <SignUp
+          mainComponent={            
+              <SignUp              
                 fallbackRedirectUrl={`/onboarding/${parsedOrDefaultTier}/add-org`}
                 appearance={{
                   elements: {
                     headerTitle: "hidden",
                     headerSubtitle: "hidden",
+                    card: "w-full shadow-none",
+                    rootBox: "w-full max-w-none !p-0",
+                    cardBox: "w-full"
                   },
                 }}
-              />
-            </>
+
+              />            
           }
           secondaryComponent={<MultiStepper steps={steps} />}
           sideHeroComponent={<SideHeroCarousel />}

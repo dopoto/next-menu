@@ -3,7 +3,6 @@ import { PageSubtitle } from "./PageSubtitle";
 import { PublicTopNav } from "./PublicTopNav";
 import { PageTitle } from "./PageTitle";
 import { ThemeSwitch } from "./ThemeSwitch";
- 
 
 export function SplitScreenContainer(props: {
   title: string;
@@ -13,8 +12,11 @@ export function SplitScreenContainer(props: {
   sideHeroComponent?: ReactNode;
 }) {
   return (
-    <div className="flex min-h-full w-full min-w-0 flex-auto flex-col bg-amber-50 dark:bg-[#202027] sm:flex-row sm:justify-center">
-      <div id="mainContent" className="flex h-full w-full flex-col flex-nowrap gap-6 px-4 py-2 sm:h-auto sm:w-auto sm:p-6 md:min-w-[450px] md:p-6 relative">
+    <div className="flex min-h-full w-full min-w-0 flex-auto flex-col bg-amber-50 sm:flex-row sm:justify-center dark:bg-[#202027]">
+      <div
+        id="mainContent"
+        className="relative flex h-full w-full flex-col flex-nowrap gap-6 px-4 py-2 sm:h-auto sm:w-auto sm:min-w-[500px] sm:px-6   xl:px-36 xl:min-w-[750px]"
+      >
         <div className="py-6">
           <PublicTopNav />
         </div>
@@ -27,13 +29,15 @@ export function SplitScreenContainer(props: {
 
         {props.mainComponent}
 
-        <footer className="mt-auto pt-6 flex flex-row text-xs text-gray-400  ">
+        <footer className="mt-auto flex flex-row pt-6 text-xs text-gray-400">
           {/* TODO actual ver */}
-          <div className="my-auto">v0.0.25</div>          
-          <div className="mt-auto ml-auto"><ThemeSwitch /></div>          
+          <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v0.0.26</div>
+          <div className="mt-auto ml-auto">
+            <ThemeSwitch />
+          </div>
         </footer>
       </div>
-      <div className="relative hidden h-auto min-h-screen flex-auto items-center justify-center overflow-hidden bg-blue-900 dark:bg-blue-950 p-16 lg:flex lg:px-28">
+      <div className="relative hidden h-auto min-h-screen flex-auto items-center justify-center overflow-hidden bg-blue-900 p-16 lg:flex lg:px-28 dark:bg-blue-950">
         <svg
           className="pointer-events-none absolute inset-0"
           viewBox="0 0 960 540"

@@ -279,3 +279,9 @@ html {
 [data-radix-popper-content-wrapper] {
   /* background-color: var(--background); */
 }
+
+ /* Override Clerk CSS */
+.cl-cardBox, .cl-rootBox {
+  width: 100% !important;
+  max-width: none !important;
+}
