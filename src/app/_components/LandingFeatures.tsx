@@ -11,37 +11,37 @@ export const LandingFeatures: React.FC = () => {
       {
         title: "Advanced Analytics",
         description:
-          "Gain deeper insights with our powerful analytics dashboard. Track performance and make data-driven decisions.",
+          "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vel sem leo.",
         icon: <BarChart2 className="h-6 w-6 text-indigo-500" />,
       },
       {
         title: "Enterprise Security",
         description:
-          "Your data security is our priority. Benefit from best-in-class encryption and secure authentication.",
+          "Nunc eget tincidunt libero. Pellentesque fringilla congue nisi id lobortis.",
         icon: <Clock className="h-6 w-6 text-indigo-500" />,
       },
       {
         title: "Lightning Performance",
         description:
-          "Optimized for speed, our platform delivers results instantly, saving you valuable time and resources.",
+          "Mauris turpis lectus, finibus eget gravida a, sollicitudin sit amet risus.",
         icon: <Zap className="h-6 w-6 text-indigo-500" />,
       },
       {
         title: "Time-Saving Automation",
         description:
-          "Automate repetitive tasks and workflows to increase efficiency and reduce manual workload.",
+          "Donec ac lobortis enim, id pellentesque massa. Nulla quis enim ut elit consequat malesuada.",
         icon: <Clock className="h-6 w-6 text-indigo-500" />,
       },
       {
         title: "Team Collaboration",
         description:
-          "Foster collaboration with tools designed for effective team communication and project management.",
+          "Quisque tincidunt aliquam malesuada. Maecenas maximus purus ac metus congue viverra. ",
         icon: <Users className="h-6 w-6 text-indigo-500" />,
       },
       {
         title: "Global Accessibility",
         description:
-          "Access your workspace from anywhere in the world, on any device with internet connection.",
+          "Suspendisse tincidunt diam non risus venenatis, ac efficitur velit sodales. Aenean blandit consequat elit in pellentesque.",
         icon: <Globe className="h-6 w-6 text-indigo-500" />,
       },
     ];

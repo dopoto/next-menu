@@ -13,7 +13,7 @@ const address = "01234";
 
 export function LandingFooter() {
   return (
-    <footer>
+    <footer className="bg-background">
       {/* Main Footer Section */}
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-background">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-6">
@@ -155,7 +155,7 @@ export function LandingFooter() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm ">
-            <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v0.0.27</div>
+            <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v0.0.28</div>
               {`© ${currentYear} All rights reserved.`}
             </div>
             <div className="ml-auto">

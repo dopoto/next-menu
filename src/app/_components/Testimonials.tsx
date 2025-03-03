@@ -10,21 +10,21 @@ interface Testimonial {
 const testimonials: Testimonial[] = [
   {
     content:
-      "TheMenu has transformed how our team works. The intuitive interface and powerful features have boosted our productivity by over 40%.",
+      "Aliquam a quam rhoncus, vestibulum arcu at, tristique nisi. Proin porttitor luctus erat id maximus. Suspendisse tincidunt nec nisl eu pulvinar.",
     author: "Sarah Johnson",
     role: "CTO",
     company: "TechNova",
   },
   {
     content:
-      "We've been using TheMenu for over a year now, and it's been a game-changer for our remote team. The collaboration tools are second to none.",
+      "Curabitur et fringilla metus. Aenean vitae eros congue, convallis nisi cursus, fringilla nunc. Curabitur tristique purus cursus, fringilla turpis a, maximus justo.",
     author: "Michael Chen",
     role: "Product Manager",
     company: "Flexibyte",
   },
   {
     content:
-      "The customer support is exceptional. Any time we've had questions, the team has been responsive and helpful. Highly recommend!",
+      "Ut tristique vitae mi quis venenatis. Nulla eu blandit nunc, eget ullamcorper nibh. Nam fermentum nec lacus a dictum.",
     author: "Emily Rodriguez",
     role: "Operations Director",
     company: "Greystone Inc",

@@ -10,7 +10,6 @@ import {
   CardTitle,
 } from "~/components/ui/card";
 import { type PriceTier } from "../_domain/price-tiers";
-import { PageTitle } from "./PageTitle";
 import { PageSubtitle } from "./PageSubtitle";
 
 const getFeatureRow = (
@@ -32,6 +31,11 @@ const getFeatureRow = (
 
 const getPrice = (monthlyUsdPrice: number) => {
   if (monthlyUsdPrice === -1) return `__.__`;
+  if (monthlyUsdPrice === 0) return (
+    <div className="mt-2">
+      <span className="text-4xl font-bold">FREE</span>      
+    </div>
+  );
   return (
     <div className="mt-2">
       <span className="text-4xl font-bold">${monthlyUsdPrice.toFixed(2)}</span>
