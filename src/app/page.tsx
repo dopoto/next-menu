@@ -15,6 +15,8 @@ import { PageSubtitle } from "./_components/PageSubtitle";
  
 import { Testimonials } from "./_components/Testimonials";
 import { Pricing } from "./_components/Pricing";
+import { FAQ } from "./_components/FAQ";
+import { faqItems } from "./_domain/faq";
  
 
 export default async function HomePage() {
@@ -53,6 +55,7 @@ export default async function HomePage() {
 
       <Testimonials />
       <Pricing />
+      <FAQ items={faqItems}/>
       <ThemeSwitch />
     </div>
   );
