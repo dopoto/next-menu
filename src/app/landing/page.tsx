@@ -1,16 +1,12 @@
 "use client";
 
 import {
-  X,
   Menu,
   BarChart2,
   Zap,
   Clock,
   Users,
   Globe,
-  Check,
-  ChevronUp,
-  ChevronDown,
   Facebook,
   Instagram,
   Linkedin,
@@ -22,16 +18,14 @@ import {
   Github,
 } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
 import SvgIcon from "../_components/SvgIcons";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Button } from "~/components/ui/button";
 import { ThemeSwitch } from "../_components/ThemeSwitch";
-import { PageTitle } from "../_components/PageTitle";
-import { PageSubtitle } from "../_components/PageSubtitle";
 import { Testimonials } from "../_components/Testimonials";
 import { Pricing } from "../_components/Pricing";
 import { FAQ } from "../_components/FAQ";
+import { LandingCta } from "../_components/LandingCta";
 
 export default function LandingPage() {
   return (
@@ -41,8 +35,8 @@ export default function LandingPage() {
       <Features />
       <Testimonials />
       <Pricing />
-      <FAQ />
-      <CTA />
+      <FAQ items={[]} />
+      <LandingCta />
       <Footer
         companyName={""}
         tagline={""}
@@ -334,37 +328,6 @@ const Features: React.FC = () => {
 
 
 
-const CTA: React.FC = () => {
-  return (
-    <div className="bg-indigo-700">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:flex lg:items-center lg:justify-between lg:px-8 lg:py-16">
-        <h2 className="text-3xl font-extrabold tracking-tight text-white md:text-4xl flex flex-col">
-          <PageTitle>Ready to dive in?</PageTitle>
-          <PageSubtitle>Create a free account now!</PageSubtitle>
-          
-        </h2>
-        <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-          <div className="inline-flex rounded-md shadow">
-            <a
-              href="#"
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-white px-5 py-3 text-base font-medium text-indigo-600 hover:bg-indigo-50"
-            >
-              Get started
-            </a>
-          </div>
-          <div className="ml-3 inline-flex rounded-md shadow">
-            <a
-              href="#"
-              className="bg-opacity-60 hover:bg-opacity-70 inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-5 py-3 text-base font-medium text-white"
-            >
-              Learn more
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 type FooterLinkItem = {
   label: string;
