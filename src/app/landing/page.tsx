@@ -65,11 +65,6 @@ export interface NavItem {
   href: string;
 }
 
-export interface Feature {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-}
 
  
 
@@ -175,152 +170,9 @@ const Navbar: React.FC = () => {
   );
 };
 
-const Hero: React.FC = () => {
-  return (
-    <div className="pt-24 pb-8 md:pt-32 md:pb-16" id="hero">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="lg:grid lg:grid-cols-12 lg:gap-8">
-          <div className="sm:text-center md:mx-auto md:max-w-2xl lg:col-span-6 lg:flex lg:flex-col lg:justify-center lg:text-left">
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl lg:text-5xl xl:text-6xl">
-              <span className="block">Simplify your</span>
-              <span className="block text-indigo-600">workflow today</span>
-            </h1>
-            <p className="mt-3 text-base text-gray-500 sm:mt-5 sm:text-xl lg:text-lg xl:text-xl">
-              Boost productivity and streamline operations with our intuitive
-              platform. Designed for teams of all sizes to collaborate
-              efficiently and deliver exceptional results.
-            </p>
-            <div className="mt-8 sm:mx-auto sm:max-w-lg sm:text-center lg:mx-0 lg:text-left">
-              <Link href="/sign-up">
-                <Button className="mt-3 w-full rounded-md border border-transparent bg-indigo-600 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none sm:mt-0 sm:flex-shrink-0">
-                  Get started
-                </Button>
-              </Link>
-              <p className="mt-3 text-sm text-gray-500">
-                Start for free now - no credit card required.
-              </p>
-            </div>
-          </div>
-          <div className="relative mt-12 sm:mx-auto sm:max-w-lg lg:col-span-6 lg:mx-0 lg:mt-0 lg:flex lg:max-w-none lg:items-center">
-            <div className="relative mx-auto w-full rounded-lg shadow-lg lg:max-w-md">
-              <div className="relative block w-full overflow-hidden rounded-lg bg-white">
-                <img
-                  className="w-full"
-                  src="/api/placeholder/640/360"
-                  alt="Product screenshot"
-                />
-                <div className="absolute inset-0 flex h-full w-full items-center justify-center">
-                  <button className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-white">
-                    <svg
-                      className="h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
-const Features: React.FC = () => {
-  const features: Feature[] = [
-    {
-      title: "Advanced Analytics",
-      description:
-        "Gain deeper insights with our powerful analytics dashboard. Track performance and make data-driven decisions.",
-      icon: <BarChart2 className="h-6 w-6 text-indigo-500" />,
-    },
-    {
-      title: "Enterprise Security",
-      description:
-        "Your data security is our priority. Benefit from best-in-class encryption and secure authentication.",
-      icon: <Clock className="h-6 w-6 text-indigo-500" />,
-    },
-    {
-      title: "Lightning Performance",
-      description:
-        "Optimized for speed, our platform delivers results instantly, saving you valuable time and resources.",
-      icon: <Zap className="h-6 w-6 text-indigo-500" />,
-    },
-    {
-      title: "Time-Saving Automation",
-      description:
-        "Automate repetitive tasks and workflows to increase efficiency and reduce manual workload.",
-      icon: <Clock className="h-6 w-6 text-indigo-500" />,
-    },
-    {
-      title: "Team Collaboration",
-      description:
-        "Foster collaboration with tools designed for effective team communication and project management.",
-      icon: <Users className="h-6 w-6 text-indigo-500" />,
-    },
-    {
-      title: "Global Accessibility",
-      description:
-        "Access your workspace from anywhere in the world, on any device with internet connection.",
-      icon: <Globe className="h-6 w-6 text-indigo-500" />,
-    },
-  ];
 
-  return (
-    <div className="bg-white py-16" id="features">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="heading-label">
-            Features
-          </h2>
-          <p className="heading-main">
-            A better way to work
-          </p>
-          <p className="heading-secondary">
-            Our platform is packed with powerful features to help your team
-            succeed.
-          </p>
-        </div>
 
-        <div className="mt-16">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feature, index) => (
-              <div
-                key={index}
-                className="relative flex flex-col rounded-xl bg-white p-6 shadow-sm transition-shadow duration-300 hover:shadow-md"
-              >
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-md bg-indigo-100">
-                  {feature.icon}
-                </div>
-                <h3 className="text-lg font-medium text-gray-900">
-                  {feature.title}
-                </h3>
-                <p className="mt-2 text-base text-gray-500">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 
 

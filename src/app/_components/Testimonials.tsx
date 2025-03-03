@@ -34,7 +34,7 @@ const testimonials: Testimonial[] = [
 export const Testimonials: React.FC = () => {
   return (
     <div
-      className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 py-16"
+      className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950 py-16"
       id="testimonials"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

@@ -12,14 +12,15 @@ import { PublicTopNav } from "./_components/PublicTopNav";
 import { ThemeSwitch } from "./_components/ThemeSwitch";
 import { PageTitle } from "./_components/PageTitle";
 import { PageSubtitle } from "./_components/PageSubtitle";
- 
+
 import { Testimonials } from "./_components/Testimonials";
 import { Pricing } from "./_components/Pricing";
 import { FAQ } from "./_components/FAQ";
 import { faqItems } from "./_domain/faq";
 import { LandingCta } from "./_components/LandingCta";
 import { LandingFooter } from "./_components/LandingFooter";
- 
+import { LandingFeatures } from "./_components/LandingFeatures";
+import { LandingHero } from "./_components/LandingHero";
 
 export default async function HomePage() {
   return (
@@ -54,10 +55,11 @@ export default async function HomePage() {
           </div>
         </SignedIn>
       </>
-
+      <LandingHero />
+      <LandingFeatures />
       <Testimonials />
       <Pricing />
-      <FAQ items={faqItems}/>
+      <FAQ items={faqItems} />
       <LandingCta />
       <LandingFooter />
     </div>
