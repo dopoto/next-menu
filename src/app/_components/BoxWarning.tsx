@@ -1,4 +1,6 @@
-export function BoxWarning(props: { title: string }) {
+import type { ReactNode } from "react";
+
+export function BoxWarning(props: { title: string; ctas?: ReactNode[]; }) {
   return (
     <div className="shadow" role="alert">
       <div className="flex">
@@ -26,6 +28,11 @@ export function BoxWarning(props: { title: string }) {
             <p className="text-sm text-gray-600">
               Your message has been send to Jack
             </p>
+            {props.ctas && (
+              <div className="mt-2 flex space-x-2 pt-4">
+                {props.ctas?.map((cta, index) => <div key={index}>{cta}</div>)}
+              </div>
+            )}
           </div>
         </div>
       </div>

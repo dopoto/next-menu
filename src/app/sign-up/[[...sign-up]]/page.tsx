@@ -1,7 +1,12 @@
 import { SignedIn, SignedOut, SignOutButton, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
-import { defaultTier, PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
+import {
+  defaultTier,
+  PriceTierId,
+  PriceTierIdSchema,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 import {
   CompletedStepIcon,
@@ -12,6 +17,8 @@ import {
 import { Card, CardFooter, CardHeader } from "~/components/ui/card";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
+import { auth } from "@clerk/nextjs/server";
+import { BoxWarning } from "~/app/_components/BoxWarning";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -67,21 +74,7 @@ export default async function SignUpPage(props: {
     <>
       <SignedOut>
         <SplitScreenContainer
-          mainComponent={            
-              <SignUp              
-                fallbackRedirectUrl={`/onboarding/${parsedOrDefaultTier}/add-org`}
-                appearance={{
-                  elements: {
-                    headerTitle: "hidden",
-                    headerSubtitle: "hidden",
-                    card: "w-full shadow-none",
-                    rootBox: "w-full max-w-none !p-0",
-                    cardBox: "w-full"
-                  },
-                }}
-
-              />            
-          }
+          mainComponent={getSignUpMainComponent(parsedOrDefaultTier)}
           secondaryComponent={<MultiStepper steps={steps} />}
           sideHeroComponent={<SideHeroCarousel />}
           title={"Let's get you onboarded!"}
@@ -90,23 +83,47 @@ export default async function SignUpPage(props: {
       </SignedOut>
       <SignedIn>
         <SplitScreenContainer
-          mainComponent={
-            <Card className="bg-amber-200">
-              <CardHeader>
-                <h1>{`You're already signed up`}</h1>
-              </CardHeader>
-              <CardFooter className="flex flex-col gap-2">
-                 <Link className="w-full" href='/my'><Button className="w-full">Take me to my dashboard</Button></Link> 
-                 <SignOutButton><Button className="w-full" variant={'secondary'}>Sign out</Button></SignOutButton> 
-              </CardFooter>
-            </Card>
-          }
+          mainComponent={getSignedInMainComponent()}
           secondaryComponent={null}
           sideHeroComponent={<SideHeroCarousel />}
           title={"Sign up"}
-          subtitle={''}
+          subtitle={""}
         ></SplitScreenContainer>
       </SignedIn>
     </>
   );
 }
+
+const getSignUpMainComponent = async (tier: PriceTierId) => {
+  return (
+    <SignUp
+      fallbackRedirectUrl={`/onboarding/${tier}/add-org`}
+      appearance={{
+        elements: {
+          headerTitle: "hidden",
+          headerSubtitle: "hidden",
+        },
+      }}
+    />
+  );
+};
+
+const getSignedInMainComponent = async () => {
+  const hasOnboarded = (await auth()).sessionClaims?.metadata
+    ?.onboardingComplete;
+
+  if (hasOnboarded === true) {
+    return (
+      <BoxWarning
+        title={"You have already signed up"}
+        ctas={[
+          <Link key="retry" href={`/my`}>
+            <Button variant="outline">My dashboard</Button>
+          </Link>,
+        ]}
+      />
+    );
+  } else {
+    return getSignUpMainComponent(defaultTier);
+  }
+};

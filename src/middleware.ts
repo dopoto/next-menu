@@ -36,9 +36,9 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   // to their actual dashboard URL if possible.
   if (userId && isMyRoute(req)) {
     if (!currentLocationId || !orgId) {
-      console.log(`DBG-MIDDLEWARE Redirecting from /my to sign-in - currentLocationId: ${currentLocationId}, orgId: ${orgId}`);
-      const signInUrl = new URL("/sign-in", req.url);
-      return NextResponse.redirect(signInUrl);
+      console.log(`DBG-MIDDLEWARE [/my] Not onboarded, redirecting to /sign-up. currentLocationId: ${currentLocationId}, orgId: ${orgId}`);
+      const signUpUrl = new URL("/sign-up", req.url);
+      return NextResponse.redirect(signUpUrl);
     }
 
     const myDashboardRoute = `/${orgId}/${currentLocationId}/dashboard`;
