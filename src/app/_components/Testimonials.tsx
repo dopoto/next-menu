@@ -1,3 +1,5 @@
+import { Card } from "~/components/ui/card";
+
 interface Testimonial {
   content: string;
   author: string;
@@ -32,18 +34,18 @@ const testimonials: Testimonial[] = [
 export const Testimonials: React.FC = () => {
   return (
     <div
-      className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 py-16"
+      className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-900 dark:via-purple-900 dark:to-pink-900 py-16"
       id="testimonials"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">
+          <h2 className="heading-label">
             Testimonials
           </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="heading-main">
             Trusted by businesses worldwide
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-gray-500">
+          <p className="heading-secondary">
             {
               "Don't just take our word for it — hear what our customers have to say."
             }
@@ -52,16 +54,16 @@ export const Testimonials: React.FC = () => {
 
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {testimonials.map((testimonial, index) => (
-            <div
+            <Card
               key={index}
-              className="flex h-full flex-col rounded-xl bg-white p-6 shadow-sm"
+              className="flex h-full flex-col rounded-xl bg-card p-6 shadow-sm"
             >
               <div className="flex-grow">
                 <p className="text-gray-600 italic">&quot;{testimonial.content}&quot;</p>
               </div>
               <div className="mt-6 flex items-center">
                 <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {testimonial.author}
                   </p>
                   <p className="text-sm text-gray-500">
@@ -69,7 +71,7 @@ export const Testimonials: React.FC = () => {
                   </p>
                 </div>
               </div>
-            </div>
+            </Card>
           ))}
         </div>
       </div>

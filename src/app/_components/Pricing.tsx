@@ -3,16 +3,16 @@ import { PricingCard } from "./PricingCard";
 
 export const Pricing: React.FC = () => {
   return (
-    <div className="bg-white py-16" id="pricing">
+    <div className="bg-background py-16" id="pricing">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">
+          <h2 className="heading-label">
             Pricing
           </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="heading-main">
             Plans for teams of all sizes
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-gray-500">
+          <p className="heading-secondary">
             {
               "Choose the perfect plan for your needs. Always know what you'll pay."
             }

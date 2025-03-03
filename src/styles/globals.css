@@ -285,3 +285,15 @@ html {
   width: 100% !important;
   max-width: none !important;
 }
+
+@layer utilities {
+  .heading-label {
+    @apply text-base font-semibold tracking-wide text-indigo-600 dark:text-indigo-200 uppercase;
+  }
+  .heading-main {
+    @apply mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900  dark:text-white sm:text-4xl;
+  }
+  .heading-secondary {
+    @apply mx-auto mt-4 max-w-2xl text-xl text-gray-500  dark:text-gray-300 ;
+  }
+}

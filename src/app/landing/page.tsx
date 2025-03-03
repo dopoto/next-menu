@@ -291,13 +291,13 @@ const Features: React.FC = () => {
     <div className="bg-white py-16" id="features">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">
+          <h2 className="heading-label">
             Features
           </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          <p className="heading-main">
             A better way to work
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-gray-500">
+          <p className="heading-secondary">
             Our platform is packed with powerful features to help your team
             succeed.
           </p>
