@@ -11,6 +11,7 @@ import {
 } from "~/components/ui/card";
 import { type PriceTier } from "../_domain/price-tiers";
 import { PageSubtitle } from "./PageSubtitle";
+import { PricingCardCta } from "./PricingCardCta";
 
 const getFeatureRow = (
   singularName: string,
@@ -78,17 +79,11 @@ export function PricingCard(props: { tier: PriceTier }) {
         <div className="flex flex-col flex-nowrap gap-2 text-sm">
           {getFeatureRow("location", "locations", locations)}
           {getFeatureRow("menu", "menus", menus)}
-          {getFeatureRow("staff members", "staff members", staffMembers)}
-      
+          {getFeatureRow("staff members", "staff members", staffMembers)}      
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between sticky bottom-0 bg-white"> 
-        <Link href={`/sign-up?tier=${id}`} className="w-full ">
-          {/* TODO show different CTA if user is logged in already */}
-          <Button className="w-full" variant="default">
-            Get started
-          </Button>
-        </Link>
+      <CardFooter className="flex justify-between sticky bottom-0"> 
+        <PricingCardCta tierId={id} />
       </CardFooter>
     </Card>
   );

@@ -12,37 +12,37 @@ export const LandingFeatures: React.FC = () => {
         title: "Advanced Analytics",
         description:
           "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vel sem leo.",
-        icon: <BarChart2 className="h-6 w-6 text-indigo-500" />,
+        icon: <BarChart2 className="h-6 w-6 text-pop" />,
       },
       {
         title: "Enterprise Security",
         description:
           "Nunc eget tincidunt libero. Pellentesque fringilla congue nisi id lobortis.",
-        icon: <Clock className="h-6 w-6 text-indigo-500" />,
+        icon: <Clock className="h-6 w-6 text-pop" />,
       },
       {
         title: "Lightning Performance",
         description:
           "Mauris turpis lectus, finibus eget gravida a, sollicitudin sit amet risus.",
-        icon: <Zap className="h-6 w-6 text-indigo-500" />,
+        icon: <Zap className="h-6 w-6 text-pop" />,
       },
       {
         title: "Time-Saving Automation",
         description:
           "Donec ac lobortis enim, id pellentesque massa. Nulla quis enim ut elit consequat malesuada.",
-        icon: <Clock className="h-6 w-6 text-indigo-500" />,
+        icon: <Clock className="h-6 w-6 text-pop" />,
       },
       {
         title: "Team Collaboration",
         description:
           "Quisque tincidunt aliquam malesuada. Maecenas maximus purus ac metus congue viverra. ",
-        icon: <Users className="h-6 w-6 text-indigo-500" />,
+        icon: <Users className="h-6 w-6 text-pop" />,
       },
       {
         title: "Global Accessibility",
         description:
           "Suspendisse tincidunt diam non risus venenatis, ac efficitur velit sodales. Aenean blandit consequat elit in pellentesque.",
-        icon: <Globe className="h-6 w-6 text-indigo-500" />,
+        icon: <Globe className="h-6 w-6 text-pop" />,
       },
     ];
   

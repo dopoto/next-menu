@@ -180,6 +180,7 @@ html {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.87 0 0);
+  --pop: oklch(0.511 0.262 276.966);
 }
 
 /*
@@ -219,6 +220,7 @@ html {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(0.269 0 0);
   --sidebar-ring: oklch(0.439 0 0);
+  --pop: oklch(0.87 0.065 274.039);
 }
 
 /*
@@ -262,6 +264,7 @@ html {
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
+  --color-pop: var(--pop)
 }
 
 /*
@@ -290,7 +293,7 @@ html {
 
 @layer utilities {
   .heading-label {
-    @apply text-base font-semibold tracking-wide text-indigo-600 uppercase dark:text-indigo-200;
+    @apply text-base font-semibold tracking-wide text-pop uppercase;
   }
   .heading-main {
     @apply mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white;

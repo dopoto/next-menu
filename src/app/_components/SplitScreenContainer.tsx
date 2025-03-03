@@ -3,6 +3,7 @@ import { PageSubtitle } from "./PageSubtitle";
 import { PublicTopNav } from "./PublicTopNav";
 import { PageTitle } from "./PageTitle";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { getAppVersion } from "../_utils/app-version-utils";
 
 export function SplitScreenContainer(props: {
   title: string;
@@ -31,7 +32,7 @@ export function SplitScreenContainer(props: {
 
         <footer className="mt-auto flex flex-row pt-6 text-xs text-gray-400">
           {/* TODO actual ver */}
-          <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v0.0.28</div>
+          <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span>  v{getAppVersion()}</div>
           <div className="mt-auto ml-auto">
             <ThemeSwitch />
           </div>

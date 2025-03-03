@@ -2,6 +2,7 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 import SvgIcon from "./SvgIcons";
 import { ThemeSwitch } from "./ThemeSwitch";
+import { getAppVersion } from "../_utils/app-version-utils";
 
 const currentYear = new Date().getFullYear();
 
@@ -155,7 +156,7 @@ export function LandingFooter() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm ">
-            <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v0.0.28</div>
+            <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v{getAppVersion()}</div>
               {`© ${currentYear} All rights reserved.`}
             </div>
             <div className="ml-auto">

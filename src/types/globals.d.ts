@@ -3,7 +3,7 @@ export {}
 declare global {
   interface CustomJwtSessionClaims {
     metadata: {
-      tier: PriceTierId,
+      tier: string,
       onboardingComplete: boolean,
       orgName: string,
       currentLocationId: string,
