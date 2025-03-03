@@ -36,7 +36,7 @@ export default async function HomePage() {
         <SignedOut>
           <div className="flex w-full flex-col justify-center gap-3 align-middle">
             <div className="text-center">
-              <SignInButton />  
+              <SignInButton  />  
             </div>
           </div>
         </SignedOut>
