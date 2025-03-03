@@ -18,6 +18,7 @@ import { Pricing } from "./_components/Pricing";
 import { FAQ } from "./_components/FAQ";
 import { faqItems } from "./_domain/faq";
 import { LandingCta } from "./_components/LandingCta";
+import { LandingFooter } from "./_components/LandingFooter";
  
 
 export default async function HomePage() {
@@ -58,7 +59,7 @@ export default async function HomePage() {
       <Pricing />
       <FAQ items={faqItems}/>
       <LandingCta />
-      <ThemeSwitch />
+      <LandingFooter />
     </div>
   );
 }
