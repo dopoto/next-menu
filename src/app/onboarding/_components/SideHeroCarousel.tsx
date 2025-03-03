@@ -5,7 +5,6 @@ import { Hero1 } from "~/app/_components/Hero1";
 import { Hero2 } from "~/app/_components/Hero2";
 import { Hero3 } from "~/app/_components/Hero3";
 import { Hero4 } from "~/app/_components/Hero4";
-import { Card, CardContent } from "~/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem } from "~/components/ui/carousel";
 import type { CarouselApi } from "~/components/ui/carousel";
 

@@ -1,9 +1,9 @@
-import { SignedIn, SignedOut, SignOutButton, SignUp } from "@clerk/nextjs";
+import { SignedIn, SignedOut, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
 import {
   defaultTier,
-  PriceTierId,
+  type PriceTierId,
   PriceTierIdSchema,
   priceTiers,
 } from "~/app/_domain/price-tiers";
@@ -14,7 +14,6 @@ import {
   MultiStepper,
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
-import { Card, CardFooter, CardHeader } from "~/components/ui/card";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { auth } from "@clerk/nextjs/server";

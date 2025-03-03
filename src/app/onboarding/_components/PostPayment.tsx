@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type Stripe from "stripe";
-import { PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 import {
   Card,
@@ -59,7 +59,6 @@ export const OrderComplete = (props: {
     customer_details,
     amount_total,
     currency,
-    payment_status,
     created,
     mode,
     subscription,

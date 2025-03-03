@@ -1,6 +1,6 @@
 "use client";
 
-import { useClerk, UserButton, useUser, useOrganization } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser  } from "@clerk/nextjs";
 import { ChevronsUpDown } from "lucide-react";
 import {
   SidebarMenu,

@@ -1,15 +1,6 @@
 "use client";
 
 import {
-  BookOpen,
-  Bot,
-  Frame,
-  Map,
-  PieChart,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
-import {
   Sidebar,
   SidebarHeader,
   SidebarContent,

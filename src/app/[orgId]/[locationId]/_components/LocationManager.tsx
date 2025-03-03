@@ -1,16 +1,13 @@
 "use client";
 
 import * as React from "react";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import { ChevronsUpDown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
   DropdownMenuContent,
   DropdownMenuLabel,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
 } from "@radix-ui/react-dropdown-menu";
-import { DropdownMenuShortcut } from "~/components/ui/dropdown-menu";
 import {
   useSidebar,
   SidebarMenu,
@@ -53,7 +50,7 @@ export function LocationManager() {
           >
             <DropdownMenuLabel className="text-muted-foreground">
               <div className="w-full bg-amber-50">TODO</div>
-            </DropdownMenuLabel>            
+            </DropdownMenuLabel>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
