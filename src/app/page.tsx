@@ -12,11 +12,14 @@ import { PublicTopNav } from "./_components/PublicTopNav";
 import { ThemeSwitch } from "./_components/ThemeSwitch";
 import { PageTitle } from "./_components/PageTitle";
 import { PageSubtitle } from "./_components/PageSubtitle";
+ 
+import { Testimonials } from "./_components/Testimonials";
 import { Pricing } from "./_components/Pricing";
+ 
 
 export default async function HomePage() {
   return (
-    <div className="flex flex-col flex-nowrap items-center justify-center gap-4 p-5">
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <PublicTopNav>
         <div className="ml-auto">
           <SignedIn>
@@ -27,16 +30,14 @@ export default async function HomePage() {
 
       <SignedOut>
         <PageTitle>Welcome!</PageTitle>
-        <PageSubtitle>
-          Please sign in or choose a tier to continue
-        </PageSubtitle>
+        <PageSubtitle>Please sign in or choose a tier to continue</PageSubtitle>
       </SignedOut>
 
       <>
         <SignedOut>
           <div className="flex w-full flex-col justify-center gap-3 align-middle">
             <div className="text-center">
-              <SignInButton  />  
+              <SignInButton />
             </div>
           </div>
         </SignedOut>
@@ -50,8 +51,8 @@ export default async function HomePage() {
         </SignedIn>
       </>
 
+      <Testimonials />
       <Pricing />
-
       <ThemeSwitch />
     </div>
   );

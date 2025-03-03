@@ -4,7 +4,8 @@ import { env } from "~/env";
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
   z.literal("pro"),
-  z.literal("custom"),
+  z.literal("enterprise"),
+  z.literal("custom1"),
 ]);
 
 export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
@@ -21,11 +22,12 @@ export type PriceTier = {
   locations: number;
   menus: number;
   staffMembers: number;
-  isEnabled: boolean;
+  isPopular: boolean;
+  isPublic: boolean;
 };
 
 export const priceTiers: Record<PriceTierId, PriceTier> = {
-  start: {    
+  start: {
     id: "start",
     name: "Starter",
     description: "Takes a minute to get started",
@@ -34,8 +36,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     staffMembers: 0,
     monthlyUsdPrice: 0,
     yearlyUsdPrice: 0,
-    isEnabled: true,
-
+    isPublic: true,
+    isPopular: false
   },
   pro: {
     id: "pro",
@@ -47,17 +49,31 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     staffMembers: 10,
     monthlyUsdPrice: 6,
     yearlyUsdPrice: 5,
-    isEnabled: true,
+    isPublic: true,
+    isPopular: true
   },
-  custom: {
-    id: "custom",
+  enterprise: {
+    id: "enterprise",
     name: "Enterprise",
     description: "Ready for large businesses",
+    locations: 100,
+    menus: 100,
+    staffMembers: 100,
+    monthlyUsdPrice: 59,
+    yearlyUsdPrice: 5900,
+    isPublic: true,
+    isPopular: false
+  },
+  custom1: {
+    id: "custom1",
+    name: "Custom 1",
+    description: "A custom plan",
     locations: -1,
     menus: -1,
     staffMembers: -1,
     monthlyUsdPrice: -1,
     yearlyUsdPrice: -1,
-    isEnabled: false,
+    isPublic: false,
+    isPopular: false
   },
 };

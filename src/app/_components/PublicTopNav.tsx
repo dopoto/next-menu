@@ -8,7 +8,7 @@ export function PublicTopNav(props: { children?: ReactNode }) {
   return (
     <nav className="flex w-full ">
       <Link href="/">
-        <SvgIcon kind="logo" size={"10"} className="fill-rose-700" />
+        <SvgIcon kind="logo" size={"10"} className="fill-black dark:fill-white" />
       </Link>
       {props.children}
     </nav>

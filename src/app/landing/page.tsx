@@ -27,6 +27,10 @@ import SvgIcon from "../_components/SvgIcons";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
 import { Button } from "~/components/ui/button";
 import { ThemeSwitch } from "../_components/ThemeSwitch";
+import { PageTitle } from "../_components/PageTitle";
+import { PageSubtitle } from "../_components/PageSubtitle";
+import { Testimonials } from "../_components/Testimonials";
+import { Pricing } from "../_components/Pricing";
 
 export default function LandingPage() {
   return (
@@ -72,22 +76,9 @@ export interface Feature {
   icon: React.ReactNode;
 }
 
-export interface Testimonial {
-  content: string;
-  author: string;
-  role: string;
-  company: string;
-  imageUrl: string;
-}
+ 
 
-export interface PricingTier {
-  name: string;
-  price: string;
-  description: string;
-  features: string[];
-  cta: string;
-  featured?: boolean;
-}
+
 
 export interface FAQItem {
   question: string;
@@ -340,205 +331,9 @@ const Features: React.FC = () => {
   );
 };
 
-const Testimonials: React.FC = () => {
-  const testimonials: Testimonial[] = [
-    {
-      content:
-        "SaaSly has transformed how our team works. The intuitive interface and powerful features have boosted our productivity by over 40%.",
-      author: "Sarah Johnson",
-      role: "CTO",
-      company: "TechNova",
-      imageUrl: "/api/placeholder/64/64",
-    },
-    {
-      content:
-        "We've been using SaaSly for over a year now, and it's been a game-changer for our remote team. The collaboration tools are second to none.",
-      author: "Michael Chen",
-      role: "Product Manager",
-      company: "Flexibyte",
-      imageUrl: "/api/placeholder/64/64",
-    },
-    {
-      content:
-        "The customer support is exceptional. Any time we've had questions, the team has been responsive and helpful. Highly recommend!",
-      author: "Emily Rodriguez",
-      role: "Operations Director",
-      company: "Greystone Inc",
-      imageUrl: "/api/placeholder/64/64",
-    },
-  ];
 
-  return (
-    <div
-      className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 py-16"
-      id="testimonials"
-    >
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">
-            Testimonials
-          </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Trusted by businesses worldwide
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-gray-500">
-            {
-              "Don't just take our word for it — hear what our customers have to say."
-            }
-          </p>
-        </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-3">
-          {testimonials.map((testimonial, index) => (
-            <div
-              key={index}
-              className="flex h-full flex-col rounded-xl bg-white p-6 shadow-sm"
-            >
-              <div className="flex-grow">
-                <p className="text-gray-600 italic">"{testimonial.content}"</p>
-              </div>
-              <div className="mt-6 flex items-center">
-                <div className="flex-shrink-0">TODO IMAGE</div>
-                <div className="ml-3">
-                  <p className="text-sm font-medium text-gray-900">
-                    {testimonial.author}
-                  </p>
-                  <p className="text-sm text-gray-500">
-                    {testimonial.role}, {testimonial.company}
-                  </p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
-const Pricing: React.FC = () => {
-  const pricingTiers: PricingTier[] = [
-    {
-      name: "Starter",
-      price: "$29",
-      description:
-        "Perfect for small teams or individuals just getting started.",
-      features: [
-        "Up to 5 users",
-        "5GB storage",
-        "Basic analytics",
-        "Email support",
-        "24-hour response time",
-      ],
-      cta: "Start with Starter",
-    },
-    {
-      name: "Professional",
-      price: "$79",
-      description: "Ideal for growing businesses with more demanding needs.",
-      features: [
-        "Up to 20 users",
-        "50GB storage",
-        "Advanced analytics",
-        "Priority email support",
-        "12-hour response time",
-        "API access",
-        "Advanced integrations",
-      ],
-      cta: "Try Professional",
-      featured: true,
-    },
-    {
-      name: "Enterprise",
-      price: "$199",
-      description:
-        "For large organizations that need the highest level of service.",
-      features: [
-        "Unlimited users",
-        "500GB storage",
-        "Custom analytics",
-        "Dedicated support manager",
-        "4-hour response time",
-        "Full API access",
-        "Custom integrations",
-        "On-premise deployment option",
-        "Advanced security features",
-      ],
-      cta: "Contact Sales",
-    },
-  ];
-
-  return (
-    <div className="bg-white py-16" id="pricing">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="text-base font-semibold tracking-wide text-indigo-600 uppercase">
-            Pricing
-          </h2>
-          <p className="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-            Plans for teams of all sizes
-          </p>
-          <p className="mx-auto mt-4 max-w-2xl text-xl text-gray-500">
-            {
-              "Choose the perfect plan for your needs. Always know what you'll pay."
-            }
-          </p>
-        </div>
-
-        <div className="mt-16 space-y-12 lg:grid lg:grid-cols-3 lg:space-y-0 lg:gap-x-8">
-          {pricingTiers.map((tier) => (
-            <div
-              key={tier.name}
-              className={`relative flex flex-col rounded-2xl border p-8 shadow-sm ${
-                tier.featured
-                  ? "border-indigo-600 ring-2 ring-indigo-600"
-                  : "border-gray-200"
-              }`}
-            >
-              {tier.featured && (
-                <div className="absolute -top-5 left-1/2 -translate-x-1/2 transform rounded-full bg-indigo-600 px-4 py-1 text-sm font-semibold text-white">
-                  Most Popular
-                </div>
-              )}
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold text-gray-900">
-                  {tier.name}
-                </h3>
-                <p className="mt-4 flex items-baseline text-gray-900">
-                  <span className="text-4xl font-extrabold tracking-tight">
-                    {tier.price}
-                  </span>
-                  <span className="ml-1 text-xl font-semibold">/month</span>
-                </p>
-                <p className="mt-6 text-gray-500">{tier.description}</p>
-
-                <ul role="list" className="mt-6 space-y-6">
-                  {tier.features.map((feature) => (
-                    <li key={feature} className="flex">
-                      <Check className="h-5 w-5 flex-shrink-0 text-green-500" />
-                      <span className="ml-3 text-gray-500">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <a
-                href="#"
-                className={`mt-8 block w-full rounded-md border border-transparent px-6 py-3 text-center font-medium ${
-                  tier.featured
-                    ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                    : "bg-indigo-50 text-indigo-700 hover:bg-indigo-100"
-                }`}
-              >
-                {tier.cta}
-              </a>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
 
 const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -629,11 +424,10 @@ const CTA: React.FC = () => {
   return (
     <div className="bg-indigo-700">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:flex lg:items-center lg:justify-between lg:px-8 lg:py-16">
-        <h2 className="text-3xl font-extrabold tracking-tight text-white md:text-4xl">
-          <span className="block">Ready to dive in?</span>
-          <span className="block text-indigo-200">
-            Start your free trial today.
-          </span>
+        <h2 className="text-3xl font-extrabold tracking-tight text-white md:text-4xl flex flex-col">
+          <PageTitle>Ready to dive in?</PageTitle>
+          <PageSubtitle>Create a free account now!</PageSubtitle>
+          
         </h2>
         <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
           <div className="inline-flex rounded-md shadow">

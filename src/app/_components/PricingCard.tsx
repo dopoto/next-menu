@@ -13,9 +13,21 @@ import { type PriceTier } from "../_domain/price-tiers";
 import { PageTitle } from "./PageTitle";
 import { PageSubtitle } from "./PageSubtitle";
 
-const getFeatureText = (singularName: string, pluralName: string, max: number) => {
+const getFeatureRow = (
+  singularName: string,
+  pluralName: string,
+  max: number,
+) => {
   if (max === -1) return `Please contact us`;
-  return `${max} ${max > 1 ? pluralName : singularName}`;
+  if (max === 0) return null;
+
+  return (
+    <div className="flex flex-row items-center gap-1">
+      <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
+      <div>{`${max} ${max > 1 ? pluralName : singularName}`}</div>
+    </div>
+  );
+  
 };
 
 const getPrice = (monthlyUsdPrice: number) => {
@@ -39,19 +51,19 @@ export function PricingCard(props: { tier: PriceTier }) {
     locations,
     menus,
     staffMembers,
-    isEnabled,
+    isPopular,
   } = props.tier;
 
   return (
-    <Card className={`w-[350px] ${!isEnabled ? "opacity-50" : ""}`}>
-      <CardHeader className={`relative`}>
-        {!isEnabled && (
+    <Card>
+      <CardHeader className={`relative flex flex-col h-full`}>
+        {isPopular && (
           <div className="absolute top-5 -right-2 z-10 rotate-4 transform bg-red-700 px-2 py-1 text-sm font-medium text-white shadow-md">
-            Coming soon!
+            Our most popular plan!
           </div>
         )}
-        <CardTitle>
-          <PageTitle>{name}</PageTitle>
+        <CardTitle className='font-light text-3xl'>
+          {name}
         </CardTitle>
         <div className="text-4xl font-medium">{getPrice(monthlyUsdPrice)}</div>
         <CardDescription>
@@ -60,33 +72,19 @@ export function PricingCard(props: { tier: PriceTier }) {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col flex-nowrap gap-2 text-sm">
-          <div className="flex flex-row items-center gap-1">
-            <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-            <div>{getFeatureText("location", "locations",locations)}</div>
-          </div>
-          <div className="flex flex-row items-center gap-1">
-            <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-            <div>{getFeatureText("menu","menus", menus)}</div>
-          </div>
-          <div className="flex flex-row items-center gap-1">
-            <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-            <div>{getFeatureText("staff members", "staff members", staffMembers)}</div>
-          </div>
+          {getFeatureRow("location", "locations", locations)}
+          {getFeatureRow("menu", "menus", menus)}
+          {getFeatureRow("staff members", "staff members", staffMembers)}
+      
         </div>
       </CardContent>
-      <CardFooter className="flex justify-between">
-        {isEnabled ? (
-          <Link href={`/sign-up?tier=${id}`} className="w-full">
-            {/* TODO show different CTA if user is logged in already */}
-            <Button className="w-full" variant="default">
-              Get started
-            </Button>
-          </Link>
-        ) : (
-          <Button disabled className="w-full" variant="outline">
+      <CardFooter className="flex justify-between sticky bottom-0 bg-white"> 
+        <Link href={`/sign-up?tier=${id}`} className="w-full ">
+          {/* TODO show different CTA if user is logged in already */}
+          <Button className="w-full" variant="default">
             Get started
           </Button>
-        )}
+        </Link>
       </CardFooter>
     </Card>
   );
