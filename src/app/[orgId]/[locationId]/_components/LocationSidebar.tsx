@@ -18,9 +18,9 @@ import { LocationManager } from "./LocationManager";
 import { NavUser } from "./NavUser";
 import Link from "next/link";
 import SvgIcon from "~/app/_components/SvgIcons";
+import { useParams, usePathname } from "next/navigation";
 
 const data = {
-  versions: ["1.0.1", "1.1.0-alpha", "2.0.0-beta1"],
   navMain: [
     {
       title: "Dashboard",
@@ -28,7 +28,7 @@ const data = {
       items: [
         {
           title: "Real-time orders",
-          url: "#",
+          url: "dashboard/orders",
         },
         
       ],
@@ -39,7 +39,7 @@ const data = {
       items: [
         {
           title: "Menus",
-          url: "#",
+          url: "manage/menus",
         },
       ],
     },
@@ -50,6 +50,27 @@ const data = {
 export function LocationSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+
+  const params = useParams()
+  const pathname = usePathname()
+  const { orgId, locationId } = params as { orgId: string; locationId: string }
+
+  // Function to check if a menu item is active
+  const isActive = (url: string) => {
+    // For root URLs like "#", they shouldn't match as active
+    if (url === "#") return false
+
+    // Construct the full path to compare with current pathname
+    const fullPath = `/${orgId}/${locationId}/${url}`
+    return pathname === fullPath
+  }
+
+  // Function to build the correct URL with dynamic segments
+  const buildUrl = (url: string) => {
+    if (url === "#") return "#"
+    return `/${orgId}/${locationId}/${url}`
+  }
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <div className="flex w-full flex-row p-2 pt-3 justify-center">
@@ -70,8 +91,10 @@ export function LocationSidebar({
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={item.isActive}>
-                      <a href={item.url}>{item.title}</a>
+                     <SidebarMenuButton asChild isActive={isActive(item.url)}> 
+                    {/* <SidebarMenuButton asChild isActive={window.location.pathname.includes(`/${props.orgId}/${props.locationId}/${item.url}`)}> */}
+                      {/* <a title={`${window.location.pathname}|${item.url}`} href={`/${props.orgId}/${props.locationId}/${item.url}`}>{item.title}</a> */}
+                      <Link href={buildUrl(item.url)}>{item.title}</Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

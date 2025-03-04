@@ -52,6 +52,12 @@ html {
   scroll-behavior: smooth;
 }
 
+
+.workflow {
+  line-height: 33px;
+  padding-left: 12px;
+}
+
 .modal-backdrop {
   position: absolute;
   top: 0;
@@ -180,7 +186,10 @@ html {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.87 0 0);
-  --pop: oklch(0.511 0.262 276.966);
+  --pop: var(--color-blue-800, currentColor)
+  /* oklch(0.379 0.146 265.522);  */
+   /* bg-blue-900 */
+  /* oklch(0.511 0.262 276.966); */
 }
 
 /*
