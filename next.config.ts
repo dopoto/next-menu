@@ -4,19 +4,50 @@ import { withSentryConfig } from "@sentry/nextjs";
  * for Docker builds.
  */
 import { type NextConfig } from "next";
-import "./src/env.js";
+import { env } from "~/env";
+ 
+
+const cspHeader = `
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data: img.clerk.com;
+    font-src 'self';
+    object-src 'none';
+    worker-src blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
+    connect-src 'self' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event;
+    base-uri 'self';
+    form-action 'self';
+    frame-ancestors 'none';
+    upgrade-insecure-requests;
+`;
 
 const config: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+
   eslint: {
     ignoreDuringBuilds: true,
   },
 
+  async headers() {
+    return [
+      {
+        source: '/(.*)',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: cspHeader.replace(/\n/g, ''),
+          },
+        ],
+      },
+    ]
+  },
+  
   webpack: (config: { cache: { type: string } }) => {
     config.cache = {
-      type: "memory", 
+      type: "memory",
     };
 
     return config;

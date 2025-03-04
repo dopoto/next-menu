@@ -21,7 +21,7 @@ export const LandingHero: React.FC = () => {
             </p>
             <div className="mt-4 sm:mx-auto sm:max-w-lg sm:text-center lg:mx-0 lg:text-left">
               <SignedIn>
-                <Link href="/sign-up">
+                <Link href="/my">
                   <Button>Go to my account</Button>
                 </Link>
               </SignedIn>
@@ -37,10 +37,11 @@ export const LandingHero: React.FC = () => {
           </div>
           <div className="relative mt-12 flex items-center justify-center sm:mx-auto sm:max-w-lg lg:col-span-6 lg:mx-0 lg:mt-0">
             <Image
+              priority={false}
               width={409}
               height={409}
               alt=""
-              src="/images/landing-hero-light.png"
+              src="/images/landing-hero.png"
             />
           </div>
         </div>

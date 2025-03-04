@@ -5,11 +5,6 @@ export interface FAQItem {
 
 export const faqItems: FAQItem[] = [
   {
-    question: "How does the 14-day trial work?",
-    answer:
-      "You can use all features of our platform for 14 days without entering any payment information. At the end of the trial, you can choose a plan that fits your needs or your account will automatically switch to our free tier with limited features.",
-  },
-  {
     question:
       "Do you offer discounts for non-profits or educational institutions?",
     answer:

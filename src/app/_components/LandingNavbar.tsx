@@ -90,8 +90,8 @@ export function LandingNavbar(props: { navItems: NavItem[] }) {
               </a>
             ))}
           </div>
-          <div className="border-t border-gray-200 pt-4 pb-3">
-            <div className="flex items-center gap-2 px-4">
+          <div className="border-b border-gray-200 pt-4 pb-3">
+            <div className="flex items-end gap-2 px-4">
               <SignedOut>
                 <SignInButton>
                   <Button variant={"secondary"}>Log in</Button>
