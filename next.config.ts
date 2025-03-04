@@ -5,17 +5,17 @@ import { withSentryConfig } from "@sentry/nextjs";
  */
 import { type NextConfig } from "next";
 import { env } from "~/env";
- 
 
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://www.googletagmanager.com;
+    script-src-elem 'self' 'unsafe-inline' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://www.googletagmanager.com;
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: img.clerk.com;
+    img-src 'self' blob: data: img.clerk.com https://www.googletagmanager.com;
     font-src 'self';
     object-src 'none';
     worker-src blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
-    connect-src 'self' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event;
+    connect-src 'self' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
@@ -34,17 +34,17 @@ const config: NextConfig = {
   async headers() {
     return [
       {
-        source: '/(.*)',
+        source: "/(.*)",
         headers: [
           {
-            key: 'Content-Security-Policy',
-            value: cspHeader.replace(/\n/g, ''),
+            key: "Content-Security-Policy",
+            value: cspHeader.replace(/\n/g, ""),
           },
         ],
       },
-    ]
+    ];
   },
-  
+
   webpack: (config: { cache: { type: string } }) => {
     config.cache = {
       type: "memory",
