@@ -11,7 +11,7 @@ export async function PricingCardCta(props: { tierId: PriceTierId }) {
     if (currentUserTier === props.tierId) {
       return (
         <div className="flex flex-col w-full gap-1">
-          <span className="text-xs text-pop text-center">You are already on this tier</span>
+          <span className="text-xs text-pop text-center">You are already on this plan</span>
           <Link href={`/my`} className="w-full">
             <Button className="w-full" variant="default">
               Go to my account
