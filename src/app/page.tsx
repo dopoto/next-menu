@@ -1,6 +1,6 @@
-import { Testimonials } from "./_components/Testimonials";
-import { Pricing } from "./_components/Pricing";
-import { FAQ } from "./_components/FAQ";
+import { LandingTestimonials } from "./_components/LandingTestimonials";
+import { LandingPricing } from "./_components/LandingPricing";
+import { LandingFAQ } from "./_components/LandingFAQ";
 import { faqItems } from "./_domain/faq";
 import { LandingCta } from "./_components/LandingCta";
 import { LandingFooter } from "./_components/LandingFooter";
@@ -11,13 +11,13 @@ import { navItems } from "./_domain/nav-items";
 
 export default async function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">       
+    <div className="min-h-screen bg-gradient-to-b from-white to-gray-50">
       <LandingNavbar navItems={navItems} />
       <LandingHero />
       <LandingFeatures />
-      <Testimonials />
-      <Pricing />
-      <FAQ items={faqItems} />
+      <LandingTestimonials />
+      <LandingPricing />
+      <LandingFAQ items={faqItems} />
       <LandingCta />
       <LandingFooter />
     </div>

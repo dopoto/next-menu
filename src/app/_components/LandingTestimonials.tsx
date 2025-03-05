@@ -1,4 +1,6 @@
 import { Card } from "~/components/ui/card";
+import { LandingSectionTitle } from "./LandingSectionTitle";
+import { sections } from "../_domain/landing-content";
 
 interface Testimonial {
   content: string;
@@ -30,28 +32,20 @@ const testimonials: Testimonial[] = [
     company: "Greystone Inc",
   },
 ];
+ const { label, title, secondary } = sections.testimonials!.header;
 
-export const Testimonials: React.FC = () => {
+export const LandingTestimonials: React.FC = () => {
   return (
     <div
       className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950 py-16 scroll-mt-[100px]"
       id="testimonials"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="heading-label">
-            Testimonials
-          </h2>
-          <p className="heading-main">
-            Trusted by businesses worldwide
-          </p>
-          <p className="heading-secondary">
-            {
-              "Don't just take our word for it — hear what our customers have to say."
-            }
-          </p>
-        </div>
-
+         <LandingSectionTitle
+          label={label}
+          title={title}
+          secondary={secondary}
+        />
         <div className="mt-16 grid gap-8 md:grid-cols-3">
           {testimonials.map((testimonial, index) => (
             <Card

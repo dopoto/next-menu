@@ -58,6 +58,8 @@ html {
   padding-left: 12px;
 }
 
+ /* TODO CLEANUP */
+
 .modal-backdrop {
   position: absolute;
   top: 0;
