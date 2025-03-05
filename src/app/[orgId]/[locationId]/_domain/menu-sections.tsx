@@ -16,13 +16,13 @@ export const menuItems: MenuItem[] = [
   {
     icon: <LayoutDashboard size={16} />,
     title: "Dashboard",
-    url: "dashboard",
+    url: "",
     parentId: "dashboard",
   },
   {
     icon: <BetweenHorizontalStart size={16} />,
     title: "Real-time orders",
-    url: "dashboard/orders",
+    url: "orders",
     parentId: "dashboard",
   },
   {

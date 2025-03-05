@@ -42,7 +42,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       return NextResponse.redirect(signUpUrl);
     }
 
-    const myDashboardRoute = `/${orgId}/${currentLocationId}/dashboard`;
+    const myDashboardRoute = `/${orgId}/${currentLocationId}`;
     console.log(`DBG-MIDDLEWARE Redirecting from /my to ${myDashboardRoute}`);
     const myDashboardRouteUrl = new URL(myDashboardRoute, req.url);
     return NextResponse.redirect(myDashboardRouteUrl);
