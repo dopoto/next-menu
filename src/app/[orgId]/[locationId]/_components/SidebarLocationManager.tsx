@@ -16,7 +16,7 @@ import {
 } from "~/components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
 
-export function LocationManager() {
+export function SidebarLocationManager() {
   const { isMobile } = useSidebar();
   const { user } = useUser();
 
@@ -35,7 +35,7 @@ export function LocationManager() {
             >
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="text-tiny truncate antialiased">
-                  CURRENT LOCATION
+                  LOCATION
                 </span>
                 <span className="truncate font-semibold">{locationName}</span>
               </div>

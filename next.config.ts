@@ -20,6 +20,7 @@ const cspHeader = `
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
+    ${env.NEXT_PUBLIC_CSP_REPORT_URI ? `report-uri: ${env.NEXT_PUBLIC_CSP_REPORT_URI}` : "" }
 `;
 
 const config: NextConfig = {

@@ -13,12 +13,13 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
-import { LocationManager } from "./LocationManager";
+import { SidebarLocationManager } from "./SidebarLocationManager";
  
-import { NavUser } from "./NavUser";
+import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import SvgIcon from "~/app/_components/SvgIcons";
 import { useParams, usePathname } from "next/navigation";
+import { LayoutDashboard, SquareMenu } from "lucide-react";
 
 const data = {
   navMain: [
@@ -27,6 +28,7 @@ const data = {
       url: "#",
       items: [
         {
+          icon: <LayoutDashboard size={14}   />,
           title: "Real-time orders",
           url: "dashboard/orders",
         },
@@ -38,6 +40,7 @@ const data = {
       url: "#",
       items: [
         {
+          icon: <SquareMenu size={14}  />,
           title: "Menus",
           url: "manage/menus",
         },
@@ -74,13 +77,13 @@ export function LocationSidebar({
   return (
     <Sidebar collapsible="icon" {...props}>
       <div className="flex w-full flex-row p-2 pt-3 justify-center">
-        <Link href="/">
+        <Link href="/my">
           <SvgIcon kind="logo" size={"8"} className="fill-rose-700" />
         </Link>
         
       </div>
       <SidebarHeader>
-        <LocationManager />
+        <SidebarLocationManager />
       </SidebarHeader>
       <SidebarContent>
         {/* We create a SidebarGroup for each parent. */}
@@ -91,10 +94,11 @@ export function LocationSidebar({
               <SidebarMenu>
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
-                     <SidebarMenuButton asChild isActive={isActive(item.url)}> 
-                    {/* <SidebarMenuButton asChild isActive={window.location.pathname.includes(`/${props.orgId}/${props.locationId}/${item.url}`)}> */}
-                      {/* <a title={`${window.location.pathname}|${item.url}`} href={`/${props.orgId}/${props.locationId}/${item.url}`}>{item.title}</a> */}
-                      <Link href={buildUrl(item.url)}>{item.title}</Link>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <Link href={buildUrl(item.url)} className="flex items-center gap-2">
+                        <span title={item.title} className="flex-shrink-0">{item.icon}</span>
+                        <span>{item.title}</span>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -104,7 +108,7 @@ export function LocationSidebar({
         ))}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser />
+        <SidebarUserManager />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
