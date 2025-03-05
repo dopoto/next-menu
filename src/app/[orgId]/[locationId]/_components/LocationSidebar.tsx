@@ -19,27 +19,31 @@ import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import SvgIcon from "~/app/_components/SvgIcons";
 import { useParams, usePathname } from "next/navigation";
-import { LayoutDashboard, SquareMenu } from "lucide-react";
+import { BetweenHorizontalStart, LayoutDashboard, SquareMenu } from "lucide-react";
 
 const data = {
-  navMain: [
-    {
-      title: "Dashboard",
-      url: "#",
-      items: [
+  dashboardMenuSection: [
+     
         {
-          icon: <LayoutDashboard size={14} />,
+          icon: <LayoutDashboard size={16} />,
+          title: "Dashboard",
+          url: "dashboard",
+        },
+     
+        {
+          icon: <BetweenHorizontalStart size={16} />,
           title: "Real-time orders",
           url: "dashboard/orders",
         },
-      ],
-    },
+   
+  ],
+  locationManagerMenuSection: [
     {
-      title: "Location",
+      title: "Location manager",
       url: "#",
       items: [
         {
-          icon: <SquareMenu size={14} />,
+          icon: <SquareMenu size={16} />,
           title: "Menus",
           url: "manage/menus",
         },
@@ -55,7 +59,6 @@ export function LocationSidebar({
   const pathname = usePathname();
   const { orgId, locationId } = params as { orgId: string; locationId: string };
 
-  // Function to check if a menu item is active
   const isActive = (url: string) => {
     // For root URLs like "#", they shouldn't match as active
     if (url === "#") return false;
@@ -65,7 +68,6 @@ export function LocationSidebar({
     return pathname === fullPath;
   };
 
-  // Function to build the correct URL with dynamic segments
   const buildUrl = (url: string) => {
     if (url === "#") return "#";
     return `/${orgId}/${locationId}/${url}`;
@@ -73,17 +75,36 @@ export function LocationSidebar({
 
   return (
     <Sidebar collapsible="icon" {...props}>
-      <div className="flex w-full flex-row justify-center p-2 pt-3">
-        <Link href="/my">
-          <SvgIcon kind="logo" size={"8"} className="fill-rose-700" />
-        </Link>
-      </div>
       <SidebarHeader>
         <SidebarLocationManager />
       </SidebarHeader>
       <SidebarContent>
-        {/* We create a SidebarGroup for each parent. */}
-        {data.navMain.map((item) => (
+ 
+          <SidebarGroup key={'das'}>
+ 
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {data.dashboardMenuSection.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                      <Link
+                        href={buildUrl(item.url)}
+                        className="flex items-center gap-2"
+                      >
+                        <span title={item.title} className="flex-shrink-0">
+                          {item.icon}
+                        </span>
+                        <span>{item.title}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+            </SidebarGroup>
+           
+
+        {data.locationManagerMenuSection.map((item) => (
           <SidebarGroup key={item.title}>
             <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
             <SidebarGroupContent>
@@ -91,8 +112,13 @@ export function LocationSidebar({
                 {item.items.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                      <Link href={buildUrl(item.url)} className="flex items-center gap-2">
-                        <span title={item.title} className="flex-shrink-0">{item.icon}</span>
+                      <Link
+                        href={buildUrl(item.url)}
+                        className="flex items-center gap-2"
+                      >
+                        <span title={item.title} className="flex-shrink-0">
+                          {item.icon}
+                        </span>
                         <span>{item.title}</span>
                       </Link>
                     </SidebarMenuButton>
