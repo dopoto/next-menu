@@ -14,43 +14,10 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { SidebarLocationManager } from "./SidebarLocationManager";
-
 import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
-import SvgIcon from "~/app/_components/SvgIcons";
 import { useParams, usePathname } from "next/navigation";
-import { BetweenHorizontalStart, LayoutDashboard, SquareMenu } from "lucide-react";
-
-const data = {
-  dashboardMenuSection: [
-     
-        {
-          icon: <LayoutDashboard size={16} />,
-          title: "Dashboard",
-          url: "dashboard",
-        },
-     
-        {
-          icon: <BetweenHorizontalStart size={16} />,
-          title: "Real-time orders",
-          url: "dashboard/orders",
-        },
-   
-  ],
-  locationManagerMenuSection: [
-    {
-      title: "Location manager",
-      url: "#",
-      items: [
-        {
-          icon: <SquareMenu size={16} />,
-          title: "Menus",
-          url: "manage/menus",
-        },
-      ],
-    },
-  ],
-};
+import { menuItems  } from "../_domain/menu-sections";
 
 export function LocationSidebar({
   ...props
@@ -73,43 +40,42 @@ export function LocationSidebar({
     return `/${orgId}/${locationId}/${url}`;
   };
 
+  const dashboardMenuSection = menuItems.filter(i => i.parentId === 'dashboard')
+  const locationManagerMenuSection = menuItems.filter(i => i.parentId === 'locationManager')
+  
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarLocationManager />
       </SidebarHeader>
       <SidebarContent>
- 
-          <SidebarGroup key={'das'}>
- 
+        <SidebarGroup key={"das"}>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {dashboardMenuSection.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <Link
+                      href={buildUrl(item.url)}
+                      className="flex items-center gap-2"
+                    >
+                      <span title={item.title} className="flex-shrink-0">
+                        {item.icon}
+                      </span>
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+         
+          <SidebarGroup key={"locationManager"}>
+            <SidebarGroupLabel>Location Manager</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {data.dashboardMenuSection.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                      <Link
-                        href={buildUrl(item.url)}
-                        className="flex items-center gap-2"
-                      >
-                        <span title={item.title} className="flex-shrink-0">
-                          {item.icon}
-                        </span>
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-            </SidebarGroup>
-           
-
-        {data.locationManagerMenuSection.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((item) => (
+                {locationManagerMenuSection.map((item) => (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton asChild isActive={isActive(item.url)}>
                       <Link
@@ -127,7 +93,7 @@ export function LocationSidebar({
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
-        ))}
+        
       </SidebarContent>
       <SidebarFooter>
         <SidebarUserManager />

@@ -30,7 +30,7 @@ type SvgIconProps = {
   className?: string;
 };
 
-const SvgIcon = ({ kind, size = 8, className }: SvgIconProps) => {
+const SvgIcon = ({ kind, size = "8", className }: SvgIconProps) => {
   const Icon = SvgIconKind[kind];
 
   return (

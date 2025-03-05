@@ -25,7 +25,7 @@ export default function RootLayout(props: {
           {props.modal}
           <div id="modal-root" />
           <Toaster />
-          <GoogleAnalytics gaId={env.NEXT_PUBLIC_GOOGLE_TAG} />
+          <GoogleAnalytics gaId={env.NEXT_PUBLIC_GOOGLE_TAG ?? ''} />
         </Providers>
       </body>
     </html>

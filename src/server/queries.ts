@@ -9,18 +9,18 @@ export async function getLocations() {
   return items;
 }
 
-export async function getMyLocations() {
-  const user = await auth();
-  if (!user.userId) throw new Error("Unauthorized");
+// export async function getMyLocations() {
+//   const user = await auth();
+//   if (!user.userId) throw new Error("Unauthorized");
 
-  console.log("user", user);
+//   console.log("user", user);
 
-  const items = await db.query.locations.findMany({
-    where: (model, { eq }) => eq(model.userId, user.userId),
-    orderBy: (model, { desc }) => desc(model.name),
-  });
-  return items;
-}
+//   const items = await db.query.locations.findMany({
+//     where: (model, { eq }) => eq(model.userId, user.userId),
+//     orderBy: (model, { desc }) => desc(model.name),
+//   });
+//   return items;
+// }
 
 export async function getLocation(id: number) {
   const item = await db.query.locations.findFirst({
