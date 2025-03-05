@@ -17,7 +17,7 @@ import {
 import { Separator } from "~/components/ui/separator";
 import { HomeIcon } from "lucide-react";
 
-export default async function MyLayout({
+export default async function MyLayout({ 
   children,
 }: {
   children: React.ReactNode;

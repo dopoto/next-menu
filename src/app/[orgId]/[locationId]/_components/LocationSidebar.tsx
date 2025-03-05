@@ -14,7 +14,7 @@ import {
   SidebarMenuItem,
 } from "~/components/ui/sidebar";
 import { SidebarLocationManager } from "./SidebarLocationManager";
- 
+
 import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import SvgIcon from "~/app/_components/SvgIcons";
@@ -28,11 +28,10 @@ const data = {
       url: "#",
       items: [
         {
-          icon: <LayoutDashboard size={14}   />,
+          icon: <LayoutDashboard size={14} />,
           title: "Real-time orders",
           url: "dashboard/orders",
         },
-        
       ],
     },
     {
@@ -40,47 +39,44 @@ const data = {
       url: "#",
       items: [
         {
-          icon: <SquareMenu size={14}  />,
+          icon: <SquareMenu size={14} />,
           title: "Menus",
           url: "manage/menus",
         },
       ],
     },
- 
   ],
-}
+};
 
 export function LocationSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
-
-  const params = useParams()
-  const pathname = usePathname()
-  const { orgId, locationId } = params as { orgId: string; locationId: string }
+  const params = useParams();
+  const pathname = usePathname();
+  const { orgId, locationId } = params as { orgId: string; locationId: string };
 
   // Function to check if a menu item is active
   const isActive = (url: string) => {
     // For root URLs like "#", they shouldn't match as active
-    if (url === "#") return false
+    if (url === "#") return false;
 
     // Construct the full path to compare with current pathname
-    const fullPath = `/${orgId}/${locationId}/${url}`
-    return pathname === fullPath
-  }
+    const fullPath = `/${orgId}/${locationId}/${url}`;
+    return pathname === fullPath;
+  };
 
   // Function to build the correct URL with dynamic segments
   const buildUrl = (url: string) => {
-    if (url === "#") return "#"
-    return `/${orgId}/${locationId}/${url}`
-  }
-  
+    if (url === "#") return "#";
+    return `/${orgId}/${locationId}/${url}`;
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
-      <div className="flex w-full flex-row p-2 pt-3 justify-center">
+      <div className="flex w-full flex-row justify-center p-2 pt-3">
         <Link href="/my">
           <SvgIcon kind="logo" size={"8"} className="fill-rose-700" />
         </Link>
-        
       </div>
       <SidebarHeader>
         <SidebarLocationManager />
