@@ -10,8 +10,8 @@ export const LandingHero: React.FC = () => {
         <div className="lg:grid lg:grid-cols-12 lg:gap-8">
           <div className="gap-4 sm:text-center md:mx-auto md:max-w-2xl lg:col-span-6 lg:flex lg:flex-col lg:justify-center lg:text-left">
             <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-5xl   xl:text-6xl dark:text-gray-700">
-              <span className="block">Simplify your</span>
-              <span className="text-pop block workflow pb-6">workflow today</span>
+              <span className="block">Lorem ipsum your</span>
+              <span className="text-pop block workflow pb-6">dolor today!</span>
             </h1>
             <p className="text-base font-light text-gray-500 sm:text-xl lg:text-lg xl:text-xl">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean
