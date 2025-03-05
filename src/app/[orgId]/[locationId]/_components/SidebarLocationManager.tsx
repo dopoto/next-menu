@@ -79,9 +79,9 @@ export function SidebarLocationManager() {
             sideOffset={4}
           >
             <DropdownMenuLabel className="text-xs text-muted-foreground">
-              Teams
+               
             </DropdownMenuLabel>
-             s
+              
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
