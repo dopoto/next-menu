@@ -1,26 +1,32 @@
 import { getMenusByLocation } from "~/server/queries";
-import { LocationIdSchema } from "~/app/_domain/location";
+import { locationIdSchema } from "~/app/_domain/location";
+import { BoxError } from "~/app/_components/BoxError";
+import { EmptyState } from "../../_components/EmptyState";
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function MenusPage(props: { params: Params }) {
   const params = await props.params;
-  const locationId = params.locationId;
 
-  if (!locationId) {
-    return <div className="text-red-500">Error: No location ID provided</div>;
+  const validationResult = locationIdSchema.safeParse(params.locationId);
+  if (!validationResult.success) {
+    return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
   }
 
-  const locationIdResult = LocationIdSchema.safeParse(locationId);
-  if (!locationIdResult.success) {
+  const parsedLocationId = validationResult.data;
+  const items = await getMenusByLocation(parsedLocationId);
+
+  if (items.length === 0) {
     return (
-      <div className="text-red-500">Error: Invalid location IDd format: {locationId}</div>
+      <EmptyState
+        title={"No menus found"}
+        secondary={"This location does not have any menus yet. Add one below."}
+        cta={"Add menu"}
+        ctaHref={"menus/add"}
+      />
     );
   }
 
-  const parsedLocationId = locationIdResult.data;
-
-  const items = await getMenusByLocation(parsedLocationId);
   return (
     <div>
       {items.map((i) => (

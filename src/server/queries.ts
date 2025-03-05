@@ -21,7 +21,7 @@ export async function getMenusByLocation(locationId: LocationId) {
   //   orderBy: (model, { desc }) => desc(model.name),
   // });
   const items = await Promise.resolve([
-    { name: `menu 1 for location ${locationId}` },
+    //{ name: `menu 1 for location ${locationId}` },
   ]);
   return items;
 }
