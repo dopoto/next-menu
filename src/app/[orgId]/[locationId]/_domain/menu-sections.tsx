@@ -1,7 +1,7 @@
 import {
   LayoutDashboard,
   BetweenHorizontalStart,
-  SquareMenu,
+  ScanQrCode,
 } from "lucide-react";
 import { type ReactNode } from "react";
 
@@ -26,7 +26,7 @@ export const menuItems: MenuItem[] = [
     parentId: "dashboard",
   },
   {
-    icon: <SquareMenu size={16} />,
+    icon: <ScanQrCode size={16} />,
     title: "Menus",
     url: "manage/menus",
     parentId: "locationManager",

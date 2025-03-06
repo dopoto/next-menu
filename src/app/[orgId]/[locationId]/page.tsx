@@ -4,6 +4,13 @@ import { BoxError } from "~/app/_components/BoxError";
 import { EmptyState } from "./_components/EmptyState";
 import { DashboardCard } from "./_components/DashboardCard";
  
+import { Button } from "~/components/ui/button";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "~/components/ui/card";
+import { Input } from "~/components/ui/input";
+import { Tabs, TabsContent, TabsTrigger } from "~/components/ui/tabs";
+import { TabsList } from "@radix-ui/react-tabs";
+import { Label } from "~/components/ui/label";
+ 
 
 type Params = Promise<{ locationId: string }>;
 
@@ -32,11 +39,23 @@ type Params = Promise<{ locationId: string }>;
 //   }
 
   return (
-    <div>
-      <div className="flex flex-row gap-2 w-full ">
-        <DashboardCard title={"Menus"} value={"0"} secondaryValue={""}/>
-        <DashboardCard title={"Orders"} value={"0"} secondaryValue={""}/>
-      </div>
-    </div>
+    <Tabs defaultValue="live" className="w-[200px]">
+    <TabsList className="grid w-full grid-cols-2   h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
+      <TabsTrigger value="live">Live</TabsTrigger>
+      <TabsTrigger value="reports">Reports</TabsTrigger>
+    </TabsList>
+    <TabsContent value="live">
+       Live data
+    </TabsContent>
+    <TabsContent value="reports">
+      Reports
+    </TabsContent>
+  </Tabs>
+    // <div>
+    //   <div className="flex flex-row gap-2 w-full ">
+    //     <DashboardCard title={"Menus"} value={"0"} secondaryValue={""}/>
+    //     <DashboardCard title={"Orders"} value={"0"} secondaryValue={""}/>
+    //   </div>
+    // </div>
   );
 }
