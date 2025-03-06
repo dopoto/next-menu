@@ -35,7 +35,7 @@
     "@radix-ui/react-tooltip": "^1.1.8",
     "@sentry/nextjs": "9.4.0",
     "@stripe/react-stripe-js": "^3.3.0",
-    "@stripe/stripe-js": "^5.8.0",
+    "@stripe/stripe-js": "^5.9.2",
     "@t3-oss/env-nextjs": "^0.12.0",
     "@vercel/postgres": "^0.10.0",
     "class-variance-authority": "^0.7.1",
@@ -55,7 +55,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4.0.9",
+    "@tailwindcss/postcss": "^4.0.10",
     "@types/eslint": "^8.56.10",
     "@types/node": "^22.13.9",
     "@types/react": "^19.0.10",
@@ -68,9 +68,9 @@
     "eslint-config-next": "^15.2.1",
     "eslint-plugin-drizzle": "^0.2.3",
     "postcss": "^8.5.3",
-    "prettier": "^3.5.2",
+    "prettier": "^3.5.3",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.0.9",
+    "tailwindcss": "^4.0.10",
     "typescript": "^5.8.2"
   },
   "ct3aMetadata": {

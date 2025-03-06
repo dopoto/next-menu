@@ -304,7 +304,7 @@ html {
 
 @layer utilities {
   .heading-label {
-    @apply text-base font-semibold tracking-wide text-pop uppercase;
+    @apply   font-semibold tracking-wide text-pop uppercase;
   }
   .heading-main {
     @apply mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white;

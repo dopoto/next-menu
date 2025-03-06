@@ -13,7 +13,11 @@ A sample Next.js application that allows restaurant and bar owners to generate Q
 ## Features
 
 ### Onboarding process
-Users sign up with Clark, create an organization and go through the initial setup of their account (they must add a location to complete the onboarding). Once the  onboarding is completed, custom public metadata is saved to their Clerk JWT token.
+Users sign up with Clerk, create an organization and go through the initial setup of their account (they must add a location to complete the onboarding).
+
+If a non-free plan is selected, users need to go throutgh an additional Pay with Stripe step during onboarding. 
+
+Once the onboarding is completed, custom public metadata is saved to their Clerk JWT token.
 
 ### Dashboard
 Signed in users have access to a dashboard where they can manage their location and menus.
