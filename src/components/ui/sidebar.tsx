@@ -18,8 +18,7 @@ import {
   TooltipTrigger,
 } from "~/components/ui/tooltip"
 
-const SIDEBAR_COOKIE_NAME = "sidebar_state"
-const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
+const SIDEBAR_STORAGE_KEY = "user_ui_sidebar_state"
 const SIDEBAR_WIDTH = "16rem"
 const SIDEBAR_WIDTH_ICON = "3rem"
 const SIDEBAR_KEYBOARD_SHORTCUT = "b"
@@ -28,13 +27,26 @@ type SidebarContext = {
   state: "expanded" | "collapsed"
   open: boolean
   setOpen: (open: boolean) => void
-  openMobile: boolean
-  setOpenMobile: (open: boolean) => void
   isMobile: boolean
   toggleSidebar: () => void
 }
 
 const SidebarContext = React.createContext<SidebarContext | null>(null)
+
+function getInitialSidebarState(isMobile: boolean): boolean {
+  try {
+    const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY)
+    if (stored !== null) {
+      const parsed: unknown = JSON.parse(stored)
+      if (typeof parsed === 'boolean') {
+        return parsed
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to read sidebar state from localStorage:', e)
+  }
+  return !isMobile // Default: expanded on desktop, collapsed on mobile
+}
 
 function useSidebar() {
   const context = React.useContext(SidebarContext)
@@ -59,12 +71,16 @@ function SidebarProvider({
   onOpenChange?: (open: boolean) => void
 }) {
   const isMobile = useIsMobile()
-  const [openMobile, setOpenMobile] = React.useState(false)
-
-  // This is the internal state of the sidebar.
-  // We use openProp and setOpenProp for control from outside the component.
-  const [_open, _setOpen] = React.useState(isMobile ? false : defaultOpen)
-  const open = openProp ?? _open
+  
+  // Use useState with undefined initial state to prevent hydration mismatch
+  const [_open, _setOpen] = React.useState<boolean | undefined>(undefined)
+  const open = openProp ?? _open ?? !isMobile // Fallback to default during SSR
+  
+  // Initialize state from localStorage after mount
+  React.useEffect(() => {
+    _setOpen(getInitialSidebarState(isMobile))
+  }, [isMobile])
+  
   const setOpen = React.useCallback(
     (value: boolean | ((value: boolean) => boolean)) => {
       const openState = typeof value === "function" ? value(open) : value
@@ -74,8 +90,12 @@ function SidebarProvider({
         _setOpen(openState)
       }
 
-      // This sets the cookie to keep the sidebar state.
-      document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`
+      // Save to localStorage
+      try {
+        localStorage.setItem(SIDEBAR_STORAGE_KEY, JSON.stringify(openState))
+      } catch (e) {
+        console.warn('Failed to save sidebar state to localStorage:', e)
+      }
     },
     [setOpenProp, open]
   )
@@ -111,11 +131,9 @@ function SidebarProvider({
       open,
       setOpen,
       isMobile,
-      openMobile,
-      setOpenMobile,
       toggleSidebar,
     }),
-    [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar]
+    [state, open, setOpen, isMobile, toggleSidebar]
   )
 
   return (
