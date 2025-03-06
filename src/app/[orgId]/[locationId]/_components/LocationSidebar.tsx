@@ -17,7 +17,7 @@ import { SidebarLocationManager } from "./SidebarLocationManager";
 import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { menuItems  } from "../_domain/menu-sections";
+import { menuItems } from "../_domain/menu-sections";
 
 export function LocationSidebar({
   ...props
@@ -27,22 +27,21 @@ export function LocationSidebar({
   const { orgId, locationId } = params as { orgId: string; locationId: string };
 
   const isActive = (url: string) => {
-    // For root URLs like "#", they shouldn't match as active
-    if (url === "#") return false;
-
-    // Construct the full path to compare with current pathname
     const fullPath = `/${orgId}/${locationId}/${url}`;
-    return pathname === fullPath;
+    return pathname === fullPath || `${pathname}/` === fullPath;
   };
 
   const buildUrl = (url: string) => {
-    if (url === "#") return "#";
     return `/${orgId}/${locationId}/${url}`;
   };
 
-  const dashboardMenuSection = menuItems.filter(i => i.parentId === 'dashboard')
-  const locationManagerMenuSection = menuItems.filter(i => i.parentId === 'locationManager')
-  
+  const dashboardMenuSection = menuItems.filter(
+    (i) => i.parentId === "dashboard",
+  );
+  const locationManagerMenuSection = menuItems.filter(
+    (i) => i.parentId === "locationManager",
+  );
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
@@ -70,30 +69,28 @@ export function LocationSidebar({
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-         
-          <SidebarGroup key={"locationManager"}>
-            <SidebarGroupLabel>Location Manager</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {locationManagerMenuSection.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild isActive={isActive(item.url)}>
-                      <Link
-                        href={buildUrl(item.url)}
-                        className="flex items-center gap-2"
-                      >
-                        <span title={item.title} className="flex-shrink-0">
-                          {item.icon}
-                        </span>
-                        <span>{item.title}</span>
-                      </Link>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        
+        <SidebarGroup key={"locationManager"}>
+          <SidebarGroupLabel>Location Manager</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {locationManagerMenuSection.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                    <Link
+                      href={buildUrl(item.url)}
+                      className="flex items-center gap-2"
+                    >
+                      <span title={item.title} className="flex-shrink-0">
+                        {item.icon}
+                      </span>
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <SidebarUserManager />
