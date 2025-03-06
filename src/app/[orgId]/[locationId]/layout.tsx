@@ -5,17 +5,7 @@ import {
 } from "~/components/ui/sidebar";
 import { LocationSidebar } from "./_components/LocationSidebar";
 import { ThemeSwitch } from "~/app/_components/ThemeSwitch";
-
-import {
-  Breadcrumb,
-  BreadcrumbList,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbSeparator,
-  BreadcrumbPage,
-} from "~/components/ui/breadcrumb";
 import { Separator } from "~/components/ui/separator";
-import { HomeIcon } from "lucide-react";
 import { PageBreadcrumb } from "./_components/PageBreadcrumb";
 
 export default async function Layout({

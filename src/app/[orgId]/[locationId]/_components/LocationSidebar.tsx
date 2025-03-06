@@ -53,14 +53,16 @@ export function LocationSidebar({
             <SidebarMenu>
               {dashboardMenuSection.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.url)}
+                    tooltip={item.title}
+                  >
                     <Link
                       href={buildUrl(item.url)}
                       className="flex items-center gap-2"
                     >
-                      <span title={item.title} className="flex-shrink-0">
-                        {item.icon}
-                      </span>
+                      <span className="flex-shrink-0">{item.icon}</span>
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
@@ -75,7 +77,11 @@ export function LocationSidebar({
             <SidebarMenu>
               {locationManagerMenuSection.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild isActive={isActive(item.url)}>
+                  <SidebarMenuButton
+                    asChild
+                    isActive={isActive(item.url)}
+                    tooltip={item.title}
+                  >
                     <Link
                       href={buildUrl(item.url)}
                       className="flex items-center gap-2"
