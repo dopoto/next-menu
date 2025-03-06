@@ -26,7 +26,7 @@ export default function AddMenuDialog(props: { orgTier: OrgTier }) {
         <DialogHeader>
           <DialogTitle>Add a menu</DialogTitle>
           <DialogDescription>
-            TODO Lorem ipsum
+           Fill the form below to create a menu
           </DialogDescription>
           <AddMenu orgTier={props.orgTier} />
         </DialogHeader>
