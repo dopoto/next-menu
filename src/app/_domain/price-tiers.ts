@@ -10,10 +10,10 @@ export const PriceTierIdSchema = z.union([
 
 export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
-export const defaultTier: PriceTierId = 'start'
+export const defaultTier: PriceTierId = "start";
 
 export type PriceTier = {
-  id: PriceTierId,
+  id: PriceTierId;
   name: string;
   stripePriceId?: string;
   description: string;
@@ -24,6 +24,13 @@ export type PriceTier = {
   staffMembers: number;
   isPopular: boolean;
   isPublic: boolean;
+};
+
+export type OrgTier = {
+  priceTierId: PriceTierId;
+  quota: number;
+  used: number;
+  available: number;
 };
 
 export const priceTiers: Record<PriceTierId, PriceTier> = {
@@ -37,7 +44,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     monthlyUsdPrice: 0,
     yearlyUsdPrice: 0,
     isPublic: true,
-    isPopular: false
+    isPopular: false,
   },
   pro: {
     id: "pro",
@@ -50,7 +57,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     monthlyUsdPrice: 6,
     yearlyUsdPrice: 5,
     isPublic: true,
-    isPopular: true
+    isPopular: true,
   },
   enterprise: {
     id: "enterprise",
@@ -62,7 +69,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     monthlyUsdPrice: 59,
     yearlyUsdPrice: 5900,
     isPublic: true,
-    isPopular: false
+    isPopular: false,
   },
   custom1: {
     id: "custom1",
@@ -74,6 +81,6 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     monthlyUsdPrice: -1,
     yearlyUsdPrice: -1,
     isPublic: false,
-    isPopular: false
+    isPopular: false,
   },
 };

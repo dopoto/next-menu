@@ -1,4 +1,4 @@
-import { BarChart2, Clock, Zap, Users, Globe } from "lucide-react";
+import { BarChart2, Clock, Zap, Users, Globe, ScanQrCode } from "lucide-react";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { sections } from "../_domain/landing-content";
 
@@ -11,10 +11,10 @@ export interface Feature {
 export const LandingFeatures: React.FC = () => {
   const features: Feature[] = [
     {
-      title: "Advanced Analytics",
+      title: "Step into the QR age",
       description:
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean vel sem leo.",
-      icon: <BarChart2 className="text-pop h-6 w-6" />,
+        "Create and manage QR-powered menus for your customers",
+      icon: <ScanQrCode className="text-pop h-6 w-6" />,
     },
     {
       title: "Enterprise Security",

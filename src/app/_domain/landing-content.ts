@@ -15,7 +15,7 @@ export const sections: Record<string, Section> = {
       label: "Features",
       title: "A better way to work",
       secondary:
-        "Our platform is packed with powerful features to help your team succeed.",
+        "The tools you need for your restaurant, bar or pub",
     },
   },
   testimonials: {
