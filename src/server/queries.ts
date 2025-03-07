@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import "server-only";
 import { type LocationId } from "~/app/_domain/location";
 import { db } from "~/server/db";
+import { Menu } from "./db/schema";
 
 export async function getLocations() {
   const items = await db.query.locations.findMany({
@@ -10,19 +11,32 @@ export async function getLocations() {
   return items;
 }
 
-export async function getMenusByLocation(locationId: LocationId) {
-  const user = await auth();
-  if (!user.userId) throw new Error("Unauthorized");
+export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]> {
+  const { userId, sessionClaims } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+  
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) throw new Error("No organization ID found");
 
-  console.log("user", user);
+  // First verify the location belongs to the organization
+  const location = await db.query.locations.findFirst({
+    where: (locations, { and, eq }) => 
+      and(
+        eq(locations.id, locationId),
+        eq(locations.orgId, orgId)
+      )
+  });
 
-  // const items = await db.query.locations.findMany({
-  //   where: (model, { eq }) => eq(model.userId, user.userId),
-  //   orderBy: (model, { desc }) => desc(model.name),
-  // });
-  const items = await Promise.resolve([
-    //{ name: `menu 1 for location ${locationId}` },
-  ]);
+  if (!location) {
+    throw new Error("Location not found or access denied");
+  }
+
+  // Now fetch menus for this location
+  const items = await db.query.menus.findMany({
+    where: (menus, { eq }) => eq(menus.locationId, locationId),
+    orderBy: (menus, { desc }) => desc(menus.name),
+  });
+
   return items;
 }
 

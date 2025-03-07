@@ -28,6 +28,14 @@ export type PriceTier = {
 
 export type OrgTier = {
   priceTierId: PriceTierId;
+  /**
+   * @example "menu"
+   */
+  resourceSingularName: string;
+  /**
+   * @example "menus"
+   */
+  resourcePluralName: string;
   quota: number;
   used: number;
   available: number;

@@ -1,10 +1,25 @@
-
 import { auth } from "@clerk/nextjs/server";
 import AddMenuDialog from "../../_components/AddMenuDialog";
-import { defaultTier, type OrgTier, type PriceTierId, PriceTierIdSchema } from "~/app/_domain/price-tiers";
+import {
+  defaultTier,
+  type OrgTier,
+  PriceTierIdSchema,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
+import { getMenusByLocation } from "~/server/queries";
+import { locationIdSchema } from "~/app/_domain/location";
+import { BoxError } from "~/app/_components/BoxError";
 
-export default async function AddMenuPage() {
- 
+type Params = Promise<{ locationId: string }>;
+
+export default async function AddMenuPage(props: { params: Params }) {
+  const params = await props.params;
+  const validationResult = locationIdSchema.safeParse(params.locationId);
+  if (!validationResult.success) {
+    return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+  }
+  const parsedLocationId = validationResult.data;
+
   const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
   // TODO revisit. or maybe just always trust JWT token
@@ -12,17 +27,17 @@ export default async function AddMenuPage() {
     ? parsedTier.data
     : defaultTier;
 
+  const menus = await getMenusByLocation(parsedLocationId);
+
+  const quota = priceTiers[parsedOrDefaultTier].menus;
   const orgTier: OrgTier = {
     priceTierId: parsedOrDefaultTier,
-    quota: 1,
-    used: 0,
-    available: 1
-  }
+    resourceSingularName: 'menu',
+    resourcePluralName: 'menus',
+    quota,
+    used: menus.length,
+    available: quota - menus.length,
+  };
 
-  console.log('Add menu page')
-
-  
-  return (
-    <AddMenuDialog orgTier={orgTier} />
-  );
+  return <AddMenuDialog orgTier={orgTier} />;
 }

@@ -2,6 +2,7 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { sql } from "drizzle-orm";
+import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 import {
   index,
   integer,
@@ -55,3 +56,10 @@ export const menus = createTable(
     nameIndex: index("menu_name_idx").on(example.name),
   }),
 );
+
+// Type definitions
+export type Menu = InferSelectModel<typeof menus>;
+export type NewMenu = InferInsertModel<typeof menus>;
+
+export type Location = InferSelectModel<typeof locations>;
+export type NewLocation = InferInsertModel<typeof locations>;

@@ -31,7 +31,7 @@ const FormSchema = z.object({
   }),
 })
 
-export function AddMenu(props: { orgTier: OrgTier }) {
+export function AddMenu() {
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -50,7 +50,6 @@ export function AddMenu(props: { orgTier: OrgTier }) {
   
   return (
     <div className="flex flex-col gap-6">
-      <TierFeatureSummary orgTier={props.orgTier} />
       <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField

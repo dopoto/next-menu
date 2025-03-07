@@ -13,7 +13,7 @@ const cspHeader = `
     style-src 'self' 'unsafe-inline';
     img-src 'self' blob: data: img.clerk.com https://www.googletagmanager.com;
     font-src 'self';
-    object-src 'none';
+    object-src ${process.env.NODE_ENV !== 'development' ? "'self' data:;" : "'none';"}
     worker-src blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
     connect-src 'self' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com;
     base-uri 'self';
