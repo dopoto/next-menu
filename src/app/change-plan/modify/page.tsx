@@ -1,10 +1,11 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Stripe } from "stripe";
 import { env } from "~/env";
 import { PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
+import { getCustomerByOrgId } from "~/server/queries";
 
 // Initialize Stripe
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
@@ -16,11 +17,7 @@ type SearchParams = Promise<
 export default async function ModifySubscriptionPage(props: {
   searchParams: SearchParams;
 }) {
-  // Get the authenticated user and organization
-  const authResult = await auth();
-  const userId = authResult.userId;
-  const orgId = authResult.orgId;
-  
+  const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
     redirect("/sign-in");
   }
@@ -32,8 +29,8 @@ export default async function ModifySubscriptionPage(props: {
     redirect("/change-plan");
   }
 
-  const parsedTierId = PriceTierIdSchema.safeParse(targetTierId);
-  if (!parsedTierId.success) {
+  const parsedTargetTierId = PriceTierIdSchema.safeParse(targetTierId);
+  if (!parsedTargetTierId.success) {
     redirect("/change-plan");
   }
 
@@ -42,38 +39,48 @@ export default async function ModifySubscriptionPage(props: {
 
   try {
     // Get the price ID
-    const tier = priceTiers[parsedTierId.data];
-    const newPriceId = tier.stripePriceId;
+    const parsedTargetTier = priceTiers[parsedTargetTierId.data];
+    console.log(`parsedTargetTier: ${JSON.stringify(parsedTargetTier)}`);
+    const newPriceId = parsedTargetTier.stripePriceId;
     if (!newPriceId) {
       throw new Error("No price ID found for this tier");
     }
 
-    // Find subscriptions for this organization
-    // Since we're using client_reference_id instead of customer ID,
-    // we need to search for subscriptions by metadata
-    const subscriptions = await stripe.subscriptions.list({
-      limit: 10, // Limit results to keep query fast
-      expand: ['data.default_payment_method'],
-    });
-    
-    // Filter subscriptions to find ones with matching orgId in metadata
-    const orgSubscriptions = subscriptions.data.filter(
-      sub => sub.metadata.orgId === orgId
-    );
+    const stripeCustomerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
 
-    if (orgSubscriptions.length === 0) {
+    if (!stripeCustomerId) {
+      // TODO handle with custom error
+      throw new Error("Cannot find stripe cust id");
+    }
+
+    const subscriptions = await stripe.subscriptions.list({
+      customer: stripeCustomerId,
+      limit: 10,
+    });
+
+    console.log(`orgId: ${orgId}`);
+    console.log(`subs: ${JSON.stringify(subscriptions, null, 2)}`);
+
+    console.log(`org subs: ${JSON.stringify(subscriptions)}`);
+
+    if (!subscriptions || subscriptions.data.length === 0) {
       throw new Error("No active subscription found for this organization");
     }
 
+    if (subscriptions.data.length > 1) {
+      throw new Error("More than 1 subscription found for this organization");
+    }
+
     // Get the first active subscription
-    const subscription = orgSubscriptions[0];
+    // TODO more filters here
+    const currentSubscription = subscriptions.data[0];
 
     // Update the subscription
-    if (subscription?.items?.data?.[0]?.id) {
-      await stripe.subscriptions.update(subscription.id, {
+    if (currentSubscription?.items?.data?.[0]?.id) {
+      await stripe.subscriptions.update(currentSubscription.id, {
         items: [
           {
-            id: subscription.items.data[0].id,
+            id: currentSubscription.items.data[0].id,
             price: newPriceId,
           },
         ],
@@ -83,10 +90,15 @@ export default async function ModifySubscriptionPage(props: {
         metadata: {
           orgId,
           userId,
-          tierId: targetTierId,
+          tierId: parsedTargetTier.id,
         },
       });
     }
+
+    const client = await clerkClient();
+    await client.users.updateUser(userId, {
+      publicMetadata: {...(sessionClaims?.metadata ?? {}), tier: parsedTargetTier.id},
+    });
 
     // Redirect to success page with appropriate action parameter
     const successAction = isUpgrade ? "upgrade" : "downgrade";
@@ -104,7 +116,10 @@ export default async function ModifySubscriptionPage(props: {
             <CardTitle>Subscription Error</CardTitle>
           </CardHeader>
           <CardContent>
-            <p>There was an error processing your subscription change. Please try again later.</p>
+            <p>
+              There was an error processing your subscription change. Please try
+              again later.
+            </p>
           </CardContent>
         </Card>
       }
@@ -112,4 +127,4 @@ export default async function ModifySubscriptionPage(props: {
       subtitle="Processing your subscription change"
     />
   );
-} 
+}

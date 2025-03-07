@@ -33,6 +33,15 @@ export async function updateCustomerByClerkUserId(
   return updatedCustomer;
 }
 
+export async function getCustomerByOrgId(orgId: string) {
+  // TODO Checks
+  const item = await db.query.customers.findFirst({
+    where: (model, { eq }) => eq(model.orgId, orgId),
+  });
+  if (!item) throw new Error("Not found");
+  return item;
+}
+
 export async function addLocation(orgId: string, name: string) {
   const [insertedLocation] = await db
     .insert(locations)

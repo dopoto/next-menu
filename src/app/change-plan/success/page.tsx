@@ -6,19 +6,16 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { CheckCircle2 } from "lucide-react";
 
-// Initialize Stripe
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
-type SearchParams = {
-  session_id?: string;
-  action?: string;
-};
-
-export default async function SuccessPage({
-  searchParams,
-}: {
+type SearchParams = Promise<
+  Record<"session_id" | "action", string  | undefined>
+>;
+ 
+export default async function SuccessPage(props: {
   searchParams: SearchParams;
 }) {
+  const searchParams = await props.searchParams;
   const { session_id: sessionId, action } = searchParams;
   let sessionStatus = "unknown";
   let tierName = "";

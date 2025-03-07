@@ -57,8 +57,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
   pro: {
     id: "pro",
     name: "Premium",
-    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_TIER,
     description: "Perfect for most",
+    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_TIER,
     locations: 5,
     menus: 10,
     staffMembers: 10,
@@ -71,6 +71,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     id: "enterprise",
     name: "Enterprise",
     description: "Ready for large businesses",
+    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_TIER,
     locations: 100,
     menus: 100,
     staffMembers: 100,
