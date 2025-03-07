@@ -8,24 +8,28 @@ import { PriceTierIdSchema, defaultTier, priceTiers, type PriceTierId } from "~/
 import Link from "next/link";
 import { StripeSubscriptionManagement } from "../_components/StripeSubscriptionManagement";
 
-type PageProps = {
-  params: {
-    priceTierId: string;
-  };
-};
+export type Params = Promise<{ priceTierId: string }>;
+ 
+export default async function ChangePlanDetailPage(props: {
+  params: Params;
+ 
+}) {
 
-export default async function ChangePlanDetailPage({ params }: PageProps) {
-  // Validate the price tier ID
-  const parsedResult = PriceTierIdSchema.safeParse(params.priceTierId);
-  if (!parsedResult.success) {
+  const params = await props.params;
+  const parsedPriceTierResult = PriceTierIdSchema.safeParse(params.priceTierId);
+  if (!parsedPriceTierResult.success) {
     return notFound();
-  }
-  
-  const targetTierId = parsedResult.data;
+  }  
+  const targetTierId = parsedPriceTierResult.data;
   const targetTier = priceTiers[targetTierId];
   
   // Get the current user's tier
   const currentUserInfo = await auth();
+  const userId = currentUserInfo.userId;
+  const orgId = currentUserInfo.orgId;
+  if (!userId || !orgId) {
+    redirect("/sign-in");
+  }
   const currentTierId = currentUserInfo.sessionClaims?.metadata?.tier as PriceTierId || defaultTier;
   
   // If user tries to change to their current tier, redirect back
@@ -34,8 +38,7 @@ export default async function ChangePlanDetailPage({ params }: PageProps) {
   }
   
   // Get user's subscription info
-  const userId = currentUserInfo.userId;
-  const hasSubscription = currentTierId !== "start"; // Checking if user has a paid plan. TODO check for 0 prrice instead
+  const hasSubscription = currentTierId !== "start"; // Checking if user has a paid plan
   
   let title: string;
   let description: string;
@@ -102,6 +105,7 @@ export default async function ChangePlanDetailPage({ params }: PageProps) {
                 targetTierId={targetTierId}
                 hasSubscription={hasSubscription}
                 userId={userId ?? ""}
+                orgId={orgId ?? ""}
               />
               
               <Link href="/change-plan" className="w-full">
