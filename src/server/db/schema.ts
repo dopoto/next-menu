@@ -19,12 +19,30 @@ import {
  */
 export const createTable = pgTableCreator((name) => `next-menu_${name}`);
 
+export const customers = createTable("customer", {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+  /**
+   * @example 'user_...'
+   */
+  clerkUserId: varchar("clerk_user_id", { length: 256 }).notNull(),
+  orgId: varchar("org_id", { length: 256 }).notNull().unique(),
+  stripeCustomerId: varchar("stripe_customer_id", { length: 256 }),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .default(sql`CURRENT_TIMESTAMP`)
+    .notNull(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+    () => new Date(),
+  ),
+});
+
 export const locations = createTable(
   "location",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
     name: varchar("name", { length: 256 }),
-    orgId: varchar("org_id", { length: 256 }).notNull(),
+    orgId: varchar("org_id", { length: 256 })
+      .notNull()
+      .references(() => customers.orgId),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -57,7 +75,7 @@ export const menus = createTable(
   }),
 );
 
-// Type definitions
+// Type definitions TODO move from here
 export type Menu = InferSelectModel<typeof menus>;
 export type NewMenu = InferInsertModel<typeof menus>;
 

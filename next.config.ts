@@ -6,16 +6,21 @@ import { withSentryConfig } from "@sentry/nextjs";
 import { type NextConfig } from "next";
 import { env } from "~/env";
 
+/**
+ * @see https://clerk.com/docs/security/clerk-csp.
+ * @see https://docs.stripe.com/security/guide#content-security-policy
+ */
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://www.googletagmanager.com;
-    script-src-elem 'self' 'unsafe-inline' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://www.googletagmanager.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://www.googletagmanager.com;
+    script-src-elem 'self' 'unsafe-inline' https://checkout.stripe.com https://js.stripe.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://www.googletagmanager.com;
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: img.clerk.com https://www.googletagmanager.com;
+    img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://www.googletagmanager.com;
     font-src 'self';
+    frame-src https://checkout.stripe.com https://*.js.stripe.com https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com;
     object-src ${process.env.NODE_ENV !== 'development' ? "'self' data:;" : "'none';"}
-    worker-src blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
-    connect-src 'self' ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com;
+    worker-src 'self' blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
+    connect-src 'self' https://checkout.stripe.com https://api.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';

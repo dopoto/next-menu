@@ -33,7 +33,6 @@ export default async function OnboardingAddLocationPage(props: {
   const params = await props.params;
   const priceTierId = params.priceTierId;
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
-  // TODO refactor extract
   const parsedOrDefaultTier = parsedTier.success
     ? parsedTier.data
     : defaultTier;

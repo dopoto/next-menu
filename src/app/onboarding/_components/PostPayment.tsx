@@ -44,8 +44,9 @@ export const PostPayment = (props: {
     default:
       return (
         <Card>
+          {/* TODO */}
           <CardContent>An error occurred</CardContent>
-          <CardFooter>TODO</CardFooter>
+          <CardFooter></CardFooter>
         </Card>
       );
   }

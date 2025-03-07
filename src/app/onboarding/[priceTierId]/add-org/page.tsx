@@ -16,6 +16,7 @@ import {
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
+import { addCustomer } from "~/server/queries";
 
 export type Params = Promise<{ priceTierId: string }>;
 
@@ -70,19 +71,25 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
       ? `/onboarding/${parsedOrDefaultTier}/add-location`
       : `/onboarding/${parsedOrDefaultTier}/payment`;
 
-  const { orgId } = await auth();
+  //TODO revisit checks
+
+  const { orgId, userId } = await auth();
   const client = await clerkClient();
   let orgName = "";
-  if (orgId) {
+  if (orgId && userId) {
     const organization = await client.organizations.getOrganization({
       organizationId: orgId,
     });
     orgName = organization.name;
+
+    const dbCustomerId = await addCustomer(userId, orgId);
+    console.log(`DBG ${dbCustomerId?.id ?? "no"}`);
   }
 
   // Users might go back and forth in browser, so don't show Create Org if
   // they already have an org.
   const mainComponent = orgId ? (
+    //TODO test, improve UI
     <Card>Org name: {orgName}</Card>
   ) : (
     <CreateOrganization

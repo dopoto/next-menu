@@ -95,7 +95,7 @@ export default async function SignUpPage(props: {
 
 const getSignUpMainComponent = async (tier: PriceTierId) => {
   return (
-    <SignUp
+    <SignUp    
       fallbackRedirectUrl={`/onboarding/${tier}/add-org`}
       appearance={{
         elements: {

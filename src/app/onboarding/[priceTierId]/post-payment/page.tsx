@@ -14,6 +14,8 @@ import {
   defaultTier,
   priceTiers,
 } from "~/app/_domain/price-tiers";
+import { updateCustomerByClerkUserId } from "~/server/queries";
+import { auth } from "@clerk/nextjs/server";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -30,7 +32,36 @@ export default async function OnboardingPaymentPage(props: {
   // Get the status of the Stripe payment
   const searchParams = await props.searchParams;
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
-  const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+  const session = await stripe.checkout.sessions.retrieve(stripeSessionId, {
+    expand: ["customer"],
+  });
+  const stripeCustomer = session.customer as Stripe.Customer;
+  if (
+    session.status === "complete" &&
+    stripeCustomer &&
+    "id" in stripeCustomer
+  ) {
+    console.log(`DBG stripeCustomer ${JSON.stringify(stripeCustomer)}`);
+    const { userId } = await auth();
+    if (userId) {
+      const upd = await updateCustomerByClerkUserId(userId, stripeCustomer.id);
+      console.log(`DBG updated user ${JSON.stringify(upd)}`);
+    } else {
+      //TODO Handle error
+    }
+
+  }
+
+  /*
+{"id":"cus_RtjpUYewkTRFWr","object":"customer","address":{"city":null,"country":"RO","line1":null,"line2":null,"postal_code":null,"state":null},"balance":0,"created":1741336434,"currency":"usd","default_source":null,"delinquent":false,"description":null,"discount":null,"email":"dopoto@gmail.com","invoice_prefix":"A6333088","invoice_settings":{"custom_fields":null,"default_payment_method":null,"footer":null,"rendering_options":null},"livemode":false,"metadata":{},"name":"D R","phone":null,"preferred_locales":["en-US"],"shipping":null,"tax_exempt":"none","test_clock":null}
+*/
+
+  // if (stripeCustomerId) {
+  //   // Store the Stripe Customer ID in your database here
+  //   await storeStripeCustomerIdInDatabase(stripeCustomerId);
+  // } else {
+  //   console.error("No customer ID found in the session.");
+  // }
 
   const params = await props.params;
   const priceTierId = params.priceTierId;

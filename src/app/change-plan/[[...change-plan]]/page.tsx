@@ -12,6 +12,8 @@ import {
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 
+// TODO redirect out if not signed in
+
 export default function ChangePlanPage() {
   return (
     <SplitScreenContainer
