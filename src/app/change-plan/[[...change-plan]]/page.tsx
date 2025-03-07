@@ -1,18 +1,16 @@
 import { auth } from "@clerk/nextjs/server";
 import { CheckIcon } from "lucide-react";
-import { PageSubtitle } from "~/app/_components/PageSubtitle";
-import { PricingCard } from "~/app/_components/PricingCard";
-import { PricingCardCta } from "~/app/_components/PricingCardCta";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { PriceTier, PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import { type PriceTier, type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
 
 export default function ChangePlanPage() {
   return (
@@ -76,6 +74,16 @@ function Plan(props: { tier: PriceTier; isCurrent: boolean }) {
           {getFeatureRow("staff members", "staff members", staffMembers)}
         </div>
       </CardContent>
+      <CardFooter>
+        {!props.isCurrent && (
+          <Link href={`/change-plan/${id}`} className="w-full">
+            <Button className="w-full" variant="default">
+              {monthlyUsdPrice === 0 ? "Downgrade to Free" : 
+               monthlyUsdPrice > 0 ? "Change to this Plan" : "Contact Sales"}
+            </Button>
+          </Link>
+        )}
+      </CardFooter>
     </Card>
   );
 }
