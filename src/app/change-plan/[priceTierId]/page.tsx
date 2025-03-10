@@ -2,26 +2,11 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
-import {
-  PriceTierIdSchema,
-  defaultTier,
-  isPriceTierId,
-  priceTiers,
-  type PriceTierId,
-} from "~/app/_domain/price-tiers";
+import { isPriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import Link from "next/link";
-import { StripeSubscriptionManagement } from "../_components/StripeSubscriptionManagement";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
+import { getPriceTierChangeScenario } from "~/app/_utils/price-tier-utils";
 
 export type Params = Promise<{ priceTierId: string }>;
 
@@ -33,6 +18,8 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
   }
 
   const parsedToTier = priceTiers[params.priceTierId];
+
+  console.log(parsedToTier);
 
   const { userId, orgId, sessionClaims } = await auth();
 
@@ -51,91 +38,77 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     return redirect("/change-plan");
   }
 
-  //TODO refactor extract to fn
-  let title: string;
-  let description: string;
+  const changePlanScenario = getPriceTierChangeScenario(
+    parsedFromTier.id,
+    parsedToTier.id,
+  );
 
-  if (parsedToTier.id === "start") {
-    title = "Downgrade to Free Plan";
-    description =
-      "You're about to downgrade to our Free plan. Your current paid features will remain active until the end of your billing period.";
-  } else if (parsedFromTier.id === "start") {
-    title = `Upgrade to ${parsedToTier.name} Plan`;
-    description = `You're about to upgrade to our ${parsedToTier.name} plan with additional features.`;
-  } else {
-    const isUpgrade =
-      parsedToTier.monthlyUsdPrice > parsedFromTier.monthlyUsdPrice;
-    title = isUpgrade
-      ? `Upgrade to ${parsedToTier.name} Plan`
-      : `Downgrade to ${parsedToTier.name} Plan`;
-    description = isUpgrade
-      ? `You're about to upgrade from ${parsedFromTier.name} to ${parsedToTier.name}. The new rate will be applied immediately.`
-      : `You're about to downgrade from ${parsedFromTier.name} to ${parsedToTier.name}. The new rate will be applied at the end of your current billing cycle.`;
+  let description = "";
+  let buttonText = "";
+  let changeUrl = "";
+
+  // TODO check if current plan has more features than future plan
+
+  switch (changePlanScenario) {
+    case "free-to-paid":
+      description = `You're about to upgrade to our ${parsedToTier.name} plan. You will get access to all the additional features immediately.`;
+      buttonText = `Subscribe to ${parsedToTier.name}`;
+      changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.id}`;
+      break;
+    case "free-to-free":
+      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. The new feature set will become available to you right away.`;
+      buttonText = `Change to ${parsedToTier.name}`;
+      changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.name}`;
+      break;
+    case "paid-to-free":
+      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
+        Your account will be credited right away with an amount corresponding to the remaining days in your current 
+        monthly subscription. The new feature set will become available to you right away.`;
+        buttonText = `Downgrade to ${parsedToTier.name}`;    
+      changeUrl = `/change-plan/cancel`;
+      break;
+    case "paid-to-paid-upgrade":
+      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
+        Your account will be debited now with the difference between the two monthly subscriptions, corresponding 
+        to the remaining days in your current month. The new feature set will become available to you right away.`;
+      buttonText = `Upgrade to ${parsedToTier.name}`;
+      changeUrl = `/change-plan/modify?targetTierId=${parsedToTier.id}`;
+      break;
+    case "paid-to-paid-downgrade":
+      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
+        Your account will be credited now with the difference between the two monthly subscriptions, corresponding 
+        to the remaining days in your current month. The new feature set will become available to you right away.`;
+      buttonText = `Downgrade to ${parsedToTier.name}`;
+      changeUrl = `/change-plan/modify?targetTierId=${parsedToTier.id}`;
+      break;
+    default:
+      return null;
   }
 
   return (
     <SplitScreenContainer
       mainComponent={
-        <>
-          <div className="flex flex-col flex-nowrap gap-4">
-            <PriceTierCard tier={parsedFromTier} isCurrent={true} />
-            <SvgIcon kind={"arrowDoodle"} className={'dark:stroke-white dark:fill-white'} />
-            <PriceTierCard tier={parsedFromTier} isCurrent={false} />
+        <div className="flex flex-col flex-nowrap gap-4">
+          <p className="pb-4 text-sm">{description}</p>
+          <PriceTierCard tier={parsedFromTier} isCurrent={true} />
+          <SvgIcon
+            kind={"arrowDoodle"}
+            className={"fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"}
+          />
+          <PriceTierCard tier={parsedToTier} isCurrent={false} />
+          <div className="flex w-full flex-col gap-2 pt-4">
+            <Link href={changeUrl} className="w-full">
+              <Button variant={'default'}  className="w-full">
+                {buttonText}
+              </Button>
+            </Link>
+            <Link href="/change-plan" className="w-full">
+              <Button variant="outline" className="w-full">
+                Go back
+              </Button>
+            </Link>
           </div>
-          <div className="flex flex-col space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>{title}</CardTitle>
-                <CardDescription>{description}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span>Current Plan:</span>
-                    <span className="font-semibold">{parsedFromTier.name}</span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span>New Plan:</span>
-                    <span className="font-semibold">{parsedToTier.name}</span>
-                  </div>
-
-                  <Separator />
-
-                  <div className="flex items-center justify-between">
-                    <span>Current Price:</span>
-                    <span className="font-semibold">
-                      {parsedFromTier.monthlyUsdPrice === 0
-                        ? "Free"
-                        : `$${parsedFromTier.monthlyUsdPrice}/month`}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <span>New Price:</span>
-                    <span className="font-semibold">
-                      {parsedToTier.monthlyUsdPrice === 0
-                        ? "Free"
-                        : `$${parsedToTier.monthlyUsdPrice}/month`}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-              <CardFooter className="flex flex-col space-y-3">
-                <StripeSubscriptionManagement
-                  fromTierId={parsedFromTier.id}
-                  toTierId={parsedToTier.id}
-                />
-
-                <Link href="/change-plan" className="w-full">
-                  <Button variant="outline" className="w-full">
-                    Cancel
-                  </Button>
-                </Link>
-              </CardFooter>
-            </Card>
-          </div>
-        </>
+        </div>
       }
       title="Change Plan"
       subtitle="Review your plan change"

@@ -3,8 +3,9 @@ import { type PriceTier } from "../_domain/price-tiers";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { CheckIcon } from "lucide-react";
+import { type ReactNode } from "react";
 
-export function PriceTierCard  (props: { tier: PriceTier; isCurrent: boolean }) {
+export function PriceTierCard  (props: { tier: PriceTier; isCurrent: boolean, footerCta?: ReactNode }) {
   const {
     id,
     name,
@@ -33,17 +34,7 @@ export function PriceTierCard  (props: { tier: PriceTier; isCurrent: boolean }) 
           {getFeatureRow("staff members", "staff members", staffMembers)}
         </div>
       </CardContent>
-      <CardFooter>
-        {!props.isCurrent && (
-          <Link href={`/change-plan/${id}`} className="w-full">
-            <Button className="w-full" variant="default">
-              {monthlyUsdPrice === 0
-                ? "Downgrade to Free"
-                : "Change to this Plan"}
-            </Button>
-          </Link>
-        )}
-      </CardFooter>
+      {props.footerCta && <CardFooter>{props.footerCta}</CardFooter>}
     </Card>
   );
 }

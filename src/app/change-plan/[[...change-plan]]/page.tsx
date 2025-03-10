@@ -36,16 +36,24 @@ async function PlanSelector() {
   return (
     <div className="flex flex-col gap-3">
       {Object.entries(priceTiers).map(([_, tier]) => {
+        const isCurrent = currentUserTier === tier.id;
+        const footerCta = isCurrent ? null : (
+          <Link href={`/change-plan/${tier.id}`} className="w-full">
+            <Button className="w-full" variant="default">
+              Change to this plan
+            </Button>
+          </Link>
+        );
+
         return tier.isPublic ? (
           <PriceTierCard
             key={tier.name}
             tier={tier}
-            isCurrent={currentUserTier === tier.id}
+            isCurrent={isCurrent}
+            footerCta={footerCta}
           />
         ) : null;
       })}
     </div>
   );
 }
-
- 

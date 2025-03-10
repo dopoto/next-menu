@@ -11,12 +11,17 @@ export const PriceTierIdSchema = z.union([
 export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
 export const isPriceTierId = (value?: string): value is PriceTierId => {
-  if(!value){
+  if (!value) {
     return false;
   }
-  return PriceTierIdSchema.safeParse(value).success;
-};
+  const isValidValue = PriceTierIdSchema.safeParse(value).success;
 
+  if (!isValidValue) {
+    return false;
+  }
+
+  return priceTiers[value as PriceTierId].isPublic;
+};
 
 export const defaultTier: PriceTierId = "start";
 
