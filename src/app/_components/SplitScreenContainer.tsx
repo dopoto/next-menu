@@ -1,9 +1,11 @@
 import { type ReactNode } from "react";
 import { PageSubtitle } from "./PageSubtitle";
-import { PublicTopNav } from "./PublicTopNav";
 import { PageTitle } from "./PageTitle";
 import { ThemeSwitch } from "./ThemeSwitch";
 import { getAppVersion } from "../_utils/app-version-utils";
+import Link from "next/link";
+import SvgIcon from "./SvgIcons";
+import { SignedIn, UserButton } from "@clerk/nextjs";
 
 export function SplitScreenContainer(props: {
   title: string;
@@ -16,10 +18,34 @@ export function SplitScreenContainer(props: {
     <div className="flex min-h-full w-full min-w-0 flex-auto flex-col bg-amber-50 sm:flex-row sm:justify-center dark:bg-[#202027]">
       <div
         id="mainContent"
-        className="relative flex h-full w-full flex-col flex-nowrap gap-3 px-4 py-2 sm:h-auto sm:w-auto sm:min-w-[500px] sm:px-6   xl:px-36 xl:min-w-[750px]"
+        className="relative flex h-full w-full flex-col flex-nowrap gap-3 px-4 py-2 sm:h-auto sm:w-auto sm:min-w-[500px] sm:px-6 xl:min-w-[750px] xl:px-36"
       >
         <div className="py-6">
-          <PublicTopNav />
+          <nav className="flex w-full">
+            <Link href="/">
+              <SvgIcon
+                kind="logo"
+                size={"12"}
+                className="fill-black dark:fill-white"
+              />
+            </Link>
+            <SignedIn>
+              <div className="flex items-end ml-auto">
+              <UserButton
+                userProfileMode="navigation"
+                userProfileUrl="/my"
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: {
+                      width: "48px",
+                      height: "48px",
+                    },
+                  },
+                }}
+              />
+              </div>
+            </SignedIn>
+          </nav>
         </div>
         <div className="flex flex-col flex-nowrap">
           <PageTitle>{props.title}</PageTitle>
@@ -32,7 +58,10 @@ export function SplitScreenContainer(props: {
 
         <footer className="mt-auto flex flex-row pt-6 text-xs text-gray-400">
           {/* TODO actual ver */}
-          <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span>  v{getAppVersion()}</div>
+          <div className="my-auto">
+            <i>the</i>
+            <span className="text-gray-600">Menu</span> v{getAppVersion()}
+          </div>
           <div className="mt-auto ml-auto">
             <ThemeSwitch />
           </div>
