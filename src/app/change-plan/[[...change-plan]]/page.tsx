@@ -1,7 +1,11 @@
 import { auth } from "@clerk/nextjs/server";
 import { CheckIcon } from "lucide-react";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { type PriceTier, type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import {
+  type PriceTier,
+  type PriceTierId,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
 import {
   Card,
   CardContent,
@@ -47,18 +51,14 @@ function Plan(props: { tier: PriceTier; isCurrent: boolean }) {
   const {
     id,
     name,
-    description,
     monthlyUsdPrice,
     locations,
     menus,
     staffMembers,
-    isPopular,
   } = props.tier;
 
   return (
-    <Card
-      className={`${props.isCurrent ? "border-2 border-blue-400 bg-gray-50" : ""}`}
-    >
+    <Card className={`${props.isCurrent ? "border-2 border-blue-700" : ""}`}>
       <CardHeader className={`relative flex h-full flex-col`}>
         {props.isCurrent && (
           <div className="absolute top-5 -right-2 z-10 rotate-4 transform bg-blue-800 px-2 py-1 text-sm font-medium text-white shadow-md">
@@ -80,8 +80,9 @@ function Plan(props: { tier: PriceTier; isCurrent: boolean }) {
         {!props.isCurrent && (
           <Link href={`/change-plan/${id}`} className="w-full">
             <Button className="w-full" variant="default">
-              {monthlyUsdPrice === 0 ? "Downgrade to Free" : 
-               monthlyUsdPrice > 0 ? "Change to this Plan" : "Contact Sales"}
+              {monthlyUsdPrice === 0
+                ? "Downgrade to Free"
+                : "Change to this Plan"}
             </Button>
           </Link>
         )}
@@ -107,6 +108,7 @@ const getPrice = (monthlyUsdPrice: number) => {
     </div>
   );
 };
+
 const getFeatureRow = (
   singularName: string,
   pluralName: string,

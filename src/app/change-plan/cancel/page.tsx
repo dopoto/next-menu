@@ -18,6 +18,8 @@ export default async function CancelSubscriptionPage() {
     redirect("/sign-in");
   }
 
+  let success = false;
+
   try {
     // Find subscriptions for this organization
     const subscriptions = await stripe.subscriptions.list({
@@ -48,27 +50,28 @@ export default async function CancelSubscriptionPage() {
       });
     }
 
-    // Redirect to success page with action parameter
-    redirect("/change-plan/success?action=cancel");
+    success = true;
   } catch (error) {
     console.error("Error canceling subscription:", error);
+    return (
+      <SplitScreenContainer
+        mainComponent={
+          <Card>
+            <CardHeader>
+              <CardTitle>Cancellation Error</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>There was an error processing your cancellation request. Please try again later.</p>
+            </CardContent>
+          </Card>
+        }
+        title="Cancel Subscription"
+        subtitle="Processing your cancellation"
+      />
+    );
   }
 
-  // If there was an error or no redirect happened
-  return (
-    <SplitScreenContainer
-      mainComponent={
-        <Card>
-          <CardHeader>
-            <CardTitle>Cancellation Error</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>There was an error processing your cancellation request. Please try again later.</p>
-          </CardContent>
-        </Card>
-      }
-      title="Cancel Subscription"
-      subtitle="Processing your cancellation"
-    />
-  );
+  if (success) {
+    redirect("/change-plan/success?action=cancel");
+  }
 } 

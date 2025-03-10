@@ -1,49 +1,47 @@
 import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
+import { getPriceTierChangeScenario } from "~/app/_utils/price-tier-utils";
 
-type StripeSubscriptionManagementProps = {
-  currentTierId: PriceTierId;
-  targetTierId: PriceTierId;
-  hasSubscription: boolean;
-  userId: string;
-  orgId: string;
-};
-
-export function StripeSubscriptionManagement({
-  currentTierId,
-  targetTierId,
-  hasSubscription,
-  userId,
-  orgId,
-}: StripeSubscriptionManagementProps) {
-  // Determine the scenario
-  const isUpgradeFromFree = currentTierId === "start" && targetTierId !== "start";
-  const isDowngradeToFree = currentTierId !== "start" && targetTierId === "start";
-  const isPaidToPaid = currentTierId !== "start" && targetTierId !== "start";
-  const isUpgrade = isPaidToPaid && priceTiers[targetTierId].monthlyUsdPrice > priceTiers[currentTierId].monthlyUsdPrice;
-
-  // Determine the appropriate button text
-  let buttonText: string;
+export function StripeSubscriptionManagement(props: {
+  fromTierId: PriceTierId;
+  toTierId: PriceTierId;
+}) {
+  let buttonText = '';
   let buttonVariant: "default" | "destructive" = "default";
+  let changeUrl = '';
 
-  if (isUpgradeFromFree) {
-    buttonText = `Subscribe to ${priceTiers[targetTierId].name}`;
-  } else if (isDowngradeToFree) {
-    buttonText = "Cancel Subscription";
-    buttonVariant = "destructive";
-  } else if (isUpgrade) {
-    buttonText = `Upgrade to ${priceTiers[targetTierId].name}`;
-  } else {
-    buttonText = `Downgrade to ${priceTiers[targetTierId].name}`;
+  const toName = priceTiers[props.toTierId].name;
+
+  const changePlanScenario = getPriceTierChangeScenario(
+    props.fromTierId,
+    props.toTierId,
+  );
+  switch (changePlanScenario) {
+    case "free-to-paid":
+      buttonText = `Subscribe to ${toName}`;
+      changeUrl = `/change-plan/subscribe?toTierId=${props.toTierId}`
+      break;
+    case "free-to-free":
+      buttonText = `Change to ${toName}`;
+      changeUrl = `/change-plan/subscribe?toTierId=${props.toTierId}`
+      break;
+    case "paid-to-free":
+      buttonText = "Cancel Subscription";
+      buttonVariant = "destructive";
+      changeUrl = `/change-plan/cancel`;
+      break;
+    case "paid-to-paid-upgrade": 
+    buttonText = `Upgrade to ${toName}`;
+     changeUrl = `/change-plan/modify?targetTierId=${props.toTierId}`;
+      break;
+    case "paid-to-paid-downgrade":
+      buttonText = `Downgrade to ${toName}`;
+      changeUrl = `/change-plan/modify?targetTierId=${props.toTierId}`
+      break;
+    default:
+      return null;
   }
-
-  // Create the subscription change URLs using organization ID
-  const changeUrl = isUpgradeFromFree 
-    ? `/change-plan/subscribe?targetTierId=${targetTierId}`
-    : isDowngradeToFree
-    ? `/change-plan/cancel`
-    : `/change-plan/modify?targetTierId=${targetTierId}&isUpgrade=${isUpgrade}`;
 
   return (
     <Link href={changeUrl} className="w-full">
@@ -52,4 +50,4 @@ export function StripeSubscriptionManagement({
       </Button>
     </Link>
   );
-} 
+}

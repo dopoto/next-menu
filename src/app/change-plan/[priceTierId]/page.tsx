@@ -49,10 +49,6 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     return redirect("/change-plan");
   }
 
-  //TODO compute if plan is free instead
-  // Get user's subscription info
-  const hasSubscription = currentTierId !== "start"; // Checking if user has a paid plan
-
   //TODO refactor extract to fn
   let title: string;
   let description: string;
@@ -121,11 +117,8 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
             </CardContent>
             <CardFooter className="flex flex-col space-y-3">
               <StripeSubscriptionManagement
-                currentTierId={currentTierId}
-                targetTierId={targetTierId}
-                hasSubscription={hasSubscription}
-                userId={userId ?? ""}
-                orgId={orgId ?? ""}
+                fromTierId={currentTierId}
+                toTierId={targetTierId}
               />
 
               <Link href="/change-plan" className="w-full">

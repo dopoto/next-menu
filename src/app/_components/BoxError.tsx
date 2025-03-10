@@ -1,18 +1,21 @@
 import { FrownIcon } from "lucide-react";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "~/components/ui/collapsible";
+import { type ErrorTypeId, errorTypes } from "../_domain/errors";
 import { type ReactNode } from "react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "~/components/ui/collapsible";
-import { ErrorTypeId, errorTypes } from "../_domain/errors";
 
 export function BoxError(props: {
-  // title: string;
-  // description: string;
-  // ctas?: ReactNode[];
-  // errorId?: string;
-  errorTypeId: ErrorTypeId
+  errorTypeId: ErrorTypeId;
+  dynamicCtas?: ReactNode[];
+  context?: Record<string, string>;
 }) {
+  const error = errorTypes[props.errorTypeId];
+  const errorId = "123"; //TODO
 
-  const error = errorTypes[props.errorTypeId]
-const errorId = '123';
+  const ctas = [...props.dynamicCtas ?? [], error.ctas];
 
   return (
     <div className="shadow" role="alert">
@@ -30,21 +33,21 @@ const errorId = '123';
             <p className="text-sm text-gray-600 dark:text-white">
               {error.userFriendlyDescription}
             </p>
-            {error.ctas && (
+            {ctas && (
               <div className="mt-2 flex space-x-2 pt-4">
-                {error.ctas?.map((cta, index) => <div key={index}>{cta}</div>)}
+                {ctas?.map((cta, index) => <div key={index}>{cta}</div>)}
               </div>
             )}
-            {(errorId.length ?? 0) > 0 && <Collapsible className="pt-4">
+            {(errorId.length ?? 0) > 0 && (
+              <Collapsible className="pt-4">
                 <CollapsibleTrigger asChild>
-                <button className="text-blue-500 underline cursor-pointer">
-                  Get help with this error
-                </button>
+                  <button className="cursor-pointer text-blue-500 underline">
+                    Get help with this error
+                  </button>
                 </CollapsibleTrigger>
-              <CollapsibleContent>
-                TODO
-              </CollapsibleContent>
-            </Collapsible>}
+                <CollapsibleContent>TODO</CollapsibleContent>
+              </Collapsible>
+            )}
           </div>
         </div>
       </div>

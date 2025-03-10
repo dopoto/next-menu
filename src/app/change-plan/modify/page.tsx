@@ -7,11 +7,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { getCustomerByOrgId } from "~/server/queries";
 
-// Initialize Stripe
+// TODO How to handle JWT token update? 
+// metadata.tier only needs to be changed at the end of the current billing period 
+
+
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 type SearchParams = Promise<
-  Record<"targetTierId" | "isUpgrade", string | string[] | undefined>
+  Record<"toTierId" | "isUpgrade", string | string[] | undefined>
 >;
 
 export default async function ModifySubscriptionPage(props: {
@@ -24,22 +27,23 @@ export default async function ModifySubscriptionPage(props: {
 
   // Validate params
   const searchParams = await props.searchParams;
-  const { targetTierId, isUpgrade: isUpgradeStr } = searchParams;
-  if (!targetTierId) {
+  const { toTierId, isUpgrade: isUpgradeStr } = searchParams;
+  if (!toTierId) {
     redirect("/change-plan");
   }
 
-  const parsedTargetTierId = PriceTierIdSchema.safeParse(targetTierId);
-  if (!parsedTargetTierId.success) {
+  const parsedToTierId = PriceTierIdSchema.safeParse(toTierId);
+  if (!parsedToTierId.success) {
     redirect("/change-plan");
   }
 
-  // Parse isUpgrade
+  // Parse isUpgrade  TODO replace with util
   const isUpgrade = isUpgradeStr === "true";
+  let success = false;
 
   try {
     // Get the price ID
-    const parsedTargetTier = priceTiers[parsedTargetTierId.data];
+    const parsedTargetTier = priceTiers[parsedToTierId.data];
     console.log(`parsedTargetTier: ${JSON.stringify(parsedTargetTier)}`);
     const newPriceId = parsedTargetTier.stripePriceId;
     if (!newPriceId) {
@@ -100,31 +104,35 @@ export default async function ModifySubscriptionPage(props: {
       publicMetadata: {...(sessionClaims?.metadata ?? {}), tier: parsedTargetTier.id},
     });
 
-    // Redirect to success page with appropriate action parameter
-    const successAction = isUpgrade ? "upgrade" : "downgrade";
-    redirect(`/change-plan/success?action=${successAction}`);
+    success = true;
   } catch (error) {
     console.error("Error updating subscription:", error);
+    return (
+      <SplitScreenContainer
+        mainComponent={
+          <Card>
+            <CardHeader>
+              <CardTitle>Subscription Error</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p>
+                There was an error processing your subscription change. Please try
+                again later.
+              </p>
+            </CardContent>
+          </Card>
+        }
+        title="Modify Subscription"
+        subtitle="Processing your subscription change"
+      />
+    );
   }
 
-  // If there was an error or no redirect happened
-  return (
-    <SplitScreenContainer
-      mainComponent={
-        <Card>
-          <CardHeader>
-            <CardTitle>Subscription Error</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>
-              There was an error processing your subscription change. Please try
-              again later.
-            </p>
-          </CardContent>
-        </Card>
-      }
-      title="Modify Subscription"
-      subtitle="Processing your subscription change"
-    />
-  );
+  if (success) {
+    const successAction = isUpgrade ? "upgrade" : "downgrade";
+    redirect(`/change-plan/success?action=${successAction}`);
+  }
+  else {
+    //TODO Show error component
+  }
 }

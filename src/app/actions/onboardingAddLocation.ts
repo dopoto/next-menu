@@ -1,5 +1,8 @@
 "use server";
 
+
+//TODO https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#step-4-instrument-nextjs-server-actions-optional
+
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { db } from "~/server/db";
@@ -119,15 +122,6 @@ export const onboardingAddLocation = async (formData: FormData) => {
   }
 
   try {
-    // const insertedLocation] = await db
-    //   .insert(locations)
-    //   .values({
-    //     name: validatedFormFields.data.locationName,
-    //     orgId,
-    //   })
-    //   .returning({ id: locations.id });
-
- 
     const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName);
     
     //TODO

@@ -19,7 +19,7 @@ export async function addCustomer(clerkUserId: string, orgId: string) {
 
 export async function updateCustomerByClerkUserId(
   clerkUserId: string,
-  stripeCustomerId: string,
+  stripeCustomerId: string | null,
 ) {
   // TODO Checks
 

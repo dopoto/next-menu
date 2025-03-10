@@ -1,6 +1,6 @@
 "use client";
 
-import { useClerk, UserButton, useUser  } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { ChevronsUpDown } from "lucide-react";
 import {
   SidebarMenu,
@@ -13,15 +13,19 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Separator } from "~/components/ui/separator";
+import Link from "next/link";
+import { TierPill } from "~/app/_components/TierPill";
+import { type PriceTierId } from "~/app/_domain/price-tiers";
 
 export function SidebarUserManager() {
   const { openUserProfile, signOut } = useClerk();
   const { user } = useUser();
- 
- // TODO const { organization } = useOrganization();
+
+  // TODO const { organization } = useOrganization();
 
   if (!user) return null;
-
+  const priceTierId: PriceTierId = user.publicMetadata.tier as PriceTierId;
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -42,6 +46,10 @@ export function SidebarUserManager() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[200px]">
+            <DropdownMenuItem>
+              <Link href="/change-plan">Change plan</Link>
+            </DropdownMenuItem>
+            <Separator />
             <DropdownMenuItem onClick={() => openUserProfile()}>
               Manage account
             </DropdownMenuItem>

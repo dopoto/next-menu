@@ -10,6 +10,14 @@ export const PriceTierIdSchema = z.union([
 
 export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
+export const isPriceTierId = (value?: string): value is PriceTierId => {
+  if(!value){
+    return false;
+  }
+  return PriceTierIdSchema.safeParse(value).success;
+};
+
+
 export const defaultTier: PriceTierId = "start";
 
 export type PriceTier = {
@@ -93,3 +101,10 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPopular: false,
   },
 };
+
+export type PriceTierChangeScenario =
+  | "free-to-paid"
+  | "free-to-free"
+  | "paid-to-free"
+  | "paid-to-paid-upgrade"
+  | "paid-to-paid-downgrade";
