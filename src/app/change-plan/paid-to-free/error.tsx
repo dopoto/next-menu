@@ -1,7 +1,7 @@
 'use client' // Error boundaries must be Client Components
 
 import { useEffect } from 'react'
-import { type ContextError, isContextError } from '~/app/_domain/errors';
+import { getErrorContext, isContextError } from '~/app/_domain/errors';
 
 export default function Error({
   error,
@@ -11,12 +11,11 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    console.error('Error:', error);
+    console.error('Error:', error, 'isContextError:', isContextError(error));
   }, [error]);
 
-  // Properly check if it's a ContextError and extract context
-  const isCtxError = isContextError(error);
-  const errorContext = isCtxError ? error.context : null;
+  // Get context and ensure we handle both raw and serialized errors
+  const errorContext = getErrorContext(error);
   const errorMessage = error instanceof Error ? error.message : String(error);
 
   return (

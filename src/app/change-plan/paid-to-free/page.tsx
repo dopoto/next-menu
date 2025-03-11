@@ -89,7 +89,10 @@ async function FinalStep(props: { step2Result: string }) {
     });
   };
   await updateProgress();
-  throw new ContextError("someth2", { prop1: 'my cval' });
+  
+  // Throw ContextError directly instead of wrapping it
+  throw new ContextError("Final step failed", { prop1: 'my cval', step: 'final' });
+  
   return (
     <SplitScreenContainer
       title={`Thank you! [${props.step2Result}]`}

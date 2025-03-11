@@ -10,13 +10,14 @@ import { Button } from "~/components/ui/button";
 export class ContextError extends Error {
   context: Record<string, unknown>;
   digest?: string;
+  readonly __type = 'ContextError'; // Add type marker
 
   constructor(message: string, context: Record<string, unknown> = {}) {
     super(message);
     this.name = 'ContextError';
     this.context = context;
     
-    // This is needed to make instanceof work correctly in TypeScript
+    Error.captureStackTrace(this, this.constructor);
     Object.setPrototypeOf(this, ContextError.prototype);
   }
 
@@ -29,7 +30,6 @@ export class ContextError extends Error {
       name: this.name,
       message: this.message,
       context: this.context,
-      stack: this.stack
     };
   }
 }
@@ -38,7 +38,28 @@ export class ContextError extends Error {
  * Helper function to check if an error is a ContextError
  */
 export function isContextError(error: unknown): error is ContextError {
-  return error instanceof ContextError;
+  return (
+    error !== null &&
+    typeof error === 'object' &&
+    (
+      error instanceof ContextError ||
+      (error as any).__type === 'ContextError' ||
+      'context' in error
+    )
+  );
+}
+
+export function getErrorContext(error: unknown): Record<string, unknown> | null {
+  if (!error) return null;
+  
+  // Handle serialized error objects
+  if (typeof error === 'object' && error !== null) {
+    if (isContextError(error)) {
+      return (error as any).context || null;
+    }
+  }
+  
+  return null;
 }
 
 export type ErrorTypeId =
