@@ -70,7 +70,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
         monthly subscription.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/paid-to-free`;
+      changeUrl = `/change-plan/paid-to-free?toTierId=${parsedToTier.id}`;
       break;
     case "paid-to-paid-upgrade":
       theHow = `You will now need to complete a payment covering the remaining days in your current month.`;

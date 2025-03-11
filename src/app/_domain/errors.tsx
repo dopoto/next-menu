@@ -2,6 +2,45 @@ import Link from "next/link";
 import { type ReactNode } from "react";
 import { Button } from "~/components/ui/button";
 
+/**
+ * Custom error class that supports additional context data
+ * This allows you to throw errors with structured metadata
+ * that can be accessed in error boundaries
+ */
+export class ContextError extends Error {
+  context: Record<string, unknown>;
+  digest?: string;
+
+  constructor(message: string, context: Record<string, unknown> = {}) {
+    super(message);
+    this.name = 'ContextError';
+    this.context = context;
+    
+    // This is needed to make instanceof work correctly in TypeScript
+    Object.setPrototypeOf(this, ContextError.prototype);
+  }
+
+  /**
+   * Helper method to convert the error to a plain object
+   * Useful for logging or serializing the error
+   */
+  toJSON() {
+    return {
+      name: this.name,
+      message: this.message,
+      context: this.context,
+      stack: this.stack
+    };
+  }
+}
+
+/**
+ * Helper function to check if an error is a ContextError
+ */
+export function isContextError(error: unknown): error is ContextError {
+  return error instanceof ContextError;
+}
+
 export type ErrorTypeId =
   | "STRIPE_MISSING_PAYMENT_DATA"
   | "STRIPE_PAYMENT_EXPIRED"

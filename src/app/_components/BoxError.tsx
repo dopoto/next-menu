@@ -19,7 +19,7 @@ export function BoxError(props: {
   const ctas = [...(props.dynamicCtas ?? []), error.ctas];
 
   const contextToShow =
-    env.NODE_ENV === "development"
+    env.NEXT_PUBLIC_ENV === "development"
       ? props.context
         ? Object.entries(props.context).map(([key, value]) => (
             <div key={key}>

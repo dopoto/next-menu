@@ -10,6 +10,10 @@ import { type ReactNode } from "react";
 import { PlanChanged } from "../_components/PlanChanged";
 import { BoxError } from "~/app/_components/BoxError";
 
+import { Suspense } from "react";
+import ProcessingPlanChange from "../_components/ProcessingPlanChange";
+import { ContextError } from "~/app/_domain/errors";
+
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
@@ -19,7 +23,100 @@ export default async function PaidToFreePage(props: {
 }) {
   let title = "";
   let subtitle = "";
-  let mainComponent: ReactNode = <>Processing your request...</>;
+  let mainComponent: ReactNode;
+  let progress = 0;
+
+  return (
+    <Suspense fallback={<ProcessingPlanChange progress={0} />}>
+      <Step1 />
+    </Suspense>
+  );
+}
+
+async function Step1() {
+  console.log("Step1 start");
+  try {
+    const updateProgress = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          console.log("Step1 updateProgress ");
+          resolve(null);
+        }, 2000);
+      });
+    };
+    console.log("Step1   bef upda");
+    await updateProgress();
+    console.log("Step1   after  upda");
+    const result1 = "res 1";
+
+    return (
+      <Suspense fallback={<ProcessingPlanChange progress={40} />}>
+        <Step2 step1Result={result1} />
+      </Suspense>
+    );
+  } catch (error) {
+    throw new Error("Step 1 failed", { cause: error });
+  }
+}
+
+async function Step2(props: { step1Result: string }) {
+  try {
+    const updateProgress = () => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve(null);
+        }, 2000);
+      });
+    };
+    await updateProgress();
+    const result2 = "res 2";
+    return (
+      <Suspense fallback={<ProcessingPlanChange progress={90} />}>
+        <FinalStep step2Result={result2} />
+      </Suspense>
+    );
+  } catch (error) {
+    throw new Error("Step 1 failed", { cause: error });
+  }
+}
+
+async function FinalStep(props: { step2Result: string }) {
+  const updateProgress = () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(null);
+      }, 2000);
+    });
+  };
+  await updateProgress();
+  throw new ContextError("someth2", { prop1: 'my cval' });
+  return (
+    <SplitScreenContainer
+      title={`Thank you! [${props.step2Result}]`}
+      subtitle="Your subscription has been updated."
+      mainComponent={<p>Ready!</p>}
+    />
+  );
+}
+
+/*
+export default async function PaidToFreePage(props: {
+  searchParams: SearchParams;
+}) {
+  let title = "";
+  let subtitle = "";
+  let mainComponent: ReactNode;
+  let progress = 0;
+
+  // Function to simulate progress updates
+  const updateProgress = (newProgress: number) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        progress = newProgress;
+        resolve(null);
+      }, 100); // Adjust the delay as needed
+    });
+  };
 
   try {
     const { userId, orgId, sessionClaims } = await auth();
@@ -27,7 +124,7 @@ export default async function PaidToFreePage(props: {
       redirect("/sign-in");
     }
 
-    // Ensure we change from a paid tier
+    await updateProgress(10);
     if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
       throw new Error(
         `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaims)}`,
@@ -40,7 +137,7 @@ export default async function PaidToFreePage(props: {
       );
     }
 
-    // Ensure we change to a free tier
+    await updateProgress(20);
     const { toTierId } = await props.searchParams;
     if (!isPriceTierId(toTierId)) {
       throw new Error(
@@ -54,15 +151,18 @@ export default async function PaidToFreePage(props: {
       );
     }
 
+    await updateProgress(30);
     const stripeCustomerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
     if (!stripeCustomerId) {
       throw new Error(`Cannot find Stripe customer for organization ${orgId}`);
     }
 
+    await updateProgress(50);
     const subscriptions = await stripe.subscriptions.list({
       customer: stripeCustomerId,
     });
 
+    await updateProgress(70);
     const orgSubscriptions = subscriptions.data.filter(
       (sub) => sub.metadata.orgId === orgId,
     );
@@ -81,8 +181,6 @@ export default async function PaidToFreePage(props: {
       );
     }
 
-    // Get the first active subscription
-    // TODO more filters here
     const currentSubscription = subscriptions.data[0];
 
     if (!currentSubscription?.items?.data?.[0]?.id) {
@@ -91,26 +189,13 @@ export default async function PaidToFreePage(props: {
       );
     }
 
-    console.log(obj2str(currentSubscription));
-
-    // await stripe.subscriptions.update(currentSubscription.id, {
-    //   cancel_at_period_end: false,
-    //   metadata: {
-    //     ...currentSubscription.metadata,
-    //     pendingDowngradeToFree: "true",
-    //   },
-    // });
-
-    // TODO update JWT token
-
-    // TODO update db
-
+    await updateProgress(90);
     title = "Thank you!";
     subtitle = "Your subscription has been updated.";
     mainComponent = (
       <PlanChanged fromTier={parsedFromTier} toTier={parsedToTier} />
     );
-  } catch(e ) {
+  } catch (e) {
     title = "Could not update your subscription";
     subtitle = "An error occurred while processing the update.";
     const errorContext = { message: (e as Error).message ?? '' }
@@ -118,10 +203,13 @@ export default async function PaidToFreePage(props: {
   }
 
   return (
-    <SplitScreenContainer
-      mainComponent={mainComponent}
-      title={title}
-      subtitle={subtitle}
-    />
+    <Suspense fallback={<Loading progress={progress} />}>
+      <SplitScreenContainer
+        mainComponent={mainComponent || <Loading progress={progress} />}
+        title={title || 'Processing your plan change'}
+        subtitle={subtitle || 'This should be done in a sec...'}
+      />
+    </Suspense>
   );
 }
+*/
