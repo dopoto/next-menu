@@ -57,33 +57,33 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
       theHow = `You will need to complete a Stripe payment in the next step`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Subscribe to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.id}`;
+      changeUrl = `/change-plan/free-to-paid?toTierId=${parsedToTier.id}`;
       break;
     case "free-to-free":
       theHow = `Click the button below to confirm the plan change`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Change to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.name}`;
+      changeUrl = `/change-plan/free-to-free?toTierId=${parsedToTier.name}`;
       break;
     case "paid-to-free":
       theHow = `Your account will be credited in the next step with an amount corresponding to the remaining days in your current 
         monthly subscription.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/cancel`;
+      changeUrl = `/change-plan/paid-to-free`;
       break;
     case "paid-to-paid-upgrade":
       theHow = `You will now need to complete a payment covering the remaining days in your current month.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Upgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/modify?toTierId=${parsedToTier.id}`;
+      changeUrl = `/change-plan/upgrade-or-downgrade?toTierId=${parsedToTier.id}`;
       break;
     case "paid-to-paid-downgrade":
       theHow = `You will receive a credit for the remaining time on your current ${parsedFromTier.name} subscription and you 
         will be billed now for the new, lower-cost subscription.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/modify?toTierId=${parsedToTier.id}`;
+      changeUrl = `/change-plan/upgrade-or-downgrade?toTierId=${parsedToTier.id}`;
       break;
     default:
       return null;

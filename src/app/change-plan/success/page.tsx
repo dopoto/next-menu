@@ -64,7 +64,7 @@ export default async function SuccessPage(props: {
 
     if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
       throw new Error(
-        `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaimsa, null, 2)}`,
+        `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaims )}`,
       );
     }
     const parsedFromTier = priceTiers[sessionClaims?.metadata?.tier];

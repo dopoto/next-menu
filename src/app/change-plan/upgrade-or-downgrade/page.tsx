@@ -61,10 +61,7 @@ export default async function ModifySubscriptionPage(props: {
       throw new Error(`Cannot find Stripe customer for organization ${orgId}`);
     }
 
-    const subscriptions = await stripe.subscriptions.list({
-      customer: stripeCustomerId,
-      limit: 10,
-    });
+    const subscriptions = await stripe.subscriptions.list({customer: stripeCustomerId});
 
     if (!subscriptions || subscriptions.data.length === 0) {
       throw new Error(`No active subscription found for organization ${orgId}`);
