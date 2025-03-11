@@ -44,7 +44,6 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     parsedToTier.id,
   );
 
-
   let theHow = "";
   let theWhen = "";
   let buttonText = "";
@@ -66,8 +65,8 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
       changeUrl = `/change-plan/free-to-free?toTierId=${parsedToTier.name}`;
       break;
     case "paid-to-free":
-      theHow = `Your account will be credited in the next step with an amount corresponding to the remaining days in your current 
-        monthly subscription.`;
+      theHow = `Your account will be credited in the next step with an amount corresponding to the 
+      remaining days in your currently active subscription.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
       changeUrl = `/change-plan/paid-to-free?toTierId=${parsedToTier.id}`;
@@ -93,32 +92,58 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     <SplitScreenContainer
       mainComponent={
         <div className="flex flex-col gap-4">
-          <div className="max-w-md text-sm">
+          {/* when what how */}
+          <div className="flex flex-col rounded-sm border-1 border-dashed border-gray-300 bg-gray-50/20 p-4 text-xs mb-4">
             <Badge
               variant={"outline"}
-              className="gap-0 border-dashed border-gray-400 mr-1 w-[70px]"
-            >              
+              className="mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
+            >
               what?
-            </Badge>{` You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan.`}            
-          </div>
-          <div className="max-w-md text-sm">
+            </Badge>
+            <div>
+              {`You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan.`}
+            </div>
+
             <Badge
               variant={"outline"}
-              className="gap-0 border-dashed border-gray-400 mr-1  w-[70px]"
+              className="mr-1 mt-5 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
             >
               how?
-            </Badge>{" "}
-            {theHow}
-          </div>
-          <div className="max-w-md text-sm">
+            </Badge>
+            <div>
+              {theHow}
+            </div>
+
             <Badge
               variant={"outline"}
-              className="gap-0 border-dashed border-gray-400 mr-1  w-[70px]"
-            >               
+              className="mr-1 mt-5 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
+            >
               when?
-            </Badge>{" "}
-            {theWhen}
+            </Badge>
+            <div>
+              {theWhen}
+            </div>
+
+            {/* <div className="max-w-md text-sm">
+              <Badge
+                variant={"outline"}
+                className="mr-1 w-[70px] gap-0 border-dashed border-gray-400"
+              >
+                how?
+              </Badge>{" "}
+              {theHow}
+            </div>
+            <div className="max-w-md text-sm">
+              <Badge
+                variant={"outline"}
+                className="mr-1 w-[70px] gap-0 border-dashed border-gray-400"
+              >
+                when?
+              </Badge>{" "}
+              {theWhen}
+            </div> */}
           </div>
+
           <PriceTierCard tier={parsedFromTier} isCurrent={true} />
           <SvgIcon
             kind={"arrowDoodle"}

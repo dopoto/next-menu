@@ -3,7 +3,11 @@ import { redirect } from "next/navigation";
 import { Stripe } from "stripe";
 import { env } from "~/env";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { isPriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import {
+  isPriceTierId,
+  PriceTier,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
 import { obj2str } from "~/app/_utils/string-utils";
 import { getCustomerByOrgId } from "~/server/queries";
 import { type ReactNode } from "react";
@@ -24,78 +28,96 @@ export default async function PaidToFreePage(props: {
   let mainComponent: ReactNode;
   let progress = 0;
 
+  const { toTierId } = await props.searchParams;
+
   return (
     <Suspense fallback={<ProcessingPlanChange progress={0} />}>
-      <Step1 />
+      <Step1 toTierId={toTierId} />
     </Suspense>
   );
 }
 
-async function Step1() {
-  console.log("Step1 start");
-  try {
-    const updateProgress = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          console.log("Step1 updateProgress ");
-          resolve(null);
-        }, 2000);
-      });
-    };
-    console.log("Step1   bef upda");
-    await updateProgress();
-    console.log("Step1   after  upda");
-    const result1 = "res 1";
-
-    return (
-      <Suspense fallback={<ProcessingPlanChange progress={40} />}>
-        <Step2 step1Result={result1} />
-      </Suspense>
-    );
-  } catch (error) {
-    throw new Error("Step 1 failed", { cause: error });
+async function Step1(props: { toTierId?: string }) {
+  const { userId, orgId, sessionClaims } = await auth();
+  if (!userId || !orgId) {
+    redirect("/sign-in");
   }
+
+  if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
+    throw new Error(
+      `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaims)}`,
+    );
+  }
+  const parsedFromTier = priceTiers[sessionClaims?.metadata?.tier];
+  if (parsedFromTier.monthlyUsdPrice <= 0) {
+    throw new Error(
+      `Expected to move from a paid tier. Got: ${obj2str(parsedFromTier)}`,
+    );
+  }
+
+  if (!isPriceTierId(props.toTierId)) {
+    throw new Error(
+      `Missing or invalid To tier param: ${props.toTierId?.toString()}`,
+    );
+  }
+  const parsedToTier = priceTiers[props.toTierId];
+  if (parsedToTier.monthlyUsdPrice > 0) {
+    throw new Error(
+      `Expected to move to a free tier. Got: ${obj2str(parsedToTier)}`,
+    );
+  }
+
+  return (
+    <Suspense fallback={<ProcessingPlanChange progress={40} />}>
+      <Step2 fromTier={parsedFromTier} toTier={parsedToTier} orgId={orgId} />
+    </Suspense>
+  );
 }
 
-async function Step2(props: { step1Result: string }) {
-  try {
-    const updateProgress = () => {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          resolve(null);
-        }, 2000);
-      });
-    };
-    await updateProgress();
-    const result2 = "res 2";
-    return (
-      <Suspense fallback={<ProcessingPlanChange progress={90} />}>
-        <FinalStep step2Result={result2} />
-      </Suspense>
-    );
-  } catch (error) {
-    throw new Error("Step 1 failed", { cause: error });
+async function Step2(props: { fromTier: PriceTier; toTier: PriceTier, orgId: string }) {
+   
+  const stripeCustomerId = (await getCustomerByOrgId(props.orgId)).stripeCustomerId;
+  if (!stripeCustomerId) {
+    throw new Error(`Cannot find Stripe customer for organization ${props.orgId}`);
   }
+
+  const subscriptions = await stripe.subscriptions.list({
+    customer: stripeCustomerId,
+  });
+
+  if (!subscriptions || subscriptions.data.length === 0) {
+    throw new Error(`No active subscription found for customer ${stripeCustomerId}`);
+  }
+
+  if (subscriptions.data.length > 1) {
+    throw new Error(`More than 1 subscription found for customer ${stripeCustomerId}`);
+  }
+  
+  const currentSubscription = subscriptions.data[0];
+
+  console.log(obj2str(currentSubscription))
+
+  if (!currentSubscription?.items?.data?.[0]?.id) {
+    throw new Error(
+      `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
+    );
+  }
+
+  // TODO Update subscription, db, token
+
+  return (
+    <Suspense fallback={<ProcessingPlanChange progress={60} />}>
+      <FinalStep fromTier={props.fromTier} toTier={props.toTier} />
+    </Suspense>
+  );
 }
 
-async function FinalStep(props: { step2Result: string }) {
-  const updateProgress = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(null);
-      }, 2000);
-    });
-  };
-  await updateProgress();
-  
-  // Throw ContextError directly instead of wrapping it
-  throw new Error("Final step failed");
-  
+async function FinalStep(props: { fromTier: PriceTier; toTier: PriceTier  }) {
   return (
     <SplitScreenContainer
-      title={`Thank you! [${props.step2Result}]`}
+      title={`Thank you!`}
       subtitle="Your subscription has been updated."
-      mainComponent={<p>Ready!</p>}
+      mainComponent={<PlanChanged fromTier={props.fromTier} toTier={props.toTier} />}
     />
   );
 }

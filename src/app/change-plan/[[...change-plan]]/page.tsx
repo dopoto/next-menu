@@ -22,8 +22,8 @@ async function PlanSelector() {
     ?.tier as PriceTierId;
 
   return (
-    <div className="flex flex-col gap-3">
-      <p>{"Next, we'll show you an overview page where you'll be able to complete the plan change."}</p>
+    <div className="flex flex-col gap-3 ">
+      <p className="text-sm max-w-md">{"Next, we'll show you an overview page where you'll be able to complete the plan change."}</p>
       {Object.entries(priceTiers).map(([_, tier]) => {
         const isCurrent = currentUserTier === tier.id;
         const footerCta = isCurrent ? null : (
