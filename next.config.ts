@@ -51,6 +51,17 @@ const config: NextConfig = {
     ];
   },
 
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'img.clerk.com',
+        port: '',
+        search: '',
+      },
+    ],
+  },
+
   webpack: (config: { cache: { type: string } }) => {
     config.cache = {
       type: "memory",

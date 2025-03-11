@@ -296,11 +296,11 @@ html {
 }
 
 /* Override Clerk CSS */
-.cl-cardBox,
-.cl-rootBox {
+/* .cl-cardBox, */
+/* .cl-rootBox {
   width: 100% !important;
   max-width: none !important;
-}
+} */
 
 @layer utilities {
   .heading-label {

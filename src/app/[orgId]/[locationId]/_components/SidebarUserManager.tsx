@@ -13,19 +13,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { Separator } from "~/components/ui/separator";
-import Link from "next/link";
-import { TierPill } from "~/app/_components/TierPill";
-import { type PriceTierId } from "~/app/_domain/price-tiers";
 
 export function SidebarUserManager() {
   const { openUserProfile, signOut } = useClerk();
   const { user } = useUser();
-
-  // TODO const { organization } = useOrganization();
-
   if (!user) return null;
-  const priceTierId: PriceTierId = user.publicMetadata.tier as PriceTierId;
+
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -35,7 +28,16 @@ export function SidebarUserManager() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
             >
-              <UserButton />
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: {
+                      width: "32px",
+                      height: "32px",
+                    },
+                  },
+                }}
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.fullName}</span>
                 <span className="truncate text-xs">
@@ -46,10 +48,6 @@ export function SidebarUserManager() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[200px]">
-            <Link href="/change-plan">
-              <DropdownMenuItem>Change plan</DropdownMenuItem>
-            </Link>
-            <Separator />
             <DropdownMenuItem onClick={() => openUserProfile()}>
               Manage account
             </DropdownMenuItem>

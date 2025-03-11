@@ -18,6 +18,7 @@ import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { menuItems } from "../_domain/menu-sections";
+import { SidebarOrganizationManager } from "./SidebarOrganizationManager";
 
 export function LocationSidebar({
   ...props
@@ -100,6 +101,7 @@ export function LocationSidebar({
       </SidebarContent>
       <SidebarFooter>
         <SidebarUserManager />
+        <SidebarOrganizationManager />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
