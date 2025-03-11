@@ -1,66 +1,7 @@
 import Link from "next/link";
 import { type ReactNode } from "react";
 import { Button } from "~/components/ui/button";
-
-/**
- * Custom error class that supports additional context data
- * This allows you to throw errors with structured metadata
- * that can be accessed in error boundaries
- */
-export class ContextError extends Error {
-  context: Record<string, unknown>;
-  digest?: string;
-  readonly __type = 'ContextError'; // Add type marker
-
-  constructor(message: string, context: Record<string, unknown> = {}) {
-    super(message);
-    this.name = 'ContextError';
-    this.context = context;
-    
-    Error.captureStackTrace(this, this.constructor);
-    Object.setPrototypeOf(this, ContextError.prototype);
-  }
-
-  /**
-   * Helper method to convert the error to a plain object
-   * Useful for logging or serializing the error
-   */
-  toJSON() {
-    return {
-      name: this.name,
-      message: this.message,
-      context: this.context,
-    };
-  }
-}
-
-/**
- * Helper function to check if an error is a ContextError
- */
-export function isContextError(error: unknown): error is ContextError {
-  return (
-    error !== null &&
-    typeof error === 'object' &&
-    (
-      error instanceof ContextError ||
-      (error as any).__type === 'ContextError' ||
-      'context' in error
-    )
-  );
-}
-
-export function getErrorContext(error: unknown): Record<string, unknown> | null {
-  if (!error) return null;
-  
-  // Handle serialized error objects
-  if (typeof error === 'object' && error !== null) {
-    if (isContextError(error)) {
-      return (error as any).context || null;
-    }
-  }
-  
-  return null;
-}
+ 
 
 export type ErrorTypeId =
   | "STRIPE_MISSING_PAYMENT_DATA"
@@ -71,14 +12,14 @@ export type ErrorTypeId =
   | "MENUS_INVALID_PARAM"
   | "ORDERS_INVALID_PARAM";
 
-export type Error = {
+export type ApplicationError = {
   errorTypeId: ErrorTypeId;
   userFriendlyTitle: string;
   userFriendlyDescription: string;
   ctas?: ReactNode[];
 };
 
-export const errorTypes: Record<ErrorTypeId, Error> = {
+export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
   STRIPE_MISSING_PAYMENT_DATA: {
     errorTypeId: "STRIPE_MISSING_PAYMENT_DATA",
     userFriendlyTitle: "Missing Stripe payment data",
@@ -109,10 +50,10 @@ export const errorTypes: Record<ErrorTypeId, Error> = {
     userFriendlyDescription: "You will need to retry your payment.",
     ctas: [
       <Link key="change" href="/change-plan">
-        <Button>Start over</Button>
+        <Button variant="outline">Start over</Button>
       </Link>,
       <Link key="home" href="/my">
-        <Button>Return to my dashboard</Button>
+        <Button variant="outline">Return to my dashboard</Button>
       </Link>,
     ],
   },
@@ -123,7 +64,7 @@ export const errorTypes: Record<ErrorTypeId, Error> = {
       "Please go to your home page, then try returning to this page from the sidebar menu.",
     ctas: [
       <Link key="home" href="/my">
-        <Button>Return to my dashboard</Button>
+        <Button variant="outline">Return to my dashboard</Button>
       </Link>,
     ],
   },
@@ -134,7 +75,7 @@ export const errorTypes: Record<ErrorTypeId, Error> = {
       "Please go to your home page, then try returning to this page from the sidebar menu.",
     ctas: [
       <Link key="home" href="/my">
-        <Button>Return to my dashboard</Button>
+        <Button variant="outline">Return to my dashboard</Button>
       </Link>,
     ],
   },

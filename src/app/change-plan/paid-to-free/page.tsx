@@ -9,10 +9,8 @@ import { getCustomerByOrgId } from "~/server/queries";
 import { type ReactNode } from "react";
 import { PlanChanged } from "../_components/PlanChanged";
 import { BoxError } from "~/app/_components/BoxError";
-
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
-import { ContextError } from "~/app/_domain/errors";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -91,7 +89,7 @@ async function FinalStep(props: { step2Result: string }) {
   await updateProgress();
   
   // Throw ContextError directly instead of wrapping it
-  throw new ContextError("Final step failed", { prop1: 'my cval', step: 'final' });
+  throw new Error("Final step failed");
   
   return (
     <SplitScreenContainer

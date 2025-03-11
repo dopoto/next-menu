@@ -1,7 +1,8 @@
-'use client' // Error boundaries must be Client Components
+"use client"; // Error boundaries must be Client Components
 
-import { useEffect } from 'react'
-import { getErrorContext, isContextError } from '~/app/_domain/errors';
+import { BoxError } from "~/app/_components/BoxError";
+import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
+import { Button } from "~/components/ui/button";
 
 export default function Error({
   error,
@@ -10,34 +11,23 @@ export default function Error({
   error: Error;
   reset: () => void;
 }) {
-  useEffect(() => {
-    console.error('Error:', error, 'isContextError:', isContextError(error));
-  }, [error]);
-
-  // Get context and ensure we handle both raw and serialized errors
-  const errorContext = getErrorContext(error);
   const errorMessage = error instanceof Error ? error.message : String(error);
-
+  const context: Record<string, string> = { message: errorMessage };
   return (
-    <div className="p-4 bg-red-50 border border-red-200 rounded-md">
-      <h2 className="text-xl font-bold text-red-700 mb-2">Something went wrong!</h2>
-      <p className="text-red-600 mb-4">{errorMessage}</p>
-      
-      {errorContext && (
-        <div className="mb-4">
-          <h3 className="font-semibold text-red-600">Error Context:</h3>
-          <pre className="bg-red-100 p-2 rounded text-sm overflow-auto">
-            {JSON.stringify(errorContext, null, 2)}
-          </pre>
-        </div>
-      )}
-      
-      <button
-        onClick={() => reset()}
-        className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
-      >
-        Try again
-      </button>
-    </div>
-  )
+    <SplitScreenContainer
+      title={`Error`}
+      subtitle="Sorry, could not change your plan due to an error."
+      mainComponent={
+        <BoxError
+          errorTypeId={"CHANGE_PLAN_ERROR"}
+          context={context}
+          dynamicCtas={[
+            <Button key="retry" variant="outline" onClick={reset}>
+              Reload
+            </Button>,
+          ]}
+        />
+      }
+    />
+  );
 }
