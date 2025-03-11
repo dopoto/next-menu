@@ -45,9 +45,16 @@ export const errorTypes: Record<ErrorTypeId, Error> = {
   },
   CHANGE_PLAN_ERROR: {
     errorTypeId: "CHANGE_PLAN_ERROR",
-    userFriendlyTitle: "Stripe payment error",
+    userFriendlyTitle: "An error occurred while changing your plan",
     userFriendlyDescription: "You will need to retry your payment.",
-    ctas: [], // dynamic cta provided at runtime
+    ctas: [
+      <Link key="change" href="/change-plan">
+        <Button>Start over</Button>
+      </Link>,
+      <Link key="home" href="/my">
+        <Button>Return to my dashboard</Button>
+      </Link>,
+    ],
   },
   ORDERS_INVALID_PARAM: {
     errorTypeId: "ORDERS_INVALID_PARAM",
@@ -65,10 +72,10 @@ export const errorTypes: Record<ErrorTypeId, Error> = {
     userFriendlyTitle: "Could not load menus data",
     userFriendlyDescription:
       "Please go to your home page, then try returning to this page from the sidebar menu.",
-      ctas: [
-        <Link key="home" href="/my">
-          <Button>Return to my dashboard</Button>
-        </Link>,
-      ],
+    ctas: [
+      <Link key="home" href="/my">
+        <Button>Return to my dashboard</Button>
+      </Link>,
+    ],
   },
 };

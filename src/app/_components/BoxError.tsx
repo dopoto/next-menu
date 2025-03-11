@@ -6,6 +6,7 @@ import {
 } from "~/components/ui/collapsible";
 import { type ErrorTypeId, errorTypes } from "../_domain/errors";
 import { type ReactNode } from "react";
+import { env } from "~/env";
 
 export function BoxError(props: {
   errorTypeId: ErrorTypeId;
@@ -15,7 +16,18 @@ export function BoxError(props: {
   const error = errorTypes[props.errorTypeId];
   const errorId = "123"; //TODO
 
-  const ctas = [...props.dynamicCtas ?? [], error.ctas];
+  const ctas = [...(props.dynamicCtas ?? []), error.ctas];
+
+  const contextToShow =
+    env.NODE_ENV === "development"
+      ? props.context
+        ? Object.entries(props.context).map(([key, value]) => (
+            <div key={key}>
+              <strong>{key}:</strong> {value}
+            </div>
+          ))
+        : "No context"
+      : "";
 
   return (
     <div className="shadow" role="alert">
@@ -34,8 +46,8 @@ export function BoxError(props: {
               {error.userFriendlyDescription}
             </p>
             {ctas && (
-              <div className="mt-2 flex space-x-2 pt-4">
-                {ctas?.map((cta, index) => <div key={index}>{cta}</div>)}
+              <div className="mt-2 flex gap-2   pt-4">                
+                {ctas?.flat().map((cta, index) => <div   key={index}>{cta}</div>)}
               </div>
             )}
             {(errorId.length ?? 0) > 0 && (
@@ -45,7 +57,10 @@ export function BoxError(props: {
                     Get help with this error
                   </button>
                 </CollapsibleTrigger>
-                <CollapsibleContent>TODO</CollapsibleContent>
+                <CollapsibleContent>
+                  TODO
+                  {contextToShow}
+                </CollapsibleContent>
               </Collapsible>
             )}
           </div>

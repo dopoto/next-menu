@@ -46,9 +46,9 @@ export function SidebarUserManager() {
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[200px]">
-            <DropdownMenuItem>
-              <Link href="/change-plan">Change plan</Link>
-            </DropdownMenuItem>
+            <Link href="/change-plan">
+              <DropdownMenuItem>Change plan</DropdownMenuItem>
+            </Link>
             <Separator />
             <DropdownMenuItem onClick={() => openUserProfile()}>
               Manage account

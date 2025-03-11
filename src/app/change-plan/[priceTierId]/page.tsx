@@ -38,7 +38,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     return redirect("/change-plan");
   }
 
-  const changePlanScenario = getPriceTierChangeScenario(
+  const priceTierChangeScenario = getPriceTierChangeScenario(
     parsedFromTier.id,
     parsedToTier.id,
   );
@@ -49,37 +49,42 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
 
   // TODO check if current plan has more features than future plan
 
-  switch (changePlanScenario) {
+  switch (priceTierChangeScenario) {
     case "free-to-paid":
-      description = `You're about to upgrade to our ${parsedToTier.name} plan. You will get access to all the additional features immediately.`;
+      description = `You're about to upgrade to our ${parsedToTier.name} plan. Your account will be switched to the ${parsedToTier.name} 
+        plan right away.`;
       buttonText = `Subscribe to ${parsedToTier.name}`;
       changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.id}`;
       break;
     case "free-to-free":
-      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. The new feature set will become available to you right away.`;
+      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. Your 
+      account will be switched to the ${parsedToTier.name} plan right away.`;
       buttonText = `Change to ${parsedToTier.name}`;
       changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.name}`;
       break;
     case "paid-to-free":
       description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
         Your account will be credited right away with an amount corresponding to the remaining days in your current 
-        monthly subscription. The new feature set will become available to you right away.`;
+        monthly subscription. Your account will be switched to the ${parsedToTier.name} 
+        plan right away.`;
         buttonText = `Downgrade to ${parsedToTier.name}`;    
       changeUrl = `/change-plan/cancel`;
       break;
     case "paid-to-paid-upgrade":
       description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
-        Your account will be debited now with the difference between the two monthly subscriptions, corresponding 
-        to the remaining days in your current month. The new feature set will become available to you right away.`;
+        Your account will be debited now with the difference between the two subscriptions, corresponding 
+        to the remaining days in your current month. Your account will be switched to the ${parsedToTier.name} 
+        plan right away.`;
       buttonText = `Upgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/modify?targetTierId=${parsedToTier.id}`;
+      changeUrl = `/change-plan/modify?toTierId=${parsedToTier.id}`;
       break;
     case "paid-to-paid-downgrade":
       description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
-        Your account will be credited now with the difference between the two monthly subscriptions, corresponding 
-        to the remaining days in your current month. The new feature set will become available to you right away.`;
+        You will receive a credit for the remaining time on your current ${parsedFromTier.name} subscription and you 
+        will be billed now for the new, lower-cost subscription. Your account will be switched to the ${parsedToTier.name} 
+        plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/modify?targetTierId=${parsedToTier.id}`;
+      changeUrl = `/change-plan/modify?toTierId=${parsedToTier.id}`;
       break;
     default:
       return null;
@@ -88,8 +93,8 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
   return (
     <SplitScreenContainer
       mainComponent={
-        <div className="flex flex-col flex-nowrap gap-4">
-          <p className="pb-4 text-sm">{description}</p>
+        <div className="flex flex-col   gap-4">
+          <div className="pb-4 text-sm max-w-md">{description}</div>
           <PriceTierCard tier={parsedFromTier} isCurrent={true} />
           <SvgIcon
             kind={"arrowDoodle"}

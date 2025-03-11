@@ -1,21 +1,23 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Stripe } from "stripe";
 import { env } from "~/env";
-import { PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
+import {
+  isPriceTierId,
+  PriceTierIdSchema,
+  priceTiers,
+} from "~/app/_domain/price-tiers";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { getCustomerByOrgId } from "~/server/queries";
+import { BoxError } from "~/app/_components/BoxError";
 
-// TODO How to handle JWT token update? 
-// metadata.tier only needs to be changed at the end of the current billing period 
-
+// TODO How to handle JWT token update?
+// metadata.tier only needs to be changed at the end of the current billing period
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
-type SearchParams = Promise<
-  Record<"toTierId" | "isUpgrade", string | string[] | undefined>
->;
+type SearchParams = Promise<Record<"toTierId", string | string[] | undefined>>;
 
 export default async function ModifySubscriptionPage(props: {
   searchParams: SearchParams;
@@ -25,36 +27,37 @@ export default async function ModifySubscriptionPage(props: {
     redirect("/sign-in");
   }
 
-  // Validate params
-  const searchParams = await props.searchParams;
-  const { toTierId, isUpgrade: isUpgradeStr } = searchParams;
-  if (!toTierId) {
-    redirect("/change-plan");
-  }
-
-  const parsedToTierId = PriceTierIdSchema.safeParse(toTierId);
-  if (!parsedToTierId.success) {
-    redirect("/change-plan");
-  }
-
-  // Parse isUpgrade  TODO replace with util
-  const isUpgrade = isUpgradeStr === "true";
-  let success = false;
+  let successRedirectUrl = null;
+  let title = "";
+  let subtitle = "";
+  let mainComponent = <>Processing your request...</>;
 
   try {
+    if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
+      const dbg = JSON.stringify(sessionClaims?.metadata, null, 2);
+      throw new Error(
+        `Missing or invalid From tier in sessionClaims?.metadata: ${dbg}`,
+      );
+    }
+
+    const { toTierId } = await props.searchParams;
+    const parsedToTierId = PriceTierIdSchema.safeParse(toTierId);
+    if (!parsedToTierId.success) {
+      throw new Error(`Invalid toTierId param "${toTierId?.toString()}"`);
+    }
+
     // Get the price ID
-    const parsedTargetTier = priceTiers[parsedToTierId.data];
-    console.log(`parsedTargetTier: ${JSON.stringify(parsedTargetTier)}`);
-    const newPriceId = parsedTargetTier.stripePriceId;
-    if (!newPriceId) {
-      throw new Error("No price ID found for this tier");
+    const parsedToTier = priceTiers[parsedToTierId.data];
+
+    const toTierStripePriceId = parsedToTier.stripePriceId;
+    if (!toTierStripePriceId) {
+      throw new Error(`No Stripe price ID found for tier ${parsedToTier.id}`);
     }
 
     const stripeCustomerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
 
     if (!stripeCustomerId) {
-      // TODO handle with custom error
-      throw new Error("Cannot find stripe cust id");
+      throw new Error(`Cannot find Stripe customer for organization ${orgId}`);
     }
 
     const subscriptions = await stripe.subscriptions.list({
@@ -62,77 +65,79 @@ export default async function ModifySubscriptionPage(props: {
       limit: 10,
     });
 
-    console.log(`orgId: ${orgId}`);
-    console.log(`subs: ${JSON.stringify(subscriptions, null, 2)}`);
-
-    console.log(`org subs: ${JSON.stringify(subscriptions)}`);
-
     if (!subscriptions || subscriptions.data.length === 0) {
-      throw new Error("No active subscription found for this organization");
+      throw new Error(`No active subscription found for organization ${orgId}`);
     }
 
     if (subscriptions.data.length > 1) {
-      throw new Error("More than 1 subscription found for this organization");
+      throw new Error(
+        `More than 1 subscription found for organization ${orgId}`,
+      );
     }
 
     // Get the first active subscription
     // TODO more filters here
     const currentSubscription = subscriptions.data[0];
 
-    // Update the subscription
-    if (currentSubscription?.items?.data?.[0]?.id) {
-      await stripe.subscriptions.update(currentSubscription.id, {
-        items: [
-          {
-            id: currentSubscription.items.data[0].id,
-            price: newPriceId,
-          },
-        ],
-        // For upgrades, prorate immediately and create an invoice
-        // For downgrades, apply at the end of the billing period
-        proration_behavior: isUpgrade ? "always_invoice" : "none",
-        metadata: {
-          orgId,
-          userId,
-          tierId: parsedTargetTier.id,
-        },
-      });
+    if (!currentSubscription?.items?.data?.[0]?.id) {
+      throw new Error(
+        `First item id (currentSubscription?.items?.data?.[0]?.id) not found for subscription ${JSON.stringify(currentSubscription, null, 2)}`,
+      );
     }
 
-    const client = await clerkClient();
-    await client.users.updateUser(userId, {
-      publicMetadata: {...(sessionClaims?.metadata ?? {}), tier: parsedTargetTier.id},
+    // Update the subscription
+    await stripe.subscriptions.update(currentSubscription.id, {
+      items: [
+        {
+          id: currentSubscription.items.data[0].id,
+          price: toTierStripePriceId,
+        },
+      ],
+      // Prorate immediately and create an invoice
+      proration_behavior: "always_invoice",
+      metadata: {
+        orgId,
+        userId,
+        tierId: parsedToTier.id,
+      },
     });
 
-    success = true;
-  } catch (error) {
-    console.error("Error updating subscription:", error);
-    return (
-      <SplitScreenContainer
-        mainComponent={
-          <Card>
-            <CardHeader>
-              <CardTitle>Subscription Error</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p>
-                There was an error processing your subscription change. Please try
-                again later.
-              </p>
-            </CardContent>
-          </Card>
-        }
-        title="Modify Subscription"
-        subtitle="Processing your subscription change"
-      />
-    );
+    // Create a checkout session
+    const session = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price: toTierStripePriceId,
+          quantity: 1,
+        },
+      ],
+      mode: "subscription",
+      success_url: `${env.NEXT_PUBLIC_APP_URL}/change-plan/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${env.NEXT_PUBLIC_APP_URL}/change-plan`,
+      metadata: {
+        orgId,
+        userId,
+        tierId: parsedToTier.id,
+      },
+    });
+
+    successRedirectUrl = session.url;
+
+  } catch {
+    title = "Could not update your subscription";
+    subtitle = "An error occurred while processing the update.";
+    mainComponent = <BoxError errorTypeId={"CHANGE_PLAN_ERROR"} />;
   }
 
-  if (success) {
-    const successAction = isUpgrade ? "upgrade" : "downgrade";
-    redirect(`/change-plan/success?action=${successAction}`);
+  if (successRedirectUrl) {
+    redirect(successRedirectUrl);
   }
-  else {
-    //TODO Show error component
-  }
+
+  return (
+    <SplitScreenContainer
+      mainComponent={mainComponent}
+      title={title}
+      subtitle={subtitle}
+    />
+  );
 }

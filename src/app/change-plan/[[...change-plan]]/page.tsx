@@ -1,18 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
-import { CheckIcon } from "lucide-react";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import {
-  type PriceTier,
-  type PriceTierId,
-  priceTiers,
-} from "~/app/_domain/price-tiers";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
