@@ -1,5 +1,5 @@
-import { auth, clerkClient } from "@clerk/nextjs/server";
-import { notFound, redirect } from "next/navigation";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 import { Stripe } from "stripe";
 import { env } from "~/env";
 import {
@@ -7,10 +7,10 @@ import {
   PriceTierIdSchema,
   priceTiers,
 } from "~/app/_domain/price-tiers";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { getCustomerByOrgId } from "~/server/queries";
 import { BoxError } from "~/app/_components/BoxError";
+import { obj2str } from "~/app/_utils/string-utils";
 
 // TODO How to handle JWT token update?
 // metadata.tier only needs to be changed at the end of the current billing period
@@ -34,9 +34,8 @@ export default async function ModifySubscriptionPage(props: {
 
   try {
     if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
-      const dbg = JSON.stringify(sessionClaims?.metadata, null, 2);
       throw new Error(
-        `Missing or invalid From tier in sessionClaims?.metadata: ${dbg}`,
+        `Missing or invalid From tier in claims metadata: ${obj2str(sessionClaims?.metadata)}`,
       );
     }
 
@@ -46,13 +45,15 @@ export default async function ModifySubscriptionPage(props: {
       throw new Error(`Invalid toTierId param "${toTierId?.toString()}"`);
     }
 
-    // Get the price ID
     const parsedToTier = priceTiers[parsedToTierId.data];
 
     const toTierStripePriceId = parsedToTier.stripePriceId;
     if (!toTierStripePriceId) {
       throw new Error(`No Stripe price ID found for tier ${parsedToTier.id}`);
     }
+
+    // TODO For free-to-paid, we'll need to create a Stripe customer and subscription first
+    // TODO update db ?
 
     const stripeCustomerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
 
@@ -81,7 +82,7 @@ export default async function ModifySubscriptionPage(props: {
 
     if (!currentSubscription?.items?.data?.[0]?.id) {
       throw new Error(
-        `First item id (currentSubscription?.items?.data?.[0]?.id) not found for subscription ${JSON.stringify(currentSubscription, null, 2)}`,
+        `First item id (currentSubscription?.items?.data?.[0]?.id) not found for subscription ${obj2str(currentSubscription)}`,
       );
     }
 
@@ -122,11 +123,13 @@ export default async function ModifySubscriptionPage(props: {
     });
 
     successRedirectUrl = session.url;
-
-  } catch {
+  } catch (e) {
     title = "Could not update your subscription";
     subtitle = "An error occurred while processing the update.";
-    mainComponent = <BoxError errorTypeId={"CHANGE_PLAN_ERROR"} />;
+    const errorContext = { message: (e as Error).message ?? "" };
+    mainComponent = (
+      <BoxError errorTypeId={"CHANGE_PLAN_ERROR"} context={errorContext} />
+    );
   }
 
   if (successRedirectUrl) {

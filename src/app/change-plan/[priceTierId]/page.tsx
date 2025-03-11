@@ -7,6 +7,7 @@ import Link from "next/link";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
 import { getPriceTierChangeScenario } from "~/app/_utils/price-tier-utils";
+import { Badge } from "~/components/ui/badge";
 
 export type Params = Promise<{ priceTierId: string }>;
 
@@ -43,7 +44,9 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     parsedToTier.id,
   );
 
-  let description = "";
+
+  let theHow = "";
+  let theWhen = "";
   let buttonText = "";
   let changeUrl = "";
 
@@ -51,38 +54,34 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
 
   switch (priceTierChangeScenario) {
     case "free-to-paid":
-      description = `You're about to upgrade to our ${parsedToTier.name} plan. Your account will be switched to the ${parsedToTier.name} 
-        plan right away.`;
+      theHow = `You will need to complete a Stripe payment in the next step`;
+      theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Subscribe to ${parsedToTier.name}`;
       changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.id}`;
       break;
     case "free-to-free":
-      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. Your 
-      account will be switched to the ${parsedToTier.name} plan right away.`;
+      theHow = `Click the button below to confirm the plan change`;
+      theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Change to ${parsedToTier.name}`;
       changeUrl = `/change-plan/subscribe?toTierId=${parsedToTier.name}`;
       break;
     case "paid-to-free":
-      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
-        Your account will be credited right away with an amount corresponding to the remaining days in your current 
-        monthly subscription. Your account will be switched to the ${parsedToTier.name} 
-        plan right away.`;
-        buttonText = `Downgrade to ${parsedToTier.name}`;    
+      theHow = `Your account will be credited in the next step with an amount corresponding to the remaining days in your current 
+        monthly subscription.`;
+      theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
+      buttonText = `Downgrade to ${parsedToTier.name}`;
       changeUrl = `/change-plan/cancel`;
       break;
     case "paid-to-paid-upgrade":
-      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
-        Your account will be debited now with the difference between the two subscriptions, corresponding 
-        to the remaining days in your current month. Your account will be switched to the ${parsedToTier.name} 
-        plan right away.`;
+      theHow = `You will now need to complete a payment covering the remaining days in your current month.`;
+      theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Upgrade to ${parsedToTier.name}`;
       changeUrl = `/change-plan/modify?toTierId=${parsedToTier.id}`;
       break;
     case "paid-to-paid-downgrade":
-      description = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan. 
-        You will receive a credit for the remaining time on your current ${parsedFromTier.name} subscription and you 
-        will be billed now for the new, lower-cost subscription. Your account will be switched to the ${parsedToTier.name} 
-        plan right away.`;
+      theHow = `You will receive a credit for the remaining time on your current ${parsedFromTier.name} subscription and you 
+        will be billed now for the new, lower-cost subscription.`;
+      theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
       changeUrl = `/change-plan/modify?toTierId=${parsedToTier.id}`;
       break;
@@ -93,17 +92,44 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
   return (
     <SplitScreenContainer
       mainComponent={
-        <div className="flex flex-col   gap-4">
-          <div className="pb-4 text-sm max-w-md">{description}</div>
+        <div className="flex flex-col gap-4">
+          <div className="max-w-md text-sm">
+            <Badge
+              variant={"outline"}
+              className="gap-0 border-dashed border-gray-400 mr-1 w-[70px]"
+            >              
+              what?
+            </Badge>{` You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan.`}            
+          </div>
+          <div className="max-w-md text-sm">
+            <Badge
+              variant={"outline"}
+              className="gap-0 border-dashed border-gray-400 mr-1  w-[70px]"
+            >
+              how?
+            </Badge>{" "}
+            {theHow}
+          </div>
+          <div className="max-w-md text-sm">
+            <Badge
+              variant={"outline"}
+              className="gap-0 border-dashed border-gray-400 mr-1  w-[70px]"
+            >               
+              when?
+            </Badge>{" "}
+            {theWhen}
+          </div>
           <PriceTierCard tier={parsedFromTier} isCurrent={true} />
           <SvgIcon
             kind={"arrowDoodle"}
-            className={"fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"}
+            className={
+              "fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"
+            }
           />
           <PriceTierCard tier={parsedToTier} isCurrent={false} />
           <div className="flex w-full flex-col gap-2 pt-4">
             <Link href={changeUrl} className="w-full">
-              <Button variant={'default'}  className="w-full">
+              <Button variant={"default"} className="w-full">
                 {buttonText}
               </Button>
             </Link>

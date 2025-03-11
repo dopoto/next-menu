@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
+import { obj2str } from "~/app/_utils/string-utils";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -45,25 +46,25 @@ export default async function SuccessPage(props: {
 
     if (!stripeCustomerId) {
       throw new Error(
-        `No stripeCustomerId found in session ${JSON.stringify(session, null, 2)}`,
+        `No stripeCustomerId found in session ${obj2str(session)}`,
       );
     }
     if (typeof stripeCustomerId !== "string") {
       throw new Error(
-        `Expected string format for Stripe customer id: ${JSON.stringify(stripeCustomerId, null, 2)}`,
+        `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
       );
     }
 
     if (!isPriceTierId(session.metadata?.tierId)) {
       throw new Error(
-        `Missing or invalid To tier in session.metadata: ${JSON.stringify(session, null, 2)}`,
+        `Missing or invalid To tier in session.metadata: ${obj2str(session)}`,
       );
     }
     const parsedToTier = priceTiers[session.metadata?.tierId];
 
     if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
       throw new Error(
-        `Missing or invalid From tier in sessionClaims?.metadata: ${JSON.stringify(sessionClaims?.metadata, null, 2)}`,
+        `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaimsa, null, 2)}`,
       );
     }
     const parsedFromTier = priceTiers[sessionClaims?.metadata?.tier];
@@ -89,7 +90,6 @@ export default async function SuccessPage(props: {
     subtitle = "Your subscription has been updated.";
     mainComponent = (
       <div className="flex flex-col flex-nowrap gap-4">
-        <p className="pb-4 text-sm">TODO Desc?</p>
         <PriceTierCard tier={parsedFromTier} isCurrent={false} />
         <SvgIcon
           kind={"arrowDoodle"}
