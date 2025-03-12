@@ -33,6 +33,8 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
 
+  transpilePackages: ["@opentelemetry/instrumentation", "import-in-the-middle", "require-in-the-middle"],
+
   async headers() {
     return [
       {
@@ -56,14 +58,6 @@ const nextConfig: NextConfig = {
         search: "",
       },
     ],
-  },
-
-  webpack: (config: { cache: { type: string } }) => {
-    config.cache = {
-      type: "memory",
-    };
-
-    return config;
   },
 };
 
