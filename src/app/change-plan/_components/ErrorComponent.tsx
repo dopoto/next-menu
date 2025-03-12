@@ -5,6 +5,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 
 export default function ErrorComponent({
   error,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   reset,
 }: {
   error: Error;

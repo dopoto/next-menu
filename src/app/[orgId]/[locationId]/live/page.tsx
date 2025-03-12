@@ -17,7 +17,7 @@ type Params = Promise<{ locationId: string }>;
 
   //TODO replace with actual functionality 
 
-  const parsedLocationId = validationResult.data;
+  //const parsedLocationId = validationResult.data;
 //   const items = await getMenusByLocation(parsedLocationId);
 
 //   if (items.length === 0) {

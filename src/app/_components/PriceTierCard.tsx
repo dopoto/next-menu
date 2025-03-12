@@ -1,19 +1,20 @@
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 import { type PriceTier } from "../_domain/price-tiers";
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
 import { CheckIcon } from "lucide-react";
 import { type ReactNode } from "react";
 
-export function PriceTierCard  (props: { tier: PriceTier; isCurrent: boolean, footerCta?: ReactNode }) {
-  const {
-    id,
-    name,
-    monthlyUsdPrice,
-    locations,
-    menus,
-    staffMembers,
-  } = props.tier;
+export function PriceTierCard(props: {
+  tier: PriceTier;
+  isCurrent: boolean;
+  footerCta?: ReactNode;
+}) {
+  const { name, monthlyUsdPrice, locations, menus, staffMembers } = props.tier;
 
   return (
     <Card className={`${props.isCurrent ? "border-2 border-blue-700" : ""}`}>

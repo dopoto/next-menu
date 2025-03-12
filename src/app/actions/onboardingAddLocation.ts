@@ -5,8 +5,6 @@
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { db } from "~/server/db";
-import { locations } from "~/server/db/schema";
 import { PriceTierIdSchema } from "../_domain/price-tiers";
 import Stripe from "stripe";
 import { env } from "~/env";

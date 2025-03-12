@@ -15,7 +15,6 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import Link from "next/link";
-import { TierPill } from "~/app/_components/TierPill";
 import { priceTiers, type PriceTierId } from "~/app/_domain/price-tiers";
 
 export function SidebarOrganizationManager() {
@@ -58,6 +57,11 @@ export function SidebarOrganizationManager() {
             <Link href="/change-plan">
               <DropdownMenuItem>Change plan</DropdownMenuItem>
             </Link>
+
+            {/* TODO*/}
+            {/* <Link href="...">
+              <DropdownMenuItem>View plan usage</DropdownMenuItem>
+            </Link> */}
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

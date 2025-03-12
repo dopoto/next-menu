@@ -64,6 +64,7 @@ export default async function FreeToPaidChangePlanSuccessPage(props: {
     );
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { userId, sessionClaims } = await auth();
   if (!userId) {
     throw new Error(`No Clerk user id found"`);

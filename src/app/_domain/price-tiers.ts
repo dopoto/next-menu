@@ -3,6 +3,7 @@ import { env } from "~/env";
 
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
+  z.literal("start2"),
   z.literal("pro"),
   z.literal("enterprise"),
   z.literal("custom1"),
@@ -48,6 +49,18 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     description: "Takes a minute to get started",
     locations: 1,
     menus: 1,
+    staffMembers: 0,
+    monthlyUsdPrice: 0,
+    yearlyUsdPrice: 0,
+    isPublic: true,
+    isPopular: false,
+  },
+  start2: {
+    id: "start2",
+    name: "Starter2",
+    description: "Takes 2 minutes to get started",
+    locations: 1,
+    menus: 2,
     staffMembers: 0,
     monthlyUsdPrice: 0,
     yearlyUsdPrice: 0,
