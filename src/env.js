@@ -9,6 +9,7 @@ export const env = createEnv({
   server: {
     POSTGRES_URL: z.string().url(),
     STRIPE_SECRET_KEY: z.string(),
+    SENTRY_AUTH_TOKEN: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -23,6 +24,7 @@ export const env = createEnv({
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_ENV: z.string(),
     NEXT_PUBLIC_LOG_TO_SENTRY: z.string(),
+    NEXT_PUBLIC_SENTRY_DSN: z.string(),
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: z.string(),
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string(),
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: z.string(),
@@ -42,8 +44,10 @@ export const env = createEnv({
     NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
     POSTGRES_URL: process.env.POSTGRES_URL,
     STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN,
     NODE_ENV: process.env.NODE_ENV,
     NEXT_PUBLIC_LOG_TO_SENTRY: process.env.NEXT_PUBLIC_LOG_TO_SENTRY,
+    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
     NEXT_PUBLIC_CLERK_SIGN_IN_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL,
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL,
     NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY,

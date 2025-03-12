@@ -1,9 +1,5 @@
 import { withSentryConfig } from "@sentry/nextjs";
-/**
- * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
- * for Docker builds.
- */
-import { type NextConfig } from "next";
+import type { NextConfig } from "next";
 import { env } from "~/env";
 
 /**
@@ -18,17 +14,17 @@ const cspHeader = `
     img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://www.googletagmanager.com;
     font-src 'self';
     frame-src https://checkout.stripe.com https://*.js.stripe.com https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com;
-    object-src ${process.env.NODE_ENV !== 'development' ? "'self' data:;" : "'none';"}
+    object-src ${process.env.NODE_ENV !== "development" ? "'self' data:;" : "'none';"}
     worker-src 'self' blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
     connect-src 'self' https://checkout.stripe.com https://api.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
     upgrade-insecure-requests;
-    ${env.NEXT_PUBLIC_CSP_REPORT_URI ? `report-uri: ${env.NEXT_PUBLIC_CSP_REPORT_URI}` : "" }
+    ${env.NEXT_PUBLIC_CSP_REPORT_URI ? `report-uri: ${env.NEXT_PUBLIC_CSP_REPORT_URI}` : ""}
 `;
 
-const config: NextConfig = {
+const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
@@ -54,10 +50,10 @@ const config: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'img.clerk.com',
-        port: '',
-        search: '',
+        protocol: "https",
+        hostname: "img.clerk.com",
+        port: "",
+        search: "",
       },
     ],
   },
@@ -71,39 +67,50 @@ const config: NextConfig = {
   },
 };
 
-export default withSentryConfig(config, {
-  // For all available options, see:
-  // https://github.com/getsentry/sentry-webpack-plugin#options
+const config =
+  env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
+    ? withSentryConfig(nextConfig, {
+        // For all available options, see:
+        // https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: "dopoto",
-  project: "next-menu",
+        org: "dopoto", //TODO extract to env
+        project: "next-menu", //TODO extract to env
+        authToken: process.env.SENTRY_AUTH_TOKEN, // Required for source map validation
 
-  // Only print logs for uploading source maps in CI
-  silent: !process.env.CI, //TODO use env instead
+        // Only print logs for uploading source maps in CI
+        silent: !process.env.CI, //TODO use env instead
 
-  // For all available options, see:
-  // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+        // For all available options, see:
+        // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
 
-  // Upload a larger set of source maps for prettier stack traces (increases build time)
-  widenClientFileUpload: true,
+        // Upload a larger set of source maps for prettier stack traces (increases build time)
+        widenClientFileUpload: true,
 
-  // Automatically annotate React components to show their full name in breadcrumbs and session replay
-  reactComponentAnnotation: {
-    enabled: true,
-  },
+        // Automatically annotate React components to show their full name in breadcrumbs and session replay
+        reactComponentAnnotation: {
+          enabled: true,
+        },
 
-  // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
-  // This can increase your server load as well as your hosting bill.
-  // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
-  // side errors will fail.
-  // tunnelRoute: "/monitoring",
+        // Uncomment to route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
+        // This can increase your server load as well as your hosting bill.
+        // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
+        // side errors will fail.
+        // tunnelRoute: "/monitoring",
 
-  // Automatically tree-shake Sentry logger statements to reduce bundle size
-  disableLogger: true,
+        // Automatically tree-shake Sentry logger statements to reduce bundle size
+        disableLogger: true,
 
-  // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
-  // See the following for more information:
-  // https://docs.sentry.io/product/crons/
-  // https://vercel.com/docs/cron-jobs
-  automaticVercelMonitors: true,
-});
+        // Enables automatic instrumentation of Vercel Cron Monitors. (Does not yet work with App Router route handlers.)
+        // See the following for more information:
+        // https://docs.sentry.io/product/crons/
+        // https://vercel.com/docs/cron-jobs
+        automaticVercelMonitors: true,
+
+        sourcemaps: {
+          disable: false,
+          deleteSourcemapsAfterUpload: true,
+        },
+      })
+    : nextConfig;
+
+module.exports = config;
