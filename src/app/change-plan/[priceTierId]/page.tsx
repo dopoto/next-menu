@@ -100,7 +100,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
             >
               what?
             </Badge>
-            <div>
+            <div className="max-w-md">
               {`You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan.`}
             </div>
 
@@ -110,7 +110,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
             >
               how?
             </Badge>
-            <div>
+            <div className="max-w-md">
               {theHow}
             </div>
 
@@ -120,7 +120,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
             >
               when?
             </Badge>
-            <div>
+            <div className="max-w-md">
               {theWhen}
             </div>
 

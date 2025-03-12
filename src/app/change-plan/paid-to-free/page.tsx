@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Stripe } from "stripe";
 import { env } from "~/env";
@@ -9,7 +9,10 @@ import {
   priceTiers,
 } from "~/app/_domain/price-tiers";
 import { obj2str } from "~/app/_utils/string-utils";
-import { getCustomerByOrgId } from "~/server/queries";
+import {
+  getCustomerByOrgId,
+  updateCustomerByClerkUserId,
+} from "~/server/queries";
 import { type ReactNode } from "react";
 import { PlanChanged } from "../_components/PlanChanged";
 import { BoxError } from "~/app/_components/BoxError";
@@ -74,11 +77,17 @@ async function Step1(props: { toTierId?: string }) {
   );
 }
 
-async function Step2(props: { fromTier: PriceTier; toTier: PriceTier, orgId: string }) {
-   
-  const stripeCustomerId = (await getCustomerByOrgId(props.orgId)).stripeCustomerId;
+async function Step2(props: {
+  fromTier: PriceTier;
+  toTier: PriceTier;
+  orgId: string;
+}) {
+  const stripeCustomerId = (await getCustomerByOrgId(props.orgId))
+    .stripeCustomerId;
   if (!stripeCustomerId) {
-    throw new Error(`Cannot find Stripe customer for organization ${props.orgId}`);
+    throw new Error(
+      `Cannot find Stripe customer for organization ${props.orgId}`,
+    );
   }
 
   const subscriptions = await stripe.subscriptions.list({
@@ -86,16 +95,20 @@ async function Step2(props: { fromTier: PriceTier; toTier: PriceTier, orgId: str
   });
 
   if (!subscriptions || subscriptions.data.length === 0) {
-    throw new Error(`No active subscription found for customer ${stripeCustomerId}`);
+    throw new Error(
+      `No active subscription found for customer ${stripeCustomerId}`,
+    );
   }
 
   if (subscriptions.data.length > 1) {
-    throw new Error(`More than 1 subscription found for customer ${stripeCustomerId}`);
+    throw new Error(
+      `More than 1 subscription found for customer ${stripeCustomerId}`,
+    );
   }
-  
+
   const currentSubscription = subscriptions.data[0];
 
-  console.log(obj2str(currentSubscription))
+  console.log(obj2str(currentSubscription));
 
   if (!currentSubscription?.items?.data?.[0]?.id) {
     throw new Error(
@@ -107,17 +120,47 @@ async function Step2(props: { fromTier: PriceTier; toTier: PriceTier, orgId: str
 
   return (
     <Suspense fallback={<ProcessingPlanChange progress={60} />}>
-      <FinalStep fromTier={props.fromTier} toTier={props.toTier} />
+      <FinalStep
+        stripeSubscription={currentSubscription}
+        fromTier={props.fromTier}
+        toTier={props.toTier}
+      />
     </Suspense>
   );
 }
 
-async function FinalStep(props: { fromTier: PriceTier; toTier: PriceTier  }) {
+async function FinalStep(props: {
+  stripeSubscription: Stripe.Subscription;
+  fromTier: PriceTier;
+  toTier: PriceTier;
+}) {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error(`No Clerk user id found"`);
+  }
+
+  // Cancel their Stripe subscription
+  await stripe.subscriptions.cancel(props.stripeSubscription.id, {
+    cancellation_details: { comment: "User moved to free tier using /change-plan/paid-to-free." },
+    prorate: true
+  });
+
+  // Delete their Stripe customer id from our records.
+  await updateCustomerByClerkUserId(userId, null);
+
+  // Update Clerk with new tier
+  const clerk = await clerkClient();
+  await clerk.users.updateUserMetadata(userId, {
+    publicMetadata: { tier: props.toTier.id },
+  });
+
   return (
     <SplitScreenContainer
       title={`Thank you!`}
       subtitle="Your subscription has been updated."
-      mainComponent={<PlanChanged fromTier={props.fromTier} toTier={props.toTier} />}
+      mainComponent={
+        <PlanChanged fromTier={props.fromTier} toTier={props.toTier} />
+      }
     />
   );
 }
