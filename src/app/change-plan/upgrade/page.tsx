@@ -81,9 +81,9 @@ async function Step2StripeProcessing(props: {
   }
   const stripeCustomerId = (await getCustomerByOrgId(props.orgId))
     .stripeCustomerId;
-  if (stripeCustomerId) {
+  if (!stripeCustomerId) {
     throw new Error(
-      `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,
+      `Expected a stripeCustomerId in our db for ${props.orgId}, got null instead.`,
     );
   }
 

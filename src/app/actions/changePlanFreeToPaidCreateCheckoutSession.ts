@@ -47,8 +47,8 @@ export const changePlanFreeToPaidCreateCheckoutSession = async (props: {
     return_url: returnUrl,
     customer: props.newStripeCustomerId,
     metadata: {
-      fromTierId: parsedFreeFromTier.id 
-    }
+      fromTierId: parsedFreeFromTier.id,
+    },
   });
 
   if (!session.client_secret)

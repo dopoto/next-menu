@@ -80,6 +80,8 @@ async function Step2(props: {
     );
   }
 
+  // TODO refactor - extract to util fn:
+
   const subscriptions = await stripe.subscriptions.list({
     customer: stripeCustomerId,
   });
@@ -97,8 +99,6 @@ async function Step2(props: {
   }
 
   const currentSubscription = subscriptions.data[0];
-
-  console.log(obj2str(currentSubscription));
 
   if (!currentSubscription?.items?.data?.[0]?.id) {
     throw new Error(
