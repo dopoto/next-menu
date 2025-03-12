@@ -1,5 +1,9 @@
 import type Stripe from "stripe";
 
+
+// TODO 
+
+
 export async function createStripeCustomer(stripeInstance: Stripe): Promise<string> {
   const customer = await stripeInstance.customers.create({
     name: 'Jenny Rosen',

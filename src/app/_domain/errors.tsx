@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { type ReactNode } from "react";
 import { Button } from "~/components/ui/button";
- 
 
 export type ErrorTypeId =
   | "STRIPE_MISSING_PAYMENT_DATA"
