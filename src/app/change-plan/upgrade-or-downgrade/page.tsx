@@ -2,15 +2,12 @@ import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Stripe } from "stripe";
 import { env } from "~/env";
-import {
-  isPriceTierId,
-  PriceTierIdSchema,
-  priceTiers,
-} from "~/app/_domain/price-tiers";
+import { PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { getCustomerByOrgId } from "~/server/queries";
 import { BoxError } from "~/app/_components/BoxError";
 import { obj2str } from "~/app/_utils/string-utils";
+import { isPriceTierId } from "~/app/_utils/price-tier-utils";
 
 // TODO How to handle JWT token update?
 // metadata.tier only needs to be changed at the end of the current billing period
@@ -61,7 +58,9 @@ export default async function ModifySubscriptionPage(props: {
       throw new Error(`Cannot find Stripe customer for organization ${orgId}`);
     }
 
-    const subscriptions = await stripe.subscriptions.list({customer: stripeCustomerId});
+    const subscriptions = await stripe.subscriptions.list({
+      customer: stripeCustomerId,
+    });
 
     if (!subscriptions || subscriptions.data.length === 0) {
       throw new Error(`No active subscription found for organization ${orgId}`);

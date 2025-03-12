@@ -2,11 +2,14 @@ import { auth } from "@clerk/nextjs/server";
 import { notFound, redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
-import { isPriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import { priceTiers } from "~/app/_domain/price-tiers";
 import Link from "next/link";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
-import { getPriceTierChangeScenario } from "~/app/_utils/price-tier-utils";
+import {
+  getPriceTierChangeScenario,
+  isPriceTierId,
+} from "~/app/_utils/price-tier-utils";
 import { Badge } from "~/components/ui/badge";
 
 export type Params = Promise<{ priceTierId: string }>;
@@ -53,13 +56,13 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
 
   switch (priceTierChangeScenario) {
     case "free-to-paid":
-      theHow = `You will need to complete a Stripe payment in the next step`;
+      theHow = `You will need to complete a Stripe payment in the next step.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Subscribe to ${parsedToTier.name}`;
       changeUrl = `/change-plan/free-to-paid?toTierId=${parsedToTier.id}`;
       break;
     case "free-to-free":
-      theHow = `Click the button below to confirm the plan change`;
+      theHow = `Click the button below to confirm the plan change.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Change to ${parsedToTier.name}`;
       changeUrl = `/change-plan/free-to-free?toTierId=${parsedToTier.name}`;
@@ -93,7 +96,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
       mainComponent={
         <div className="flex flex-col gap-4">
           {/* when what how */}
-          <div className="flex flex-col rounded-sm border-1 border-dashed border-gray-300 bg-gray-50/20 p-4 text-xs mb-4">
+          <div className="mb-4 flex flex-col rounded-sm border-1 border-dashed border-gray-300 bg-gray-50/20 p-4 text-xs">
             <Badge
               variant={"outline"}
               className="mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
@@ -106,42 +109,19 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
 
             <Badge
               variant={"outline"}
-              className="mr-1 mt-5 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
+              className="mt-5 mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
             >
               how?
             </Badge>
-            <div className="max-w-md">
-              {theHow}
-            </div>
+            <div className="max-w-md">{theHow}</div>
 
             <Badge
               variant={"outline"}
-              className="mr-1 mt-5 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
+              className="mt-5 mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
             >
               when?
             </Badge>
-            <div className="max-w-md">
-              {theWhen}
-            </div>
-
-            {/* <div className="max-w-md text-sm">
-              <Badge
-                variant={"outline"}
-                className="mr-1 w-[70px] gap-0 border-dashed border-gray-400"
-              >
-                how?
-              </Badge>{" "}
-              {theHow}
-            </div>
-            <div className="max-w-md text-sm">
-              <Badge
-                variant={"outline"}
-                className="mr-1 w-[70px] gap-0 border-dashed border-gray-400"
-              >
-                when?
-              </Badge>{" "}
-              {theWhen}
-            </div> */}
+            <div className="max-w-md">{theWhen}</div>
           </div>
 
           <PriceTierCard tier={parsedFromTier} isCurrent={true} />

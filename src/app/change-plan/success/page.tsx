@@ -2,8 +2,11 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { env } from "~/env";
 import Stripe from "stripe";
-import { isPriceTierId, priceTiers } from "~/app/_domain/price-tiers";
-import { getPriceTierChangeScenario } from "~/app/_utils/price-tier-utils";
+import { priceTiers } from "~/app/_domain/price-tiers";
+import {
+  getPriceTierChangeScenario,
+  isPriceTierId,
+} from "~/app/_utils/price-tier-utils";
 import { updateCustomerByClerkUserId } from "~/server/queries";
 import { BoxError } from "~/app/_components/BoxError";
 import Link from "next/link";
@@ -64,7 +67,7 @@ export default async function SuccessPage(props: {
 
     if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
       throw new Error(
-        `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaims )}`,
+        `Missing or invalid From tier in sessionClaims?.metadata: ${obj2str(sessionClaims)}`,
       );
     }
     const parsedFromTier = priceTiers[sessionClaims?.metadata?.tier];
@@ -107,11 +110,13 @@ export default async function SuccessPage(props: {
         </div>
       </div>
     );
-  } catch(e ) {
+  } catch (e) {
     title = "Could not update your subscription";
     subtitle = "An error occurred while processing the update.";
-    const errorContext = { message: (e as Error).message ?? '' }
-    mainComponent = <BoxError errorTypeId={"CHANGE_PLAN_ERROR"} context={errorContext} />;
+    const errorContext = { message: (e as Error).message ?? "" };
+    mainComponent = (
+      <BoxError errorTypeId={"CHANGE_PLAN_ERROR"} context={errorContext} />
+    );
   }
 
   return (

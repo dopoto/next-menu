@@ -2,6 +2,8 @@ import { Badge } from "~/components/ui/badge";
 import { type OrgTier } from "../_domain/price-tiers";
 import { TierPill } from "./TierPill";
 
+// TODO revisit
+
 export function TierFeatureSummary(props: { orgTier: OrgTier }) {
   const { quota, used, available } = props.orgTier;
 
@@ -9,7 +11,7 @@ export function TierFeatureSummary(props: { orgTier: OrgTier }) {
     <div className="flex flex-col gap-4 w-full rounded-sm bg-gray-200 p-4 align-middle text-xs">
       <div className="flex grow-1 flex-col items-start justify-start gap-1 text-gray-600">
         <div>{"Your current plan"}</div>
-        <TierPill priceTierId={props.orgTier.priceTierId} />
+        <TierPill priceTierId={props.orgTier.priceTierId} showTierName={false} isExpandable={false} />
       </div>
       <div className="flex grow-1 flex-col items-start justify-end gap-1 text-gray-600">
         <div>{`Your ${props.orgTier.resourceSingularName} stats`}</div>

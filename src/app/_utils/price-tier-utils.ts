@@ -2,13 +2,85 @@ import {
   type PriceTierChangeScenario,
   priceTiers,
   type PriceTierId,
+  PriceTierIdSchema,
+  type PriceTier,
 } from "../_domain/price-tiers";
 
+export const getValidPriceTier = (
+  priceTierId?: string,
+): PriceTier | undefined => {
+  if (!priceTierId) {
+    return undefined;
+  }
+  const isValidPriceTierId = PriceTierIdSchema.safeParse(priceTierId).success;
+
+  if (!isValidPriceTierId) {
+    return undefined;
+  }
+
+  const candidate = priceTiers[priceTierId as PriceTierId];
+
+  if (!candidate) {
+    return undefined;
+  }
+
+  if (!candidate.isPublic) {
+    return undefined;
+  }
+
+  return candidate;
+};
+
+export const getValidFreePriceTier = (
+  priceTierId?: string,
+): PriceTier | undefined => {
+  const candidate = getValidPriceTier(priceTierId);
+  if (!candidate || candidate.monthlyUsdPrice > 0) {
+    return undefined;
+  }
+  return candidate;
+};
+
+export const getValidPaidPriceTier = (
+  priceTierId?: string,
+): PriceTier | undefined => {
+  const candidate = getValidPriceTier(priceTierId);
+  if (!candidate || candidate.monthlyUsdPrice === 0) {
+    return undefined;
+  }
+  return candidate;
+};
+
+export const isPriceTierId = (value?: string): value is PriceTierId => {
+  if (!value) {
+    return false;
+  }
+  const isValidValue = PriceTierIdSchema.safeParse(value).success;
+
+  if (!isValidValue) {
+    return false;
+  }
+
+  return priceTiers[value as PriceTierId].isPublic;
+};
+
 export function isFreePriceTier(priceTierId: PriceTierId): boolean {
+  if (!priceTiers[priceTierId]) {
+    throw new Error(`PriceTierId ${priceTierId} is not defined`);
+  }
+  if (priceTiers[priceTierId].isPublic !== true) {
+    throw new Error(`PriceTierId ${priceTierId} is not public`);
+  }
   return priceTiers[priceTierId].monthlyUsdPrice === 0;
 }
 
 export function isPaidPriceTier(priceTierId: PriceTierId): boolean {
+  if (!priceTiers[priceTierId]) {
+    throw new Error(`PriceTierId ${priceTierId} is not defined`);
+  }
+  if (priceTiers[priceTierId].isPublic !== true) {
+    throw new Error(`PriceTierId ${priceTierId} is not public`);
+  }
   return priceTiers[priceTierId].monthlyUsdPrice > 0;
 }
 

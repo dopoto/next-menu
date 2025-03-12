@@ -14,7 +14,7 @@ export default function Error({
   const message = error instanceof Error ? error.message : String(error);
   const context: Record<string, string> = {
     message,
-    tag: "paid-to-free",
+    tag: "free-to-paid",
   };
   return (
     <SplitScreenContainer
