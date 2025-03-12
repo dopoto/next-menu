@@ -65,7 +65,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
       theHow = `Click the button below to confirm the plan change.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Change to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/free-to-free?toTierId=${parsedToTier.name}`;
+      changeUrl = `/change-plan/free-to-free?toTierId=${parsedToTier.id}`;
       break;
     case "paid-to-free":
       theHow = `Your account will be credited in the next step with an amount corresponding to the 

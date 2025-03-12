@@ -1,95 +1,76 @@
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { Stripe } from "stripe";
-import { env } from "~/env";
-import { PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
+import { type PriceTier } from "~/app/_domain/price-tiers";
+import { obj2str } from "~/app/_utils/string-utils";
+import { PlanChanged } from "../_components/PlanChanged";
+import { Suspense } from "react";
+import ProcessingPlanChange from "../_components/ProcessingPlanChange";
+import { getValidFreePriceTier } from "~/app/_utils/price-tier-utils";
 
-const stripe = new Stripe(env.STRIPE_SECRET_KEY);
+type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
-type SearchParams = Promise<Record<"toTierId", string | string[] | undefined>>;
-
-export default async function SubscribePage(props: {
+export default async function FreeToFreePage(props: {
   searchParams: SearchParams;
 }) {
-  const { userId, orgId } = await auth();
+  const { toTierId } = await props.searchParams;
+  return (
+    <Suspense fallback={<ProcessingPlanChange progress={12} />}>
+      <Step1 toTierId={toTierId} />
+    </Suspense>
+  );
+}
+
+async function Step1(props: { toTierId?: string }) {
+  const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
     redirect("/sign-in");
   }
 
-  // Validate params
-  const searchParams = await props.searchParams;
-  const { toTierId } = searchParams;
-  if (!toTierId) {
-    redirect("/change-plan");
+  // Expecting a valid free From tier:
+  const parsedFreeFromTier = getValidFreePriceTier(
+    sessionClaims?.metadata?.tier,
+  );
+  if (!parsedFreeFromTier) {
+    throw new Error(
+      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    );
   }
 
-  const parsedToTierId = PriceTierIdSchema.safeParse(toTierId);
-  if (!parsedToTierId.success) {
-    redirect("/change-plan");
+  // Expecting a valid free To tier:
+  const parsedFreeToTier = getValidFreePriceTier(props.toTierId);
+  if (!parsedFreeToTier) {
+    throw new Error(
+      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+    );
   }
 
-  let stripeSessionUrl = "";
+  return (
+    <Suspense fallback={<ProcessingPlanChange progress={40} />}>
+      <FinalStep fromTier={parsedFreeFromTier} toTier={parsedFreeToTier} />
+    </Suspense>
+  );
+}
 
-  try {
-    const parsedToTier = priceTiers[parsedToTierId.data];
-    const newTierStripePriceId = parsedToTier.stripePriceId;
-    if (!newTierStripePriceId) {
-      throw new Error("No price ID found for this tier");
-    }
-
-    /*
-    TODO handle edge case where the user had a paid tier, went to free, and now is moving back to 
-    paid tier, since maybe in this case they should have a Stripe subscription?
-    */
-
-    const stripeSession = await stripe.checkout.sessions.create({
-      client_reference_id: orgId,
-      success_url: `${env.NEXT_PUBLIC_APP_URL}/change-plan/success?session_id={CHECKOUT_SESSION_ID}`,
-      line_items: [
-        {
-          price: newTierStripePriceId,
-          quantity: 1,
-        },
-      ],
-      mode: "subscription",
-      metadata: {
-        userId: userId,
-        orgId: orgId,
-        tierId: parsedToTier.id,
-      },
-    });
-
-    stripeSessionUrl = stripeSession.url ?? "";
-  } catch (error) {
-    console.error("Error creating checkout session:", error);
+async function FinalStep(props: { fromTier: PriceTier; toTier: PriceTier }) {
+  const { userId } = await auth();
+  if (!userId) {
+    throw new Error(`No Clerk user id found"`);
   }
 
-  if (stripeSessionUrl !== "") {
-    redirect(stripeSessionUrl);
-  } else {
-    //TODO Show error
-  }
+  // Update Clerk with new tier
+  const clerk = await clerkClient();
+  await clerk.users.updateUserMetadata(userId, {
+    publicMetadata: { tier: props.toTier.id },
+  });
 
-  // If there was an error or no redirect happened
   return (
     <SplitScreenContainer
+      title={`Thank you!`}
+      subtitle="Your subscription has been updated."
       mainComponent={
-        <Card>
-          <CardHeader>
-            <CardTitle>Subscription Error</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>
-              There was an error processing your subscription request. Please
-              try again later.
-            </p>
-          </CardContent>
-        </Card>
+        <PlanChanged fromTier={props.fromTier} toTier={props.toTier} />
       }
-      title="Subscribe"
-      subtitle="Processing your subscription"
     />
   );
 }
