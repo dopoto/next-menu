@@ -15,7 +15,7 @@ const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 export type Params = Promise<{ priceTierId: string }>;
 type SearchParams = Promise<Record<"session_id", string | undefined>>;
 
-export default async function FreeToPaidChangePlanSuccessPage(props: {
+export default async function FreeToPaidPostPaymentPage(props: {
   params: Params;
   searchParams: SearchParams;
 }) {

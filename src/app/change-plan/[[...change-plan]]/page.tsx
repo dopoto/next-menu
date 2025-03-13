@@ -5,8 +5,6 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 
-// TODO redirect out if not signed in
-
 export default function ChangePlanPage() {
   return (
     <SplitScreenContainer

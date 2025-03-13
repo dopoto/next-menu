@@ -28,9 +28,9 @@ export function ErrorCard(props: {
       <div className="text-xs">Digest: {props.errorDigest ?? "--"}</div>
       <div className="text-xs">Id: {props.errorClientSideId}</div>
 
-      <div className="text-sm font-semibold">What can you try next?</div>
+      <div className="text-sm font-semibold">What can I try next?</div>
       {ctas.map((cta) => (
-        <Link href={cta.href} key={cta.href} className="cursor-pointer py-4 text-blue-500 underline">
+        <Link href={cta.href} key={cta.href} className="cursor-pointer   text-blue-500 underline">
            <div className="flex flex-row items-center gap-1">
             <ChevronsRight size={12}/>
             {cta.text}

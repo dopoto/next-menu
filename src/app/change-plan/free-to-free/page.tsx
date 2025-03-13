@@ -66,8 +66,8 @@ async function FinalStep(props: { fromTier: PriceTier; toTier: PriceTier }) {
 
   return (
     <SplitScreenContainer
-      title={`Thank you!`}
-      subtitle="Your subscription has been updated."
+      title={`Change your plan`}
+      subtitle="Your plan has been updated!"
       mainComponent={
         <PlanChanged fromTier={props.fromTier} toTier={props.toTier} />
       }

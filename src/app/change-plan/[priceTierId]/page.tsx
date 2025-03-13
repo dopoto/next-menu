@@ -8,36 +8,36 @@ import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
 import {
   getPriceTierChangeScenario,
-  isPriceTierId,
+  getValidPriceTier,
 } from "~/app/_utils/price-tier-utils";
-import { OverviewCard } from "~/app/_components/OverviewCard";
 import { PreviewCard } from "~/app/_components/PreviewCard";
-import { ErrorCard } from "~/app/_components/ErrorCard";
+import { obj2str } from "~/app/_utils/string-utils";
 
 export type Params = Promise<{ priceTierId: string }>;
 
 export default async function ChangePlanDetailPage(props: { params: Params }) {
-  const params = await props.params;
-
-  if (!isPriceTierId(params.priceTierId)) {
-    return notFound();
-  }
-
-  const parsedToTier = priceTiers[params.priceTierId];
-
-  console.log(parsedToTier);
-
   const { userId, orgId, sessionClaims } = await auth();
-
   if (!userId || !orgId) {
     redirect("/sign-in");
   }
 
-  if (!isPriceTierId(sessionClaims?.metadata?.tier)) {
-    return notFound();
+  const params = await props.params;
+
+  // Expecting a valid To tier:
+  const parsedToTier = getValidPriceTier(params.priceTierId);
+  if (!parsedToTier) {
+    throw new Error(
+      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    );
   }
 
-  const parsedFromTier = priceTiers[sessionClaims?.metadata?.tier];
+  // Expecting a valid From tier:
+  const parsedFromTier = getValidPriceTier(sessionClaims?.metadata?.tier);
+  if (!parsedFromTier) {
+    throw new Error(
+      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    );
+  }
 
   // If user tries to change to their current tier, redirect back
   if (parsedToTier.id === parsedFromTier.id) {
@@ -94,7 +94,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
       return null;
   }
 
-  const overviewSections  = [
+  const overviewSections = [
     { title: "what", content: theWhat },
     { title: "how", content: theHow },
     { title: "when", content: theWhen },
