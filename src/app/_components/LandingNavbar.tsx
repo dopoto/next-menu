@@ -44,6 +44,7 @@ export function LandingNavbar(props: { navItems: NavItem[] }) {
                 <Button variant={"secondary"}>Log in</Button>
               </SignInButton>
               <SignUpButton>
+                {/* TODO take them to a plan selector page */}
                 <Button>Sign up</Button>
               </SignUpButton>
             </SignedOut>

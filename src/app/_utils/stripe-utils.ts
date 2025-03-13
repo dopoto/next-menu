@@ -1,21 +1,43 @@
 import type Stripe from "stripe";
+import { type StripeSubscriptionItemId } from "../_domain/stripe";
 
+/**
+ * NOTE: We assume that our Stripe subscriptions only have one item in them - the current sub.
+ */
+export function getCurrentSubscriptionItemId(
+  subscription: Stripe.Subscription | undefined,
+): StripeSubscriptionItemId {
+  if (!subscription) {
+    throw new Error(`No subscription.`);
+  }
 
-// TODO 
+  if (subscription.items?.data?.[0]?.plan.active !== true) {
+    throw new Error(`Subscription item not active for sub ${subscription.id}`);
+  }
 
+  if (!subscription.items?.data?.[0]?.id) {
+    throw new Error(`Subscription item not found for sub ${subscription.id}`);
+  }
 
-export async function createStripeCustomer(stripeInstance: Stripe): Promise<string> {
+  return subscription.items.data[0].id as StripeSubscriptionItemId;
+}
+
+// TODO
+
+export async function createStripeCustomer(
+  stripeInstance: Stripe,
+): Promise<string> {
   const customer = await stripeInstance.customers.create({
-    name: 'Jenny Rosen',
-    email: 'jennyrosen@example.com',
+    name: "Jenny Rosen",
+    email: "jennyrosen@example.com",
   });
 
   return customer.id;
-
 }
 
-
-export async function createStripeCustomerSubscription(stripeInstance: Stripe): Promise<string> {
+export async function createStripeCustomerSubscription(
+  stripeInstance: Stripe,
+): Promise<string> {
   const subscription = await stripeInstance.subscriptions.create({
     customer: "cus_Na6dX7aXxi11N4",
     items: [

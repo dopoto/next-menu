@@ -104,7 +104,7 @@ export function getPriceTierChangeScenario(
   }
 
   if (isPaidPriceTier(from.id) && isPaidPriceTier(to.id)) {
-    return from.monthlyUsdPrice > to.monthlyUsdPrice
+    return to.monthlyUsdPrice < from.monthlyUsdPrice
       ? "paid-to-paid-downgrade"
       : "paid-to-paid-upgrade";
   }

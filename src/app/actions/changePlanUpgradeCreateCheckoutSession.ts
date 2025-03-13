@@ -7,6 +7,7 @@ import { getValidPaidPriceTier } from "../_utils/price-tier-utils";
 import { getCustomerByOrgId } from "~/server/queries";
 import { auth } from "@clerk/nextjs/server";
 import { obj2str } from "../_utils/string-utils";
+import { type StripeSubscriptionId, type UpgradeTiersStripeMetadata } from "../_domain/stripe";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -67,7 +68,7 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
 
   const subscription = subscriptions.data[0];
 
-  const subscriptionId = subscription?.id;
+  const subscriptionId = subscription?.id as StripeSubscriptionId;
 
   if (!subscriptionId) {
     throw new Error(
@@ -99,7 +100,14 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
 
   console.log(obj2str(invoicePreview));
   
+  // TODO ensure payment is made before redirecting t osuccerss
   // Create a checkout session for the prorated amount
+
+  const metadata: UpgradeTiersStripeMetadata = {
+    stripeSubscriptionId: subscriptionId,
+    fromTierId: parsedPaidFromTier.id,
+    toTierId: parsedPaidToTier.id
+  }
   const session = await stripe.checkout.sessions.create({
     mode: 'payment',
     customer: stripeCustomerId,
@@ -116,14 +124,9 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
         quantity: 1,
       },
     ],
-    metadata: {
-      subscriptionId,
-      subscriptionItemId,
-    },
-     
-     
+    metadata,
     ui_mode: 'embedded',
-    return_url: `${env.NEXT_PUBLIC_APP_URL}/change-plan/upgrade/${parsedPaidToTier.id}/success?session_id={CHECKOUT_SESSION_ID}`,
+    return_url: `${env.NEXT_PUBLIC_APP_URL}/change-plan/upgrade/success?session_id={CHECKOUT_SESSION_ID}`,
   });
 
   // const returnUrl = `${env.NEXT_PUBLIC_APP_URL}/change-plan/upgrade/success/${parsedPaidToTier.id}?session_id={CHECKOUT_SESSION_ID}`;
