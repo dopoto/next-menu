@@ -10,6 +10,7 @@ import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import { UpgradeStripeCheckoutForm } from "../_components/UpgradeStripeCheckoutForm";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
+import { changePlanUpgradeCreateCheckoutSession } from "~/app/_utils/stripe-utils";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -87,28 +88,24 @@ async function Step2StripeProcessing(props: {
     );
   }
 
-  const newStripeCustomer = await stripe.customers.create({
-    description: "Created from /change-plan/free-to-paid.",
-    metadata: {
-      orgId: props.orgId,
-    },
+  const clientSecret = await changePlanUpgradeCreateCheckoutSession({
+    fromTierId: props.fromTier.id,
+    toTierId: props.toTier.id,
   });
+
+  if (!clientSecret) {
+    throw new Error(`Could not initialize Stripe checkout session.`);
+  }
 
   return (
     <Suspense fallback={<ProcessingPlanChange progress={100} />}>
-      <FinalStepShowStripeCheckoutForm
-        newStripeCustomerId={newStripeCustomer.id}
-        fromTierId={props.fromTier.id}
-        toTierId={props.toTier.id}
-      />
+      <FinalStepShowStripeCheckoutForm stripeClientSecret={clientSecret} />
     </Suspense>
   );
 }
 
 async function FinalStepShowStripeCheckoutForm(props: {
-  newStripeCustomerId: string;
-  fromTierId: PriceTierId;
-  toTierId: PriceTierId;
+  stripeClientSecret: string;
 }) {
   const { userId } = await auth();
   if (!userId) {
@@ -117,12 +114,11 @@ async function FinalStepShowStripeCheckoutForm(props: {
 
   return (
     <SplitScreenContainer
-      title={`Change plan`}
+      title="Change plan"
       subtitle="Please enter your payment details below."
       mainComponent={
         <UpgradeStripeCheckoutForm
-          fromTierId={props.fromTierId}
-          toTierId={props.toTierId}
+          stripeClientSecret={props.stripeClientSecret}
         />
       }
     />
