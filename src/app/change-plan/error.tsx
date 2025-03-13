@@ -1,0 +1,43 @@
+"use client"; // Error boundaries must be Client Components
+
+import { useEffect } from "react";
+import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
+import { ErrorCard } from "../_components/ErrorCard";
+import { generateErrorId, logException } from "../_utils/error-logger-utils";
+import { type ErrorTypeId, type ErrorBoundaryException } from "../_domain/errors";
+
+export default function ChangePlanError({
+  error,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  reset,
+}: {
+  error: ErrorBoundaryException,
+  reset: () => void;
+}) {
+  const errorTypeId: ErrorTypeId = 'CHANGE_PLAN_ERROR';
+  const errorClientSideId = generateErrorId();
+
+  useEffect(() => {
+    logException(error, errorTypeId, errorClientSideId);
+  }, [error, errorClientSideId]);
+
+  // const message = error instanceof Error ? error.message : String(error);
+  // const context: Record<string, string> = {message};
+  return (
+    <SplitScreenContainer
+      title={`Change plan`}
+      subtitle="Sorry, could not complete this operation..."
+      mainComponent={<ErrorCard title="An error occurred" errorTypeId={errorTypeId} errorDigest={error.digest} errorClientSideId={errorClientSideId}  />}
+    />
+  );
+}
+
+// <BoxError
+//           errorTypeId={"CHANGE_PLAN_ERROR"}
+//           context={context}
+//           dynamicCtas={[
+//             <Button key="retry" variant="outline" onClick={reset}>
+//               Reload
+//             </Button>,
+//           ]}
+//         />

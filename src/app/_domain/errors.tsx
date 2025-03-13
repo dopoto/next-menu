@@ -2,6 +2,11 @@ import Link from "next/link";
 import { type ReactNode } from "react";
 import { Button } from "~/components/ui/button";
 
+/**
+ * @see https://nextjs.org/docs/app/building-your-application/routing/error-handling#using-error-boundaries.
+ */
+export type ErrorBoundaryException = Error & { digest?: string };
+
 export type ErrorTypeId =
   | "STRIPE_MISSING_PAYMENT_DATA"
   | "STRIPE_PAYMENT_EXPIRED"
@@ -11,11 +16,16 @@ export type ErrorTypeId =
   | "MENUS_INVALID_PARAM"
   | "ORDERS_INVALID_PARAM";
 
+type ErrorCta = {
+  text: string;
+  href: string;
+};
+
 export type ApplicationError = {
   errorTypeId: ErrorTypeId;
   userFriendlyTitle: string;
   userFriendlyDescription: string;
-  ctas?: ReactNode[];
+  ctas?: ErrorCta[];
 };
 
 export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
@@ -48,12 +58,14 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     userFriendlyTitle: "An error occurred while changing your plan",
     userFriendlyDescription: "You will need to retry your payment.",
     ctas: [
-      <Link key="change" href="/change-plan">
-        <Button variant="outline">Start over</Button>
-      </Link>,
-      <Link key="home" href="/my">
-        <Button variant="outline">Return to my dashboard</Button>
-      </Link>,
+      { text: "Start over", href: "/change-plan" },
+      { text: "Go back to my account", href: "/my" },
+      // <Link key="change" href="/change-plan">
+      //   <Button variant="outline">Start over</Button>
+      // </Link>,
+      // <Link key="home" href="/my">
+      //   <Button variant="outline">Return to my dashboard</Button>
+      // </Link>,
     ],
   },
   ORDERS_INVALID_PARAM: {
@@ -61,21 +73,13 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     userFriendlyTitle: "Could not load orders data",
     userFriendlyDescription:
       "Please go to your home page, then try returning to this page from the sidebar menu.",
-    ctas: [
-      <Link key="home" href="/my">
-        <Button variant="outline">Return to my dashboard</Button>
-      </Link>,
-    ],
+    ctas: [{ text: "Go back to my account", href: "/my" }],
   },
   MENUS_INVALID_PARAM: {
     errorTypeId: "MENUS_INVALID_PARAM",
     userFriendlyTitle: "Could not load menus data",
     userFriendlyDescription:
       "Please go to your home page, then try returning to this page from the sidebar menu.",
-    ctas: [
-      <Link key="home" href="/my">
-        <Button variant="outline">Return to my dashboard</Button>
-      </Link>,
-    ],
+    ctas: [{ text: "Go back to my account", href: "/my" }],
   },
 };
