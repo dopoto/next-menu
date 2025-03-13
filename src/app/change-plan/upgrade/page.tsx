@@ -1,18 +1,17 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { Stripe } from "stripe";
-import { env } from "~/env";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { type PriceTierId, type PriceTier } from "~/app/_domain/price-tiers";
+import { type PriceTier } from "~/app/_domain/price-tiers";
 import { obj2str } from "~/app/_utils/string-utils";
 import { getCustomerByOrgId } from "~/server/queries";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import { UpgradeStripeCheckoutForm } from "../_components/UpgradeStripeCheckoutForm";
-import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
+import {
+  getPriceTierChangeScenario,
+  getValidPaidPriceTier,
+} from "~/app/_utils/price-tier-utils";
 import { changePlanUpgradeCreateCheckoutSession } from "~/app/_utils/stripe-utils";
-
-const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
@@ -53,9 +52,13 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   }
 
   // Expecting an upgrade:
-  if (parsedPaidToTier.monthlyUsdPrice < parsedPaidFromTier.monthlyUsdPrice) {
+  const changePlanScenario = getPriceTierChangeScenario(
+    parsedPaidFromTier.id,
+    parsedPaidToTier.id,
+  );
+  if (changePlanScenario !== "paid-to-paid-upgrade") {
     throw new Error(
-      `Expected upgrade. Got: FromTier: ${obj2str(parsedPaidFromTier)}|ToTier: ${obj2str(parsedPaidToTier)}`,
+      `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
     );
   }
 

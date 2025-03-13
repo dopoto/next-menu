@@ -7,16 +7,13 @@ import {
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { obj2str } from "~/app/_utils/string-utils";
-import {
-  getCustomerByOrgId,
-  updateCustomerByClerkUserId,
-} from "~/server/queries";
+import { getCustomerByOrgId } from "~/server/queries";
 import { PlanChanged } from "../../_components/PlanChanged";
 import {
   type StripeSubscriptionId,
   type UpgradeTiersStripeMetadata,
 } from "~/app/_domain/stripe";
-import { getCurrentSubscriptionItemId } from "~/app/_utils/stripe-utils";
+import { getActiveSubscriptionItemId } from "~/app/_utils/stripe-utils";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -84,7 +81,8 @@ export default async function UpgradeChangePlanSuccessPage(props: {
     );
   }
 
-  const subscriptionId: StripeSubscriptionId | null = metadata.stripeSubscriptionId;
+  const subscriptionId: StripeSubscriptionId | null =
+    metadata.stripeSubscriptionId;
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
   // Validate Stripe customer Id
@@ -109,17 +107,14 @@ export default async function UpgradeChangePlanSuccessPage(props: {
   }
 
   // Move the customer to the upgraded tier in Stripe
-  await stripe.subscriptions.update(
-    subscriptionId,
-    {
-      items: [
-        {
-          id: getCurrentSubscriptionItemId(subscription),
-          price: parsedPaidToTier.stripePriceId,
-        },
-      ],
-    },
-  );
+  await stripe.subscriptions.update(subscriptionId, {
+    items: [
+      {
+        id: getActiveSubscriptionItemId(subscription),
+        price: parsedPaidToTier.stripePriceId,
+      },
+    ],
+  });
 
   // Update Clerk with new tier
   const clerk = await clerkClient();

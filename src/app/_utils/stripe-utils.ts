@@ -1,9 +1,10 @@
 import "server-only";
 import Stripe from "stripe";
 import {
-  StripeSubscriptionId,
-  UpgradeTiersStripeMetadata,
+  type StripeSubscriptionId,
+  type UpgradeTiersStripeMetadata,
   type StripeSubscriptionItemId,
+  type StripeCustomerId,
 } from "../_domain/stripe";
 import { type PriceTierId } from "../_domain/price-tiers";
 import { getValidPaidPriceTier } from "./price-tier-utils";
@@ -15,12 +16,49 @@ import { obj2str } from "./string-utils";
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
 
-/**
- * NOTE: We assume that our Stripe subscriptions only have one item in them - the current sub.
- */
-export function getCurrentSubscriptionItemId(
-  subscription: Stripe.Subscription | undefined,
-): StripeSubscriptionItemId {
+export async function getActiveStripeSubscription(
+  stripeCustomerId?: StripeCustomerId,
+): Promise<Stripe.Subscription | undefined> {
+  let customerId;
+  let orgId;
+
+  if (stripeCustomerId) {
+    customerId = stripeCustomerId;
+  } else {
+    orgId = (await auth()).orgId;
+    if (!orgId) {
+      throw new Error(`No orgId found in auth.`);
+    }
+    customerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
+  }
+
+  if (!customerId) {
+    throw new Error(
+      `No stripeCustomerId. orgId: ${orgId}. Was passed stripeCustomerId: ${stripeCustomerId}.`,
+    );
+  }
+
+  // Retrieve user's active subscription
+  const subscriptions = await stripe.subscriptions.list({
+    customer: customerId,
+    status: "active",
+    limit: 1,
+  });
+
+  if (subscriptions.data.length === 0) {
+    throw new Error(
+      `No active subscriptions found for stripeCustomerId ${customerId}.`,
+    );
+  }
+
+  return subscriptions.data[0];
+}
+
+export async function getActiveSubscriptionItemId(
+  sub?: Stripe.Subscription,
+): Promise<StripeSubscriptionItemId> {
+  const subscription = sub ?? (await getActiveStripeSubscription());
+
   if (!subscription) {
     throw new Error(`No subscription.`);
   }
