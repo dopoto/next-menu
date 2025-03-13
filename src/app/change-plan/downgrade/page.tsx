@@ -151,7 +151,12 @@ async function Step2StripeProcessing(props: {
   });
 
   const prorationInvoice = invoices.data[0];
-  let refundDetails = null;
+
+  if (!prorationInvoice) {
+    throw new Error(`ProrationInvoice missing`);
+  }
+
+  let refundDetails : StripeDowngradeRefund | null = null;
 
   // If the invoice represents a credit, process a refund
   if (prorationInvoice && prorationInvoice.total < 0) {
@@ -183,7 +188,7 @@ async function Step2StripeProcessing(props: {
       });
 
       refundDetails = {
-        id: refund.id,
+        id: refund.id as StripeRefundId,
         amount: refund.amount,
         status: refund.status,
       };
@@ -200,14 +205,12 @@ async function Step2StripeProcessing(props: {
         updatedSubscription.current_period_end * 1000,
       ).toISOString(),
     },
-    invoice: prorationInvoice
-      ? {
-          id: prorationInvoice.id,
-          amount: prorationInvoice.total / 100, // Convert from cents
-          currency: prorationInvoice.currency,
-          status: prorationInvoice.status,
-        }
-      : null,
+    invoice: {
+      id: prorationInvoice.id,
+      amount: prorationInvoice.total / 100, // Convert from cents
+      currency: prorationInvoice.currency,
+      status: prorationInvoice.status,
+    },
     refund: refundDetails,
   };
 
@@ -256,14 +259,14 @@ type StripeDowngradeTxDetails = {
     currentPeriodEnd: string;
   };
   invoice?: StripeDowngradeProrationInvoice;
-  refund: StripeDowngradeRefund;
+  refund: StripeDowngradeRefund | null;
 };
 
 type StripeDowngradeProrationInvoice = {
   id: string;
-  amount: string;
+  amount: number;
   currency: string;
-  status: string;
+  status?: Stripe.Invoice.Status | null;
 };
 
 type StripeDowngradeRefund = {
@@ -272,5 +275,8 @@ type StripeDowngradeRefund = {
    * Amount in cents.
    */
   amount: number;
-  status: string;
+  /**
+   * pending, requires_action, succeeded, failed, or canceled
+   */
+  status: string  | null;
 };
