@@ -46,8 +46,8 @@ export function BoxError(props: {
               {error.userFriendlyDescription}
             </p>
             {ctas && (
-              <div className="mt-2 flex gap-2   pt-4">                
-                {ctas?.flat().map((cta, index) => <div   key={index}>{cta}</div>)}
+              <div className="mt-2 flex gap-2 pt-4">
+                {ctas?.flat().map((cta, index) => <div key={index}>{cta}</div>)}
               </div>
             )}
             {(errorId.length ?? 0) > 0 && (

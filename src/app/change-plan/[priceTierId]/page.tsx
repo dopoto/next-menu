@@ -10,7 +10,9 @@ import {
   getPriceTierChangeScenario,
   isPriceTierId,
 } from "~/app/_utils/price-tier-utils";
-import { Badge } from "~/components/ui/badge";
+import { OverviewCard } from "~/app/_components/OverviewCard";
+import { PreviewCard } from "~/app/_components/PreviewCard";
+import { ErrorCard } from "~/app/_components/ErrorCard";
 
 export type Params = Promise<{ priceTierId: string }>;
 
@@ -47,6 +49,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     parsedToTier.id,
   );
 
+  const theWhat = `You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan.`;
   let theHow = "";
   let theWhen = "";
   let buttonText = "";
@@ -91,39 +94,17 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
       return null;
   }
 
+  const overviewSections  = [
+    { title: "what", content: theWhat },
+    { title: "how", content: theHow },
+    { title: "when", content: theWhen },
+  ];
+
   return (
     <SplitScreenContainer
       mainComponent={
         <div className="flex flex-col gap-4">
-          {/* when what how */}
-          <div className="mb-4 flex flex-col rounded-sm border-1 border-dashed border-gray-300 bg-gray-50/20 p-4 text-xs">
-            <Badge
-              variant={"outline"}
-              className="mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
-            >
-              what?
-            </Badge>
-            <div className="max-w-md">
-              {`You're about to move from our ${parsedFromTier.name} plan to our ${parsedToTier.name} plan.`}
-            </div>
-
-            <Badge
-              variant={"outline"}
-              className="mt-5 mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
-            >
-              how?
-            </Badge>
-            <div className="max-w-md">{theHow}</div>
-
-            <Badge
-              variant={"outline"}
-              className="mt-5 mr-1 mb-1 w-[70px] gap-0 border-dashed border-gray-400"
-            >
-              when?
-            </Badge>
-            <div className="max-w-md">{theWhen}</div>
-          </div>
-
+          <PreviewCard title={"Overview"} sections={overviewSections} />
           <PriceTierCard tier={parsedFromTier} isCurrent={true} />
           <SvgIcon
             kind={"arrowDoodle"}
@@ -147,7 +128,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
         </div>
       }
       title="Change Plan"
-      subtitle="Review your plan change"
+      subtitle="Review your changes below"
     />
   );
 }
