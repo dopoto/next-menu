@@ -24,7 +24,7 @@ type SearchParams = Promise<Record<"session_id", string | undefined>>;
  * after paying the more expensive tiers for the rest of the current month.
  * This page will validate the payment and will process moving the org to the new tier.
  */
-export default async function UpgradeChangePlanSuccessPage(props: {
+export default async function UpgradePostPaymentPage(props: {
   searchParams: SearchParams;
 }) {
   const { userId, orgId } = await auth();

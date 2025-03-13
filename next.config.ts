@@ -67,8 +67,8 @@ const config =
         // For all available options, see:
         // https://github.com/getsentry/sentry-webpack-plugin#options
 
-        org: "dopoto", //TODO extract to env
-        project: "next-menu", //TODO extract to env
+        org: env.NEXT_PUBLIC_SENTRY_ORG,
+        project: env.NEXT_PUBLIC_SENTRY_PROJECT,
         authToken: process.env.SENTRY_AUTH_TOKEN, // Required for source map validation
 
         // Only print logs for uploading source maps in CI

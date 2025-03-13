@@ -51,18 +51,7 @@ export default async function OnboardingPaymentPage(props: {
     }
 
   }
-
-  /*
-{"id":"cus_RtjpUYewkTRFWr","object":"customer","address":{"city":null,"country":"RO","line1":null,"line2":null,"postal_code":null,"state":null},"balance":0,"created":1741336434,"currency":"usd","default_source":null,"delinquent":false,"description":null,"discount":null,"email":"dopoto@gmail.com","invoice_prefix":"A6333088","invoice_settings":{"custom_fields":null,"default_payment_method":null,"footer":null,"rendering_options":null},"livemode":false,"metadata":{},"name":"D R","phone":null,"preferred_locales":["en-US"],"shipping":null,"tax_exempt":"none","test_clock":null}
-*/
-
-  // if (stripeCustomerId) {
-  //   // Store the Stripe Customer ID in your database here
-  //   await storeStripeCustomerIdInDatabase(stripeCustomerId);
-  // } else {
-  //   console.error("No customer ID found in the session.");
-  // }
-
+  
   const params = await props.params;
   const priceTierId = params.priceTierId;
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);

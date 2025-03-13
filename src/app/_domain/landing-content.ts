@@ -33,7 +33,7 @@ export const sections: Record<string, Section> = {
       label: "Pricing",
       title: "Plans for teams of all sizes",
       secondary:
-        "Choose the perfect plan for your needs. Always know what you'll pay.",
+        "No strings attached. Upgrade, downgrade or cancel instantly, anytime.",
     },
   },
   faqs: {
