@@ -2,6 +2,11 @@ import { getMenusByLocation } from "~/server/queries";
 import { locationIdSchema } from "~/app/_domain/location";
 import { BoxError } from "~/app/_components/BoxError";
 import { EmptyState } from "../../_components/EmptyState";
+import { Button } from "~/components/ui/button";
+import Link from "next/link";
+import { PlusCircle } from "lucide-react";
+import type * as schema from "~/server/db/schema";
+import MenuCard from "../_components/MenuCard";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -14,7 +19,7 @@ export default async function MenusPage(props: { params: Params }) {
   }
 
   const parsedLocationId = validationResult.data;
-  const items = await getMenusByLocation(parsedLocationId);
+  const items: schema.Menu[] = await getMenusByLocation(parsedLocationId);
 
   if (items.length === 0) {
     return (
@@ -28,10 +33,20 @@ export default async function MenusPage(props: { params: Params }) {
   }
 
   return (
-    <div>
-      {items.map((i) => (
-        <div key={i.name}>{i.name}</div>
-      ))}
+    <div className="flex flex-col gap-2">
+      <div className="flex flex-row justify-end">
+        <Button asChild>
+          <Link href={"menus/add"}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Add menu
+          </Link>
+        </Button>
+      </div>
+      <div>
+        {items.map((menu) => (
+          <MenuCard key={menu.id} item={menu} />
+        ))}
+      </div>
     </div>
   );
 }

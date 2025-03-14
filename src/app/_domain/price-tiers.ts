@@ -3,6 +3,7 @@ import { env } from "~/env";
 
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
+  z.literal("start2"),
   z.literal("pro"),
   z.literal("enterprise"),
   z.literal("custom1"),
@@ -10,10 +11,10 @@ export const PriceTierIdSchema = z.union([
 
 export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
-export const defaultTier: PriceTierId = 'start'
+export const defaultTier: PriceTierId = "start";
 
 export type PriceTier = {
-  id: PriceTierId,
+  id: PriceTierId;
   name: string;
   stripePriceId?: string;
   description: string;
@@ -24,6 +25,21 @@ export type PriceTier = {
   staffMembers: number;
   isPopular: boolean;
   isPublic: boolean;
+};
+
+export type OrgTier = {
+  priceTierId: PriceTierId;
+  /**
+   * @example "menu"
+   */
+  resourceSingularName: string;
+  /**
+   * @example "menus"
+   */
+  resourcePluralName: string;
+  quota: number;
+  used: number;
+  available: number;
 };
 
 export const priceTiers: Record<PriceTierId, PriceTier> = {
@@ -37,32 +53,45 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     monthlyUsdPrice: 0,
     yearlyUsdPrice: 0,
     isPublic: true,
-    isPopular: false
+    isPopular: false,
+  },
+  start2: {
+    id: "start2",
+    name: "Starter2",
+    description: "Takes 2 minutes to get started",
+    locations: 1,
+    menus: 2,
+    staffMembers: 0,
+    monthlyUsdPrice: 0,
+    yearlyUsdPrice: 0,
+    isPublic: true,
+    isPopular: false,
   },
   pro: {
     id: "pro",
     name: "Premium",
-    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_TIER,
     description: "Perfect for most",
+    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_TIER,
     locations: 5,
     menus: 10,
     staffMembers: 10,
     monthlyUsdPrice: 6,
     yearlyUsdPrice: 5,
     isPublic: true,
-    isPopular: true
+    isPopular: true,
   },
   enterprise: {
     id: "enterprise",
     name: "Enterprise",
     description: "Ready for large businesses",
+    stripePriceId: env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_TIER,
     locations: 100,
     menus: 100,
     staffMembers: 100,
     monthlyUsdPrice: 59,
     yearlyUsdPrice: 5900,
     isPublic: true,
-    isPopular: false
+    isPopular: false,
   },
   custom1: {
     id: "custom1",
@@ -74,6 +103,13 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     monthlyUsdPrice: -1,
     yearlyUsdPrice: -1,
     isPublic: false,
-    isPopular: false
+    isPopular: false,
   },
 };
+
+export type PriceTierChangeScenario =
+  | "free-to-paid"
+  | "free-to-free"
+  | "paid-to-free"
+  | "paid-to-paid-upgrade"
+  | "paid-to-paid-downgrade";

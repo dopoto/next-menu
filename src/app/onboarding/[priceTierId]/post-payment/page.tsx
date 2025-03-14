@@ -14,6 +14,8 @@ import {
   defaultTier,
   priceTiers,
 } from "~/app/_domain/price-tiers";
+import { updateCustomerByClerkUserId } from "~/server/queries";
+import { auth } from "@clerk/nextjs/server";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -30,8 +32,26 @@ export default async function OnboardingPaymentPage(props: {
   // Get the status of the Stripe payment
   const searchParams = await props.searchParams;
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
-  const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
+  const session = await stripe.checkout.sessions.retrieve(stripeSessionId, {
+    expand: ["customer"],
+  });
+  const stripeCustomer = session.customer as Stripe.Customer;
+  if (
+    session.status === "complete" &&
+    stripeCustomer &&
+    "id" in stripeCustomer
+  ) {
+    console.log(`DBG stripeCustomer ${JSON.stringify(stripeCustomer)}`);
+    const { userId } = await auth();
+    if (userId) {
+      const upd = await updateCustomerByClerkUserId(userId, stripeCustomer.id);
+      console.log(`DBG updated user ${JSON.stringify(upd)}`);
+    } else {
+      //TODO Handle error
+    }
 
+  }
+  
   const params = await props.params;
   const priceTierId = params.priceTierId;
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);

@@ -9,7 +9,6 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-out(.*)",
   "/sign-up(.*)",
-  "/landing(.*)", //TODO RMOVE
 ]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
@@ -42,7 +41,7 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
       return NextResponse.redirect(signUpUrl);
     }
 
-    const myDashboardRoute = `/${orgId}/${currentLocationId}`;
+    const myDashboardRoute = `/${orgId}/${currentLocationId}/live`;
     console.log(`DBG-MIDDLEWARE Redirecting from /my to ${myDashboardRoute}`);
     const myDashboardRouteUrl = new URL(myDashboardRoute, req.url);
     return NextResponse.redirect(myDashboardRouteUrl);

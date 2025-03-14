@@ -12,7 +12,7 @@ export default async function OrdersPage(props: { params: Params }) {
     return <BoxError errorTypeId={"ORDERS_INVALID_PARAM"} />;
   }
 
-  const parsedLocationId = validationResult.data;
+ // const parsedLocationId = validationResult.data;
   const items = await Promise.resolve([]);
 
   if (items.length === 0) {

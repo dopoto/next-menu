@@ -13,7 +13,7 @@ export const LandingPricing: React.FC = () => {
           title={title}
           secondary={secondary}
         />
-        <div className="mt-16 space-y-12 lg:grid lg:grid-cols-3 lg:space-y-0 lg:gap-x-8">
+        <div className="mt-16 space-y-12 lg:grid lg:grid-cols-3 lg:space-y-0 lg:gap-8">
           {Object.entries(priceTiers).map(([_, tier]) => {
             return tier.isPublic ? <PricingCard key={tier.name} tier={tier} /> : null;
           })}

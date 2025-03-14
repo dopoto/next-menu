@@ -1,6 +1,6 @@
 "use client";
 
-import { useClerk, UserButton, useUser  } from "@clerk/nextjs";
+import { useClerk, UserButton, useUser } from "@clerk/nextjs";
 import { ChevronsUpDown } from "lucide-react";
 import {
   SidebarMenu,
@@ -17,9 +17,6 @@ import {
 export function SidebarUserManager() {
   const { openUserProfile, signOut } = useClerk();
   const { user } = useUser();
- 
- // TODO const { organization } = useOrganization();
-
   if (!user) return null;
 
   return (
@@ -31,7 +28,16 @@ export function SidebarUserManager() {
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
             >
-              <UserButton />
+              <UserButton
+                appearance={{
+                  elements: {
+                    userButtonAvatarBox: {
+                      width: "32px",
+                      height: "32px",
+                    },
+                  },
+                }}
+              />
               <div className="grid flex-1 text-left text-sm leading-tight">
                 <span className="truncate font-semibold">{user.fullName}</span>
                 <span className="truncate text-xs">

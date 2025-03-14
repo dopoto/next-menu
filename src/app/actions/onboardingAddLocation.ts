@@ -1,12 +1,14 @@
 "use server";
 
+
+//TODO https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#step-4-instrument-nextjs-server-actions-optional
+
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { z } from "zod";
-import { db } from "~/server/db";
-import { locations } from "~/server/db/schema";
 import { PriceTierIdSchema } from "../_domain/price-tiers";
 import Stripe from "stripe";
 import { env } from "~/env";
+import { addLocation } from "~/server/queries";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -118,13 +120,7 @@ export const onboardingAddLocation = async (formData: FormData) => {
   }
 
   try {
-    const [insertedLocation] = await db
-      .insert(locations)
-      .values({
-        name: validatedFormFields.data.locationName,
-        orgId,
-      })
-      .returning({ id: locations.id });
+    const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName);
 
     // TODO send analytics
     // analyticsServerClient.capture({

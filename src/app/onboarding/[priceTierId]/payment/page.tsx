@@ -27,7 +27,7 @@ export default async function OnboardingPaymentPage(props: { params: Params }) {
   const stripePriceId = priceTiers[parsedOrDefaultTier].stripePriceId ?? "";
 
   const mainComponent = stripePriceId ? (
-    <CheckoutForm priceId={stripePriceId} />
+    <CheckoutForm priceTierId={parsedOrDefaultTier} />
   ) : (
     // TODO
     <>Go next</>

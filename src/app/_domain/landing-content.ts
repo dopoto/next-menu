@@ -15,7 +15,7 @@ export const sections: Record<string, Section> = {
       label: "Features",
       title: "A better way to work",
       secondary:
-        "Our platform is packed with powerful features to help your team succeed.",
+        "The tools you need for your restaurant, bar or pub",
     },
   },
   testimonials: {
@@ -33,7 +33,7 @@ export const sections: Record<string, Section> = {
       label: "Pricing",
       title: "Plans for teams of all sizes",
       secondary:
-        "Choose the perfect plan for your needs. Always know what you'll pay.",
+        "No strings attached. Upgrade, downgrade or cancel instantly, anytime.",
     },
   },
   faqs: {

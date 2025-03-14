@@ -33,7 +33,6 @@ export default async function OnboardingAddLocationPage(props: {
   const params = await props.params;
   const priceTierId = params.priceTierId;
   const parsedTier = PriceTierIdSchema.safeParse(priceTierId);
-  // TODO refactor extract
   const parsedOrDefaultTier = parsedTier.success
     ? parsedTier.data
     : defaultTier;
@@ -109,9 +108,8 @@ const getMainComponent = async (
     // TODO log error
     mainComponent = (
       <BoxError
-        title="Missing Stripe payment data"
-        description={"You will need to retry your payment"}
-        ctas={[
+        errorTypeId="STRIPE_MISSING_PAYMENT_DATA"
+        dynamicCtas={[
           <Link key="retry" href={`/onboarding/${tierId}/payment`}>
             <Button variant="outline">Retry payment</Button>
           </Link>,
@@ -136,9 +134,8 @@ const getMainComponent = async (
           // TODO log error
           mainComponent = (
             <BoxError
-              title="Stripe payment expired"
-              description={"You will need to retry your payment"}
-              ctas={[
+              errorTypeId="STRIPE_PAYMENT_EXPIRED"
+              dynamicCtas={[
                 <Link key="retry" href={`/onboarding/${tierId}/payment`}>
                   <Button variant="outline">Retry payment</Button>
                 </Link>,
@@ -153,9 +150,9 @@ const getMainComponent = async (
           // TODO log error
           mainComponent = (
             <BoxError
-              title="An error occurred during Stripe payment"
-              description={"You will need to retry your payment"}
-              ctas={[
+              errorTypeId="STRIPE_PAYMENT_UNKNOWN_STATUS"
+              context={{ status: sessionStatus ?? "" }}
+              dynamicCtas={[
                 <Link key="retry" href={`/onboarding/${tierId}/payment`}>
                   <Button variant="outline">Retry payment</Button>
                 </Link>,
@@ -167,9 +164,8 @@ const getMainComponent = async (
     } catch {
       mainComponent = (
         <BoxError
-          title="Stripe payment error"
-          description={"You will need to retry your payment"}
-          ctas={[
+          errorTypeId="STRIPE_PAYMENT_EXPIRED"
+          dynamicCtas={[
             <Link key="retry" href={`/onboarding/${tierId}/payment`}>
               <Button variant="outline">Retry payment</Button>
             </Link>,
