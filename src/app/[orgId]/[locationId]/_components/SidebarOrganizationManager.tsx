@@ -57,6 +57,9 @@ export function SidebarOrganizationManager() {
             <Link href="/change-plan">
               <DropdownMenuItem>Change plan</DropdownMenuItem>
             </Link>
+            <Link href="/view-plan">
+              <DropdownMenuItem>View plan usage</DropdownMenuItem>
+            </Link>
 
             {/* TODO*/}
             {/* <Link href="...">

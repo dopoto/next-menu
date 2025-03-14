@@ -10,7 +10,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev": "set TURBOPACK=0 && next dev",
+    "dev": "next dev",
     "dev-inspect": "cross-env NODE_OPTIONS='--inspect' next dev",
     "dev-turbo": "next dev --turbopack",
     "lint": "next lint",

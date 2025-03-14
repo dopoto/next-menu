@@ -14,7 +14,6 @@ import {
   MultiStepper,
 } from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
-import { BoxError } from "~/app/_components/BoxError";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 
@@ -107,14 +106,17 @@ const getMainComponent = async (
   if (stripeSessionId?.length === 0) {
     // TODO log error
     mainComponent = (
-      <BoxError
+      <>
+        TODO Throw instead
+        {/* <BoxError
         errorTypeId="STRIPE_MISSING_PAYMENT_DATA"
         dynamicCtas={[
           <Link key="retry" href={`/onboarding/${tierId}/payment`}>
             <Button variant="outline">Retry payment</Button>
           </Link>,
         ]}
-      />
+      /> */}
+      </>
     );
   } else {
     let sessionStatus: string | null = "";
@@ -133,14 +135,17 @@ const getMainComponent = async (
         case "expired":
           // TODO log error
           mainComponent = (
-            <BoxError
+            <>
+              TODO Throw instead
+              {/*             <BoxError
               errorTypeId="STRIPE_PAYMENT_EXPIRED"
               dynamicCtas={[
                 <Link key="retry" href={`/onboarding/${tierId}/payment`}>
                   <Button variant="outline">Retry payment</Button>
                 </Link>,
               ]}
-            />
+            /> */}
+            </>
           );
           break;
         case "open":
@@ -149,7 +154,9 @@ const getMainComponent = async (
         default:
           // TODO log error
           mainComponent = (
-            <BoxError
+            <>
+              TODO Throw instead
+              {/*             <BoxError
               errorTypeId="STRIPE_PAYMENT_UNKNOWN_STATUS"
               context={{ status: sessionStatus ?? "" }}
               dynamicCtas={[
@@ -157,20 +164,24 @@ const getMainComponent = async (
                   <Button variant="outline">Retry payment</Button>
                 </Link>,
               ]}
-            />
+            /> */}
+            </>
           );
           break;
       }
     } catch {
       mainComponent = (
-        <BoxError
+        <>
+          TODO Throw instead
+          {/*                     <BoxError
           errorTypeId="STRIPE_PAYMENT_EXPIRED"
           dynamicCtas={[
             <Link key="retry" href={`/onboarding/${tierId}/payment`}>
               <Button variant="outline">Retry payment</Button>
             </Link>,
           ]}
-        />
+        /> */}
+        </>
       );
     }
   }

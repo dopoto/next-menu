@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { BoxError } from "~/app/_components/BoxError";
+ 
 import { locationIdSchema } from "~/app/_domain/location";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 
@@ -12,7 +12,8 @@ type Params = Promise<{ locationId: string }>;
 
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+    // TODO new error component
+    //return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
   }
 
   //TODO replace with actual functionality 

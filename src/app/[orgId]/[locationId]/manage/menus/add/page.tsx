@@ -2,13 +2,13 @@ import { auth } from "@clerk/nextjs/server";
 import AddMenuDialog from "../../_components/AddMenuDialog";
 import {
   defaultTier,
-  type OrgTier,
+ 
   PriceTierIdSchema,
   priceTiers,
 } from "~/app/_domain/price-tiers";
 import { getMenusByLocation } from "~/server/queries";
 import { locationIdSchema } from "~/app/_domain/location";
-import { BoxError } from "~/app/_components/BoxError";
+ 
 
 type Params = Promise<{ locationId: string }>;
 
@@ -16,7 +16,8 @@ export default async function AddMenuPage(props: { params: Params }) {
   const params = await props.params;
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+    // TODO new error component
+    //return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
   }
   const parsedLocationId = validationResult.data;
 
@@ -27,17 +28,18 @@ export default async function AddMenuPage(props: { params: Params }) {
     ? parsedTier.data
     : defaultTier;
 
-  const menus = await getMenusByLocation(parsedLocationId);
+    //TODO
+  const menus = await getMenusByLocation(parsedLocationId!);
 
-  const quota = priceTiers[parsedOrDefaultTier].menus;
-  const orgTier: OrgTier = {
-    priceTierId: parsedOrDefaultTier,
-    resourceSingularName: 'menu',
-    resourcePluralName: 'menus',
-    quota,
-    used: menus.length,
-    available: quota - menus.length,
-  };
+  // const quota = priceTiers[parsedOrDefaultTier].menus;
+  // const orgTier: OrgTier = {
+  //   priceTierId: parsedOrDefaultTier,
+  //   resourceSingularName: 'menu',
+  //   resourcePluralName: 'menus',
+  //   quota,
+  //   used: menus.length,
+  //   available: quota - menus.length,
+  // };
 
-  return <AddMenuDialog orgTier={orgTier} />;
+  return <AddMenuDialog   />;
 }

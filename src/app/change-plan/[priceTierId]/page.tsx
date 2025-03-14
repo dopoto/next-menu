@@ -1,8 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
-import { priceTiers } from "~/app/_domain/price-tiers";
 import Link from "next/link";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
@@ -10,8 +9,8 @@ import {
   getPriceTierChangeScenario,
   getValidPriceTier,
 } from "~/app/_utils/price-tier-utils";
-import { PreviewCard } from "~/app/_components/PreviewCard";
 import { obj2str } from "~/app/_utils/string-utils";
+import { OverviewCard } from "~/app/_components/OverviewCard";
 
 export type Params = Promise<{ priceTierId: string }>;
 
@@ -104,7 +103,11 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     <SplitScreenContainer
       mainComponent={
         <div className="flex flex-col gap-4">
-          <PreviewCard title={"Overview"} sections={overviewSections} />
+          <OverviewCard
+            title={"Overview"}
+            sections={overviewSections}
+            variant="preview"
+          />
           <PriceTierCard tier={parsedFromTier} isCurrent={true} />
           <SvgIcon
             kind={"arrowDoodle"}
