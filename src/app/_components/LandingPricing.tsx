@@ -1,8 +1,8 @@
 import { sections } from "../_domain/landing-content";
 import { priceTiers } from "../_domain/price-tiers";
+import { GetStartedCta } from "./GetStartedCta";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { PriceTierCard, type CardCustomizations } from "./PriceTierCard";
-import { PricingCardCta } from "./PricingCardCta";
 
 export const LandingPricing: React.FC = () => {
   const { label, title, secondary } = sections.pricing!.header;
@@ -16,6 +16,9 @@ export const LandingPricing: React.FC = () => {
         />
         <div className="mt-16 space-y-12 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
           {Object.entries(priceTiers).map(([_, tier]) => {
+            if (!tier.isPublic) {
+              return null;
+            }
             //TODO Ctas, customization
 
             const cardCustomizations: CardCustomizations | undefined =
@@ -26,15 +29,15 @@ export const LandingPricing: React.FC = () => {
                     badgeText: "Our most popular plan!",
                   }
                 : undefined;
-            console.log(cardCustomizations);
-            return tier.isPublic ? (
+
+            return (
               <PriceTierCard
                 key={tier.name}
                 tier={tier}
                 cardCustomizations={cardCustomizations}
-                // footerCta = {<PricingCardCta tierId={tier.id} />}
+                footerCta={<GetStartedCta tier={tier.id} variant={"default"} />}
               />
-            ) : null;
+            );
           })}
         </div>
       </div>

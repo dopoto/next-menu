@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { env } from "~/env";
-import { PriceTierFeature, PriceTierFeatureId } from "./price-tier-features";
+import {  type PriceTierFeatureId } from "./price-tier-features";
 
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
@@ -14,7 +14,7 @@ export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
 export const defaultTier: PriceTierId = "start";
 
-export type Feature = { id: PriceTierFeatureId; quota: number | boolean };
+export type Feature = { id: PriceTierFeatureId; quota: number   };
 
 export type PriceTier = {
   id: PriceTierId;
@@ -52,7 +52,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPopular: false,
     features: [
       {id: 'locations', quota: 1},
-      {id: 'menus', quota: 2}
+       
     ],
   },
   pro: {

@@ -3,7 +3,11 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { PriceTierCard } from "~/app/_components/PriceTierCard";
+import {
+  CardCustomizations,
+  getCurrentPlanCardCustomizations,
+  PriceTierCard,
+} from "~/app/_components/PriceTierCard";
 
 export default function ChangePlanPage() {
   return (
@@ -20,10 +24,23 @@ async function PlanSelector() {
     ?.tier as PriceTierId;
 
   return (
-    <div className="flex flex-col gap-3 ">
-      <p className="text-sm max-w-md">{"Next, we'll show you an overview page where you'll be able to complete the plan change."}</p>
+    <div className="flex flex-col gap-3">
+      <p className="max-w-md text-sm">
+        {
+          "Next, we'll show you an overview page where you'll be able to complete the plan change."
+        }
+      </p>
       {Object.entries(priceTiers).map(([_, tier]) => {
+        if (!tier.isPublic) {
+          return null;
+        }
+
         const isCurrent = currentUserTier === tier.id;
+
+        const cardCustomizations = isCurrent
+          ? getCurrentPlanCardCustomizations()
+          : undefined;
+
         const footerCta = isCurrent ? null : (
           <Link href={`/change-plan/${tier.id}`} className="w-full">
             <Button className="w-full" variant="default">
@@ -32,14 +49,14 @@ async function PlanSelector() {
           </Link>
         );
 
-        return tier.isPublic ? (
+        return (
           <PriceTierCard
             key={tier.name}
             tier={tier}
-            isCurrent={isCurrent}
+            cardCustomizations={cardCustomizations}
             footerCta={footerCta}
           />
-        ) : null;
+        );
       })}
     </div>
   );

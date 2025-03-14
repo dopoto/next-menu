@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { PriceTierCard } from "~/app/_components/PriceTierCard";
+import { getCurrentPlanCardCustomizations, PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
 import {
   getPriceTierChangeScenario,
@@ -108,14 +108,14 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
             sections={overviewSections}
             variant="preview"
           />
-          <PriceTierCard tier={parsedFromTier} isCurrent={true} />
+          <PriceTierCard tier={parsedFromTier} cardCustomizations={getCurrentPlanCardCustomizations()}/>
           <SvgIcon
             kind={"arrowDoodle"}
             className={
               "fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"
             }
           />
-          <PriceTierCard tier={parsedToTier} isCurrent={false} />
+          <PriceTierCard tier={parsedToTier}  />
           <div className="flex w-full flex-col gap-2 pt-4">
             <Link href={changeUrl} className="w-full">
               <Button variant={"default"} className="w-full">

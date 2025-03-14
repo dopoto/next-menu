@@ -7,7 +7,11 @@ import {
 } from "~/components/ui/card";
 import { type Feature, type PriceTier } from "../_domain/price-tiers";
 import { Fragment, type ReactNode } from "react";
-import { priceTierFeatures } from "../_domain/price-tier-features";
+import {
+  type PriceTierFeature,
+  priceTierFeatures,
+} from "../_domain/price-tier-features";
+import { CheckIcon } from "lucide-react";
 
 export type CardCustomizations = {
   containerStyle?: string;
@@ -49,6 +53,14 @@ export function PriceTierCard(props: {
   );
 }
 
+export const getCurrentPlanCardCustomizations = (): CardCustomizations => {
+  return {
+    containerStyle: "border-2 border-blue-700",
+    badgeStyle: "bg-blue-800",
+    badgeText: "Your current plan",
+  };
+};
+
 const getPrice = (monthlyUsdPrice: number) => {
   if (monthlyUsdPrice === -1) return `__.__`;
   if (monthlyUsdPrice === 0)
@@ -67,10 +79,20 @@ const getPrice = (monthlyUsdPrice: number) => {
   );
 };
 
-const getDisplayValue = (quota: Feature["quota"]) => {
-  if (quota === true) return "yes";
-  if (quota === false) return "no";
-  if (typeof quota === "number") return quota.toString();
+const getDisplayValue = (
+  featureDetails: PriceTierFeature,
+  quota: Feature["quota"],
+) => {
+  if (typeof quota === "number")
+    return (
+      <>
+        <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
+        {quota.toString()}{" "}
+        {quota > 1
+          ? featureDetails.resourcePluralName
+          : featureDetails.resourceSingularName}
+      </>
+    );
   return "--";
 };
 
@@ -87,9 +109,9 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
 
   return (
     <div className="flex flex-row items-center gap-1">
-      {/* <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-      <div>{getDisplayValue(quota)}</div> */}
-      {featureDetails.resourceSingularName}|{quota}
+      {/* <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />*/}
+      {getDisplayValue(featureDetails, quota)}
+      {/* {featureDetails.resourceSingularName}|{quota} */}
     </div>
   );
 };
