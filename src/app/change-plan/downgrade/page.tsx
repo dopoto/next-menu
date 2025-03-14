@@ -156,7 +156,7 @@ async function Step2StripeProcessing(props: {
     throw new Error(`ProrationInvoice missing`);
   }
 
-  let refundDetails : StripeDowngradeRefund | null = null;
+  let refundDetails: StripeDowngradeRefund | null = null;
 
   // If the invoice represents a credit, process a refund
   if (prorationInvoice && prorationInvoice.total < 0) {
@@ -244,7 +244,8 @@ async function FinalStepShowConfirmation(props: {
       subtitle="Please enter your payment details below."
       mainComponent={
         <>
-          {obj2str(props.txDetails)}
+          {/* TODO overview */}
+          {/* {obj2str(props.txDetails)} */}
           <PlanChanged fromTier={props.fromTier} toTier={props.toTier} />
         </>
       }
@@ -278,5 +279,5 @@ type StripeDowngradeRefund = {
   /**
    * pending, requires_action, succeeded, failed, or canceled
    */
-  status: string  | null;
+  status: string | null;
 };

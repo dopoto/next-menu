@@ -57,7 +57,6 @@ export function SplitScreenContainer(props: {
         {props.mainComponent}
 
         <footer className="mt-auto flex flex-row pt-6 text-xs text-gray-400">
-          {/* TODO actual ver */}
           <div className="my-auto">
             <i>the</i>
             <span className="text-gray-600">Menu</span> v{getAppVersion()}

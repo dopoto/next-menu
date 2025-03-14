@@ -60,12 +60,6 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     ctas: [
       { text: "Start over", href: "/change-plan" },
       { text: "Go back to my account", href: "/my" },
-      // <Link key="change" href="/change-plan">
-      //   <Button variant="outline">Start over</Button>
-      // </Link>,
-      // <Link key="home" href="/my">
-      //   <Button variant="outline">Return to my dashboard</Button>
-      // </Link>,
     ],
   },
   ORDERS_INVALID_PARAM: {

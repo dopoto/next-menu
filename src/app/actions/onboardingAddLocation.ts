@@ -121,9 +121,6 @@ export const onboardingAddLocation = async (formData: FormData) => {
 
   try {
     const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName);
-    
-    //TODO
-    console.log(`DBG insertedLocation: ${JSON.stringify(insertedLocation)}`);
 
     // TODO send analytics
     // analyticsServerClient.capture({

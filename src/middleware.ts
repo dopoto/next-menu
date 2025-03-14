@@ -10,7 +10,7 @@ const isPublicRoute = createRouteMatcher([
   "/sign-out(.*)",
   "/sign-up(.*)",
 ]);
-// TODO Change-plan - signed-in only
+
 export default clerkMiddleware(async (auth, req: NextRequest) => {
   const { userId, sessionClaims, redirectToSignIn } = await auth();
   const { currentLocationId } = sessionClaims?.metadata ?? {};

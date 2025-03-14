@@ -21,8 +21,6 @@ export default function ChangePlanError({
     logException(error, errorTypeId, errorClientSideId);
   }, [error, errorClientSideId]);
 
-  // const message = error instanceof Error ? error.message : String(error);
-  // const context: Record<string, string> = {message};
   return (
     <SplitScreenContainer
       title={`Change plan`}
@@ -31,13 +29,3 @@ export default function ChangePlanError({
     />
   );
 }
-
-// <BoxError
-//           errorTypeId={"CHANGE_PLAN_ERROR"}
-//           context={context}
-//           dynamicCtas={[
-//             <Button key="retry" variant="outline" onClick={reset}>
-//               Reload
-//             </Button>,
-//           ]}
-//         />
