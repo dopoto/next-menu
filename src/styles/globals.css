@@ -188,10 +188,9 @@ html {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.87 0 0);
+  /* Custom: */
   --pop: var(--color-blue-800, currentColor)
-  /* oklch(0.379 0.146 265.522);  */
-   /* bg-blue-900 */
-  /* oklch(0.511 0.262 276.966); */
+  
 }
 
 /*
@@ -275,7 +274,9 @@ html {
   --color-sidebar-primary: var(--sidebar-primary);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --color-sidebar: var(--sidebar);
-  --color-pop: var(--pop)
+  /* Custom: */
+  --color-pop: var(--pop);
+  --color-primary-foreground: var(--sidebar-primary-foreground);
 }
 
 /*

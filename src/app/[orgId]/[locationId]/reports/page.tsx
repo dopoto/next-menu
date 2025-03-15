@@ -6,7 +6,7 @@ type Params = Promise<{ locationId: string }>;
 
  export default async function ReportsPage(props: { params: Params }) {
   const params = await props.params;
-
+  throw new Error("d2d")
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
     // TODO new error component

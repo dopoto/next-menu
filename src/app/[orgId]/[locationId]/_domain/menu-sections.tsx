@@ -1,4 +1,5 @@
 import {
+  ChartPie,
   LayoutDashboard,
   ScanQrCode,
 } from "lucide-react";
@@ -14,8 +15,14 @@ type MenuItem = {
 export const menuItems: MenuItem[] = [
   {
     icon: <LayoutDashboard size={16} />,
-    title: "Dashboard",
+    title: "Open orders",
     url: "live",
+    parentId: "dashboard",
+  },
+  {
+    icon: <ChartPie size={16} />,
+    title: "Reports",
+    url: "reports",
     parentId: "dashboard",
   },
   {
