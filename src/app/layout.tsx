@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import 'react-loading-skeleton/dist/skeleton.css'
 import { type Metadata } from "next";
 import { type ReactNode } from "react";
 import { Toaster } from "~/components/ui/toaster";

@@ -16,6 +16,7 @@ import { obj2str } from "../_utils/string-utils";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Suspense } from "react";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
@@ -127,10 +128,10 @@ function PlanUsageSkeleton(props: { rows: number }) {
       <TableBody>
         {[...Array(props.rows).keys()].map((row) => (
           <TableRow key={row}>
-            <TableCell className="font-medium capitalize">...</TableCell>
-            <TableCell className="text-right">...</TableCell>
-            <TableCell className="text-right">...</TableCell>
-            <TableCell className="text-right">...</TableCell>
+            <TableCell className="font-medium capitalize"><Skeleton  className="h-[20px] w-[80px]" /></TableCell>
+            <TableCell className="text-right"><Skeleton className="h-[20px] w-[30px] ml-auto" /></TableCell>
+            <TableCell className=" text-right"><Skeleton  className="h-[20px] w-[30px] ml-auto" /></TableCell>
+            <TableCell className=" text-right"><Skeleton  className="h-[20px] w-[30px] ml-auto" /></TableCell>
           </TableRow>
         ))}
       </TableBody>

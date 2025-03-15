@@ -83,12 +83,33 @@ export async function getPlanUsage() {
 }
 
 export async function getMenusPlanUsage() {
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  return 3;
+  const { userId, sessionClaims } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) throw new Error("No organization ID found");
+
+  const result = await db.query.menus.findMany({
+    where: (menus, { eq, and, exists }) =>
+      exists(
+        db
+          .select()
+          .from(locations)
+          .where(
+            and(
+              eq(locations.id, menus.locationId),
+              eq(locations.orgId, orgId)
+            )
+          )
+      )
+  });
+
+  return result.length;
 }
 
 export async function getLocationsPlanUsage() {
-  return Promise.resolve(2);
+  //TODO
+  return Promise.resolve(1);
 }
 
 export async function addLocation(orgId: string, name: string) {
