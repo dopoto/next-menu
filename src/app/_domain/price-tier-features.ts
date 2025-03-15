@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { env } from "~/env";
+import { getLocationsPlanUsage, getMenusPlanUsage } from "~/server/queries";
 
 export const PriceTierFeatureIdSchema = z.union([
   z.literal("locations"),
@@ -19,8 +20,9 @@ export type PriceTierFeature = {
    * @example "menus"
    */
   resourcePluralName: string;
-  
 }
+
+export type PriceTierFeatureUsage =  {id: PriceTierFeatureId,  planQuota: number, used: number}
 
  
  
@@ -31,10 +33,15 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
     resourcePluralName: "locations"
   },
   menus: {
-    id: "locations",
+    id: "menus",
     resourceSingularName: "menu",
     resourcePluralName: "menus"
   }
+};
+
+export const priceTierUsageFunctions: Record<PriceTierFeatureId, () => Promise<number>> = {
+  "locations": getLocationsPlanUsage,
+  "menus": getMenusPlanUsage,
 };
 
  

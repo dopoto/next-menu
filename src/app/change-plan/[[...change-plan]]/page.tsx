@@ -8,6 +8,7 @@ import {
   getCurrentPlanCardCustomizations,
   PriceTierCard,
 } from "~/app/_components/PriceTierCard";
+import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 
 export default function ChangePlanPage() {
   return (
@@ -41,7 +42,13 @@ async function PlanSelector() {
           ? getCurrentPlanCardCustomizations()
           : undefined;
 
-        const footerCta = isCurrent ? null : (
+        const footerCta = isCurrent ? (
+          <Link href="/view-plan" className="w-full">
+            <Button variant="outline" className="w-full">
+              View plan usage
+            </Button>
+          </Link>
+        ) : (
           <Link href={`/change-plan/${tier.id}`} className="w-full">
             <Button className="w-full" variant="default">
               Change to this plan
@@ -58,6 +65,23 @@ async function PlanSelector() {
           />
         );
       })}
+      <SeparatorWithText title={"Not ready for a change yet?"} />
+      <div className="flex w-full flex-col gap-2">
+        <p className="pb-4">
+          Remember that you can upgrade, downgrade or cancel instantly,
+          anytime.{" "}
+        </p>
+        <Link href="/my" className="w-full">
+          <Button variant="outline" className="w-full">
+            Go back to my account
+          </Button>
+        </Link>
+        <Link href="/view-plan" className="w-full">
+            <Button variant="outline" className="w-full">
+              View plan usage
+            </Button>
+          </Link>
+      </div>
     </div>
   );
 }

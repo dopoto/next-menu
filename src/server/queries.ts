@@ -4,6 +4,15 @@ import { type LocationId } from "~/app/_domain/location";
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
 import { eq } from "drizzle-orm";
+import { priceTiers } from "~/app/_domain/price-tiers";
+import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
+import { obj2str } from "~/app/_utils/string-utils";
+import {
+  priceTierFeatures,
+  PriceTierFeatureUsage,
+  PriceTierFeatureWithUsage,
+  priceTierUsageFunctions,
+} from "~/app/_domain/price-tier-features";
 
 export async function addCustomer(clerkUserId: string, orgId: string) {
   // TODO Checks ? auth etc
@@ -40,6 +49,46 @@ export async function getCustomerByOrgId(orgId: string) {
   });
   if (!item) throw new Error("Not found");
   return item;
+}
+
+export async function getPlanUsage() {
+  const { userId, sessionClaims } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) throw new Error("No organization ID found");
+
+  const tierId = sessionClaims?.metadata.tier;
+  //TODO validate tier
+  if (!tierId) throw new Error("No tier found");
+
+  const parsedFromTier = getValidPriceTier(tierId);
+  if (!parsedFromTier) {
+    throw new Error(
+      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    );
+  }
+  const featuresInCurrentTier = parsedFromTier.features;
+
+  const featuresInCurrentTierWithUsage: PriceTierFeatureUsage[] =
+    await Promise.all(
+      featuresInCurrentTier.map(async (tierFeature) => {
+        const usedQuotaFn = priceTierUsageFunctions[tierFeature.id];
+        const used = usedQuotaFn ? await usedQuotaFn() : 0;
+        return { id: tierFeature.id, planQuota: tierFeature.quota, used };
+      }),
+    );
+
+  return featuresInCurrentTierWithUsage;
+}
+
+export async function getMenusPlanUsage() {
+  await new Promise(resolve => setTimeout(resolve, 5000));
+  return 3;
+}
+
+export async function getLocationsPlanUsage() {
+  return Promise.resolve(2);
 }
 
 export async function addLocation(orgId: string, name: string) {
