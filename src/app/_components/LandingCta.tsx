@@ -38,20 +38,6 @@ export const LandingCta: React.FC = () => {
         </h2>
         <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
           <GetStartedCta variant={"outline"} />
-          {/* <SignedIn>
-            <Link href="/my">
-              <Button variant={"outline"} size={"lg"}>
-                Go to my account
-              </Button>
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <Link href="/sign-up">
-              <Button variant={"outline"} size={"lg"}>
-                Get started
-              </Button>
-            </Link>
-          </SignedOut> */}
         </div>
       </div>
     </div>

@@ -10,8 +10,7 @@ export const PriceTierFeatureIdSchema = z.union([
 export type PriceTierFeatureId = z.infer<typeof PriceTierFeatureIdSchema>;
 
 export type PriceTierFeature = {
-  
-  id: PriceTierFeatureId
+  id: PriceTierFeatureId;
   /**
    * @example "menu"
    */
@@ -20,28 +19,32 @@ export type PriceTierFeature = {
    * @example "menus"
    */
   resourcePluralName: string;
-}
+};
 
-export type PriceTierFeatureUsage =  {id: PriceTierFeatureId,  planQuota: number, used: number}
+export type PriceTierFeatureUsage = {
+  id: PriceTierFeatureId;
+  planQuota: number;
+  used: number;
+  available: number;
+};
 
- 
- 
 export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
   locations: {
     id: "locations",
     resourceSingularName: "location",
-    resourcePluralName: "locations"
+    resourcePluralName: "locations",
   },
   menus: {
     id: "menus",
     resourceSingularName: "menu",
-    resourcePluralName: "menus"
-  }
+    resourcePluralName: "menus",
+  },
 };
 
-export const priceTierUsageFunctions: Record<PriceTierFeatureId, () => Promise<number>> = {
-  "locations": getLocationsPlanUsage,
-  "menus": getMenusPlanUsage,
+export const priceTierUsageFunctions: Record<
+  PriceTierFeatureId,
+  () => Promise<number>
+> = {
+  locations: getLocationsPlanUsage,
+  menus: getMenusPlanUsage,
 };
-
- 

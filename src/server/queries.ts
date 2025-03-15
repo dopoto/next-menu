@@ -48,37 +48,6 @@ export async function getCustomerByOrgId(orgId: string) {
   return item;
 }
 
-export async function getPlanUsage() {
-  const { userId, sessionClaims } = await auth();
-  if (!userId) throw new Error("Unauthorized");
-
-  const orgId = sessionClaims?.org_id;
-  if (!orgId) throw new Error("No organization ID found");
-
-  const tierId = sessionClaims?.metadata.tier;
-  //TODO validate tier
-  if (!tierId) throw new Error("No tier found");
-
-  const parsedFromTier = getValidPriceTier(tierId);
-  if (!parsedFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
-  }
-  const featuresInCurrentTier = parsedFromTier.features;
-
-  const featuresInCurrentTierWithUsage: PriceTierFeatureUsage[] =
-    await Promise.all(
-      featuresInCurrentTier.map(async (tierFeature) => {
-        const usedQuotaFn = priceTierUsageFunctions[tierFeature.id];
-        const used = usedQuotaFn ? await usedQuotaFn() : 0;
-        return { id: tierFeature.id, planQuota: tierFeature.quota, used };
-      }),
-    );
-
-  return featuresInCurrentTierWithUsage;
-}
-
 export async function getMenusPlanUsage() {
   const { userId, sessionClaims } = await auth();
   if (!userId) throw new Error("Unauthorized");

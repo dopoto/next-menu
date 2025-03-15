@@ -9,7 +9,6 @@ import {
 } from "~/components/ui/table";
 import { OverviewCard } from "../_components/OverviewCard";
 import { SplitScreenContainer } from "../_components/SplitScreenContainer";
-import { getPlanUsage } from "~/server/queries";
 import { auth } from "@clerk/nextjs/server";
 import { getValidPriceTier } from "../_utils/price-tier-utils";
 import { obj2str } from "../_utils/string-utils";
@@ -17,6 +16,9 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { Suspense } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
+import { type PriceTier } from "../_domain/price-tiers";
+import { type PriceTierFeatureUsage } from "../_domain/price-tier-features";
+import { getAvailableQuota } from "../_utils/quota-utils";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
@@ -52,17 +54,19 @@ export default async function ViewPlanPage() {
           >
             <OverviewCard
               title={"Plan usage"}
-              sections={[{ title: "", content: <PlanUsage /> }]}
+              sections={[
+                { title: "", content: <PlanUsage tier={parsedTier} /> },
+              ]}
               variant="neutral"
             />
           </Suspense>
-          <Suspense fallback="Loading...">
+          {/* <Suspense fallback="Loading...">
             <OverviewCard
               title={"Plan billing"}
               sections={[{ title: "", content: <PlanBilling /> }]}
               variant="neutral"
             />
-          </Suspense>
+          </Suspense> */}
           <div className="flex w-full flex-col gap-2">
             <Link href="/my" className="w-full">
               <Button variant="outline" className="w-full">
@@ -83,8 +87,15 @@ export default async function ViewPlanPage() {
   );
 }
 
-async function PlanUsage() {
-  const planUsage = await getPlanUsage();
+async function PlanUsage(props: { tier: PriceTier }) {
+  const featuresInCurrentTier = props.tier.features;
+  const featuresInCurrentTierWithUsage: PriceTierFeatureUsage[] =
+    await Promise.all(
+      featuresInCurrentTier.map(async (feature) => {
+        const available = await getAvailableQuota(feature.id);
+        return { id: feature.id, planQuota: feature.quota, available, used: feature.quota - available };
+      }),
+    );
 
   return (
     <Table className="mt-2">
@@ -97,7 +108,7 @@ async function PlanUsage() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {planUsage.map((feature) => (
+        {featuresInCurrentTierWithUsage.map((feature) => (
           <TableRow key={feature.id}>
             <TableCell className="font-medium capitalize">
               {feature.id}
@@ -128,10 +139,18 @@ function PlanUsageSkeleton(props: { rows: number }) {
       <TableBody>
         {[...Array(props.rows).keys()].map((row) => (
           <TableRow key={row}>
-            <TableCell className="font-medium capitalize"><Skeleton  className="h-[20px] w-[80px]" /></TableCell>
-            <TableCell className="text-right"><Skeleton className="h-[20px] w-[30px] ml-auto" /></TableCell>
-            <TableCell className=" text-right"><Skeleton  className="h-[20px] w-[30px] ml-auto" /></TableCell>
-            <TableCell className=" text-right"><Skeleton  className="h-[20px] w-[30px] ml-auto" /></TableCell>
+            <TableCell className="font-medium capitalize">
+              <Skeleton className="h-[20px] w-[80px]" />
+            </TableCell>
+            <TableCell className="text-right">
+              <Skeleton className="ml-auto h-[20px] w-[30px]" />
+            </TableCell>
+            <TableCell className="text-right">
+              <Skeleton className="ml-auto h-[20px] w-[30px]" />
+            </TableCell>
+            <TableCell className="text-right">
+              <Skeleton className="ml-auto h-[20px] w-[30px]" />
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

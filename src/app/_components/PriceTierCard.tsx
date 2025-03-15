@@ -104,14 +104,9 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
     return null;
   }
 
-  // if (max === -1) return `Please contact us`;
-  // if (max === 0) return null;
-
   return (
     <div className="flex flex-row items-center gap-1">
-      {/* <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />*/}
       {getDisplayValue(featureDetails, quota)}
-      {/* {featureDetails.resourceSingularName}|{quota} */}
     </div>
   );
 };

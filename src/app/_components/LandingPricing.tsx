@@ -19,8 +19,6 @@ export const LandingPricing: React.FC = () => {
             if (!tier.isPublic) {
               return null;
             }
-            //TODO Ctas, customization
-
             const cardCustomizations: CardCustomizations | undefined =
               tier.isPopular
                 ? {
@@ -29,7 +27,6 @@ export const LandingPricing: React.FC = () => {
                     badgeText: "Our most popular plan!",
                   }
                 : undefined;
-
             return (
               <PriceTierCard
                 key={tier.name}

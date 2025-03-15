@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Button } from "~/components/ui/button";
 
 export function NoQuotaLeft(props: { title: string }) {
-  // TODO revisit NoQuotaLeft
   return (
     <div className="animate-in fade-in-50 flex h-full flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
       <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center gap-2 text-center">
@@ -12,7 +11,6 @@ export function NoQuotaLeft(props: { title: string }) {
         <p className="text-muted-foreground mb-4 text-sm">
           Not to worry, you can get more by upgrading your plan
         </p>
-        {/* <TierFeatureSummary orgTier={props.orgTier} /> */}
         <Button className="w-full" variant="default" asChild>
           <Link href={"/change-plan"}>Change plan</Link>
         </Button>
