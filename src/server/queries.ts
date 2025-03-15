@@ -4,13 +4,10 @@ import { type LocationId } from "~/app/_domain/location";
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
 import { eq } from "drizzle-orm";
-import { priceTiers } from "~/app/_domain/price-tiers";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { obj2str } from "~/app/_utils/string-utils";
 import {
-  priceTierFeatures,
-  PriceTierFeatureUsage,
-  PriceTierFeatureWithUsage,
+  type PriceTierFeatureUsage,
   priceTierUsageFunctions,
 } from "~/app/_domain/price-tier-features";
 
@@ -96,12 +93,9 @@ export async function getMenusPlanUsage() {
           .select()
           .from(locations)
           .where(
-            and(
-              eq(locations.id, menus.locationId),
-              eq(locations.orgId, orgId)
-            )
-          )
-      )
+            and(eq(locations.id, menus.locationId), eq(locations.orgId, orgId)),
+          ),
+      ),
   });
 
   return result.length;

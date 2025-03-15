@@ -65,8 +65,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPublic: true,
     isPopular: true,
     features: [
-      {id: 'locations', quota: 5},
-      {id: 'menus', quota: 10}
+      {id: 'locations', quota: 1},
+      {id: 'menus', quota: 1}
     ],
   },
   enterprise: {
@@ -79,7 +79,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPublic: true,
     isPopular: false,
     features: [
-      {id: 'locations', quota: 100},
+      {id: 'locations', quota: 1},
       {id: 'menus', quota: 100}
     ],
   },

@@ -13,8 +13,11 @@ export function NoQuotaLeft(props: { title: string }) {
           Not to worry, you can get more by upgrading your plan
         </p>
         {/* <TierFeatureSummary orgTier={props.orgTier} /> */}
+        <Button className="w-full" variant="default" asChild>
+          <Link href={"/change-plan"}>Change plan</Link>
+        </Button>
         <Button className="w-full" variant="secondary" asChild>
-          <Link href={"/change-plan"}>Upgrade</Link>
+          <Link href={"/view-plan"}>View plan usage</Link>
         </Button>
       </div>
     </div>
