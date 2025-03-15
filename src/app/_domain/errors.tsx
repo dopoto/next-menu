@@ -13,6 +13,7 @@ export type ErrorTypeId =
   | "STRIPE_PAYMENT_UNKNOWN_STATUS"
   | "STRIPE_PAYMENT_ERROR"
   | "CHANGE_PLAN_ERROR"
+  | "VIEW_PLAN_ERROR"
   | "MENUS_INVALID_PARAM"
   | "ORDERS_INVALID_PARAM";
 
@@ -54,6 +55,15 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     ctas: [], // dynamic cta provided at runtime
   },
   CHANGE_PLAN_ERROR: {
+    errorTypeId: "CHANGE_PLAN_ERROR",
+    userFriendlyTitle: "An error occurred while changing your plan",
+    userFriendlyDescription: "You will need to retry your payment.",
+    ctas: [
+      { text: "Start over", href: "/change-plan" },
+      { text: "Go back to my account", href: "/my" },
+    ],
+  },
+  VIEW_PLAN_ERROR: {
     errorTypeId: "CHANGE_PLAN_ERROR",
     userFriendlyTitle: "An error occurred while changing your plan",
     userFriendlyDescription: "You will need to retry your payment.",

@@ -1,5 +1,4 @@
 import { locationIdSchema } from "~/app/_domain/location";
-import { BoxError } from "~/app/_components/BoxError";
 import { EmptyState } from "../_components/EmptyState";
 
 type Params = Promise<{ locationId: string }>;
@@ -9,7 +8,9 @@ export default async function OrdersPage(props: { params: Params }) {
 
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    return <BoxError errorTypeId={"ORDERS_INVALID_PARAM"} />;
+    // TODO new error component
+    return 
+    //return <BoxError errorTypeId={"ORDERS_INVALID_PARAM"} />;
   }
 
  // const parsedLocationId = validationResult.data;

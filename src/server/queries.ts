@@ -4,6 +4,12 @@ import { type LocationId } from "~/app/_domain/location";
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
 import { eq } from "drizzle-orm";
+import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
+import { obj2str } from "~/app/_utils/string-utils";
+import {
+  type PriceTierFeatureUsage,
+  priceTierUsageFunctions,
+} from "~/app/_domain/price-tier-features";
 
 export async function addCustomer(clerkUserId: string, orgId: string) {
   // TODO Checks ? auth etc
@@ -40,6 +46,33 @@ export async function getCustomerByOrgId(orgId: string) {
   });
   if (!item) throw new Error("Not found");
   return item;
+}
+
+export async function getMenusPlanUsage() {
+  const { userId, sessionClaims } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) throw new Error("No organization ID found");
+
+  const result = await db.query.menus.findMany({
+    where: (menus, { eq, and, exists }) =>
+      exists(
+        db
+          .select()
+          .from(locations)
+          .where(
+            and(eq(locations.id, menus.locationId), eq(locations.orgId, orgId)),
+          ),
+      ),
+  });
+
+  return result.length;
+}
+
+export async function getLocationsPlanUsage() {
+  //TODO
+  return Promise.resolve(1);
 }
 
 export async function addLocation(orgId: string, name: string) {

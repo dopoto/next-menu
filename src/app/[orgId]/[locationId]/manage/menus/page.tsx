@@ -1,6 +1,5 @@
 import { getMenusByLocation } from "~/server/queries";
 import { locationIdSchema } from "~/app/_domain/location";
-import { BoxError } from "~/app/_components/BoxError";
 import { EmptyState } from "../../_components/EmptyState";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
@@ -15,11 +14,13 @@ export default async function MenusPage(props: { params: Params }) {
 
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+    // TODO new error component
+    // return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
   }
 
+  //TODO
   const parsedLocationId = validationResult.data;
-  const items: schema.Menu[] = await getMenusByLocation(parsedLocationId);
+  const items: schema.Menu[] = await getMenusByLocation(parsedLocationId!);
 
   if (items.length === 0) {
     return (

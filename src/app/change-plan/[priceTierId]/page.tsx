@@ -1,17 +1,16 @@
 import { auth } from "@clerk/nextjs/server";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
-import { priceTiers } from "~/app/_domain/price-tiers";
 import Link from "next/link";
-import { PriceTierCard } from "~/app/_components/PriceTierCard";
+import { getCurrentPlanCardCustomizations, PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
 import {
   getPriceTierChangeScenario,
   getValidPriceTier,
 } from "~/app/_utils/price-tier-utils";
-import { PreviewCard } from "~/app/_components/PreviewCard";
 import { obj2str } from "~/app/_utils/string-utils";
+import { OverviewCard } from "~/app/_components/OverviewCard";
 
 export type Params = Promise<{ priceTierId: string }>;
 
@@ -104,15 +103,19 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     <SplitScreenContainer
       mainComponent={
         <div className="flex flex-col gap-4">
-          <PreviewCard title={"Overview"} sections={overviewSections} />
-          <PriceTierCard tier={parsedFromTier} isCurrent={true} />
+          <OverviewCard
+            title={"Overview"}
+            sections={overviewSections}
+            variant="preview"
+          />
+          <PriceTierCard tier={parsedFromTier} cardCustomizations={getCurrentPlanCardCustomizations()}/>
           <SvgIcon
             kind={"arrowDoodle"}
             className={
               "fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"
             }
           />
-          <PriceTierCard tier={parsedToTier} isCurrent={false} />
+          <PriceTierCard tier={parsedToTier}  />
           <div className="flex w-full flex-col gap-2 pt-4">
             <Link href={changeUrl} className="w-full">
               <Button variant={"default"} className="w-full">

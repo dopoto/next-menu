@@ -1,8 +1,6 @@
-import Link from "next/link";
 import { PageSubtitle } from "./PageSubtitle";
 import { PageTitle } from "./PageTitle";
-import { Button } from "~/components/ui/button";
-import { SignedIn, SignedOut } from "@clerk/nextjs";
+import { GetStartedCta } from "./GetStartedCta";
 
 export const LandingCta: React.FC = () => {
   return (
@@ -35,25 +33,11 @@ export const LandingCta: React.FC = () => {
         <h2 className="flex flex-col text-3xl font-extrabold tracking-tight md:text-4xl">
           <PageTitle textColor="text-white">Ready to dive in?</PageTitle>
           <PageSubtitle textColor="text-white">
-            <SignedIn>Your account is waiting!</SignedIn>
-            <SignedOut>Create a free account now!</SignedOut>
+            {"Let's get started!"}
           </PageSubtitle>
         </h2>
         <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-          <SignedIn>
-            <Link href="/my">
-              <Button variant={"outline"} size={"lg"}>
-                Go to my account
-              </Button>
-            </Link>
-          </SignedIn>
-          <SignedOut>
-            <Link href="/sign-up">
-              <Button variant={"outline"} size={"lg"}>
-                Get started
-              </Button>
-            </Link>
-          </SignedOut>
+          <GetStartedCta variant={"outline"} />
         </div>
       </div>
     </div>
