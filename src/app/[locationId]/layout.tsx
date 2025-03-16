@@ -10,6 +10,7 @@ import { PageBreadcrumb } from "./_components/PageBreadcrumb";
 import { getAppVersion } from "../_utils/app-version-utils";
 import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
+import { APP_CONFIG } from "../_config/app-config";
 
 export default async function Layout({
   children,
@@ -41,13 +42,16 @@ export default async function Layout({
             <i>the</i>
             <span className="text-gray-600">Menu</span> v{getAppVersion()}
           </div>
-          <div className="flex align-middle ml-auto gap-2">
+          <div className="ml-auto flex gap-2 align-middle">
             <Link className="flex gap-0.5 align-middle" href="/">
               <House size={14} /> Home
             </Link>
             <Separator orientation="vertical" />
-            {/* TODO */}
-            <Link className="flex gap-0.5 align-middle" href="/">
+            <Link
+              prefetch={false}
+              className="flex gap-0.5 align-middle"
+              href={`mailto: ${APP_CONFIG.supportEmail}?subject=Support Request`}
+            >
               <MessageCircleQuestion size={14} /> Support
             </Link>
           </div>
