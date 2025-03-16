@@ -1,10 +1,10 @@
 import { getMenusByLocation } from "~/server/queries";
-import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
 import { EmptyState } from "../../_components/EmptyState";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { PlusCircle, ScanQrCode } from "lucide-react";
 import MenuCard from "./_components/MenuCard";
+import { locationIdSchema } from "../../_domain/locations";
 
 type Params = Promise<{ locationId: string }>;
 

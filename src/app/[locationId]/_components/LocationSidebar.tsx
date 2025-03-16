@@ -25,15 +25,15 @@ export function LocationSidebar({
 }: React.ComponentProps<typeof Sidebar>) {
   const params = useParams();
   const pathname = usePathname();
-  const { orgId, locationId } = params as { orgId: string; locationId: string };
+  const { locationId } = params as { locationId: string };
 
   const isActive = (url: string) => {
-    const fullPath = `/${orgId}/${locationId}/${url}`;
+    const fullPath = `/${locationId}/${url}`;
     return pathname === fullPath || `${pathname}/` === fullPath;
   };
 
   const buildUrl = (url: string) => {
-    return `/${orgId}/${locationId}/${url}`;
+    return `/${locationId}/${url}`;
   };
 
   const dashboardMenuSection = menuItems.filter(

@@ -1,15 +1,9 @@
 import { auth } from "@clerk/nextjs/server";
-import "server-only";
-import { type LocationId } from "~/app/[orgId]/[locationId]/_domain/locations";
+import "server-only"; 
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
 import { eq } from "drizzle-orm";
-import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
-import { obj2str } from "~/app/_utils/string-utils";
-import {
-  type PriceTierFeatureUsage,
-  priceTierUsageFunctions,
-} from "~/app/_domain/price-tier-features";
+import { type LocationId } from "~/app/[locationId]/_domain/locations";
 
 export async function addCustomer(clerkUserId: string, orgId: string) {
   // TODO Checks ? auth etc

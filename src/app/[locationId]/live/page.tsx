@@ -1,8 +1,8 @@
-import { Suspense } from "react";
-import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
+import { Suspense } from "react"; 
 import { EmptyState } from "../_components/EmptyState";
 import { getUsedQuota } from "~/app/_utils/quota-utils";
 import { LayoutDashboard } from "lucide-react";
+import { locationIdSchema } from "../_domain/locations";
 
 type Params = Promise<{ locationId: string }>;
 

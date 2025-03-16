@@ -1,7 +1,7 @@
 import { Suspense } from "react";
-import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
 import { EmptyState } from "../_components/EmptyState";
 import { ChartPie } from "lucide-react";
+import { locationIdSchema } from "../_domain/locations";
 
 type Params = Promise<{ locationId: string }>;
 
