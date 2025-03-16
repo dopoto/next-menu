@@ -9,17 +9,8 @@ import {
 } from "~/app/_components/PriceTierCard";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 
-export default function ChangePlanPage() {
-  return (
-    <SplitScreenContainer
-      mainComponent={<PlanSelector />}
-      title={"Change your plan"}
-      subtitle={"Please select a new plan below"}
-    ></SplitScreenContainer>
-  );
-}
-
-async function PlanSelector() {
+ 
+export async function PlanSelector() {
   const currentUserTier = (await auth()).sessionClaims?.metadata
     ?.tier as PriceTierId;
 
