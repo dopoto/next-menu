@@ -3,12 +3,12 @@ import Link from "next/link";
 import SvgIcon from "../../_components/SvgIcons";
 import { ThemeSwitch } from "../../_components/ThemeSwitch";
 import { getAppVersion } from "../../_utils/app-version-utils";
+import { APP_CONFIG } from "~/app/_config/app-config";
 
 const currentYear = new Date().getFullYear();
 
 //TODO
 const tagline = "Lorem ipsum doloret";
-const email = "info@themenu.io";
 const phone = "01234";
 const address = "01234";
 
@@ -36,10 +36,10 @@ export function LandingFooter() {
               <li className="flex items-start">
                 <Mail className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-400" />
                 <a
-                  href={`mailto:${email}`}
+                  href={`mailto:${APP_CONFIG.contactEmail}`}
                   className="transition-colors hover:text-blue-400"
                 >
-                  {email}
+                  {APP_CONFIG.contactEmail}
                 </a>
               </li>
               <li className="flex items-start">
