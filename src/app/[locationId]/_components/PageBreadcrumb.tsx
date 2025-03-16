@@ -14,7 +14,7 @@ import {
 
 export function PageBreadcrumb() {
   const pathname = usePathname();
-  const currentPath = pathname.split("/").slice(3).join("/");
+  const currentPath = pathname.split("/").slice(2).join("/");
   const currentMenuItem = menuItems.find((item) => item.url === currentPath);
   const pageTitle = currentMenuItem?.title ?? "Dashboard";
 
