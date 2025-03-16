@@ -20,9 +20,8 @@ export default async function SignUpPage(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-  const tier = searchParams.tier;
 
-  const validationResult = PriceTierIdSchema.safeParse(tier);
+  const validationResult = PriceTierIdSchema.safeParse(searchParams.tier);
   if (validationResult.success === false) {
     redirect("/select-plan");
   }
@@ -31,7 +30,7 @@ export default async function SignUpPage(props: {
   const steps: OnboardingStep[] = [
     {
       id: "tier",
-      title: `Chose ${priceTiers[parsedTier].name} tier`,
+      title: `Chose ${priceTiers[parsedTier].name} tier ($${priceTiers[parsedTier].monthlyUsdPrice.toFixed(2)}/month)`,
       isActive: false,
       icon: <CompletedStepIcon />,
     },
@@ -43,7 +42,7 @@ export default async function SignUpPage(props: {
     },
     {
       id: "addorg",
-      title: "Add organization",
+      title: "Create your organization",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },
@@ -59,7 +58,7 @@ export default async function SignUpPage(props: {
       : []),
     {
       id: "addloc",
-      title: "Set up a location",
+      title: "Create your first location",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },

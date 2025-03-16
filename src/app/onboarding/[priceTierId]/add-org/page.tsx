@@ -44,7 +44,7 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
     },
     {
       id: "addorg",
-      title: "Add organization",
+      title: "Create your organization",
       isActive: true,
       icon: <InProgressStepIcon />,
     },
@@ -60,7 +60,7 @@ export default async function OnboardingAddOrgPage(props: { params: Params }) {
       : []),
     {
       id: "addloc",
-      title: "Set up a location",
+      title: "Create your first location",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },

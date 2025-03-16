@@ -79,7 +79,7 @@ export default async function OnboardingPaymentPage(props: {
     {
       id: "addorg",
       icon: <CompletedStepIcon />,
-      title: "Added organization",
+      title: "Organization created",
       isActive: false,
     },
     {
@@ -90,7 +90,7 @@ export default async function OnboardingPaymentPage(props: {
     },
     {
       id: "addloc",
-      title: "Set up a location",
+      title: "Create your first location",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },

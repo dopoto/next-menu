@@ -30,13 +30,13 @@ export default async function SignUpSelectPlanPage(_props: {
     },
     {
       id: "addorg",
-      title: "Add organization",
+      title: "Create your organization",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },
     {
       id: "addloc",
-      title: "Set up a location",
+      title: "Create your first location",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },
