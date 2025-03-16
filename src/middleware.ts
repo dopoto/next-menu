@@ -8,8 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-out(.*)",
-  "/sign-up(.*)",
-  "/sign-up/select-plan(.*)",
+  "/sign-up(.*)"
 ]);
 
 export default clerkMiddleware(async (auth, req: NextRequest) => {
@@ -28,17 +27,17 @@ export default clerkMiddleware(async (auth, req: NextRequest) => {
   }
 
   // If the user isn't signed in and the route is private, redirect to sign-in
-  if (!userId && !isPublicRoute(req)) {
-    console.log(`DBG-MIDDLEWARE Redirecting to sign in`);
-    return redirectToSignIn({ returnBackUrl: req.url });
-  }
+  // if (!userId && !isPublicRoute(req)) {
+  //   console.log(`DBG-MIDDLEWARE Redirecting to sign in`);
+  //   return redirectToSignIn({ returnBackUrl: req.url });
+  // }
 
   // If the user is signed in and accessing the /my route, redirect them
   // to their actual dashboard URL if possible.
   if (userId && isMyRoute(req)) {
     if (!currentLocationId || !orgId) {
       console.log(`DBG-MIDDLEWARE [/my] Not onboarded, redirecting to /sign-up. currentLocationId: ${currentLocationId}, orgId: ${orgId}`);
-      const signUpUrl = new URL("/sign-up/select-plan", req.url);
+      const signUpUrl = new URL("/sign-up", req.url);
       return NextResponse.redirect(signUpUrl);
     }
 

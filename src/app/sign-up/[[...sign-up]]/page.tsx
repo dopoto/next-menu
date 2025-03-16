@@ -1,10 +1,7 @@
 import { SignedIn, SignedOut, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
-import {
-  PriceTierIdSchema,
-  priceTiers,
-} from "~/app/_domain/price-tiers";
+import { PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 import {
   CompletedStepIcon,
@@ -13,6 +10,7 @@ import {
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import { redirect } from "next/navigation";
+import { PlanSelector } from "../_components/PlanSelector";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
@@ -22,23 +20,46 @@ export default async function SignUpPage(props: {
   const searchParams = await props.searchParams;
 
   const validationResult = PriceTierIdSchema.safeParse(searchParams.tier);
-  if (validationResult.success === false) {
-    redirect("/select-plan");
-  }
+
   const parsedTier = validationResult.data;
+
+  // If a valid tier is passed as a search param, we'll take them straight to the sign up step
+
+  const tierStepTitle = parsedTier
+    ? `Chose ${priceTiers[parsedTier].name} tier ($${priceTiers[parsedTier].monthlyUsdPrice.toFixed(2)}/month)`
+    : "Select a plan";
+  const tierStepIsActive = parsedTier ? false : true;
+  const tierStepIcon = parsedTier ? <CompletedStepIcon /> : <InProgressStepIcon />;
+
+  const signUpStepIsActive = parsedTier ? true: false;
+  const signUpStepIcon = parsedTier ? <InProgressStepIcon /> :<UncompletedStepIcon /> ; 
+
+  const currentStepComponent = parsedTier ? (
+    <SignUp
+      forceRedirectUrl={`/onboarding/${parsedTier}/add-org`}
+      appearance={{
+        elements: {
+          headerTitle: "hidden",
+          headerSubtitle: "hidden",
+        },
+      }}
+    />
+  ) : (
+    <PlanSelector />
+  );
 
   const steps: OnboardingStep[] = [
     {
       id: "tier",
-      title: `Chose ${priceTiers[parsedTier].name} tier ($${priceTiers[parsedTier].monthlyUsdPrice.toFixed(2)}/month)`,
-      isActive: false,
-      icon: <CompletedStepIcon />,
+      title: tierStepTitle,
+      isActive: tierStepIsActive,
+      icon: tierStepIcon,
     },
     {
       id: "signup",
       title: "Sign up",
-      isActive: true,
-      icon: <InProgressStepIcon />,
+      isActive: signUpStepIsActive,
+      icon: signUpStepIcon,
     },
     {
       id: "addorg",
@@ -68,40 +89,22 @@ export default async function SignUpPage(props: {
     <>
       <SignedOut>
         <SplitScreenContainer
-          mainComponent={
-            <SignUp
-              forceRedirectUrl={`/onboarding/${parsedTier}/add-org`}
-              appearance={{
-                elements: {
-                  headerTitle: "hidden",
-                  headerSubtitle: "hidden",
-                },
-              }}
-            />
-          }
-          secondaryComponent={<MultiStepper steps={steps} />}           
+          mainComponent={currentStepComponent}
+          secondaryComponent={<MultiStepper steps={steps} />}
           title={"Let's get you onboarded!"}
           subtitle={"This should just take a minute..."}
         ></SplitScreenContainer>
       </SignedOut>
-      <SignedIn>
+      {/* <SignedIn>
         <SplitScreenContainer
           mainComponent={
-            <SignUp
-              forceRedirectUrl={`/onboarding/${parsedTier}/add-org`}
-              appearance={{
-                elements: {
-                  headerTitle: "hidden",
-                  headerSubtitle: "hidden",
-                },
-              }}
-            />
+            <>signed in</>
           }
-          secondaryComponent={null}           
+          secondaryComponent={null}
           title={"Sign up"}
           subtitle={""}
         ></SplitScreenContainer>
-      </SignedIn>
+      </SignedIn> */}
     </>
   );
 }
