@@ -48,7 +48,6 @@ export default async function SignUpSelectPlanPage(_props: {
         <SplitScreenContainer
           mainComponent={<PlanSelector />}
           secondaryComponent={<MultiStepper steps={steps} />}
-          sideHeroComponent={<SideHeroCarousel />}
           title={"Let's get you onboarded!"}
           subtitle={"This should just take a minute..."}
         ></SplitScreenContainer>
@@ -57,7 +56,6 @@ export default async function SignUpSelectPlanPage(_props: {
         <SplitScreenContainer
           mainComponent={<>signed in. TODO</>}
           secondaryComponent={null}
-          sideHeroComponent={<SideHeroCarousel />}
           title={"Sign up"}
           subtitle={""}
         ></SplitScreenContainer>

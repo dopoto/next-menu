@@ -80,8 +80,7 @@ export default async function SignUpPage(props: {
               }}
             />
           }
-          secondaryComponent={<MultiStepper steps={steps} />}
-          sideHeroComponent={<SideHeroCarousel />}
+          secondaryComponent={<MultiStepper steps={steps} />}           
           title={"Let's get you onboarded!"}
           subtitle={"This should just take a minute..."}
         ></SplitScreenContainer>
@@ -99,8 +98,7 @@ export default async function SignUpPage(props: {
               }}
             />
           }
-          secondaryComponent={null}
-          sideHeroComponent={<SideHeroCarousel />}
+          secondaryComponent={null}           
           title={"Sign up"}
           subtitle={""}
         ></SplitScreenContainer>
