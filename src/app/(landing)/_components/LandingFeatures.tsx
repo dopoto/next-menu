@@ -1,6 +1,6 @@
 import { Clock, Zap, Users, Globe, ScanQrCode } from "lucide-react";
 import { LandingSectionTitle } from "./LandingSectionTitle";
-import { sections } from "../_domain/landing-content";
+import { sections } from "../../_domain/landing-content";
 
 export interface Feature {
   title: string;

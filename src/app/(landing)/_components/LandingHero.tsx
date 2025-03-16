@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { GetStartedCta } from "./GetStartedCta";
+import { GetStartedCta } from "../../_components/GetStartedCta";
 
 export const LandingHero: React.FC = () => {
   return (

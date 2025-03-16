@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import SvgIcon from "./SvgIcons";
+import SvgIcon from "../../_components/SvgIcons";
 import {
   SignedOut,
   SignInButton,
@@ -11,7 +11,7 @@ import {
 } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import { Button } from "~/components/ui/button";
-import { type NavItem } from "../_domain/nav-items";
+import { type NavItem } from "../../_domain/nav-items";
 import { useState } from "react";
 
 export function LandingNavbar(props: { navItems: NavItem[] }) {

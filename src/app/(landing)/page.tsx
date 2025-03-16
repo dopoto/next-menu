@@ -1,13 +1,13 @@
 import { LandingTestimonials } from "./_components/LandingTestimonials";
 import { LandingPricing } from "./_components/LandingPricing";
 import { LandingFAQ } from "./_components/LandingFAQ";
-import { faqItems } from "./_domain/faq";
+import { faqItems } from "../_domain/faq";
 import { LandingCta } from "./_components/LandingCta";
 import { LandingFooter } from "./_components/LandingFooter";
 import { LandingFeatures } from "./_components/LandingFeatures";
 import { LandingHero } from "./_components/LandingHero";
 import { LandingNavbar } from "./_components/LandingNavbar";
-import { navItems } from "./_domain/nav-items";
+import { navItems } from "../_domain/nav-items";
 
 export default async function HomePage() {
   return (

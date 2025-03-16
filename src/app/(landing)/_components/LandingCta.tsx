@@ -1,6 +1,6 @@
-import { PageSubtitle } from "./PageSubtitle";
-import { PageTitle } from "./PageTitle";
-import { GetStartedCta } from "./GetStartedCta";
+import { PageSubtitle } from "../../_components/PageSubtitle";
+import { PageTitle } from "../../_components/PageTitle";
+import { GetStartedCta } from "../../_components/GetStartedCta";
 
 export const LandingCta: React.FC = () => {
   return (

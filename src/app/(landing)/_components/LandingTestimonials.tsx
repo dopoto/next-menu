@@ -1,6 +1,6 @@
 import { Card } from "~/components/ui/card";
 import { LandingSectionTitle } from "./LandingSectionTitle";
-import { sections } from "../_domain/landing-content";
+import { sections } from "../../_domain/landing-content";
 
 interface Testimonial {
   content: string;
