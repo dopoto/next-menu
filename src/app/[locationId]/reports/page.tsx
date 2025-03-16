@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { EmptyState } from "../_components/EmptyState";
 import { ChartPie } from "lucide-react";
 import { locationIdSchema } from "../_domain/locations";
+import LoadingSection from "../_components/LoadingSection";
+import { Reports } from "./_components/Reports";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -14,27 +16,10 @@ type Params = Promise<{ locationId: string }>;
   if (!validationResult.success) {
     throw new Error(`Invalid location: ${params.locationId}`);
   }
-
-    //TODO: Implement OpenOrders page
-    const items = await Promise.resolve([]);
-
-    if (items.length === 0) {
  
-      const title =   "No reports found for this location";      
-      const secondary = "Please come back in a while.";
-      return (
-        <EmptyState
-          icon={<ChartPie size={36} />}
-          title={title}
-          secondary={secondary}
- 
-        />
-      );
-    }
-
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>Reports</div>
+    <Suspense fallback={<LoadingSection />}>
+      <Reports locationId={validationResult.data} />
     </Suspense>
   );
 }
