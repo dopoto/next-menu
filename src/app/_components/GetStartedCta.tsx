@@ -13,7 +13,7 @@ export function GetStartedCta(props: {
   return (
     <>
       <SignedIn>
-        <SignedInCta variant={props.variant} />
+        <SignedInCta variant={props.variant} tier={props.tier} />
       </SignedIn>
       <SignedOut>
         <SignedOutCta variant={props.variant} secondaryText={props.secondaryText} tier={props.tier}/>
@@ -72,7 +72,7 @@ function SignedOutCta(props: {
   variant: "default" | "outline";
 }) {
 
-  const signUpLink = props.tier ? `/sign-up?tier=${props.tier}` : '/sign-up'
+  const signUpLink = props.tier ? `/sign-up?tier=${props.tier}` : '/sign-up/select-plan'
   return (
     <>
       <Link className="w-full" href={signUpLink}>

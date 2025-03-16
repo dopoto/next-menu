@@ -134,7 +134,6 @@ export const onboardingAddLocation = async (formData: FormData) => {
     const customJwtSessionClaims: CustomJwtSessionClaims = {
       metadata: {
         tier: validatedFormFields.data.priceTierId,
-        onboardingComplete: true,
         orgName,
         currentLocationId: insertedLocation?.id.toString() ?? "",
         currentLocationName: validatedFormFields.data.locationName,

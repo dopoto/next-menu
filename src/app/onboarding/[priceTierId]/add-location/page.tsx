@@ -14,8 +14,6 @@ import {
   MultiStepper,
 } from "~/app/_components/MultiStepper";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
-import { Button } from "~/components/ui/button";
-import Link from "next/link";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);

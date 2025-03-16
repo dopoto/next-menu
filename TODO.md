@@ -5,3 +5,4 @@
 [] CSP
 [] ESLint 10
 [] Validate Stripe / Clerk on sign in / (& regularly?)
+[] Delete my account

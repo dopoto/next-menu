@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { env } from "~/env";
 import { getLocationsPlanUsage, getMenusPlanUsage } from "~/server/queries";
 
 export const PriceTierFeatureIdSchema = z.union([

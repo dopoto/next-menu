@@ -1,7 +1,3 @@
-import Link from "next/link";
-import { type ReactNode } from "react";
-import { Button } from "~/components/ui/button";
-
 /**
  * @see https://nextjs.org/docs/app/building-your-application/routing/error-handling#using-error-boundaries.
  */
@@ -14,6 +10,7 @@ export type ErrorTypeId =
   | "STRIPE_PAYMENT_ERROR"
   | "CHANGE_PLAN_ERROR"
   | "VIEW_PLAN_ERROR"
+  | "ORG_MANAGER_ERROR"
   | "MENUS_INVALID_PARAM"
   | "ORDERS_INVALID_PARAM";
 
@@ -70,6 +67,14 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     ctas: [
       { text: "Start over", href: "/change-plan" },
       { text: "Go back to my account", href: "/my" },
+    ],
+  },
+ ORG_MANAGER_ERROR: {
+    errorTypeId: "ORG_MANAGER_ERROR",
+    userFriendlyTitle: "An error occurred",
+    userFriendlyDescription: "",
+    ctas: [      
+      { text: "Go to my account", href: "/my" },
     ],
   },
   ORDERS_INVALID_PARAM: {
