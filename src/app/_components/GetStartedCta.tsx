@@ -13,7 +13,7 @@ export function GetStartedCta(props: {
   return (
     <>
       <SignedIn>
-        <SignedInCta variant={props.variant} />
+        <SignedInCta variant={props.variant} tier={props.tier} />
       </SignedIn>
       <SignedOut>
         <SignedOutCta variant={props.variant} secondaryText={props.secondaryText} tier={props.tier}/>
