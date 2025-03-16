@@ -13,33 +13,24 @@ import {
   MultiStepper,
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
-import { redirect } from "next/navigation";
+import { PlanSelector } from "../_components/PlanSelector";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export default async function SignUpPage(props: {
+export default async function SignUpSelectPlanPage(props: {
   searchParams: SearchParams;
 }) {
-  const searchParams = await props.searchParams;
-  const tier = searchParams.tier;
-
-  const validationResult = PriceTierIdSchema.safeParse(tier);
-  if (validationResult.success === false) {
-    redirect("/select-plan");
-  }
-  const parsedTier = validationResult.data;
-
   const steps: OnboardingStep[] = [
     {
       id: "tier",
-      title: `Chose ${priceTiers[parsedTier].name} tier`,
-      isActive: false,
+      title: `Select a plan`,
+      isActive: true,
       icon: <CompletedStepIcon />,
     },
     {
       id: "signup",
       title: "Sign up",
-      isActive: true,
+      isActive: false,
       icon: <InProgressStepIcon />,
     },
     {
@@ -48,16 +39,6 @@ export default async function SignUpPage(props: {
       isActive: false,
       icon: <UncompletedStepIcon />,
     },
-    ...(parsedTier !== "start"
-      ? [
-          {
-            id: "pay",
-            title: "Pay with Stripe",
-            isActive: false,
-            icon: <UncompletedStepIcon />,
-          },
-        ]
-      : []),
     {
       id: "addloc",
       title: "Set up a location",
@@ -70,17 +51,7 @@ export default async function SignUpPage(props: {
     <>
       <SignedOut>
         <SplitScreenContainer
-          mainComponent={
-            <SignUp
-              forceRedirectUrl={`/onboarding/${parsedTier}/add-org`}
-              appearance={{
-                elements: {
-                  headerTitle: "hidden",
-                  headerSubtitle: "hidden",
-                },
-              }}
-            />
-          }
+          mainComponent={<PlanSelector />}
           secondaryComponent={<MultiStepper steps={steps} />}
           sideHeroComponent={<SideHeroCarousel />}
           title={"Let's get you onboarded!"}
@@ -89,17 +60,7 @@ export default async function SignUpPage(props: {
       </SignedOut>
       <SignedIn>
         <SplitScreenContainer
-          mainComponent={
-            <SignUp
-              forceRedirectUrl={`/onboarding/${parsedTier}/add-org`}
-              appearance={{
-                elements: {
-                  headerTitle: "hidden",
-                  headerSubtitle: "hidden",
-                },
-              }}
-            />
-          }
+          mainComponent={<>signed in. TODO</>}
           secondaryComponent={null}
           sideHeroComponent={<SideHeroCarousel />}
           title={"Sign up"}

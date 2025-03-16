@@ -9,7 +9,7 @@ import {
   DialogTitle,
 } from "~/components/ui/dialog";
 import { AddMenu } from "./AddMenu";
-import { NoQuotaLeft } from "../../_components/NoQuotaLeft";
+import { NoQuotaLeft } from "../../../_components/NoQuotaLeft";
 
 export default function AddMenuDialog(props: { availableQuota: number }) {
   const router = useRouter();

@@ -1,51 +1,40 @@
-import Link from "next/link";
-import { locationIdSchema } from "~/app/_domain/location";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Suspense } from "react";
+import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
+import { EmptyState } from "../_components/EmptyState";
+import { ChartPie } from "lucide-react";
 
 type Params = Promise<{ locationId: string }>;
 
  export default async function ReportsPage(props: { params: Params }) {
   const params = await props.params;
-  throw new Error("d2d")
+
+  //TODO org checks
+
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    // TODO new error component
-    return 
-    //return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+    throw new Error(`Invalid location: ${params.locationId}`);
   }
 
-  //TODO replace with actual functionality 
+    //TODO: Implement OpenOrders page
+    const items = await Promise.resolve([]);
 
-  //const parsedLocationId = validationResult.data;
-  //const items = await getMenusByLocation(parsedLocationId);
-
-//   if (items.length === 0) {
-//     return (
-//       <EmptyState
-//         title={"No data to display for this location"}
-//         secondary={"To get things going, start by adding one or more menus."}
-//         cta={"Add menu"}
-//         ctaHref={"menus/add"}
-//       />
-//     );
-//   }
+    if (items.length === 0) {
+ 
+      const title =   "No reports found for this location";      
+      const secondary = "Please come back in a while.";
+      return (
+        <EmptyState
+          icon={<ChartPie size={36} />}
+          title={title}
+          secondary={secondary}
+ 
+        />
+      );
+    }
 
   return (
-    <Tabs defaultValue="reports" className="w-[200px]">
-    <TabsList className="grid w-full grid-cols-2   h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
-      <TabsTrigger value="live"><Link href={`live`}>Live</Link></TabsTrigger>
-      <TabsTrigger value="reports">Reports</TabsTrigger>
-    </TabsList>
- 
-    <TabsContent value="reports">
-      Reports
-    </TabsContent>
-  </Tabs>
-    // <div>
-    //   <div className="flex flex-row gap-2 w-full ">
-    //     <DashboardCard title={"Menus"} value={"0"} secondaryValue={""}/>
-    //     <DashboardCard title={"Orders"} value={"0"} secondaryValue={""}/>
-    //   </div>
-    // </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div>Reports</div>
+    </Suspense>
   );
 }

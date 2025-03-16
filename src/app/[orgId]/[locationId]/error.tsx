@@ -15,7 +15,7 @@ export default function ManageError({
   error: ErrorBoundaryException;
   reset: () => void;
 }) {
-  const errorTypeId: ErrorTypeId = "CHANGE_PLAN_ERROR";
+  const errorTypeId: ErrorTypeId = "ORG_MANAGER_ERROR";
   const errorClientSideId = generateErrorId();
 
   useEffect(() => {

@@ -1,26 +1,60 @@
 import "server-only";
-import { priceTierUsageFunctions, type PriceTierFeatureId } from "../_domain/price-tier-features";
+import {
+  priceTierUsageFunctions,
+  type PriceTierFeatureId,
+} from "../_domain/price-tier-features";
 import { auth } from "@clerk/nextjs/server";
-import { getValidPaidPriceTier } from "./price-tier-utils";
+import {  getValidPriceTier } from "./price-tier-utils";
 import { obj2str } from "./string-utils";
 
-export async function getAvailableQuota(featureId: PriceTierFeatureId): Promise<number> {
+/**
+ * Returns the number of items included in a feature (E.G. "menus")
+ * for the price tier used by the current organization.
+ */
+export async function getIncludedQuota(
+  featureId: PriceTierFeatureId,
+): Promise<number> {
   const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
 
-  const parsedTier = getValidPaidPriceTier(priceTierId);
+  const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
     throw new Error(`Missing or invalid From tier in session claims.`);
   }
 
-  const included = parsedTier.features.find(f => f.id === featureId)?.quota;
+  const included = parsedTier.features.find((f) => f.id === featureId)?.quota;
   if (!included) {
-    throw new Error(`Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`);
+    throw new Error(
+      `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
+    );
   }
 
-  const usedQuotaFn = priceTierUsageFunctions.menus;
+  return included;
+}
+
+/**
+ * Returns the number of items used by the current organization in a feature - E.G. "menus".
+ */
+export async function getUsedQuota(
+  featureId: PriceTierFeatureId,
+): Promise<number> {
+  const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
+
+  const parsedTier = getValidPriceTier(priceTierId);
+  if (!parsedTier) {
+    throw new Error(`Missing or invalid tier in session claims.`);
+  }
+
+  const usedQuotaFn = priceTierUsageFunctions[featureId];
   const used = usedQuotaFn ? await usedQuotaFn() : 0;
 
-  const available = included - used;
+  return used;
+}
 
+export async function getAvailableQuota(
+  featureId: PriceTierFeatureId,
+): Promise<number> {
+  const included = await getIncludedQuota(featureId);
+  const used = await getUsedQuota(featureId);
+  const available = included - used;
   return available;
 }

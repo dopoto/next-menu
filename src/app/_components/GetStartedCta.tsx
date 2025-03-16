@@ -72,7 +72,7 @@ function SignedOutCta(props: {
   variant: "default" | "outline";
 }) {
 
-  const signUpLink = props.tier ? `/sign-up?tier=${props.tier}` : '/sign-up'
+  const signUpLink = props.tier ? `/sign-up?tier=${props.tier}` : '/sign-up/select-plan'
   return (
     <>
       <Link className="w-full" href={signUpLink}>

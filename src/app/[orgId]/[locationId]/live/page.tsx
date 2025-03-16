@@ -1,53 +1,42 @@
-import Link from "next/link";
- 
-import { locationIdSchema } from "~/app/_domain/location";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-
- 
+import { Suspense } from "react";
+import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
+import { EmptyState } from "../_components/EmptyState";
+import { getUsedQuota } from "~/app/_utils/quota-utils";
+import { LayoutDashboard } from "lucide-react";
 
 type Params = Promise<{ locationId: string }>;
 
- export default async function MenusPage(props: { params: Params }) {
+export default async function OpenOrdersPage(props: { params: Params }) {
   const params = await props.params;
 
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    // TODO new error component
-    //return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+    throw new Error(`Invalid location: ${params.locationId}`);
   }
 
-  //TODO replace with actual functionality 
+  //TODO: Implement OpenOrders page
+  const items = await Promise.resolve([]);
 
-  //const parsedLocationId = validationResult.data;
-//   const items = await getMenusByLocation(parsedLocationId);
-
-//   if (items.length === 0) {
-//     return (
-//       <EmptyState
-//         title={"No data to display for this location"}
-//         secondary={"To get things going, start by adding one or more menus."}
-//         cta={"Add menu"}
-//         ctaHref={"menus/add"}
-//       />
-//     );
-//   }
+  if (items.length === 0) {
+    const hasAddedMenus = (await getUsedQuota("menus")) > 0;
+    const title = "No open orders at the moment";
+    const secondary = hasAddedMenus
+      ? "Come back in a while."
+      : "For orders to flow in, start by adding one or more menus.";
+    return (
+      <EmptyState
+        icon={<LayoutDashboard size={36} />}
+        title={title}
+        secondary={secondary}
+        cta={hasAddedMenus ? undefined : "Add menu"}
+        ctaHref={hasAddedMenus ? undefined : "manage/menus/add"}
+      />
+    );
+  }
 
   return (
-    <Tabs defaultValue="live" className="w-[200px]">
-    <TabsList className="grid w-full grid-cols-2   h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground">
-      <TabsTrigger value="live">Live</TabsTrigger>
-      <TabsTrigger value="reports"><Link href={`reports`}>Reports</Link></TabsTrigger>
-    </TabsList>
- 
-    <TabsContent value="live">
-      Live data
-    </TabsContent>
-  </Tabs>
-    // <div>
-    //   <div className="flex flex-row gap-2 w-full ">
-    //     <DashboardCard title={"Menus"} value={"0"} secondaryValue={""}/>
-    //     <DashboardCard title={"Orders"} value={"0"} secondaryValue={""}/>
-    //   </div>
-    // </div>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div>Open orders</div>
+    </Suspense>
   );
 }

@@ -1,5 +1,5 @@
-import AddMenuDialog from "../../_components/AddMenuDialog";
-import { locationIdSchema } from "~/app/_domain/location";
+import AddMenuDialog from "../_components/AddMenuDialog";
+import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
 import { getAvailableQuota } from "~/app/_utils/quota-utils";
 
 type Params = Promise<{ locationId: string }>;

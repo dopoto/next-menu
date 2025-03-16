@@ -69,7 +69,7 @@ async function PlanSelector() {
       <div className="flex w-full flex-col gap-2">
         <p className="pb-4">
           Remember that you can upgrade, downgrade or cancel instantly,
-          anytime.{" "}
+          anytime. 
         </p>
         <Link href="/my" className="w-full">
           <Button variant="outline" className="w-full">

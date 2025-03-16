@@ -1,9 +1,6 @@
-import { ChevronRight, ChevronsRight, CloudAlert, FrownIcon } from "lucide-react";
-import { type ReactNode } from "react";
-import { Badge } from "~/components/ui/badge";
+import { ChevronsRight, CloudAlert } from "lucide-react";
 import { errorTypes, type ErrorTypeId } from "../_domain/errors";
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
 
 export function ErrorCard(props: {
   title: string;
@@ -14,12 +11,12 @@ export function ErrorCard(props: {
   const ctas = errorTypes[props.errorTypeId]?.ctas ?? [];
 
   return (
-    <div className="mb-4 flex flex-col gap-3 rounded-xl border-1 border-dashed border-red-300 bg-red-50/20 p-4 text-xs">
+    <div className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-dashed border-red-300 bg-red-50/20 p-4 text-xs">
       <div className="flex flex-col justify-center gap-1">
         <div className="flex justify-center">
           <CloudAlert strokeWidth={2} className="size-8 stroke-red-500" />
         </div>
-        <div className="text-center text-sm text-red-500 uppercase">
+        <div className="text-center text-sm text-red-500 uppercase font-semibold">
           {props.title}
         </div>
       </div>
@@ -49,8 +46,8 @@ export function ErrorCard(props: {
         {`If you want to send an inquiry about this issue to our customer support, please use the link below.`}
       </div>
 
-      <Link href={"TODO mailto"} prefetch={false}  className="cursor-pointer py-4 text-blue-500 underline">
-           <div className="flex flex-row items-center gap-1">
+      <Link href={"TODO mailto"} prefetch={false}  className="cursor-pointer py-1 text-blue-500 underline">
+           <div className="flex flex-row items-center gap-1 font-bold">
             <ChevronsRight size={12}/>
             Request support
             </div>

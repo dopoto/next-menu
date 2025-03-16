@@ -1,11 +1,10 @@
 import { getMenusByLocation } from "~/server/queries";
-import { locationIdSchema } from "~/app/_domain/location";
+import { locationIdSchema } from "~/app/[orgId]/[locationId]/_domain/locations";
 import { EmptyState } from "../../_components/EmptyState";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
-import type * as schema from "~/server/db/schema";
-import MenuCard from "../_components/MenuCard";
+import { PlusCircle, ScanQrCode } from "lucide-react";
+import MenuCard from "./_components/MenuCard";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -14,17 +13,15 @@ export default async function MenusPage(props: { params: Params }) {
 
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
-    // TODO new error component
-    // return <BoxError errorTypeId={"MENUS_INVALID_PARAM"} />;
+    throw new Error(`Invalid location: ${params.locationId}`);
   }
 
-  //TODO
-  const parsedLocationId = validationResult.data;
-  const items: schema.Menu[] = await getMenusByLocation(parsedLocationId!);
+  const items = await getMenusByLocation(validationResult.data);
 
   if (items.length === 0) {
     return (
       <EmptyState
+        icon={<ScanQrCode size={36} />}
         title={"No menus found"}
         secondary={"This location does not have any menus yet. Add one below."}
         cta={"Add menu"}

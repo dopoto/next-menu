@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import "server-only";
-import { type LocationId } from "~/app/_domain/location";
+import { type LocationId } from "~/app/[orgId]/[locationId]/_domain/locations";
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
 import { eq } from "drizzle-orm";
