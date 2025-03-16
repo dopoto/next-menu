@@ -2,7 +2,7 @@ import { ChartPie } from "lucide-react";
 import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/[locationId]/_domain/locations";
 
-export async function Reports(props: { locationId: LocationId }) {
+export async function Reports(_props: { locationId: LocationId }) {
   const items = await Promise.resolve([]);
  
   if (items.length === 0) {

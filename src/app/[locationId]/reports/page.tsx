@@ -1,6 +1,4 @@
 import { Suspense } from "react";
-import { EmptyState } from "../_components/EmptyState";
-import { ChartPie } from "lucide-react";
 import { locationIdSchema } from "../_domain/locations";
 import LoadingSection from "../_components/LoadingSection";
 import { Reports } from "./_components/Reports";

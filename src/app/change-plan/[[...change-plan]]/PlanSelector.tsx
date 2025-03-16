@@ -4,7 +4,6 @@ import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import {
-  CardCustomizations,
   getCurrentPlanCardCustomizations,
   PriceTierCard,
 } from "~/app/_components/PriceTierCard";
@@ -68,8 +67,7 @@ async function PlanSelector() {
       <SeparatorWithText title={"Not ready for a change yet?"} />
       <div className="flex w-full flex-col gap-2">
         <p className="pb-4">
-          Remember that you can upgrade, downgrade or cancel instantly,
-          anytime. 
+          Remember that you can upgrade, downgrade or cancel instantly, anytime.
         </p>
         <Link href="/my" className="w-full">
           <Button variant="outline" className="w-full">
@@ -77,10 +75,10 @@ async function PlanSelector() {
           </Button>
         </Link>
         <Link href="/view-plan" className="w-full">
-            <Button variant="outline" className="w-full">
-              View plan usage
-            </Button>
-          </Link>
+          <Button variant="outline" className="w-full">
+            View plan usage
+          </Button>
+        </Link>
       </div>
     </div>
   );

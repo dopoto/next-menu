@@ -2,7 +2,6 @@ import { SignedIn, SignedOut, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
 import {
-  defaultTier,
   PriceTierIdSchema,
   priceTiers,
 } from "~/app/_domain/price-tiers";

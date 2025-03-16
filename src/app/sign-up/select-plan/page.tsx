@@ -1,11 +1,6 @@
-import { SignedIn, SignedOut, SignUp } from "@clerk/nextjs";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
-import {
-  defaultTier,
-  PriceTierIdSchema,
-  priceTiers,
-} from "~/app/_domain/price-tiers";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 import {
   CompletedStepIcon,
@@ -17,7 +12,7 @@ import { PlanSelector } from "../_components/PlanSelector";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-export default async function SignUpSelectPlanPage(props: {
+export default async function SignUpSelectPlanPage(_props: {
   searchParams: SearchParams;
 }) {
   const steps: OnboardingStep[] = [

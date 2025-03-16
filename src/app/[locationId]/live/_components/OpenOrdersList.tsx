@@ -3,7 +3,7 @@ import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/[locationId]/_domain/locations";
 import { getUsedQuota } from "~/app/_utils/quota-utils";
 
-export async function OpenOrdersList(props: { locationId: LocationId }) {
+export async function OpenOrdersList(_props: { locationId: LocationId }) {
   //TODO: Fetch actual open orders  
   const items = await Promise.resolve([]);
  
