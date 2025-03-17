@@ -9,11 +9,10 @@ import { generateErrorId, logException } from "~/app/_utils/error-logger-utils";
 
 export default function ManageError({
   error,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  reset,
+   
 }: {
   error: ErrorBoundaryException;
-  reset: () => void;
+       
 }) {
   const errorTypeId: ErrorTypeId = "ORG_MANAGER_ERROR";
   const errorClientSideId = generateErrorId();

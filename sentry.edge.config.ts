@@ -7,7 +7,6 @@ import { env } from "~/env";
 
 const fileName = "sentry.edge.config.ts";
 if (env.NEXT_PUBLIC_LOG_TO_SENTRY !== "true") {
-  // eslint-disable-next-line no-console
   console.log(
     `${fileName}: skipping Sentry init - NEXT_PUBLIC_LOG_TO_SENTRY is not set to true.`,
   );

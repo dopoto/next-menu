@@ -1,3 +1,4 @@
+import React from 'react';
 import { PageSubtitle } from "../../_components/PageSubtitle";
 import { PageTitle } from "../../_components/PageTitle";
 import { GetStartedCta } from "../../_components/GetStartedCta";

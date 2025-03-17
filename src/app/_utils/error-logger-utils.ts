@@ -16,7 +16,6 @@ export function logException(
 ) {
   if (env.NEXT_PUBLIC_LOG_TO_CONSOLE) {
     const errorString = `[APP_ERROR] ${error?.toString()}`;
-    // eslint-disable-next-line no-console
     console.error(errorString);
   }
 

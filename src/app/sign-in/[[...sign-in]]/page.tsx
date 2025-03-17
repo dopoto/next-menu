@@ -8,8 +8,6 @@ export default function Page() {
     <SplitScreenContainer
       mainComponent={
         <SignIn
-          forceRedirectUrl={"/my"}
-          fallbackRedirectUrl={"/my"}
           appearance={{
             elements: {
               headerTitle: "hidden",

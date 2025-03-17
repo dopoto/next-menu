@@ -33,10 +33,12 @@ export default async function OnboardingPaymentPage(props: { params: Params }) {
     <>Go next</>
   );
 
+  const tierStepTitle = `Chose the ${priceTiers[parsedOrDefaultTier].name} plan ($${priceTiers[parsedOrDefaultTier].monthlyUsdPrice.toFixed(2)}/month)`;
+
   const steps: OnboardingStep[] = [
     {
       id: "tier",
-      title: `Chose ${priceTiers[parsedOrDefaultTier].name} tier`,
+      title: tierStepTitle,
       isActive: false,
       icon: <CompletedStepIcon />,
     },

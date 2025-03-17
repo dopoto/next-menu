@@ -1,3 +1,4 @@
+import React from 'react';
 import { Clock, Zap, Users, Globe, ScanQrCode } from "lucide-react";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { sections } from "../../_domain/landing-content";

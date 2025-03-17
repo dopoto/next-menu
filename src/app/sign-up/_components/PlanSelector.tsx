@@ -9,7 +9,7 @@ export async function PlanSelector() {
       <p className="pb-4 text-sm">
           You can upgrade, downgrade or cancel your plan instantly anytime later.
         </p>
-      {Object.entries(priceTiers).map(([_, tier]) => {
+      {Object.entries(priceTiers).map(([, tier]) => {
         if (!tier.isPublic) {
           return null;
         }

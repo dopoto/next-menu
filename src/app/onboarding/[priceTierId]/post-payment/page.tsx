@@ -63,10 +63,12 @@ export default async function OnboardingPaymentPage(props: {
     <PostPayment stripeSession={session} tierId={parsedOrDefaultTier} />
   );
 
+  const tierStepTitle = `Chose ${priceTiers[parsedOrDefaultTier].name} tier ($${priceTiers[parsedOrDefaultTier].monthlyUsdPrice.toFixed(2)}/month)`;
+
   const steps: OnboardingStep[] = [
     {
       id: "tier",
-      title: `Chose ${priceTiers[parsedOrDefaultTier].name} tier`,
+      title: tierStepTitle,
       isActive: false,
       icon: <CompletedStepIcon />,
     },

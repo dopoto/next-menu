@@ -1,3 +1,4 @@
+import React from 'react';
 import { Card } from "~/components/ui/card";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { sections } from "../../_domain/landing-content";

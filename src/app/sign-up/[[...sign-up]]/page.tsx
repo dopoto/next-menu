@@ -1,6 +1,5 @@
-import { SignedIn, SignedOut, SignUp } from "@clerk/nextjs";
+import { SignedOut, SignUp } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { SideHeroCarousel } from "~/app/onboarding/_components/SideHeroCarousel";
 import { PriceTierIdSchema, priceTiers } from "~/app/_domain/price-tiers";
 import type { OnboardingStep } from "~/app/_domain/onboarding-steps";
 import {
@@ -9,7 +8,6 @@ import {
   MultiStepper,
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
-import { redirect } from "next/navigation";
 import { PlanSelector } from "../_components/PlanSelector";
 
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -26,7 +24,7 @@ export default async function SignUpPage(props: {
   // If a valid tier is passed as a search param, we'll take them straight to the sign up step
 
   const tierStepTitle = parsedTier
-    ? `Chose ${priceTiers[parsedTier].name} tier ($${priceTiers[parsedTier].monthlyUsdPrice.toFixed(2)}/month)`
+    ? `Chose the ${priceTiers[parsedTier].name} plan ($${priceTiers[parsedTier].monthlyUsdPrice.toFixed(2)}/month)`
     : "Select a plan";
   const tierStepIsActive = parsedTier ? false : true;
   const tierStepIcon = parsedTier ? <CompletedStepIcon /> : <InProgressStepIcon />;
@@ -36,7 +34,6 @@ export default async function SignUpPage(props: {
 
   const currentStepComponent = parsedTier ? (
     <SignUp
-      forceRedirectUrl={`/onboarding/${parsedTier}/add-org`}
       appearance={{
         elements: {
           headerTitle: "hidden",
