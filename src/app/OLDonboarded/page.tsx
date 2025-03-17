@@ -1,5 +1,5 @@
 import { SplitScreenContainer } from "../_components/SplitScreenContainer";
-import { Onboarded } from "../onboarding/_components/Onboarded";
+import { Onboarded } from "../OLDonboarding/_components/Onboarded";
 
 export default async function OnboardedPage() {
   // TODO Keep? or handled in middleware already?
