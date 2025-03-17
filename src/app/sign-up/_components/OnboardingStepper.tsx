@@ -26,7 +26,6 @@ const getStepIcon = (
   step: OnboardingStepperStep,
   currentStep: OnboardingStepperStep,
 ) => {
-  console.log(step, currentStep);
   if(step === currentStep){
     return <InProgressStepIcon />;
   }

@@ -4,6 +4,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { priceTiers } from "~/app/_domain/price-tiers";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { OnboardingStepper } from "../../_components/OnboardingStepper";
+import { ClerkSignUp } from "../../_components/ClerkSignUp";
 
 type SearchParams = Promise<Record<"tier", string | undefined>>;
 
@@ -20,25 +21,21 @@ export default async function SignUpCreateAccountPage(props: {
 
   const searchParamValidTier = getValidPriceTier(searchParams.tier);
 
-  if (!searchParamValidTier) {
-    console.log("No valid tier in search param. try cookie");
-    redirect("/select-plan")
-    // get from cookie
-  }
+  // if (!searchParamValidTier) {
+  //   console.log("No valid tier in search param. try cookie");
+  //   redirect("/sign-up/select-plAN");
+  //   // get from cookie
+  // }
 
   return (
     <SplitScreenContainer
-      mainComponent={
-        <SignUp
-          appearance={{
-            elements: {
-              headerTitle: "hidden",
-              headerSubtitle: "hidden",
-            },
-          }}
+      mainComponent={<ClerkSignUp />}
+      secondaryComponent={
+        <OnboardingStepper
+          currentStep={"create-account"}
+          tierId={searchParamValidTier?.id}
         />
       }
-      secondaryComponent={<OnboardingStepper currentStep={"create-account"} tierId={searchParamValidTier.id}   />}
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}
     ></SplitScreenContainer>
