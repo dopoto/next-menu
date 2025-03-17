@@ -17,7 +17,7 @@ type Params = Promise<{ locationId: string }>;
  
   return (
     <Suspense fallback={<LoadingSection />}>
-      <Reports locationId={validationResult.data} />
+      <Reports   />
     </Suspense>
   );
 }

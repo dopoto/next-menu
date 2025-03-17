@@ -3,6 +3,7 @@ import {
   CompletedStepIcon,
   InProgressStepIcon,
   MultiStepper,
+  Step,
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import { PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
@@ -14,13 +15,6 @@ export type OnboardingStepperStep =
   | "pay"
   | "add-location"
   | 'review';
-
-export type OnboardingStep = {
-  id: OnboardingStepperStep;
-  isActive: boolean;
-  icon: ReactNode;
-  title: string | ReactNode;
-};
 
 const getStepIcon = (
   step: OnboardingStepperStep,
@@ -64,7 +58,7 @@ export async function OnboardingStepper(props: {
   // const signUpStepIsActive = parsedTier ? true: false;
   // const signUpStepIcon = parsedTier ? <InProgressStepIcon /> :<UncompletedStepIcon /> ;
 
-  const steps: OnboardingStep[] = [
+  const steps: Step[] = [
     {
       id: "select-plan",
       title: props.tierId

@@ -15,7 +15,7 @@ export default async function OpenOrdersPage(props: { params: Params }) {
 
   return (
     <Suspense fallback={<LoadingSection />}>
-      <OpenOrdersList locationId={validationResult.data} />
+      <OpenOrdersList   />
     </Suspense>
   );
 }

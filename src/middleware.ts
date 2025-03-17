@@ -8,6 +8,8 @@ const isPublicRoute = createRouteMatcher([
   "/sign-in(.*)",
   "/sign-out(.*)",
   "/sign-up(.*)",
+  "/sign-up-error(.*)",
+  "/.well-known(.*)",
 ]);
 
 export default clerkMiddleware(
@@ -23,7 +25,7 @@ export default clerkMiddleware(
 
     // If the user isn't signed in and the route is private, redirect to sign-in
     if (!userId && !isPublicRoute(req)) {
-      console.log(`DBG-MIDDLEWARE Redirecting to sign in`);
+      console.log(`DBG-MIDDLEWARE [${req.url}] Not public and no user id found => Redirecting to sign in`);
       return redirectToSignIn({ returnBackUrl: req.url });
     }
 

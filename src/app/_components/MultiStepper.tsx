@@ -1,10 +1,18 @@
-import { type OnboardingStep } from "../_domain/onboarding-steps";
+ 
+import { ReactNode } from "react";
 
-export function MultiStepper(props: { steps: Array<OnboardingStep> }) {
+export type  Step = {
+  id: string;
+  isActive: boolean;
+  icon: ReactNode;
+  title: string | ReactNode;
+};
+
+export function MultiStepper(props: { steps: Array<Step> }) {
   return (
     <div className="grid max-w-2xl">
       {props.steps.map((step, index) => (
-        <Step
+        <MultistepperStep
           key={step.id}
           step={step}
           isFirst={index === 0}
@@ -15,8 +23,8 @@ export function MultiStepper(props: { steps: Array<OnboardingStep> }) {
   );
 }
 
-const Step = (props: {
-  step: OnboardingStep;
+const MultistepperStep = (props: {
+  step:  Step;
   isFirst: boolean;
   isLast: boolean;
 }) => {
