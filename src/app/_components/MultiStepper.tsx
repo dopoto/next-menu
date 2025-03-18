@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export type  Step = {
   id: string;
-  isActive: boolean;
+  status: 'completed' | 'active' | 'pending';
   icon: ReactNode;
   title: string | ReactNode;
 };
@@ -40,7 +40,7 @@ const MultistepperStep = (props: {
       </div>
       <div>
         <h3
-          className={`mt-1 text-sm pb-3 text-gray-800 dark:text-gray-100 ${props.step.isActive ? "font-medium" : "font-light"} `}
+          className={`mt-1 text-sm pb-3 text-gray-800 dark:text-gray-100 ${props.step.status === 'active' ? "font-medium" : "font-light"} `}
         >
           {props.step.title}
         </h3>

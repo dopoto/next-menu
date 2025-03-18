@@ -24,7 +24,8 @@ export default async function AddOrgPlanPage() {
   if (!parsedTier) {
     redirect("/onboard/select-plan");
   }
-  const nextStep = isFreePriceTier(parsedTier.id)
+  const parsedTierId = parsedTier.id;
+  const nextStep = isFreePriceTier(parsedTierId)
     ? `/onboard/add-location`
     : `/onboard/payment`;
 
@@ -42,7 +43,7 @@ export default async function AddOrgPlanPage() {
     <SplitScreenContainer
       mainComponent={mainComponent}
       secondaryComponent={
-        <OnboardingStepper currentStep={"addOrg"} tierId={parsedTier.id} />
+        <OnboardingStepper currentStep={"addOrg"} tierId={parsedTierId} />
       }
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}

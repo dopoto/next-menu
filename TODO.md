@@ -8,3 +8,4 @@
 [] Delete my account
 [] Typesafe routes
 [] nuqs https://blog.logrocket.com/managing-search-parameters-next-js-nuqs/
+[] Errors with context

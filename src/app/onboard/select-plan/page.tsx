@@ -14,7 +14,7 @@ export default async function SignUpSelectPlanPage() {
       mainComponent={
         <SignUpPlanSelector/>
       }
-      secondaryComponent={<OnboardingStepper currentStep={"select-plan"} />}
+      secondaryComponent={<OnboardingStepper currentStep={"selectPlan"} />}
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}
     ></SplitScreenContainer>

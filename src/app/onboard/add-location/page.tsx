@@ -56,7 +56,7 @@ export default async function OnboardAddLocationPage(props: {
     <SplitScreenContainer
       mainComponent={mainComponent}
       secondaryComponent={
-        <OnboardingStepper currentStep={"add-location"} tierId={parsedTierId} />
+        <OnboardingStepper currentStep={"addLocation"} tierId={parsedTierId} />
       }
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}

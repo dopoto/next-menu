@@ -32,7 +32,7 @@ export default async function SignUpCreateAccountPage(props: {
       mainComponent={<ClerkSignUp />}
       secondaryComponent={
         <OnboardingStepper
-          currentStep={"create-account"}
+          currentStep={"createAccount"}
           tierId={searchParamValidTier?.id}
         />
       }

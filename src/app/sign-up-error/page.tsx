@@ -13,7 +13,7 @@ export default async function SignUpErrorPage() {
       mainComponent={
         <>create account error</>
       }
-      secondaryComponent={<OnboardingStepper currentStep={"create-account"} />}
+      secondaryComponent={<OnboardingStepper currentStep={"createAccount"} />}
       title={"Let's get you onboarded!"}
       subtitle={"This should just take a minute..."}
     ></SplitScreenContainer>
