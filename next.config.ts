@@ -49,15 +49,7 @@ const nextConfig: NextConfig = {
     ];
   },
 
-  async redirects() {
-    return [
-      {
-        source: '/sign-up',
-        destination: '/sign-up/select-plan',
-        permanent: true,
-      },
-    ]
-  },
+ 
 
   images: {
     remotePatterns: [

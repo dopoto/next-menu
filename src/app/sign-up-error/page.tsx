@@ -1,5 +1,5 @@
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { OnboardingStepper } from "../sign-up/_components/OnboardingStepper";
+import { OnboardingStepper } from "../onboard/_components/OnboardingStepper";
  
 /**
  

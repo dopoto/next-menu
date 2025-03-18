@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import {
   CompletedStepIcon,
   InProgressStepIcon,
@@ -14,29 +13,33 @@ export type OnboardingStepperStep =
   | "add-org"
   | "pay"
   | "add-location"
-  | 'review';
+  | "overview";
 
 const getStepIcon = (
   step: OnboardingStepperStep,
   currentStep: OnboardingStepperStep,
 ) => {
-  if(step === currentStep){
+  if (step === currentStep) {
     return <InProgressStepIcon />;
   }
 
-  if(step === 'select-plan'){
+  if (step === "select-plan") {
     return <CompletedStepIcon />;
   }
 
-  if(step === 'create-account'){
-    if(currentStep === 'pay' || currentStep === 'add-org' || currentStep === 'add-location'){
+  if (step === "create-account") {
+    if (
+      currentStep === "pay" ||
+      currentStep === "add-org" ||
+      currentStep === "add-location"
+    ) {
       return <CompletedStepIcon />;
     }
     return <UncompletedStepIcon />;
   }
 
-  if(step === 'add-org'){
-    if(currentStep === 'pay' || currentStep === 'add-location'){
+  if (step === "add-org") {
+    if (currentStep === "pay" || currentStep === "add-location") {
       return <CompletedStepIcon />;
     }
     return <UncompletedStepIcon />;
@@ -49,15 +52,6 @@ export async function OnboardingStepper(props: {
   tierId?: PriceTierId;
   currentStep: OnboardingStepperStep;
 }) {
-  //   const tierStepTitle = parsedTier
-  //   ? `Chose the ${priceTiers[parsedTier].name} plan ($${priceTiers[parsedTier].monthlyUsdPrice.toFixed(2)}/month)`
-  //   : "Select a plan";
-  // const tierStepIsActive = parsedTier ? false : true;
-  // const tierStepIcon = parsedTier ? <CompletedStepIcon /> : <InProgressStepIcon />;
-
-  // const signUpStepIsActive = parsedTier ? true: false;
-  // const signUpStepIcon = parsedTier ? <InProgressStepIcon /> :<UncompletedStepIcon /> ;
-
   const steps: Step[] = [
     {
       id: "select-plan",
@@ -69,7 +63,11 @@ export async function OnboardingStepper(props: {
     },
     {
       id: "create-account",
-      title: "Create account",
+      title:
+        props.currentStep === "select-plan" ||
+        props.currentStep === "create-account"
+          ? "Sign up"
+          : "Signed up",
       isActive: props.currentStep === "create-account",
       icon: getStepIcon("create-account", props.currentStep),
     },
@@ -92,18 +90,16 @@ export async function OnboardingStepper(props: {
     {
       id: "add-location",
       title: "Create a location",
-      isActive: false,
-      icon: <UncompletedStepIcon />,
+      isActive: props.currentStep === "add-location",
+      icon: getStepIcon("add-location", props.currentStep),
     },
     {
-      id: "review",
+      id: "overview",
       title: "Onboarding overview",
       isActive: false,
       icon: <UncompletedStepIcon />,
     },
   ];
 
-  return (
-    <MultiStepper steps={steps} />
-  );
+  return <MultiStepper steps={steps} />;
 }

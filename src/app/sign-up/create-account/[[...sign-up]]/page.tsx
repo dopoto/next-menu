@@ -1,11 +1,8 @@
-import { SignUp } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { priceTiers } from "~/app/_domain/price-tiers";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
-import { OnboardingStepper } from "../../_components/OnboardingStepper";
-import { ClerkSignUp } from "../../_components/ClerkSignUp";
-
+import { ClerkSignUp } from "~/app/onboard/_components/ClerkSignUp";
+import { OnboardingStepper } from "~/app/onboard/_components/OnboardingStepper";
+ 
 type SearchParams = Promise<Record<"tier", string | undefined>>;
 
 /**

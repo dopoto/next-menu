@@ -15,7 +15,7 @@ export async function SignUpPlanSelector() {
         }
 
         const footerCta = (
-          <Link href={`/sign-up/create-account?tier=${tier.id}`} className="w-full">
+          <Link href={`/sign-up?tier=${tier.id}`} className="w-full">
             <Button className="w-full" variant="default">
               Select this plan
             </Button>

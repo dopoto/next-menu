@@ -81,7 +81,8 @@ export   function ClerkSignUp() {
 
       const signUpError = getSignUpError(signUp.verifications)
       if(signUpError){
-         router.push(`/sign-up-error?error=${signUpError}`);
+        // TODO this works, but then DBG-MIDDLEWARE Redirecting from /my to /[locationId]/live happens
+        // router.push(`/sign-up-error?error=${signUpError}`);
       }
     };
 

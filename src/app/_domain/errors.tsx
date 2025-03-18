@@ -4,6 +4,7 @@
 export type ErrorBoundaryException = Error & { digest?: string };
 
 export type ErrorTypeId =
+  | "ONBOARD_ERROR"
   | "STRIPE_MISSING_PAYMENT_DATA"
   | "STRIPE_PAYMENT_EXPIRED"
   | "STRIPE_PAYMENT_UNKNOWN_STATUS"
@@ -27,6 +28,12 @@ export type ApplicationError = {
 };
 
 export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
+  ONBOARD_ERROR: {
+    errorTypeId: "ONBOARD_ERROR",
+    userFriendlyTitle: "Onboard error ",
+    userFriendlyDescription: "",
+    ctas: [], // dynamic cta provided at runtime TODO Revisit
+  },
   STRIPE_MISSING_PAYMENT_DATA: {
     errorTypeId: "STRIPE_MISSING_PAYMENT_DATA",
     userFriendlyTitle: "Missing Stripe payment data",
@@ -69,13 +76,11 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
       { text: "Go back to my account", href: "/my" },
     ],
   },
- ORG_MANAGER_ERROR: {
+  ORG_MANAGER_ERROR: {
     errorTypeId: "ORG_MANAGER_ERROR",
     userFriendlyTitle: "An error occurred",
     userFriendlyDescription: "",
-    ctas: [      
-      { text: "Go to my account", href: "/my" },
-    ],
+    ctas: [{ text: "Go to my account", href: "/my" }],
   },
   ORDERS_INVALID_PARAM: {
     errorTypeId: "ORDERS_INVALID_PARAM",

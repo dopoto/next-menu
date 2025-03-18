@@ -43,7 +43,7 @@ export function LandingNavbar(props: { navItems: NavItem[] }) {
               <SignInButton>
                 <Button variant={"secondary"}>Log in</Button>
               </SignInButton>
-              <Link href="/sign-up/select-plan">
+              <Link href="/onboard/select-plan">
                 <Button>Sign up</Button>
               </Link>
             </SignedOut>
