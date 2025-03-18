@@ -276,7 +276,7 @@ html {
   --color-sidebar: var(--sidebar);
   /* Custom: */
   --color-pop: var(--pop);
-  --color-primary-foreground: var(--sidebar-primary-foreground);
+  /* --color-primary-foreground: var(--sidebar-primary-foreground); */
 }
 
 /*
