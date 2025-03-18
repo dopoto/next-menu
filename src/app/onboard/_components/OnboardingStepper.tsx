@@ -7,6 +7,7 @@ import {
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import { PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import { isPaidPriceTier } from "~/app/_utils/price-tier-utils";
 
 export type OnboardingStepId =
   | "selectPlan"
@@ -68,33 +69,41 @@ export async function OnboardingStepper(props: {
   tierId?: PriceTierId;
   currentStep: OnboardingStepId;
 }) {
+  const isPaidTier = props?.tierId && isPaidPriceTier(props?.tierId);
   const currentStepIndex = onboardingSteps[props.currentStep].orderIndex;
-  const steps: Step[] = Object.keys(onboardingSteps).map((stepId) => {
-    const step = onboardingSteps[stepId as OnboardingStepId];
-    const stepStatus: Step["status"] =
-      step.orderIndex < currentStepIndex
-        ? "completed"
-        : step.orderIndex === currentStepIndex
-          ? "active"
-          : "pending";
-    const context: OnboardingContext = { tierId: props.tierId };
-    return {
-      id: stepId,
-      title:
-        stepStatus === "completed"
-          ? step.completedTitleFn(context)
-          : step.title,
-      status: stepStatus,
-      icon:
-        stepStatus === "completed" ? (
-          <CompletedStepIcon />
-        ) : stepStatus === "active" ? (
-          <InProgressStepIcon />
-        ) : (
-          <UncompletedStepIcon />
-        ),
-    };
-  });
+  const steps: Step[] = Object.keys(onboardingSteps)
+    .filter((stepId) => {
+      if (!isPaidTier && stepId === "pay") {
+        return false;
+      }
+      return true;
+    })
+    .map((stepId) => {
+      const step = onboardingSteps[stepId as OnboardingStepId];
+      const stepStatus: Step["status"] =
+        step.orderIndex < currentStepIndex
+          ? "completed"
+          : step.orderIndex === currentStepIndex
+            ? "active"
+            : "pending";
+      const context: OnboardingContext = { tierId: props.tierId };
+      return {
+        id: stepId,
+        title:
+          stepStatus === "completed"
+            ? step.completedTitleFn(context)
+            : step.title,
+        status: stepStatus,
+        icon:
+          stepStatus === "completed" ? (
+            <CompletedStepIcon />
+          ) : stepStatus === "active" ? (
+            <InProgressStepIcon />
+          ) : (
+            <UncompletedStepIcon />
+          ),
+      };
+    });
 
   return <MultiStepper steps={steps} />;
 }

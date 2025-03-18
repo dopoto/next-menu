@@ -37,7 +37,7 @@ export default async function OnboardAddLocationPage(props: {
   const parsedTier = getValidPriceTier(tier);
 
   if (!parsedTier) {
-    redirect("/sign-up/select-plan");
+    redirect("/onboard/select-plan");
   }
   const parsedTierId = parsedTier.id;
 

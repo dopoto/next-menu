@@ -3,6 +3,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
 import { env } from "./env";
 
+const redirectTo = (route: string) =>
+  NextResponse.redirect(new URL(`${env.NEXT_PUBLIC_APP_URL}${route}`));
 const isSignUpRoute = createRouteMatcher(["/sign-up"]);
 const isSignOutRoute = createRouteMatcher(["/sign-out(.*)"]);
 const isMyRoute = createRouteMatcher(["/my(.*)"]);
@@ -39,7 +41,7 @@ export default clerkMiddleware(
         console.log(
           `DBG-MIDDLEWARE [${req.url}] Not a valid price tier: ${tierParam}. Redirect to /onboard/select-plan`,
         );
-        return NextResponse.redirect(new URL("/onboard/select-plan", req.url));
+        return redirectTo(`/onboard/select-plan`);
       }
     }
 
@@ -63,22 +65,21 @@ export default clerkMiddleware(
         console.log(
           `DBG-MIDDLEWARE [/my] Not onboarded yet, redirecting to /onboard/add-org. currentLocationId: ${currentLocationId}, orgId: ${orgId}`,
         );
-        const signUpUrl = new URL("/onboard/add-org", req.url);
-        return NextResponse.redirect(signUpUrl);
+        return redirectTo(`/onboard/add-org`);
       }
 
       const myDashboardRoute = `/${currentLocationId}/live`;
       console.log(
         `DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`,
       );
-      const myDashboardRouteUrl = new URL(myDashboardRoute, req.url);
-      return NextResponse.redirect(myDashboardRouteUrl);
+      return redirectTo(`/my`);
     }
 
     // If the user is logged in and the route is protected, let them use it.
     if (userId && !isPublicRoute(req)) return NextResponse.next();
   },
-  { debug: env.NEXT_PUBLIC_ENV === 'development' }, 
+  //{ debug: env.NEXT_PUBLIC_ENV === 'development' },
+  { debug: false },
 );
 
 export const config = {

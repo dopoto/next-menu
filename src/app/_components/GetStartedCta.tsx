@@ -58,7 +58,7 @@ function SignedInCta(props: {
   }
 
   return (
-    <Link className="w-full" href="/change-plan">
+    <Link className="w-full" href={`/change-plan/${props?.tier}`}>
       <Button className="w-full" variant={props.variant}>
         Switch to this plan
       </Button>

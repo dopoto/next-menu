@@ -13,7 +13,7 @@ export function OverviewCard(props: {
 }) {
   const containerStyle =
     props.variant === "preview"
-      ? "border-dashed border-gray-300 bg-gray-50/20"
+      ? "border-dashed border-gray-300"
       : props.variant === "confirmation"
         ? " border-green-700/20 bg-green-200/10"
         : "";

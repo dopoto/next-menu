@@ -12,7 +12,7 @@ export function ErrorCard(props: {
   const ctas = errorTypes[props.errorTypeId]?.ctas ?? [];
 
   return (
-    <div className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-dashed border-red-300 bg-red-50/20 p-4 text-xs">
+    <div className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-dashed border-red-300  p-4 text-xs">
       <div className="flex flex-col justify-center gap-1">
         <div className="flex justify-center">
           <CloudAlert strokeWidth={2} className="size-8 stroke-red-500" />

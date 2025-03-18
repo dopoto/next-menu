@@ -5,13 +5,12 @@ import { getUsedQuota } from "~/app/_utils/quota-utils";
 export async function OpenOrdersList( ) {
   //TODO: Fetch actual open orders  
   const items = await Promise.resolve([]);
- 
 
   if (items.length === 0) {
     const hasAddedMenus = (await getUsedQuota("menus")) > 0;
     const title = "No open orders at the moment";
     const secondary = hasAddedMenus
-      ? "Come back in a while."
+      ? "Please come back in a while."
       : "For orders to flow in, start by adding one or more menus.";
     return (
       <EmptyState
