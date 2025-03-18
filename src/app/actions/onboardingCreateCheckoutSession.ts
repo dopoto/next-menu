@@ -15,7 +15,7 @@ export const onboardingCreateCheckoutSession = async (props: {
   
   const tier = priceTiers[props.priceTierId];
 
-  const returnUrl = `${env.NEXT_PUBLIC_APP_URL}/onboarding/${tier.id}/post-payment?session_id={CHECKOUT_SESSION_ID}`;
+  const returnUrl = `${env.NEXT_PUBLIC_APP_URL}/onboard/post-payment?session_id={CHECKOUT_SESSION_ID}`;
   
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded",

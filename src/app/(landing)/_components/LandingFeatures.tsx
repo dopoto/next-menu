@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, Zap, Users, Globe, ScanQrCode } from "lucide-react";
+import { Clock, Zap, Users, Globe, ScanQrCode, Utensils, Airplay } from "lucide-react";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { sections } from "../../_domain/landing-content";
 
@@ -17,19 +17,19 @@ export const LandingFeatures: React.FC = () => {
       icon: <ScanQrCode className="text-pop h-6 w-6" />,
     },
     {
-      title: "Enterprise Security",
+      title: "Handle take-out orders with ease",
       description:
         "Nunc eget tincidunt libero. Pellentesque fringilla congue nisi id lobortis.",
-      icon: <Clock className="text-pop h-6 w-6" />,
+      icon: <Utensils className="text-pop h-6 w-6" />,
     },
     {
-      title: "Lightning Performance",
+      title: "Set up and manage kiosk screens",
       description:
         "Mauris turpis lectus, finibus eget gravida a, sollicitudin sit amet risus.",
-      icon: <Zap className="text-pop h-6 w-6" />,
+      icon: <Airplay className="text-pop h-6 w-6" />,
     },
     {
-      title: "Time-Saving Automation",
+      title: "See open orders in real time, anytime",
       description:
         "Donec ac lobortis enim, id pellentesque massa. Nulla quis enim ut elit consequat malesuada.",
       icon: <Clock className="text-pop h-6 w-6" />,
