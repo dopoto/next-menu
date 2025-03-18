@@ -29,7 +29,7 @@ export default async function AddOrgPlanPage() {
     : `/onboard/payment`;
 
   const mainComponent = orgId ? (
-    <OrgCreated />
+    <OrgCreated nextStepRoute={nextStep} />
   ) : (
     <CreateOrganization
       afterCreateOrganizationUrl={nextStep}

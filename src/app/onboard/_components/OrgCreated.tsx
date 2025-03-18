@@ -6,7 +6,7 @@ import { OverviewCard } from "~/app/_components/OverviewCard";
 import { priceTiers, type PriceTierId } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 
-export function OrgCreated() {
+export function OrgCreated(props: {nextStepRoute: string}) {
   const { organization } = useOrganization();
   const { openOrganizationProfile } = useClerk();
   const { user } = useUser();
@@ -34,7 +34,7 @@ export function OrgCreated() {
         variant="neutral"
       />
       <div className="flex w-full flex-col gap-2">
-            <Link href="/onboard/add-location" className="w-full">
+            <Link href={props.nextStepRoute} className="w-full">
               <Button variant="outline" className="w-full">
                 Go to next step
               </Button>

@@ -4,11 +4,11 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 
-export const Redirecting = () => {
+export const Redirecting = (props: {stripeSessionId: string}) => {
   const router = useRouter();
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.push("/onboard/add-location");
+      router.push(`/onboard/add-location?session_id=${props.stripeSessionId}`);
     }, 3000);
 
     return () => clearTimeout(timer);

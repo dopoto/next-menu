@@ -50,7 +50,7 @@ export default async function OnboardPostPaymentPage(props: {
   return (
     <SplitScreenContainer
       mainComponent={
-        <Redirecting />
+        <Redirecting stripeSessionId={session.id} />
       }
       secondaryComponent={
         <OnboardingStepper currentStep={"pay"} tierId={parsedTier.id} />

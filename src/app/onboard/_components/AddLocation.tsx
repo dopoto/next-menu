@@ -7,13 +7,7 @@ import { onboardingAddLocation } from "../../actions/onboardingAddLocation";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { type PriceTierId } from "~/app/_domain/price-tiers";
@@ -36,7 +30,7 @@ export const AddLocation = ({
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload();
-      router.push("/overview");
+      router.push("/onboard/overview");
     }
     if (res?.errors) {
       setErrors(res?.errors);
@@ -45,9 +39,11 @@ export const AddLocation = ({
 
   return (
     <div className={cn("flex w-full flex-col gap-6", className)}>
-      <p className="text-sm max-w-[400px]">Enter the name of your restaurant, pub or bar. This can be changed anytime later from your account.</p>
+      <p className="max-w-[400px] text-sm">
+        Enter the name of your restaurant, pub or bar. This can be changed
+        anytime later from your account.
+      </p>
       <Card className="w-full">
- 
         <CardContent>
           <form action={handleSubmit}>
             <input type="hidden" name="priceTierId" value={priceTierId} />
