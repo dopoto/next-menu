@@ -12,6 +12,7 @@ import { getAppVersion } from "../_utils/app-version-utils";
 import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
 import { APP_CONFIG } from "../_config/app-config";
+import { AppVersion } from '../_components/AppVersion';
 
 export default async function Layout({
   children,
@@ -39,10 +40,7 @@ export default async function Layout({
         </header>
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
         <footer className="flex gap-4 p-4 pt-0 text-xs">
-          <div className="my-auto">
-            <i>the</i>
-            <span className="text-gray-600">Menu</span> v{getAppVersion()}
-          </div>
+          <AppVersion />
           <div className="ml-auto flex gap-2 align-middle">
             <Link className="flex gap-0.5 align-middle" href="/">
               <House size={14} /> Home

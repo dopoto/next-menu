@@ -4,6 +4,8 @@ import SvgIcon from "../../_components/SvgIcons";
 import { ThemeSwitch } from "../../_components/ThemeSwitch";
 import { getAppVersion } from "../../_utils/app-version-utils";
 import { APP_CONFIG } from "~/app/_config/app-config";
+import React from "react";
+import { AppVersion } from "~/app/_components/AppVersion";
 
 const currentYear = new Date().getFullYear();
 
@@ -156,7 +158,7 @@ export function LandingFooter() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm ">
-            <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v{getAppVersion()}</div>
+            <AppVersion />
               {`© ${currentYear} All rights reserved.`}
             </div>
             <div className="ml-auto">

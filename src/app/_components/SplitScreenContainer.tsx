@@ -6,6 +6,8 @@ import { getAppVersion } from "../_utils/app-version-utils";
 import Link from "next/link";
 import SvgIcon from "./SvgIcons";
 import { SignedIn, UserButton } from "@clerk/nextjs";
+import React from "react";
+import { AppVersion } from "./AppVersion";
 
 export function SplitScreenContainer(props: {
   title: string;
@@ -57,10 +59,7 @@ export function SplitScreenContainer(props: {
         {props.mainComponent}
 
         <footer className="mt-auto flex flex-row pt-6 text-xs text-gray-400">
-          <div className="my-auto">
-            <i>the</i>
-            <span className="text-gray-600">Menu</span> v{getAppVersion()}
-          </div>
+          <AppVersion />
           <div className="mt-auto ml-auto">
             <ThemeSwitch />
           </div>
