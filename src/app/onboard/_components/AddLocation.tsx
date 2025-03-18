@@ -36,7 +36,7 @@ export const AddLocation = ({
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload();
-      router.push("/onboarded");
+      router.push("/overview");
     }
     if (res?.errors) {
       setErrors(res?.errors);
@@ -44,9 +44,9 @@ export const AddLocation = ({
   };
 
   return (
-    <div className={cn("flex max-w-[400px] flex-col gap-6", className)}>
-      <p>Enter the name of your restaurant, pub or bar. This can be changed anytime later from your account.</p>
-      <Card>
+    <div className={cn("flex w-full flex-col gap-6", className)}>
+      <p className="text-sm max-w-[400px]">Enter the name of your restaurant, pub or bar. This can be changed anytime later from your account.</p>
+      <Card className="w-full">
  
         <CardContent>
           <form action={handleSubmit}>

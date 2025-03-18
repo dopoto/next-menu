@@ -6,6 +6,7 @@ import {
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
 import { PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
 
 export type OnboardingStepperStep =
   | "select-plan"
@@ -19,6 +20,7 @@ const getStepIcon = (
   step: OnboardingStepperStep,
   currentStep: OnboardingStepperStep,
 ) => {
+
   if (step === currentStep) {
     return <InProgressStepIcon />;
   }
@@ -29,9 +31,10 @@ const getStepIcon = (
 
   if (step === "create-account") {
     if (
-      currentStep === "pay" ||
       currentStep === "add-org" ||
-      currentStep === "add-location"
+      currentStep === "pay" ||
+      currentStep === "add-location" ||
+      currentStep === "overview"
     ) {
       return <CompletedStepIcon />;
     }
@@ -39,10 +42,35 @@ const getStepIcon = (
   }
 
   if (step === "add-org") {
-    if (currentStep === "pay" || currentStep === "add-location") {
+    if (
+      currentStep === "pay" ||
+      currentStep === "add-location" ||
+      currentStep === "overview"
+    ) {
       return <CompletedStepIcon />;
     }
     return <UncompletedStepIcon />;
+  }
+
+  if (step === "pay") {
+    if (
+      currentStep === "add-location" ||
+      currentStep === "overview"
+    ) {
+      return <CompletedStepIcon />;
+    }
+    return <UncompletedStepIcon />;
+  }
+
+  if (step === "add-location") {
+    if (currentStep === "overview") {
+      return <CompletedStepIcon />;
+    }
+    return <UncompletedStepIcon />;
+  }
+
+  if (currentStep === "overview") {
+    return <CompletedStepIcon />;
   }
 
   return <UncompletedStepIcon />;
@@ -77,16 +105,16 @@ export async function OnboardingStepper(props: {
       isActive: props.currentStep === "add-org",
       icon: getStepIcon("add-org", props.currentStep),
     },
-    // ...(getValidPaidPriceTier(props.tierId)  ?
-    //   [
-    //       {
-    //         id: "pay",
-    //         title: "Pay with Stripe",
-    //         isActive: false,
-    //         icon: <UncompletedStepIcon />,
-    //       },
-    //     ]
-    //   : []),
+    ...(getValidPaidPriceTier(props.tierId)  ?
+      [
+          {
+            id: "pay",
+            title: "Pay with Stripe",
+            isActive: false,
+            icon: <UncompletedStepIcon />,
+          },
+        ]
+      : []),
     {
       id: "add-location",
       title: "Create a location",
@@ -96,8 +124,8 @@ export async function OnboardingStepper(props: {
     {
       id: "overview",
       title: "Onboarding overview",
-      isActive: false,
-      icon: <UncompletedStepIcon />,
+      isActive: props.currentStep === "overview",
+      icon: getStepIcon("overview", props.currentStep),
     },
   ];
 

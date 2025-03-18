@@ -10,6 +10,7 @@ import {
   isFreePriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
+import { Overview } from "../_components/Overview";
 
 export default async function OverviewPage() {
   const { userId, orgId } = await auth();
@@ -31,12 +32,12 @@ export default async function OverviewPage() {
 
   return (
     <SplitScreenContainer
-      mainComponent={<>Overview</>}
+      mainComponent={<Overview/>}
       secondaryComponent={
-        <OnboardingStepper currentStep={"add-org"} tierId={parsedTierId} />
+        <OnboardingStepper currentStep={"overview"} tierId={parsedTierId} />
       }
-      title={"Let's get you onboarded!"}
-      subtitle={"This should just take a minute..."}
+      title={"Welcome!"}
+      subtitle={"Your onboarding is now completed"}
     ></SplitScreenContainer>
   );
 }

@@ -1,6 +1,5 @@
 "use server";
 
-
 //TODO https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#step-4-instrument-nextjs-server-actions-optional
 
 import { auth, clerkClient } from "@clerk/nextjs/server";
@@ -120,7 +119,10 @@ export const onboardingAddLocation = async (formData: FormData) => {
   }
 
   try {
-    const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName);
+    const insertedLocation = await addLocation(
+      orgId,
+      validatedFormFields.data.locationName,
+    );
 
     // TODO send analytics
     // analyticsServerClient.capture({
@@ -142,6 +144,9 @@ export const onboardingAddLocation = async (formData: FormData) => {
     const res = await client.users.updateUser(userId, {
       publicMetadata: customJwtSessionClaims.metadata,
     });
+
+    //TODO delete onboiarded tier cookie
+
     return { message: res.publicMetadata };
   } catch {
     // TODO log error

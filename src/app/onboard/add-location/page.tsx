@@ -12,6 +12,7 @@ import Stripe from "stripe";
 import { env } from "~/env";
 import type { PriceTierId } from "~/app/_domain/price-tiers";
 import { AddLocation } from "../_components/AddLocation";
+import { LocationCreated } from "../_components/LocationCreated";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -23,7 +24,7 @@ export type SearchParams = Promise<
 export default async function OnboardAddLocationPage(props: {
   searchParams: SearchParams;
 }) {
-  const { userId } = await auth();
+  const { userId,  sessionClaims } = await auth();
   if (!userId) {
     redirect("/sign-in");
   }
@@ -38,7 +39,10 @@ export default async function OnboardAddLocationPage(props: {
   const parsedTierId = parsedTier.id;
 
   let mainComponent;
-  if (isFreePriceTier(parsedTierId)) {
+  if(sessionClaims.metadata.currentLocationId){
+    mainComponent = <LocationCreated />
+  }
+  else if (isFreePriceTier(parsedTierId)) {
     mainComponent = <AddLocation priceTierId="start" />;
   } else {
     // If we are on a non-free onboarding, we need to ensure that the payment

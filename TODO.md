@@ -6,3 +6,5 @@
 [] ESLint 10
 [] Validate Stripe / Clerk on sign in / (& regularly?)
 [] Delete my account
+[] Typesafe routes
+[] nuqs https://blog.logrocket.com/managing-search-parameters-next-js-nuqs/
