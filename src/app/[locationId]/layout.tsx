@@ -8,7 +8,6 @@ import { LocationSidebar } from "./_components/LocationSidebar";
 import { ThemeSwitch } from "~/app/_components/ThemeSwitch";
 import { Separator } from "~/components/ui/separator";
 import { PageBreadcrumb } from "./_components/PageBreadcrumb";
-import { getAppVersion } from "../_utils/app-version-utils";
 import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
 import { APP_CONFIG } from "../_config/app-config";

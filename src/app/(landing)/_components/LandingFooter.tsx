@@ -2,7 +2,6 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 import SvgIcon from "../../_components/SvgIcons";
 import { ThemeSwitch } from "../../_components/ThemeSwitch";
-import { getAppVersion } from "../../_utils/app-version-utils";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import React from "react";
 import { AppVersion } from "~/app/_components/AppVersion";

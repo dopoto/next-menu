@@ -1,6 +1,6 @@
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { CreateOrganization, OrganizationList } from "@clerk/nextjs";
+import { CreateOrganization } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
@@ -10,6 +10,9 @@ import {
   isFreePriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
+import * as React from "react";
+
+const dynamic = 'force-dynamic';
 
 export default async function AddOrgPlanPage() {
   const { userId, orgId } = await auth();

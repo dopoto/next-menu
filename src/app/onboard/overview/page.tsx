@@ -1,19 +1,14 @@
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { CreateOrganization, OrganizationList } from "@clerk/nextjs";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { CookieKey } from "~/app/_domain/cookies";
-import {
-  getValidPriceTier,
-  isFreePriceTier,
-} from "~/app/_utils/price-tier-utils";
-import { OrgCreated } from "../_components/OrgCreated";
+import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Overview } from "../_components/Overview";
 
 export default async function OverviewPage() {
-  const { userId, orgId } = await auth();
+  const { userId } = await auth();
   if (!userId) {
     redirect("/sign-in");
   }
@@ -26,13 +21,10 @@ export default async function OverviewPage() {
     redirect("/onboard/select-plan");
   }
   const parsedTierId = parsedTier.id;
- 
-
- 
 
   return (
     <SplitScreenContainer
-      mainComponent={<Overview/>}
+      mainComponent={<Overview />}
       secondaryComponent={
         <OnboardingStepper currentStep={"overview"} tierId={parsedTierId} />
       }

@@ -2,7 +2,6 @@ import { type ReactNode } from "react";
 import { PageSubtitle } from "./PageSubtitle";
 import { PageTitle } from "./PageTitle";
 import { ThemeSwitch } from "./ThemeSwitch";
-import { getAppVersion } from "../_utils/app-version-utils";
 import Link from "next/link";
 import SvgIcon from "./SvgIcons";
 import { SignedIn, UserButton } from "@clerk/nextjs";

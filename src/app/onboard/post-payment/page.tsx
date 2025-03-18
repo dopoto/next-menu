@@ -4,7 +4,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { env } from "~/env";
 import { updateCustomerByClerkUserId } from "~/server/queries";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { PostPayment, Redirecting } from "../_components/PostPayment";
+import { Redirecting } from "../_components/PostPayment";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { CookieKey } from "~/app/_domain/cookies";

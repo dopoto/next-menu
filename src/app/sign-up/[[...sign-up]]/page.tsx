@@ -1,10 +1,7 @@
 import { SignUp } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { priceTiers } from "~/app/_domain/price-tiers";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { OnboardingStepper } from "../../onboard/_components/OnboardingStepper";
-import { ClerkSignUp } from "../../onboard/_components/ClerkSignUp";
 
 type SearchParams = Promise<Record<"tier", string | undefined>>;
 
@@ -29,7 +26,16 @@ export default async function SignUpCreateAccountPage(props: {
 
   return (
     <SplitScreenContainer
-      mainComponent={<ClerkSignUp />}
+      mainComponent={
+        <SignUp
+          appearance={{
+            elements: {
+              headerTitle: "hidden",
+              headerSubtitle: "hidden",
+            },
+          }}
+        />
+      }
       secondaryComponent={
         <OnboardingStepper
           currentStep={"createAccount"}

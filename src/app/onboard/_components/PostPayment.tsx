@@ -12,7 +12,7 @@ export const Redirecting = (props: {stripeSessionId: string}) => {
     }, 3000);
 
     return () => clearTimeout(timer);
-  }, [router]);
+  }, [router, props.stripeSessionId]);
 
   return (
     <OverviewCard

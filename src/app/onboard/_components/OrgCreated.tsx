@@ -3,7 +3,6 @@
 import { useClerk, useOrganization, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { OverviewCard } from "~/app/_components/OverviewCard";
-import { priceTiers, type PriceTierId } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 
 export function OrgCreated(props: {nextStepRoute: string}) {
@@ -13,10 +12,7 @@ export function OrgCreated(props: {nextStepRoute: string}) {
 
   if (!user) return null;
   if (!organization) return null;
-
-  const priceTierId: PriceTierId = user.publicMetadata.tier as PriceTierId;
-  const tier = priceTiers[priceTierId];
-
+    
   return (
     <>
       <OverviewCard
