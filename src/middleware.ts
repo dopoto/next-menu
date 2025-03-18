@@ -1,6 +1,7 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
+import { env } from "./env";
 
 const isSignUpRoute = createRouteMatcher(["/sign-up"]);
 const isSignOutRoute = createRouteMatcher(["/sign-out(.*)"]);
@@ -11,8 +12,6 @@ const isPublicRoute = createRouteMatcher([
   "/sign-out(.*)",
   "/onboard/select-plan(.*)",
   "/sign-up(.*)",
-  "/sign-up-error(.*)",
-  "/.well-known(.*)",
 ]);
 
 export default clerkMiddleware(
@@ -38,7 +37,7 @@ export default clerkMiddleware(
         return res;
       } else {
         console.log(
-          `DBG-MIDDLEWARE [${req.url}] Not a valid price tier: ${tierParam}. Redirect to /select-plan`,
+          `DBG-MIDDLEWARE [${req.url}] Not a valid price tier: ${tierParam}. Redirect to /onboard/select-plan`,
         );
         return NextResponse.redirect(new URL("/onboard/select-plan", req.url));
       }
@@ -76,10 +75,10 @@ export default clerkMiddleware(
       return NextResponse.redirect(myDashboardRouteUrl);
     }
 
-    // If the user is logged in and the route is protected, let them view.
+    // If the user is logged in and the route is protected, let them use it.
     if (userId && !isPublicRoute(req)) return NextResponse.next();
   },
-  { debug: false }, //TODO
+  { debug: env.NEXT_PUBLIC_ENV === 'development' }, 
 );
 
 export const config = {

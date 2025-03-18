@@ -15,14 +15,7 @@ export default async function SignUpCreateAccountPage(props: {
   searchParams: SearchParams;
 }) {
   const searchParams = await props.searchParams;
-
   const searchParamValidTier = getValidPriceTier(searchParams.tier);
-
-  // if (!searchParamValidTier) {
-  //   console.log("No valid tier in search param. try cookie");
-  //   redirect("/sign-up/select-plAN");
-  //   // get from cookie
-  // }
 
   return (
     <SplitScreenContainer
