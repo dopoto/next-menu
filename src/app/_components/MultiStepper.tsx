@@ -1,10 +1,17 @@
-import { type OnboardingStep } from "../_domain/onboarding-steps";
+import { ReactNode } from "react";
 
-export function MultiStepper(props: { steps: Array<OnboardingStep> }) {
+export type  Step = {
+  id: string;
+  status: 'completed' | 'active' | 'pending';
+  icon: ReactNode;
+  title: string | ReactNode;
+};
+
+export function MultiStepper(props: { steps: Array<Step> }) {
   return (
     <div className="grid max-w-2xl">
       {props.steps.map((step, index) => (
-        <Step
+        <MultistepperStep
           key={step.id}
           step={step}
           isFirst={index === 0}
@@ -15,8 +22,8 @@ export function MultiStepper(props: { steps: Array<OnboardingStep> }) {
   );
 }
 
-const Step = (props: {
-  step: OnboardingStep;
+const MultistepperStep = (props: {
+  step:  Step;
   isFirst: boolean;
   isLast: boolean;
 }) => {
@@ -32,7 +39,7 @@ const Step = (props: {
       </div>
       <div>
         <h3
-          className={`mt-1 text-sm pb-3 text-gray-800 dark:text-gray-100 ${props.step.isActive ? "font-medium" : "font-light"} `}
+          className={`mt-1 text-sm pb-3 text-gray-800 dark:text-gray-100 ${props.step.status === 'active' ? "font-medium" : "font-light"} `}
         >
           {props.step.title}
         </h3>

@@ -6,7 +6,7 @@ export default async function SignOutPage() {
   return (
     <SplitScreenContainer
       mainComponent={
-        <SignOutButton redirectUrl="/">
+        <SignOutButton>
           <Button>Sign out</Button>
         </SignOutButton>
       }

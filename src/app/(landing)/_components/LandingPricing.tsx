@@ -1,3 +1,4 @@
+import React from 'react';
 import { sections } from "../../_domain/landing-content";
 import { priceTiers } from "../../_domain/price-tiers";
 import { GetStartedCta } from "../../_components/GetStartedCta";
@@ -15,7 +16,7 @@ export const LandingPricing: React.FC = () => {
           secondary={secondary}
         />
         <div className="mt-16 space-y-12 lg:grid lg:grid-cols-3 lg:gap-8 lg:space-y-0">
-          {Object.entries(priceTiers).map(([_, tier]) => {
+          {Object.entries(priceTiers).map(([, tier]) => {
             if (!tier.isPublic) {
               return null;
             }

@@ -2,13 +2,14 @@ import { Mail, Phone, MapPin } from "lucide-react";
 import Link from "next/link";
 import SvgIcon from "../../_components/SvgIcons";
 import { ThemeSwitch } from "../../_components/ThemeSwitch";
-import { getAppVersion } from "../../_utils/app-version-utils";
+import { APP_CONFIG } from "~/app/_config/app-config";
+import React from "react";
+import { AppVersion } from "~/app/_components/AppVersion";
 
 const currentYear = new Date().getFullYear();
 
 //TODO
 const tagline = "Lorem ipsum doloret";
-const email = "info@themenu.io";
 const phone = "01234";
 const address = "01234";
 
@@ -36,10 +37,10 @@ export function LandingFooter() {
               <li className="flex items-start">
                 <Mail className="mt-0.5 mr-3 h-5 w-5 flex-shrink-0 text-blue-400" />
                 <a
-                  href={`mailto:${email}`}
+                  href={`mailto:${APP_CONFIG.contactEmail}`}
                   className="transition-colors hover:text-blue-400"
                 >
-                  {email}
+                  {APP_CONFIG.contactEmail}
                 </a>
               </li>
               <li className="flex items-start">
@@ -156,7 +157,7 @@ export function LandingFooter() {
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm ">
-            <div className="my-auto"><i>the</i><span className="text-gray-600">Menu</span> v{getAppVersion()}</div>
+            <AppVersion />
               {`© ${currentYear} All rights reserved.`}
             </div>
             <div className="ml-auto">

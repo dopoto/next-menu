@@ -1,9 +1,8 @@
 import { LayoutDashboard } from "lucide-react";
 import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
-import { type LocationId } from "~/app/[locationId]/_domain/locations";
 import { getUsedQuota } from "~/app/_utils/quota-utils";
 
-export async function OpenOrdersList(_props: { locationId: LocationId }) {
+export async function OpenOrdersList( ) {
   //TODO: Fetch actual open orders  
   const items = await Promise.resolve([]);
  

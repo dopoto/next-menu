@@ -26,7 +26,9 @@ export function ErrorCard(props: {
       <div className="text-xs">Digest: {props.errorDigest ?? "--"}</div>
       <div className="text-xs">Id: {props.errorClientSideId}</div>
 
-      <div className="text-sm font-semibold">What can I try next?</div>
+      {ctas?.length > 0 && (
+        <div className="text-sm font-semibold">What can I try next?</div>
+      )}
       {ctas.map((cta) => (
         <Link
           href={cta.href}
@@ -40,14 +42,14 @@ export function ErrorCard(props: {
         </Link>
       ))}
       <div className="text-sm font-semibold">Additional info</div>
-      <div className="text-gray-500">
+      <div >
         {`The details of this error have been logged automatically and we have been notified 
         about it, so you don't need to report it.`}
       </div>
       <div className="text-sm font-semibold">
         Request support with this error
       </div>
-      <div className="text-gray-500">
+      <div >
         {`If you want to send an inquiry about this issue to our customer support, please use the link below.`}
       </div>
 

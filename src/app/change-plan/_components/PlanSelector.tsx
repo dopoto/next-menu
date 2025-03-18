@@ -1,5 +1,4 @@
 import { auth } from "@clerk/nextjs/server";
-import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
@@ -21,7 +20,7 @@ export async function PlanSelector() {
           "Next, we'll show you an overview page where you'll be able to complete the plan change."
         }
       </p>
-      {Object.entries(priceTiers).map(([_, tier]) => {
+      {Object.entries(priceTiers).map(([, tier]) => {
         if (!tier.isPublic) {
           return null;
         }

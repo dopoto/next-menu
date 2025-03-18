@@ -8,11 +8,8 @@ import { type ErrorTypeId, type ErrorBoundaryException } from "../_domain/errors
 
 export default function ChangePlanError({
   error,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  reset,
 }: {
   error: ErrorBoundaryException,
-  reset: () => void;
 }) {
   const errorTypeId: ErrorTypeId = 'CHANGE_PLAN_ERROR';
   const errorClientSideId = generateErrorId();

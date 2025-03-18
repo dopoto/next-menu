@@ -3,13 +3,13 @@ import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import { priceTiers } from "~/app/_domain/price-tiers";
 import { Button } from "~/components/ui/button";
 
-export async function PlanSelector() {
+export async function SignUpPlanSelector() {
   return (
     <div className="flex flex-col gap-3">
       <p className="pb-4 text-sm">
           You can upgrade, downgrade or cancel your plan instantly anytime later.
         </p>
-      {Object.entries(priceTiers).map(([_, tier]) => {
+      {Object.entries(priceTiers).map(([, tier]) => {
         if (!tier.isPublic) {
           return null;
         }

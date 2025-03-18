@@ -1,15 +1,15 @@
 import Link from "next/link";
-import * as React from "react";
 import { Button } from "~/components/ui/button";
-
-//TODO Add overview 
-
-export async function Onboarded() {
+ 
+export const Overview = () => {
   return (
-    <div className="flex max-w-[400px] flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
+      {/* TODO Selected plasn, signed upo as, org, pay, location */}
+      <div className="flex   flex-col gap-6">
       <Link className="w-full" href={"/my"}>
         <Button className="w-full">Take me to my dashboard</Button>
       </Link>
     </div>
+    </div>
   );
-}
+};

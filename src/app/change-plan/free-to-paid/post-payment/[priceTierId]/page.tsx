@@ -64,8 +64,7 @@ export default async function FreeToPaidPostPaymentPage(props: {
     );
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
   if (!userId) {
     throw new Error(`No Clerk user id found"`);
   }
