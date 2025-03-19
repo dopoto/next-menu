@@ -13,10 +13,10 @@ import { PlanChanged } from "../_components/PlanChanged";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import {
-  getExceededFeatures,
   getValidFreePriceTier,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 

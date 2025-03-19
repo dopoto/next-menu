@@ -31,7 +31,12 @@ export const AddLocation = ({
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload();
-      router.push("/onboard/overview");
+
+      const nextStepRoute =  stripeSessionId
+      ? `/onboard/overview?session_id=${ stripeSessionId}`
+      : `/onboard/overview`;
+
+      router.push(nextStepRoute);
     }
     if (res?.errors) {
       setErrors(res?.errors);

@@ -1,10 +1,15 @@
 import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { Button } from "~/components/ui/button";
 
-export async function LocationCreated() {
+export async function LocationCreated(props: { stripeSessionId?: string }) {
   const { sessionClaims } = await auth();
+
+  const nextStepRoute = props.stripeSessionId
+    ? `/onboard/overview?session_id=${props.stripeSessionId}`
+    : `/onboard/overview`;
 
   return (
     <>
@@ -13,13 +18,20 @@ export async function LocationCreated() {
         sections={[
           {
             title: "",
-            content: <div>{sessionClaims?.metadata?.currentLocationName}</div>,
+            content: (
+              <div className="mt-2 flex flex-col flex-nowrap gap-2">
+                <Labeled
+                  label={"Name"}
+                  text={sessionClaims?.metadata?.currentLocationName}
+                />
+              </div>
+            ),
           },
         ]}
         variant="neutral"
       />
       <div className="flex w-full flex-col gap-2">
-        <Link href="/onboard/overview" className="w-full">
+        <Link href={nextStepRoute} className="w-full">
           <Button variant="outline" className="w-full">
             Go to next step
           </Button>

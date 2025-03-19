@@ -1,6 +1,6 @@
 import { LayoutDashboard } from "lucide-react";
 import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
-import { getUsedQuota } from "~/app/_utils/quota-utils";
+import { getUsedQuota } from "~/app/_utils/quota-utils.server-only";
 
 export async function OpenOrdersList( ) {
   //TODO: Fetch actual open orders  

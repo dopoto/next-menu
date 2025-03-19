@@ -7,7 +7,6 @@ import { getCustomerByOrgId } from "~/server/queries";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import {
-  getExceededFeatures,
   getPriceTierChangeScenario,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
@@ -23,6 +22,7 @@ import {
   type StripeRefundId,
   type StripeSubscriptionId,
 } from "~/app/_domain/stripe";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -76,7 +76,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     );
   }
 
-    // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
   const exceededFeatures = await getExceededFeatures(
     parsedPaidFromTier.id,
     parsedPaidToTier.id,

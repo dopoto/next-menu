@@ -9,12 +9,12 @@ import {
 } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
 import {
-  getExceededFeatures,
   getPriceTierChangeScenario,
   getValidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { obj2str } from "~/app/_utils/string-utils";
 import { OverviewCard } from "~/app/_components/OverviewCard";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 export type Params = Promise<{ priceTierId: string }>;
 

@@ -2,6 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
 import { env } from "./env";
+import { CookieKey } from "./app/_domain/cookies";
 
 const redirectTo = (req: NextRequest, route: string) =>
   NextResponse.redirect(new URL(route, req.url));
@@ -31,17 +32,12 @@ export default clerkMiddleware(
           `DBG-MIDDLEWARE [${req.url}] Setting onboard-plan cookie to ${tierParam}`,
         );
         const res = NextResponse.next();
-        res.cookies.set("onboard-plan", tierParam, {
+        res.cookies.set(CookieKey.OnboardPlan, tierParam, {
           path: "/",
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
         });
         return res;
-      } else {
-        console.log(
-          `DBG-MIDDLEWARE [${req.url}] Not a valid price tier: ${tierParam}. Redirect to /onboard/select-plan`,
-        );
-        return redirectTo(req, `/onboard/select-plan`);
       }
     }
 

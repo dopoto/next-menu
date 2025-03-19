@@ -15,7 +15,7 @@ import { AddLocation } from "../_components/AddLocation";
 import { LocationCreated } from "../_components/LocationCreated";
 import * as React from "react";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -27,7 +27,7 @@ export type SearchParams = Promise<
 export default async function OnboardAddLocationPage(props: {
   searchParams: SearchParams;
 }) {
-  const { userId,  sessionClaims } = await auth();
+  const { userId, sessionClaims } = await auth();
   if (!userId) {
     redirect("/sign-in");
   }
@@ -41,17 +41,15 @@ export default async function OnboardAddLocationPage(props: {
   }
   const parsedTierId = parsedTier.id;
 
+  const searchParams = await props.searchParams;
+  const stripeSessionId = searchParams.session_id?.toString() ?? "";
+
   let mainComponent;
-  if(sessionClaims.metadata.currentLocationId){
-    mainComponent = <LocationCreated />
-  }
-  else if (isFreePriceTier(parsedTierId)) {
+  if (sessionClaims.metadata.currentLocationId) {
+    mainComponent = <LocationCreated stripeSessionId={stripeSessionId} />;
+  } else if (isFreePriceTier(parsedTierId)) {
     mainComponent = <AddLocation priceTierId="start" />;
   } else {
-    // If we are on a non-free onboarding, we need to ensure that the payment
-    // has been completed successfully before showing an Add Location form here.
-    const searchParams = await props.searchParams;
-    const stripeSessionId = searchParams.session_id?.toString() ?? "";
     mainComponent = await getMainComponent(stripeSessionId, parsedTierId);
   }
 
@@ -77,6 +75,9 @@ export const getMainComponent = async (
   } else {
     let sessionStatus: string | null = "";
 
+    // If we are on a non-free onboarding, we need to ensure that the payment
+    // has been completed successfully before showing an Add Location form here.
+
     const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
     sessionStatus = session.status;
     switch (sessionStatus) {
@@ -93,7 +94,6 @@ export const getMainComponent = async (
         throw new Error(
           `Stripe - payment is open for session id ${session.id}`,
         );
-        break;
       default:
         throw new Error(
           `Stripe - unknown status ${sessionStatus} for session id ${session.id}`,

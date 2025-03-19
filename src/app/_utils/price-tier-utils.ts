@@ -1,18 +1,12 @@
-import {
-  ExceededFeature,
-  PriceTierFeature,
-  priceTierFeatures,
-  type PriceTierFeatureUsage,
-} from "../_domain/price-tier-features";
+import { ExceededFeature } from "../_domain/price-tier-features";
 import {
   type PriceTierChangeScenario,
   priceTiers,
   type PriceTierId,
   PriceTierIdSchema,
   type PriceTier,
-  Feature,
 } from "../_domain/price-tiers";
-import { getAvailableQuota } from "./quota-utils";
+import { getAvailableQuota } from "./quota-utils.server-only";
 
 export const getValidPriceTier = (
   priceTierId?: string,
@@ -116,28 +110,4 @@ export function getPriceTierChangeScenario(
       ? "paid-to-paid-downgrade"
       : "paid-to-paid-upgrade";
   }
-}
-
-export async function getExceededFeatures(
-  currentTierId: PriceTierId,
-  candidateTierId: PriceTierId,
-): Promise<Array<ExceededFeature>> {
-  const featuresInCurrentTierWithUsage =
-    await Promise.all(
-      priceTiers[currentTierId].features.map(async (feature) => {
-        const available = await getAvailableQuota(feature.id);
-        const candidateQuota = priceTiers[candidateTierId].features.find(
-          (cf) => cf.id === feature.id,
-        )?.quota ?? 0;
-        return {
-          id: feature.id,
-          planQuota: feature.quota,
-          available,
-          used: feature.quota - available,
-          candidateQuota,
-        };
-      }),
-    );
-
-  return featuresInCurrentTierWithUsage.filter(f => f.candidateQuota < f.used);
 }

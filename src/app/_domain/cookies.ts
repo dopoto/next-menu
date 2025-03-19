@@ -1,1 +1,4 @@
-export enum CookieKey  {OnboardPlan = 'onboard-plan'}
+export enum CookieKey {
+  OnboardPlan = "onboard-plan",
+  OnboardStripeSessionId = "onboard-sid",
+}

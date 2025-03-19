@@ -8,11 +8,11 @@ import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import { UpgradeStripeCheckoutForm } from "../_components/UpgradeStripeCheckoutForm";
 import {
-  getExceededFeatures,
   getPriceTierChangeScenario,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { changePlanUpgradeCreateCheckoutSession } from "~/app/_utils/stripe-utils";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 

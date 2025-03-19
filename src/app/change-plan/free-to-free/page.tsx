@@ -6,10 +6,8 @@ import { obj2str } from "~/app/_utils/string-utils";
 import { PlanChanged } from "../_components/PlanChanged";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
-import {
-  getExceededFeatures,
-  getValidFreePriceTier,
-} from "~/app/_utils/price-tier-utils";
+import { getValidFreePriceTier } from "~/app/_utils/price-tier-utils";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
