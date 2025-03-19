@@ -1,5 +1,5 @@
 import { type PriceTierId } from "./price-tiers";
-import Stripe from "stripe";
+import  type Stripe from "stripe";
 
 export type StripeCustomerId = `cus_${string}`;
 export type StripeSubscriptionId = `sub_${string}`;

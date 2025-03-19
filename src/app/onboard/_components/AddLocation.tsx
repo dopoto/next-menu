@@ -7,7 +7,6 @@ import { onboardingAddLocation } from "../../actions/onboardingAddLocation";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { type PriceTierId } from "~/app/_domain/price-tiers";

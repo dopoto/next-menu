@@ -1,4 +1,4 @@
-import { ExceededFeature } from "../_domain/price-tier-features";
+import { type ExceededFeature } from "../_domain/price-tier-features";
 import {
   priceTiers,
   type PriceTierId,

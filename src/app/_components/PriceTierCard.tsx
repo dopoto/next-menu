@@ -8,12 +8,11 @@ import {
 import { type Feature, type PriceTier } from "../_domain/price-tiers";
 import { Fragment, type ReactNode } from "react";
 import {
-  ExceededFeature,
+  type ExceededFeature,
   type PriceTierFeature,
   priceTierFeatures,
-  type PriceTierFeatureUsage,
 } from "../_domain/price-tier-features";
-import { CheckIcon, CircleX, CircleXIcon } from "lucide-react";
+import { CheckIcon, CircleXIcon } from "lucide-react";
 
 export type CardCustomizations = {
   containerStyle?: string;

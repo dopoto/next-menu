@@ -1,12 +1,12 @@
-import { ReactNode } from "react";
+import { type ReactNode } from "react";
 import {
   CompletedStepIcon,
   InProgressStepIcon,
   MultiStepper,
-  Step,
+  type Step,
   UncompletedStepIcon,
 } from "~/app/_components/MultiStepper";
-import { PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
+import { type PriceTierId, priceTiers } from "~/app/_domain/price-tiers";
 import { isPaidPriceTier } from "~/app/_utils/price-tier-utils";
 
 export type OnboardingStepId =

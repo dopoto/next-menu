@@ -1,17 +1,9 @@
 "use client";
 
 import React from "react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "~/components/ui/dropdown-menu";
 import { ChevronsUpDown } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 import { useClerk, useOrganization, useUser } from "@clerk/nextjs";
-import { PriceTierId, priceTiers } from "../_domain/price-tiers";
 
 export function OrgDropdownMenu() {
   const { organization } = useOrganization();

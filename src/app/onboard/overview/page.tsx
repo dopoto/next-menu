@@ -6,7 +6,7 @@ import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Overview } from "../_components/Overview";
 import { env } from "~/env";
 import Stripe from "stripe";
-import { PublicStripeSessionDetails, StripeCustomerId } from "~/app/_domain/stripe";
+import { type PublicStripeSubscriptionDetails, type StripeCustomerId } from "~/app/_domain/stripe";
 import { getActiveStripeSubscription } from "~/app/_utils/stripe-utils";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
@@ -41,7 +41,7 @@ export default async function OverviewPage(props: {
   const stripeCustomer = session.customer as Stripe.Customer;
   const stripeCustomerId   = stripeCustomer.id as StripeCustomerId;
   const stripeSub = await getActiveStripeSubscription(stripeCustomerId)
-  const publicStripeSubscriptionDetails: PublicStripeSessionDetails = {
+  const publicStripeSubscriptionDetails: PublicStripeSubscriptionDetails = {
     id: stripeSub?.id,
     current_period_end: stripeSub?.current_period_end,
   };

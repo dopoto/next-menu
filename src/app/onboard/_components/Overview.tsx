@@ -1,10 +1,9 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
-import { PublicStripeSubscriptionDetails } from "~/app/_domain/stripe";
+import { type PublicStripeSubscriptionDetails } from "~/app/_domain/stripe";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
-import { obj2str } from "~/app/_utils/string-utils";
 import { Button } from "~/components/ui/button";
 
 export const Overview = async (props: {
