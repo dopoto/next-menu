@@ -47,3 +47,8 @@ export const priceTierUsageFunctions: Record<
   locations: getLocationsPlanUsage,
   menus: getMenusPlanUsage,
 };
+
+
+export type ExceededFeature = PriceTierFeatureUsage & {
+  candidateQuota?: number;
+}
