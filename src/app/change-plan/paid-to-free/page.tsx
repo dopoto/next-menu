@@ -13,6 +13,7 @@ import { PlanChanged } from "../_components/PlanChanged";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import {
+  getExceededFeatures,
   getValidFreePriceTier,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
@@ -56,6 +57,15 @@ async function Step1(props: { toTierId?: string }) {
     );
   }
 
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedPaidFromTier.id,
+    parsedFreeToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
+  }
+  
   return (
     <Suspense fallback={<ProcessingPlanChange progress={40} />}>
       <Step2

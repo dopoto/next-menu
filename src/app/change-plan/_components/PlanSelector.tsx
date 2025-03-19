@@ -33,8 +33,6 @@ export async function PlanSelector() {
           tier.id,
         );
 
-        console.log(exceededFeatures)
-
         const cardCustomizations = isCurrent
           ? getCurrentPlanCardCustomizations()
           : exceededFeatures.length > 0

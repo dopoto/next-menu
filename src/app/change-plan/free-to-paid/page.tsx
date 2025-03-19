@@ -9,6 +9,7 @@ import { getCustomerByOrgId } from "~/server/queries";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import {
+  getExceededFeatures,
   getValidFreePriceTier,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
@@ -50,8 +51,18 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
     throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,   {cause: "abc"}
+      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+      { cause: "abc" },
     );
+  }
+
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedFreeFromTier.id,
+    parsedPaidToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
   }
 
   return (

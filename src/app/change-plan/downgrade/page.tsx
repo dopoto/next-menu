@@ -7,6 +7,7 @@ import { getCustomerByOrgId } from "~/server/queries";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import {
+  getExceededFeatures,
   getPriceTierChangeScenario,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
@@ -73,6 +74,15 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     throw new Error(
       `Expected 'paid-to-paid-downgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
     );
+  }
+
+    // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedPaidFromTier.id,
+    parsedPaidToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
   }
 
   return (

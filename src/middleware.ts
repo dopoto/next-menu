@@ -72,7 +72,7 @@ export default clerkMiddleware(
       console.log(
         `DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`,
       );
-      return redirectTo(req, `/live`);
+      return redirectTo(req, myDashboardRoute);
     }
 
     // If the user is logged in and the route is protected, let them use it.
