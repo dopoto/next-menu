@@ -4,11 +4,12 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import {
   getCurrentPlanCardCustomizations,
+  getExceededPlanCardCustomizations,
   PriceTierCard,
 } from "~/app/_components/PriceTierCard";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
- 
 export async function PlanSelector() {
   const currentUserTier = (await auth()).sessionClaims?.metadata
     ?.tier as PriceTierId;
@@ -20,29 +21,45 @@ export async function PlanSelector() {
           "Next, we'll show you an overview page where you'll be able to complete the plan change."
         }
       </p>
-      {Object.entries(priceTiers).map(([, tier]) => {
+      {Object.entries(priceTiers).map(async ([, tier]) => {
         if (!tier.isPublic) {
           return null;
         }
 
         const isCurrent = currentUserTier === tier.id;
 
+        const exceededFeatures = await getExceededFeatures(
+          currentUserTier,
+          tier.id,
+        );
+
         const cardCustomizations = isCurrent
           ? getCurrentPlanCardCustomizations()
-          : undefined;
+          : exceededFeatures.length > 0
+            ? getExceededPlanCardCustomizations()
+            : undefined;
 
         const footerCta = isCurrent ? (
           <Link href="/view-plan" className="w-full">
-            <Button variant="outline" className="w-full">
+            <Button variant="secondary" className="w-full">
               View plan usage
             </Button>
           </Link>
         ) : (
-          <Link href={`/change-plan/${tier.id}`} className="w-full">
-            <Button className="w-full" variant="default">
+          exceededFeatures.length  === 0 ? <Link href={`/change-plan/${tier.id}`} className="w-full">
+            <Button
+              variant="default"              
+              className="w-full"
+            >
               Change to this plan
             </Button>
-          </Link>
+          </Link> : <Button
+              variant="default"              
+              className="w-full"
+              disabled
+            >
+              Change to this plan
+            </Button>
         );
 
         return (
@@ -50,6 +67,7 @@ export async function PlanSelector() {
             key={tier.name}
             tier={tier}
             cardCustomizations={cardCustomizations}
+            exceededFeatures={exceededFeatures}
             footerCta={footerCta}
           />
         );

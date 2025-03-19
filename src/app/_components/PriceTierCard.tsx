@@ -8,10 +8,11 @@ import {
 import { type Feature, type PriceTier } from "../_domain/price-tiers";
 import { Fragment, type ReactNode } from "react";
 import {
+  type ExceededFeature,
   type PriceTierFeature,
   priceTierFeatures,
 } from "../_domain/price-tier-features";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, CircleXIcon } from "lucide-react";
 
 export type CardCustomizations = {
   containerStyle?: string;
@@ -22,6 +23,7 @@ export type CardCustomizations = {
 export function PriceTierCard(props: {
   tier: PriceTier;
   cardCustomizations?: CardCustomizations;
+  exceededFeatures?:  Array<ExceededFeature>;
   footerCta?: ReactNode;
 }) {
   const { name, monthlyUsdPrice, features } = props.tier;
@@ -46,6 +48,11 @@ export function PriceTierCard(props: {
               {getFeatureRow(props.tier, feature)}
             </Fragment>
           ))}
+          {props.exceededFeatures?.map((exceededFeature) => (
+            <Fragment key={exceededFeature.id}>
+              {getExceededFeatureRow(props.tier, exceededFeature)}
+            </Fragment>
+          ))}
         </div>
       </CardContent>
       {props.footerCta && <CardFooter>{props.footerCta}</CardFooter>}
@@ -58,6 +65,14 @@ export const getCurrentPlanCardCustomizations = (): CardCustomizations => {
     containerStyle: "border-2 border-blue-700",
     badgeStyle: "bg-blue-800",
     badgeText: "Your current plan",
+  };
+};
+
+export const getExceededPlanCardCustomizations = (): CardCustomizations => {
+  return {
+    containerStyle: "border-2 border-red-700 bg-gray-100 dark:bg-gray-800",
+    badgeStyle: "bg-red-800",
+    badgeText: "Does not fit your current usage",
   };
 };
 
@@ -107,6 +122,16 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
   return (
     <div className="flex flex-row items-center gap-1">
       {getDisplayValue(featureDetails, quota)}
+    </div>
+  );
+};
+
+const getExceededFeatureRow = (tier: PriceTier, feature: ExceededFeature) => {
+  const featureDetails = priceTierFeatures[feature.id];
+ 
+  return (
+    <div className="flex flex-row items-center gap-1 text-red-600 dark:text-red-400">
+     <CircleXIcon strokeWidth={3} className="size-4 stroke-red-600 dark:stroke-red-400" /> 0 {featureDetails.resourcePluralName} (you are using {feature.used})
     </div>
   );
 };

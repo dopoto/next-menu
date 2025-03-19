@@ -17,7 +17,7 @@ import { Suspense } from "react";
 import { Skeleton } from "~/components/ui/skeleton";
 import { type PriceTier } from "../_domain/price-tiers";
 import { type PriceTierFeatureUsage } from "../_domain/price-tier-features";
-import { getAvailableQuota } from "../_utils/quota-utils";
+import { getAvailableQuota } from "../_utils/quota-utils.server-only";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();

@@ -3,7 +3,10 @@ import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
-import { getCurrentPlanCardCustomizations, PriceTierCard } from "~/app/_components/PriceTierCard";
+import {
+  getCurrentPlanCardCustomizations,
+  PriceTierCard,
+} from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
 import {
   getPriceTierChangeScenario,
@@ -11,10 +14,11 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { obj2str } from "~/app/_utils/string-utils";
 import { OverviewCard } from "~/app/_components/OverviewCard";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 export type Params = Promise<{ priceTierId: string }>;
 
-export default async function ChangePlanDetailPage(props: { params: Params }) {
+export default async function ChangePlanPage(props: { params: Params }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
     redirect("/sign-in");
@@ -25,9 +29,7 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
   // Expecting a valid To tier:
   const parsedToTier = getValidPriceTier(params.priceTierId);
   if (!parsedToTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new Error(`Missing or invalid To tier in params: ${obj2str(params)}`);
   }
 
   // Expecting a valid From tier:
@@ -36,6 +38,15 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
     throw new Error(
       `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     );
+  }
+
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedFromTier.id,
+    parsedToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
   }
 
   // If user tries to change to their current tier, redirect back
@@ -108,14 +119,17 @@ export default async function ChangePlanDetailPage(props: { params: Params }) {
             sections={overviewSections}
             variant="preview"
           />
-          <PriceTierCard tier={parsedFromTier} cardCustomizations={getCurrentPlanCardCustomizations()}/>
+          <PriceTierCard
+            tier={parsedFromTier}
+            cardCustomizations={getCurrentPlanCardCustomizations()}
+          />
           <SvgIcon
             kind={"arrowDoodle"}
             className={
               "fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"
             }
           />
-          <PriceTierCard tier={parsedToTier}  />
+          <PriceTierCard tier={parsedToTier} />
           <div className="flex w-full flex-col gap-2 pt-4">
             <Link href={changeUrl} className="w-full">
               <Button variant={"default"} className="w-full">

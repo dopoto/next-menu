@@ -16,6 +16,7 @@ import {
   getValidFreePriceTier,
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -56,6 +57,15 @@ async function Step1(props: { toTierId?: string }) {
     );
   }
 
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedPaidFromTier.id,
+    parsedFreeToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
+  }
+  
   return (
     <Suspense fallback={<ProcessingPlanChange progress={40} />}>
       <Step2

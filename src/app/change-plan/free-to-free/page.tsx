@@ -7,6 +7,7 @@ import { PlanChanged } from "../_components/PlanChanged";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import { getValidFreePriceTier } from "~/app/_utils/price-tier-utils";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
@@ -43,6 +44,15 @@ async function Step1(props: { toTierId?: string }) {
     throw new Error(
       `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
     );
+  }
+
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedFreeFromTier.id,
+    parsedFreeToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
   }
 
   return (

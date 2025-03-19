@@ -13,6 +13,7 @@ import {
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { FreeToPaidStripeCheckoutForm } from "../_components/FreeToPaidStripeCheckoutForm";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -50,8 +51,17 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
     throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,   {cause: "abc"}
+      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
     );
+  }
+
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedFreeFromTier.id,
+    parsedPaidToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
   }
 
   return (

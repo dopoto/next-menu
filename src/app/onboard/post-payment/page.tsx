@@ -21,12 +21,13 @@ export default async function OnboardPostPaymentPage(props: {
   searchParams: SearchParams;
 }) {
   const cookieStore = cookies();
+  (await cookieStore).set(CookieKey.OnboardStripeSessionId, "g");
   const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
   const parsedTier = getValidPaidPriceTier(tier);
   if (!parsedTier) {
     redirect("/onboard/select-plan");
   }
-  
+
   // Get the status of the Stripe payment
   const searchParams = await props.searchParams;
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
@@ -36,22 +37,23 @@ export default async function OnboardPostPaymentPage(props: {
   const stripeCustomer = session.customer as Stripe.Customer;
   const { userId } = await auth();
 
-  const isValidPayment = session.status === "complete" &&
+  const isValidPayment =
+    session.status === "complete" &&
     stripeCustomer &&
-    "id" in stripeCustomer && userId;
+    "id" in stripeCustomer &&
+    userId;
 
-    if(isValidPayment){
-        await updateCustomerByClerkUserId(userId, stripeCustomer.id);
-    }
-    else {
-      throw new Error(`Stripe - not a valid payment. Payment status: ${session.status}| userId: ${userId}| stripeCustomer: ${JSON.stringify(stripeCustomer)}`);
-    }
+  if (isValidPayment) {
+    await updateCustomerByClerkUserId(userId, stripeCustomer.id);
+  } else {
+    throw new Error(
+      `Stripe - not a valid payment. Payment status: ${session.status}| userId: ${userId}| stripeCustomer: ${JSON.stringify(stripeCustomer)}`,
+    );
+  }
 
   return (
     <SplitScreenContainer
-      mainComponent={
-        <Redirecting stripeSessionId={session.id} />
-      }
+      mainComponent={<Redirecting stripeSessionId={session.id} />}
       secondaryComponent={
         <OnboardingStepper currentStep={"pay"} tierId={parsedTier.id} />
       }

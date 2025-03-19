@@ -22,6 +22,7 @@ import {
   type StripeRefundId,
   type StripeSubscriptionId,
 } from "~/app/_domain/stripe";
+import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -73,6 +74,15 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     throw new Error(
       `Expected 'paid-to-paid-downgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
     );
+  }
+
+  // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
+  const exceededFeatures = await getExceededFeatures(
+    parsedPaidFromTier.id,
+    parsedPaidToTier.id,
+  );
+  if (exceededFeatures?.length > 0) {
+    return redirect("/change-plan");
   }
 
   return (
