@@ -15,7 +15,7 @@ import { AddLocation } from "../_components/AddLocation";
 import { LocationCreated } from "../_components/LocationCreated";
 import * as React from "react";
 
-const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);

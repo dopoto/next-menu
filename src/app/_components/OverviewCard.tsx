@@ -8,6 +8,7 @@ type Section = {
 
 export function OverviewCard(props: {
   title?: string;
+  subtitle?: string;
   sections: Section[];
   variant: "preview" | "confirmation" | "neutral";
 }) {
@@ -20,9 +21,12 @@ export function OverviewCard(props: {
         
   return (
     <div className={`${containerStyle} mb-4 flex flex-col rounded-xl border-1 p-4 text-xs`}>
-      <div className="text-center text-sm text-gray-500 uppercase">
+      <div className="text-center text-sm font-semibold text-gray-500 uppercase">
         {props.title}
       </div>
+      {props.subtitle && <div className="text-center text-sm text-gray-500 ">
+        {props.subtitle}
+      </div>}
       {props.sections.map((section) => (
         <Fragment key={section.title}>
           {section.title && <Badge
