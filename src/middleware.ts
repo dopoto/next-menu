@@ -74,8 +74,7 @@ export default clerkMiddleware(
     // If the user is logged in and the route is protected, let them use it.
     if (userId && !isPublicRoute(req)) return NextResponse.next();
   },
-  //{ debug: env.NEXT_PUBLIC_ENV === 'development' },
-  { debug: false },
+  { debug: env.NEXT_PUBLIC_ENV === 'development' },
 );
 
 export const config = {

@@ -52,7 +52,6 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   if (!parsedPaidToTier) {
     throw new Error(
       `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
-      { cause: "abc" },
     );
   }
 

@@ -7,10 +7,8 @@ import { redirect } from "next/navigation";
 type SearchParams = Promise<Record<"tier", string | undefined>>;
 
 /**
- * Users that get here should already have chosen a tier - that should be
- * either in the search param or in a cookie.
- * TODO act if user is already signed up
- * TODO act if user is already signed in
+ * Users that get here should already have chosen a tier - that 
+ * should be either in the search param or in a cookie.
  */
 export default async function SignUpPage(props: {
   searchParams: SearchParams;
