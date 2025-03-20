@@ -34,6 +34,7 @@ export const AddLocation = ({
     }
     if (res?.errors) {
       setErrors(res?.errors);
+    console.log(res?.eventId); //TODO
     }
   };
 

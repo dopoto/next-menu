@@ -8,6 +8,7 @@ import { CookieKey } from "~/app/_domain/cookies";
 import {
   getValidPriceTier,
   isFreePriceTier,
+  isPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
 import * as React from "react";
@@ -28,9 +29,9 @@ export default async function OnboardAddOrgPage() {
   if (!parsedTier) {
     redirect(ROUTES.onboardSelectPlan);
   }
-  const nextStep: ApplicationRoute = isFreePriceTier(parsedTier.id)
-    ? ROUTES.onboardAddLocation
-    : ROUTES.onboardPayment
+  const nextStep: ApplicationRoute = isPaidPriceTier(parsedTier.id)
+    ? ROUTES.onboardPayment
+    : ROUTES.onboardAddLocation;
 
   const mainComponent = orgId ? (
     <OrgCreated nextStepRoute={nextStep} />

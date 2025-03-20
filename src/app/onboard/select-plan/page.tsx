@@ -4,7 +4,6 @@ import { SignUpPlanSelector } from "../_components/SignUpPlanSelector";
  
 /**
  * This is the first step of signing up a user.
- * TODO act if user is already signed up
  * TODO act if user is already signed in
  */
 export default async function SignUpSelectPlanPage() {
