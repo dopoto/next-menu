@@ -14,6 +14,7 @@ import type { PriceTierId } from "~/app/_domain/price-tiers";
 import { AddLocation } from "../_components/AddLocation";
 import { LocationCreated } from "../_components/LocationCreated";
 import * as React from "react";
+import { ROUTES } from "~/app/_domain/routes";
 
 export const dynamic = "force-dynamic";
 
@@ -29,7 +30,7 @@ export default async function OnboardAddLocationPage(props: {
 }) {
   const { userId, sessionClaims } = await auth();
   if (!userId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   const cookieStore = cookies();
@@ -37,7 +38,7 @@ export default async function OnboardAddLocationPage(props: {
   const parsedTier = getValidPriceTier(tier);
 
   if (!parsedTier) {
-    redirect("/onboard/select-plan");
+    redirect(ROUTES.onboardSelectPlan);
   }
   const parsedTierId = parsedTier.id;
 

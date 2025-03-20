@@ -3,6 +3,7 @@ import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { getCurrentPlanCardCustomizations, PriceTierCard } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
+import { ROUTES } from "~/app/_domain/routes";
 
 export function PlanChanged(props: { fromTier: PriceTier; toTier: PriceTier }) {
   return (
@@ -16,7 +17,7 @@ export function PlanChanged(props: { fromTier: PriceTier; toTier: PriceTier }) {
       />
       <PriceTierCard tier={props.toTier} cardCustomizations={getCurrentPlanCardCustomizations()} />
       <div className="flex w-full flex-col gap-2 pt-4">
-        <Link href="/my" className="w-full">
+        <Link href={ROUTES.my} className="w-full">
           <Button variant="outline" className="w-full">
             Go back to my account
           </Button>

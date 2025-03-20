@@ -12,6 +12,7 @@ import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
 import { APP_CONFIG } from "../_config/app-config";
 import { AppVersion } from '../_components/AppVersion';
+import { ROUTES } from '../_domain/routes';
 
 export default async function Layout({
   children,
@@ -40,7 +41,7 @@ export default async function Layout({
         <footer className="flex gap-4 p-4 pt-0 text-xs">
           <AppVersion />
           <div className="ml-auto flex gap-2 align-middle">
-            <Link className="flex gap-0.5 align-middle" href="/">
+            <Link className="flex gap-0.5 align-middle" href={ROUTES.home}>
               <House size={14} /> Home
             </Link>
             <Separator orientation="vertical" />

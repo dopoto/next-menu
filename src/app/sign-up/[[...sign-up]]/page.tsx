@@ -3,6 +3,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { OnboardingStepper } from "../../onboard/_components/OnboardingStepper";
 import { redirect } from "next/navigation";
+import { ROUTES } from "~/app/_domain/routes";
 
 type SearchParams = Promise<Record<"tier", string | undefined>>;
 
@@ -17,7 +18,7 @@ export default async function SignUpPage(props: {
   const tier = getValidPriceTier(searchParams.tier);
 
   if(!tier){
-    redirect("/onboard/select-plan");
+    redirect(ROUTES.onboardSelectPlan);
   }
 
   return (

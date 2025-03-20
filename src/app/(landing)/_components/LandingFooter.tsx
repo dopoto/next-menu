@@ -5,6 +5,7 @@ import { ThemeSwitch } from "../../_components/ThemeSwitch";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import React from "react";
 import { AppVersion } from "~/app/_components/AppVersion";
+import { ROUTES } from "~/app/_domain/routes";
 
 const currentYear = new Date().getFullYear();
 
@@ -22,7 +23,7 @@ export function LandingFooter() {
           {/* Company Info */}
           <div className="lg:col-span-2">
             <div className="mb-4 flex items-center">
-              <Link href="/">
+              <Link href={ROUTES.home}>
                 <SvgIcon
                   kind="logo"
                   size={"10"}

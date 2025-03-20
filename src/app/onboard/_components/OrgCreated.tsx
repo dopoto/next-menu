@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { OrgDropdownMenu } from "~/app/_components/OrgDropdownMenu";
 import { OverviewCard } from "~/app/_components/OverviewCard";
+import { ApplicationRoute } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 
-export function OrgCreated(props: { nextStepRoute: string }) {
+export function OrgCreated(props: { nextStepRoute: ApplicationRoute }) {
   return (
     <>
       <OverviewCard
@@ -20,7 +21,7 @@ export function OrgCreated(props: { nextStepRoute: string }) {
         variant="neutral"
       />
       <div className="flex w-full flex-col gap-2">
-        <Link href={props.nextStepRoute} className="w-full">
+        <Link href={props.nextStepRoute.toString()} className="w-full">
           <Button variant="outline" className="w-full">
             Go to next step
           </Button>

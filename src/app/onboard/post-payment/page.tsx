@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { CookieKey } from "~/app/_domain/cookies";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
+import { ROUTES } from "~/app/_domain/routes";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -25,7 +26,7 @@ export default async function OnboardPostPaymentPage(props: {
   const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
   const parsedTier = getValidPaidPriceTier(tier);
   if (!parsedTier) {
-    redirect("/onboard/select-plan");
+    redirect(ROUTES.onboardSelectPlan);
   }
 
   // Get the status of the Stripe payment

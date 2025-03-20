@@ -3,6 +3,7 @@ import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/[locationId]/_domain/locations";
 import { getMenusByLocation } from "~/server/queries";
 import MenuCard from "./MenuCard";
+import { ROUTES } from "~/app/_domain/routes";
 
 export async function MenusList(props: { locationId: LocationId }) {
   const items = await getMenusByLocation(props.locationId)
@@ -14,7 +15,7 @@ export async function MenusList(props: { locationId: LocationId }) {
         title={"No menus found"}
         secondary={"This location does not have any menus yet. Add one below."}
         cta={"Add menu"}
-        ctaHref={"menus/add"}
+        ctaHref={ROUTES.manageRelativeMenusAdd}
       />
     );
   }

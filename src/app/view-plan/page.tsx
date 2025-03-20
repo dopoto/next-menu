@@ -65,7 +65,7 @@ export default async function ViewPlanPage() {
             <SubscriptionDetails />
           </Suspense>
           <div className="flex w-full flex-col gap-2">
-            <Link href="/my" className="w-full">
+            <Link href={ROUTES.my} className="w-full">
               <Button variant="outline" className="w-full">
                 Go back to my account
               </Button>

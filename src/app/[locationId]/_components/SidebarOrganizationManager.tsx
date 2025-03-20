@@ -20,6 +20,7 @@ import {
 import Link from "next/link";
 import { priceTiers, type PriceTierId } from "~/app/_domain/price-tiers";
 import { ROUTES } from "~/app/_domain/routes";
+import React from "react";
 
 export function SidebarOrganizationManager() {
   const { organization } = useOrganization();
@@ -69,7 +70,7 @@ export function SidebarOrganizationManager() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuLabel>Your plan</DropdownMenuLabel>
-            <Link href="/view-plan">
+            <Link href={ROUTES.viewPlan}>
               <DropdownMenuItem>View plan details</DropdownMenuItem>
             </Link>
             <Link href={ROUTES.changePlan}>

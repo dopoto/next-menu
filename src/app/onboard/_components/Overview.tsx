@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
+import { ROUTES } from "~/app/_domain/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Button } from "~/components/ui/button";
 
@@ -71,7 +72,7 @@ export const Overview = async (props: {
         <SubscriptionDetails />
       </Suspense>
       <div className="flex flex-col gap-6">
-        <Link className="w-full" href={"/my"}>
+        <Link className="w-full" href={ROUTES.my}>
           <Button className="w-full">Take me to my dashboard</Button>
         </Link>
       </div>

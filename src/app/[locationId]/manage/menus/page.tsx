@@ -5,6 +5,7 @@ import { locationIdSchema } from "../../_domain/locations";
 import { Suspense } from "react";
 import { MenusList } from "./_components/MenusList";
 import LoadingSection from "../../_components/LoadingSection";
+import { ROUTES } from "~/app/_domain/routes";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -20,7 +21,7 @@ export default async function MenusPage(props: { params: Params }) {
     <div className="flex flex-col gap-2 h-full">
       <div className="flex flex-row justify-end">
         <Button asChild>
-          <Link href={"menus/add"}>
+          <Link href={ROUTES.manageRelativeMenusAdd}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add menu
           </Link>

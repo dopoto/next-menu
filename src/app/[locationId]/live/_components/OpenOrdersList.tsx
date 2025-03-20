@@ -1,5 +1,6 @@
 import { LayoutDashboard } from "lucide-react";
 import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
+import { ROUTES } from "~/app/_domain/routes";
 import { getUsedQuota } from "~/app/_utils/quota-utils.server-only";
 
 export async function OpenOrdersList( ) {
@@ -18,7 +19,7 @@ export async function OpenOrdersList( ) {
         title={title}
         secondary={secondary}
         cta={hasAddedMenus ? undefined : "Add menu"}
-        ctaHref={hasAddedMenus ? undefined : "manage/menus/add"}
+        ctaHref={hasAddedMenus ? undefined : ROUTES.manageRelativeMenusAdd}
       />
     );
   }

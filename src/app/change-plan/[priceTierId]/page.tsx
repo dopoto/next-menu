@@ -22,7 +22,7 @@ export type Params = Promise<{ priceTierId: string }>;
 export default async function ChangePlanPage(props: { params: Params }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   const params = await props.params;

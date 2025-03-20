@@ -1,5 +1,6 @@
 import { CloudAlert } from "lucide-react";
 import Link from "next/link";
+import React from "react";
 import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 
@@ -16,7 +17,7 @@ export function NoQuotaLeft(props: { title: string }) {
           <Link href={ROUTES.changePlan}>Change plan</Link>
         </Button>
         <Button className="w-full" variant="secondary" asChild>
-          <Link href={"/view-plan"}>View plan usage</Link>
+          <Link href={ROUTES.viewPlan}>View plan usage</Link>
         </Button>
       </div>
     </div>

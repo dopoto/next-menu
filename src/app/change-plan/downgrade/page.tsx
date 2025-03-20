@@ -45,7 +45,7 @@ export default async function DowngradePage(props: {
 async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   // Expecting a valid paid From tier:

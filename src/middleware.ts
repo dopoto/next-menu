@@ -3,18 +3,19 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
 import { env } from "./env";
 import { CookieKey } from "./app/_domain/cookies";
+import { ROUTES } from "./app/_domain/routes";
 
 const redirectTo = (req: NextRequest, route: string) =>
   NextResponse.redirect(new URL(route, req.url));
-const isSignUpRoute = createRouteMatcher(["/sign-up"]);
-const isSignOutRoute = createRouteMatcher(["/sign-out(.*)"]);
-const isMyRoute = createRouteMatcher(["/my(.*)"]);
+const isSignUpRoute = createRouteMatcher([ROUTES.signUp]);
+const isSignOutRoute = createRouteMatcher([`${ROUTES.signOut}(.*)`]);
+const isMyRoute = createRouteMatcher([`${ROUTES.my}(.*)`]);
 const isPublicRoute = createRouteMatcher([
-  "/",
-  "/sign-in(.*)",
-  "/sign-out(.*)",
+  ROUTES.home,
+  `${ROUTES.signIn}(.*)`,
+  `${ROUTES.signOut}(.*)`,
   "/onboard/select-plan(.*)",
-  "/sign-up(.*)",
+  `${ROUTES.signUp}(.*)`,
 ]);
 
 export default clerkMiddleware(
@@ -74,7 +75,7 @@ export default clerkMiddleware(
     // If the user is logged in and the route is protected, let them use it.
     if (userId && !isPublicRoute(req)) return NextResponse.next();
   },
-  { debug: env.NEXT_PUBLIC_ENV === 'development' },
+  { debug: env.NEXT_PUBLIC_ENV === "development" },
 );
 
 export const config = {

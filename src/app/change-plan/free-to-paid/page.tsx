@@ -35,7 +35,7 @@ export default async function FreeToPaidPage(props: {
 async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   // Expecting a valid free From tier:
