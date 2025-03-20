@@ -15,7 +15,7 @@ import { ROUTES, ApplicationRoute } from "~/app/_domain/routes";
 
 export const dynamic = "force-dynamic";
 
-export default async function AddOrgPlanPage() {
+export default async function OnboardAddOrgPage() {
   const { userId, orgId } = await auth();
   if (!userId) {
     redirect(ROUTES.signIn);

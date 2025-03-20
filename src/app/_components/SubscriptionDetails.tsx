@@ -20,25 +20,6 @@ export async function SubscriptionDetails() {
   const tierId = sessionClaims?.metadata.tier;
   const parsedTier = getValidPriceTier(tierId);
 
-  if (parsedTier && isFreePriceTier(parsedTier.id)) {
-    return (
-      <OverviewCard
-        title={"Subscription details"}
-        sections={[
-          {
-            title: "",
-            content: (
-              <div className="mt-2 flex flex-col flex-nowrap gap-2">
-                <Labeled label={"Price"} text={"Free"} />
-              </div>
-            ),
-          },
-        ]}
-        variant="neutral"
-      />
-    );
-  }
-
   if (parsedTier && isPaidPriceTier(parsedTier.id)) {
     const stripeCustomerId = (await getCustomerByOrgId(orgId))
       .stripeCustomerId as StripeCustomerId;
@@ -50,7 +31,7 @@ export async function SubscriptionDetails() {
 
     return (
       <OverviewCard
-        title={"Subscription details"}
+        title={"Subscription"}
         sections={[
           {
             title: "",

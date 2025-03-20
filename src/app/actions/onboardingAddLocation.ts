@@ -7,7 +7,9 @@ import { z } from "zod";
 import { PriceTierIdSchema } from "../_domain/price-tiers";
 import Stripe from "stripe";
 import { env } from "~/env";
-import { addLocation } from "~/server/queries";
+import { addCustomer, addLocation } from "~/server/queries";
+import { isPaidPriceTier } from "~/app/_utils/price-tier-utils";
+import { stripeCustomerIdSchema } from "../_domain/stripe";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -53,52 +55,62 @@ export const onboardingAddLocation = async (formData: FormData) => {
     };
   }
 
-  // Validate Stripe payment
-  if (validatedFormFields.data.priceTierId !== "start") {
+  let validatedStripeCustomerIdOrNull;
+
+  if (isPaidPriceTier(validatedFormFields.data.priceTierId)) {
     if (validatedFormFields.data.stripeSessionId?.length === 0) {
       // TODO Log / Return error
       // TODO CTAs
       return {
         errors: ["Stripe payment data not found. Please start over"],
       };
-    } else {
-      try {
-        const session = await stripe.checkout.sessions.retrieve(
-          validatedFormFields.data.stripeSessionId,
-        );
-        switch (session.status) {
-          case "complete":
-            // The only happy path => continue
-            break;
-          case "expired":
-            // TODO Log / Return error
-            // TODO CTAs
-            return {
-              errors: ["Stripe payment data expired. Please start over"],
-            };
-          case "open":
-            // TODO Log / Return error
-            // TODO CTAs
-            // TODO Revisit / test
-            return {
-              errors: ["Stripe payment not completed."],
-            };
-          default:
-            // TODO Log / Return error
-            // TODO CTAs
-            // TODO Revisit / test
-            return {
-              errors: ["Unexpected Stripe payment data."],
-            };
-        }
-      } catch {
-        // TODO Log / Return error
-        // TODO CTAs
-        // TODO Revisit / test
-        return {
-          errors: ["An error occurred while processing your request."],
-        };
+    }
+
+    try {
+      const session = await stripe.checkout.sessions.retrieve(
+        validatedFormFields.data.stripeSessionId,
+      );
+
+      const validationResult = stripeCustomerIdSchema.safeParse(
+        session.customer,
+      );
+      if (!validationResult.success) {
+        throw new Error(`Invalid Stripe customer id`);
       }
+      validatedStripeCustomerIdOrNull = validationResult.data;
+
+      switch (session.status) {
+        case "complete":
+          // The only happy path => continue
+          break;
+        case "expired":
+          // TODO Log / Return error
+          // TODO CTAs
+          return {
+            errors: ["Stripe payment data expired. Please start over"],
+          };
+        case "open":
+          // TODO Log / Return error
+          // TODO CTAs
+          // TODO Revisit / test
+          return {
+            errors: ["Stripe payment not completed."],
+          };
+        default:
+          // TODO Log / Return error
+          // TODO CTAs
+          // TODO Revisit / test
+          return {
+            errors: ["Unexpected Stripe payment data."],
+          };
+      }
+    } catch {
+      // TODO Log / Return error
+      // TODO CTAs
+      // TODO Revisit / test
+      return {
+        errors: ["An error occurred while processing your request."],
+      };
     }
   }
 
@@ -118,7 +130,17 @@ export const onboardingAddLocation = async (formData: FormData) => {
     };
   }
 
+  // Make sure we don't have a customer with this org id in the db already
+  // const existingDbCustomer = await getCustomerByOrgId(orgId)
+  // if(existingDbCustomer){
+  //   return {
+  //     errors: ["This org already exists."],
+  //   };
+  // }
+
   try {
+    await addCustomer(userId, orgId, validatedStripeCustomerIdOrNull);
+
     const insertedLocation = await addLocation(
       orgId,
       validatedFormFields.data.locationName,

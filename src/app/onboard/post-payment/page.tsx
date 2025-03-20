@@ -31,29 +31,10 @@ export default async function OnboardPostPaymentPage(props: {
   // Get the status of the Stripe payment
   const searchParams = await props.searchParams;
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
-  const session = await stripe.checkout.sessions.retrieve(stripeSessionId, {
-    expand: ["customer"],
-  });
-  const stripeCustomer = session.customer as Stripe.Customer;
-  const { userId } = await auth();
-
-  const isValidPayment =
-    session.status === "complete" &&
-    stripeCustomer &&
-    "id" in stripeCustomer &&
-    userId;
-
-  if (isValidPayment) {
-    await updateCustomerByClerkUserId(userId, stripeCustomer.id);
-  } else {
-    throw new Error(
-      `Stripe - not a valid payment. Payment status: ${session.status}| userId: ${userId}| stripeCustomer: ${JSON.stringify(stripeCustomer)}`,
-    );
-  }
 
   return (
     <SplitScreenContainer
-      mainComponent={<Redirecting stripeSessionId={session.id} />}
+      mainComponent={<Redirecting stripeSessionId={stripeSessionId} />}      
       secondaryComponent={
         <OnboardingStepper currentStep={"pay"} tierId={parsedTier.id} />
       }

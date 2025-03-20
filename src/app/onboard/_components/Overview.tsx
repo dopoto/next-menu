@@ -8,34 +8,17 @@ import { ROUTES } from "~/app/_domain/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Button } from "~/components/ui/button";
 
-export const Overview = async (props: {
-  claims: CustomJwtSessionClaims;
-}) => {
+
+// TODO Location in overview?
+
+export const Overview = async (props: { claims: CustomJwtSessionClaims }) => {
   const priceTierId = props.claims?.metadata?.tier;
   const parsedTier = getValidPriceTier(priceTierId);
   const user = await currentUser();
   return (
     <div className="flex w-full flex-col gap-1">
       <OverviewCard
-        title={"Your plan"}
-        sections={[
-          {
-            title: "",
-            content: (
-              <div className="mt-2 flex flex-col flex-nowrap gap-2">
-                <Labeled label={"Name"} text={parsedTier?.name} />
-                <Labeled
-                  label={"Price"}
-                  text={`${parsedTier?.monthlyUsdPrice.toFixed(2)} USD/month`}
-                />
-              </div>
-            ),
-          },
-        ]}
-        variant="neutral"
-      />
-      <OverviewCard
-        title={"Your account"}
+        title={"Account"}
         sections={[
           {
             title: "",
@@ -45,6 +28,10 @@ export const Overview = async (props: {
                   label={"Email"}
                   text={`${user?.emailAddresses[0]?.emailAddress}`}
                 />
+                <Labeled
+                  label={"Organization"}
+                  text={props.claims?.metadata?.orgName}
+                />
               </div>
             ),
           },
@@ -52,15 +39,16 @@ export const Overview = async (props: {
         variant="neutral"
       />
       <OverviewCard
-        title={"Your organization"}
+        title={"Plan"}
         sections={[
           {
             title: "",
             content: (
               <div className="mt-2 flex flex-col flex-nowrap gap-2">
+                <Labeled label={"Name"} text={parsedTier?.name} />
                 <Labeled
-                  label={"Name"}
-                  text={props.claims?.metadata?.orgName}
+                  label={"Price"}
+                  text={`${parsedTier?.monthlyUsdPrice.toFixed(2)} USD/month`}
                 />
               </div>
             ),
