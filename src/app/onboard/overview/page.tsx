@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Overview } from "../_components/Overview";
 import { ROUTES } from "~/app/_domain/routes";
+import { SuccessAnimation } from "~/app/_components/SuccessAnimation";
 
 export default async function OverviewPage() {
   const { userId, sessionClaims } = await auth();
@@ -21,17 +22,20 @@ export default async function OverviewPage() {
   const parsedTierId = parsedTier.id;
 
   return (
-    <SplitScreenContainer
-      mainComponent={
-        <Overview
-          claims={sessionClaims}
-        />
-      }
-      secondaryComponent={
-        <OnboardingStepper currentStep={"overview"} tierId={parsedTierId} />
-      }
-      title={"Welcome!"}
-      subtitle={"Your onboarding is now completed"}
-    ></SplitScreenContainer>
+    <>
+      <SplitScreenContainer
+        mainComponent={
+          <>
+            <Overview claims={sessionClaims} />
+          </>
+        }
+        secondaryComponent={
+          <OnboardingStepper currentStep={"overview"} tierId={parsedTierId} />
+        }
+        title={"Welcome!"}
+        subtitle={"Your onboarding is now completed"}
+      ></SplitScreenContainer>
+      <SuccessAnimation />
+    </>
   );
 }

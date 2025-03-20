@@ -1,6 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Suspense } from "react";
+import { Fireworks } from "~/app/_components/SuccessAnimation";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
@@ -16,7 +17,7 @@ export const Overview = async (props: { claims: CustomJwtSessionClaims }) => {
   const parsedTier = getValidPriceTier(priceTierId);
   const user = await currentUser();
   return (
-    <div className="flex w-full flex-col gap-1">
+    <div className="flex w-full flex-col gap-1">      
       <OverviewCard
         title={"Account"}
         sections={[
