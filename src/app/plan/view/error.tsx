@@ -1,14 +1,11 @@
 "use client"; // Error boundaries must be Client Components
 
 import { useEffect } from "react";
+import { ErrorCard } from "~/app/_components/ErrorCard";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { ErrorCard } from "../_components/ErrorCard";
-import { generateErrorId, logException } from "../_utils/error-logger-utils";
-import {
-  type ErrorTypeId,
-  type ErrorBoundaryException,
-} from "../_domain/errors";
-
+import { ErrorBoundaryException, ErrorTypeId } from "~/app/_domain/errors";
+import { generateErrorId, logException } from "~/app/_utils/error-logger-utils";
+ 
 export default function ViewPlanError({
   error,
 }: {
