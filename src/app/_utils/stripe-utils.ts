@@ -186,7 +186,8 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
     ],
     metadata,
     ui_mode: "embedded",
-    return_url: `${env.NEXT_PUBLIC_APP_URL}/change-plan/upgrade/post-payment?session_id={CHECKOUT_SESSION_ID}`,
+      // TODO put in ROUTES:
+    return_url: `${env.NEXT_PUBLIC_APP_URL}/plan/change/upgrade/post-payment?session_id={CHECKOUT_SESSION_ID}`,
   });
 
   return session.client_secret;

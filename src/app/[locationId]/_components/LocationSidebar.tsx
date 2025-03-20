@@ -57,11 +57,11 @@ export function LocationSidebar({
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    isActive={isActive(item.url)}
+                    isActive={isActive(item.route)}
                     tooltip={item.title}
                   >
                     <Link
-                      href={buildUrl(item.url)}
+                      href={buildUrl(item.route)}
                       className="flex items-center gap-2"
                     >
                       <span className="flex-shrink-0">{item.icon}</span>
@@ -81,11 +81,11 @@ export function LocationSidebar({
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     asChild
-                    isActive={isActive(item.url)}
+                    isActive={isActive(item.route)}
                     tooltip={item.title}
                   >
                     <Link
-                      href={buildUrl(item.url)}
+                      href={buildUrl(item.route)}
                       className="flex items-center gap-2"
                     >
                       <span title={item.title} className="flex-shrink-0">

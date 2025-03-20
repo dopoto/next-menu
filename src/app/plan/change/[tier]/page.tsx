@@ -17,7 +17,7 @@ import { OverviewCard } from "~/app/_components/OverviewCard";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
 
-export type Params = Promise<{ priceTierId: string }>;
+export type Params = Promise<{ tier: string }>;
 
 export default async function ChangePlanPage(props: { params: Params }) {
   const { userId, orgId, sessionClaims } = await auth();
@@ -28,7 +28,7 @@ export default async function ChangePlanPage(props: { params: Params }) {
   const params = await props.params;
 
   // Expecting a valid To tier:
-  const parsedToTier = getValidPriceTier(params.priceTierId);
+  const parsedToTier = getValidPriceTier(params.tier);
   if (!parsedToTier) {
     throw new Error(`Missing or invalid To tier in params: ${obj2str(params)}`);
   }
@@ -71,33 +71,33 @@ export default async function ChangePlanPage(props: { params: Params }) {
       theHow = `You will need to complete a Stripe payment in the next step.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Subscribe to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/free-to-paid?toTierId=${parsedToTier.id}`;
+      changeUrl = ROUTES.changePlanToPlan("free-to-paid", parsedToTier.id);
       break;
     case "free-to-free":
       theHow = `Click the button below to confirm the plan change.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Change to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/free-to-free?toTierId=${parsedToTier.id}`;
+      changeUrl = ROUTES.changePlanToPlan("free-to-free", parsedToTier.id);
       break;
     case "paid-to-free":
       theHow = `Your account will be credited in the next step with an amount corresponding to the 
       remaining days in your currently active subscription.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/paid-to-free?toTierId=${parsedToTier.id}`;
+      changeUrl = ROUTES.changePlanToPlan("paid-to-paid", parsedToTier.id);
       break;
     case "paid-to-paid-upgrade":
       theHow = `You will now need to complete a payment covering the remaining days in your current month.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Upgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/upgrade?toTierId=${parsedToTier.id}`;
+      changeUrl = ROUTES.changePlanToPlan("upgrade", parsedToTier.id);
       break;
     case "paid-to-paid-downgrade":
       theHow = `You will receive a credit for the remaining time on your current ${parsedFromTier.name} subscription and you 
         will be billed now for the new, lower-cost subscription.`;
       theWhen = `Your account will move to the ${parsedToTier.name} plan right away.`;
       buttonText = `Downgrade to ${parsedToTier.name}`;
-      changeUrl = `/change-plan/downgrade?toTierId=${parsedToTier.id}`;
+      changeUrl = ROUTES.changePlanToPlan("downgrade", parsedToTier.id);
       break;
     default:
       return null;

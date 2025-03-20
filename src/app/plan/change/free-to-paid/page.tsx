@@ -95,7 +95,7 @@ async function Step2CreateStripeCustomerAndSubscription(props: {
   }
 
   const newStripeCustomer = await stripe.customers.create({
-    description: "Created from /change-plan/free-to-paid.",
+    description: "Created from /plan/change/free-to-paid.",
     metadata: {
       orgId: props.orgId,
     },

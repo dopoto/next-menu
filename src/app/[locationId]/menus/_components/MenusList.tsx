@@ -15,7 +15,7 @@ export async function MenusList(props: { locationId: LocationId }) {
         title={"No menus found"}
         secondary={"This location does not have any menus yet. Add one below."}
         cta={"Add menu"}
-        ctaHref={ROUTES.manageRelativeMenusAdd}
+        ctaHref={ROUTES.menusAdd}
       />
     );
   }

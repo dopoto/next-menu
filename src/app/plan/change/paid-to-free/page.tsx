@@ -141,7 +141,7 @@ async function FinalStep(props: {
   // Cancel their Stripe subscription
   await stripe.subscriptions.cancel(props.stripeSubscription.id, {
     cancellation_details: {
-      comment: "User moved to free tier using /change-plan/paid-to-free.",
+      comment: "User moved to free tier using /plan/change/paid-to-free.",
     },
     prorate: true,
   });

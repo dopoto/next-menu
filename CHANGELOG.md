@@ -9,4 +9,4 @@
 ## 0.0.32
 
 ### Features
-- Users can now change their price tier (/change-plan)
+- Users can now change their price tier

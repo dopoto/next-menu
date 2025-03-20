@@ -17,13 +17,13 @@ import { ROUTES } from "~/app/_domain/routes";
 export function PageBreadcrumb() {
   const pathname = usePathname();
   const currentPath = pathname.split("/").slice(2).join("/");
-  const currentMenuItem = menuItems.find((item) => item.url === currentPath);
+  const currentMenuItem = menuItems.find((item) => item.route === currentPath);
   const pageTitle = currentMenuItem?.title ?? "Dashboard";
 
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {currentMenuItem?.url !== "" && (
+        {currentMenuItem?.route !== "" && (
           <><BreadcrumbItem className="hidden md:block">
             <BreadcrumbLink href={ROUTES.my}>
               <HomeIcon size={16} />

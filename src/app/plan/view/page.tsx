@@ -1,3 +1,17 @@
+import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
+import { Suspense } from "react";
+import { OverviewCard } from "~/app/_components/OverviewCard";
+import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
+import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
+import { PriceTierFeatureUsage } from "~/app/_domain/price-tier-features";
+import { PriceTier } from "~/app/_domain/price-tiers";
+import { ROUTES } from "~/app/_domain/routes";
+import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
+import { getAvailableQuota } from "~/app/_utils/quota-utils.server-only";
+import { obj2str } from "~/app/_utils/string-utils";
+import { Button } from "~/components/ui/button";
+import { Skeleton } from "~/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -6,20 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
-import { OverviewCard } from "../_components/OverviewCard";
-import { SplitScreenContainer } from "../_components/SplitScreenContainer";
-import { auth } from "@clerk/nextjs/server";
-import { getValidPriceTier } from "../_utils/price-tier-utils";
-import { obj2str } from "../_utils/string-utils";
-import Link from "next/link";
-import { Button } from "~/components/ui/button";
-import { Suspense } from "react";
-import { Skeleton } from "~/components/ui/skeleton";
-import { type PriceTier } from "../_domain/price-tiers";
-import { type PriceTierFeatureUsage } from "../_domain/price-tier-features";
-import { getAvailableQuota } from "../_utils/quota-utils.server-only";
-import { ROUTES } from "../_domain/routes";
-import { SubscriptionDetails } from "../_components/SubscriptionDetails";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
@@ -37,6 +37,9 @@ export default async function ViewPlanPage() {
     <SplitScreenContainer
       mainComponent={
         <>
+          <Suspense fallback="Loading...">
+            <SubscriptionDetails />
+          </Suspense>
           <Suspense
             fallback={
               <OverviewCard
@@ -60,9 +63,6 @@ export default async function ViewPlanPage() {
               ]}
               variant="neutral"
             />
-          </Suspense>
-          <Suspense fallback="Loading...">
-            <SubscriptionDetails />
           </Suspense>
           <div className="flex w-full flex-col gap-2">
             <Link href={ROUTES.my} className="w-full">
