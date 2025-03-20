@@ -3,6 +3,7 @@
 Handle users that reuse their existing account in Sign Up 
 Validate Stripe / Clerk on sign in / (& regularly?)
 Delete my account
+Manage org > remove Invite Members
 
 Typesafe routes
 Google Analytics
