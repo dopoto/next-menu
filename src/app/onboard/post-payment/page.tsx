@@ -4,7 +4,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { env } from "~/env";
 import { updateCustomerByClerkUserId } from "~/server/queries";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { Redirecting } from "../_components/PostPayment";
+import { Redirecting } from "../_components/Redirecting";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { CookieKey } from "~/app/_domain/cookies";
@@ -22,7 +22,6 @@ export default async function OnboardPostPaymentPage(props: {
   searchParams: SearchParams;
 }) {
   const cookieStore = cookies();
-  (await cookieStore).set(CookieKey.OnboardStripeSessionId, "g");
   const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
   const parsedTier = getValidPaidPriceTier(tier);
   if (!parsedTier) {
