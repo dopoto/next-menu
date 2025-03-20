@@ -15,13 +15,14 @@ import {
 import { obj2str } from "~/app/_utils/string-utils";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 export type Params = Promise<{ priceTierId: string }>;
 
 export default async function ChangePlanPage(props: { params: Params }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   const params = await props.params;
@@ -46,12 +47,12 @@ export default async function ChangePlanPage(props: { params: Params }) {
     parsedToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   // If user tries to change to their current tier, redirect back
   if (parsedToTier.id === parsedFromTier.id) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   const priceTierChangeScenario = getPriceTierChangeScenario(
@@ -64,8 +65,6 @@ export default async function ChangePlanPage(props: { params: Params }) {
   let theWhen = "";
   let buttonText = "";
   let changeUrl = "";
-
-  // TODO check if current plan has more features than future plan
 
   switch (priceTierChangeScenario) {
     case "free-to-paid":
@@ -136,7 +135,7 @@ export default async function ChangePlanPage(props: { params: Params }) {
                 {buttonText}
               </Button>
             </Link>
-            <Link href="/change-plan" className="w-full">
+            <Link href={ROUTES.changePlan} className="w-full">
               <Button variant="outline" className="w-full">
                 Go back
               </Button>

@@ -13,6 +13,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { type NavItem } from "../../_domain/nav-items";
 import { useState } from "react";
+import { ROUTES } from "~/app/_domain/routes";
 
 export function LandingNavbar(props: { navItems: NavItem[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -22,7 +23,7 @@ export function LandingNavbar(props: { navItems: NavItem[] }) {
         <div className="flex h-16 justify-between">
           <div className="flex items-center">
             <div className="flex flex-shrink-0 items-center">
-              <Link href="/">
+              <Link href={ROUTES.home}>
                 <SvgIcon kind="logo" size={"12"} />
               </Link>
             </div>
@@ -43,7 +44,7 @@ export function LandingNavbar(props: { navItems: NavItem[] }) {
               <SignInButton>
                 <Button variant={"secondary"}>Log in</Button>
               </SignInButton>
-              <Link href="/onboard/select-plan">
+              <Link href={ROUTES.signUp}>
                 <Button>Sign up</Button>
               </Link>
             </SignedOut>

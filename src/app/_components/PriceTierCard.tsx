@@ -1,6 +1,7 @@
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -13,6 +14,7 @@ import {
   priceTierFeatures,
 } from "../_domain/price-tier-features";
 import { CheckIcon, CircleXIcon } from "lucide-react";
+import { PageSubtitle } from "./PageSubtitle";
 
 export type CardCustomizations = {
   containerStyle?: string;
@@ -26,7 +28,7 @@ export function PriceTierCard(props: {
   exceededFeatures?:  Array<ExceededFeature>;
   footerCta?: ReactNode;
 }) {
-  const { name, monthlyUsdPrice, features } = props.tier;
+  const { name, description, monthlyUsdPrice, features } = props.tier;
 
   return (
     <Card className={`${props.cardCustomizations?.containerStyle}`}>
@@ -40,6 +42,9 @@ export function PriceTierCard(props: {
         )}
         <CardTitle className="text-xl font-light">{name}</CardTitle>
         <div className="font-medium">{getPrice(monthlyUsdPrice)}</div>
+        <CardDescription>
+          <PageSubtitle>{description}</PageSubtitle>
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="flex flex-col flex-nowrap gap-2 text-sm">

@@ -14,6 +14,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { FreeToPaidStripeCheckoutForm } from "../_components/FreeToPaidStripeCheckoutForm";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -34,7 +35,7 @@ export default async function FreeToPaidPage(props: {
 async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   // Expecting a valid free From tier:
@@ -61,7 +62,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     parsedPaidToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   return (

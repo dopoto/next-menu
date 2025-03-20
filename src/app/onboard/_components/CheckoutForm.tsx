@@ -5,7 +5,7 @@ import {
   EmbeddedCheckoutProvider,
   EmbeddedCheckout,
 } from "@stripe/react-stripe-js";
-import { onboardingCreateCheckoutSession } from "~/app/actions/onboardingCreateCheckoutSession";
+import { onboardCreateCheckoutSession } from "~/app/actions/onboardCreateCheckoutSession";
 import { env } from "~/env";
 import { type PriceTierId } from "~/app/_domain/price-tiers";
 
@@ -13,8 +13,7 @@ const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export const CheckoutForm = (props: { priceTierId: PriceTierId } ) => {
   const fetchClientSecret = useCallback(async () => {
-    //TODO: move from server action:
-    const stripeResponse = await onboardingCreateCheckoutSession({ priceTierId: props.priceTierId });
+    const stripeResponse = await onboardCreateCheckoutSession({ priceTierId: props.priceTierId });
     return stripeResponse.clientSecret;
   }, [props.priceTierId]);
 

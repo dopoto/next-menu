@@ -2,15 +2,11 @@ import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
+import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 
-export async function LocationCreated(props: { stripeSessionId?: string }) {
+export async function LocationCreated() {
   const { sessionClaims } = await auth();
-
-  const nextStepRoute = props.stripeSessionId
-    ? `/onboard/overview?session_id=${props.stripeSessionId}`
-    : `/onboard/overview`;
-
   return (
     <>
       <OverviewCard
@@ -31,7 +27,7 @@ export async function LocationCreated(props: { stripeSessionId?: string }) {
         variant="neutral"
       />
       <div className="flex w-full flex-col gap-2">
-        <Link href={nextStepRoute} className="w-full">
+        <Link href={ROUTES.onboardOverview} className="w-full">
           <Button variant="outline" className="w-full">
             Go to next step
           </Button>

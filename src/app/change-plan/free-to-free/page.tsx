@@ -8,6 +8,7 @@ import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import { getValidFreePriceTier } from "~/app/_utils/price-tier-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
@@ -25,7 +26,7 @@ export default async function FreeToFreePage(props: {
 async function Step1(props: { toTierId?: string }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   // Expecting a valid free From tier:
@@ -52,7 +53,7 @@ async function Step1(props: { toTierId?: string }) {
     parsedFreeToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   return (

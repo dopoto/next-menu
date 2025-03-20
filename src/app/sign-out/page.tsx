@@ -6,12 +6,15 @@ export default async function SignOutPage() {
   return (
     <SplitScreenContainer
       mainComponent={
+        <>
+        <p>Click the button below to log out of your account.</p>
         <SignOutButton>
           <Button>Sign out</Button>
         </SignOutButton>
+        </>
       }
-      title={"Hope to see you again soon!"}
-      subtitle={"Click the button below to sign out"}
+      title={"Sign out"}
+      subtitle={"Hope to see you again soon!"}
     ></SplitScreenContainer>
   );
 }

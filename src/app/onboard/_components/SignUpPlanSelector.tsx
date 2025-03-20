@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { PriceTierCard } from "~/app/_components/PriceTierCard";
 import { priceTiers } from "~/app/_domain/price-tiers";
+import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 
 export async function SignUpPlanSelector() {
@@ -15,7 +16,7 @@ export async function SignUpPlanSelector() {
         }
 
         const footerCta = (
-          <Link href={`/sign-up?tier=${tier.id}`} className="w-full">
+          <Link href={ROUTES.signUpForPriceTier(tier.id)} className="w-full">
             <Button className="w-full" variant="default">
               Select this plan
             </Button>

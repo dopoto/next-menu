@@ -7,8 +7,7 @@ import { type PriceTierId, priceTiers } from "../_domain/price-tiers";
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
 
- // TODO refactor - remov action
-export const onboardingCreateCheckoutSession = async (props: {
+export const onboardCreateCheckoutSession = async (props: {
   priceTierId: PriceTierId;
 }) => {
   // TODO

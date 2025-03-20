@@ -8,16 +8,18 @@ import { CookieKey } from "~/app/_domain/cookies";
 import {
   getValidPriceTier,
   isFreePriceTier,
+  isPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
 import * as React from "react";
+import { ROUTES, ApplicationRoute } from "~/app/_domain/routes";
 
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
-export default async function AddOrgPlanPage() {
+export default async function OnboardAddOrgPage() {
   const { userId, orgId } = await auth();
   if (!userId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   const cookieStore = cookies();
@@ -25,11 +27,11 @@ export default async function AddOrgPlanPage() {
   const parsedTier = getValidPriceTier(tier);
 
   if (!parsedTier) {
-    redirect("/onboard/select-plan");
+    redirect(ROUTES.onboardSelectPlan);
   }
-  const nextStep = isFreePriceTier(parsedTier.id)
-    ? `/onboard/add-location`
-    : `/onboard/payment`;
+  const nextStep: ApplicationRoute = isPaidPriceTier(parsedTier.id)
+    ? ROUTES.onboardPayment
+    : ROUTES.onboardAddLocation;
 
   const mainComponent = orgId ? (
     <OrgCreated nextStepRoute={nextStep} />

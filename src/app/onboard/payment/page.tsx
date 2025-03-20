@@ -6,21 +6,22 @@ import { CookieKey } from "~/app/_domain/cookies";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
 import { CheckoutForm } from "../_components/CheckoutForm";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
+import { ROUTES } from "~/app/_domain/routes";
 
 export default async function OnboardPaymentPage() {
   const { userId, orgId } = await auth();
   if (!userId) {
-    redirect("/sign-up");
+    redirect(ROUTES.signUp);
   }
   if (!orgId) {
-    redirect("/onboard/create-org");
+    redirect(ROUTES.onboardCreateOrg);
   }
 
   const cookieStore = cookies();
   const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
   const parsedTier = getValidPaidPriceTier(tier);
   if (!parsedTier) {
-    redirect("/onboard/select-plan");
+    redirect(ROUTES.onboardSelectPlan);
   }
 
   const stripePriceId = parsedTier.stripePriceId;

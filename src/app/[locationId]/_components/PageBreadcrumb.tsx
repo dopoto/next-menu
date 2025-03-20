@@ -11,6 +11,8 @@ import {
   BreadcrumbSeparator,
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
+import React from "react";
+import { ROUTES } from "~/app/_domain/routes";
 
 export function PageBreadcrumb() {
   const pathname = usePathname();
@@ -23,7 +25,7 @@ export function PageBreadcrumb() {
       <BreadcrumbList>
         {currentMenuItem?.url !== "" && (
           <><BreadcrumbItem className="hidden md:block">
-            <BreadcrumbLink href="/my">
+            <BreadcrumbLink href={ROUTES.my}>
               <HomeIcon size={16} />
             </BreadcrumbLink>
           </BreadcrumbItem>

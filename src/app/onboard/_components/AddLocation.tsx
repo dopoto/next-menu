@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { onboardingAddLocation } from "../../actions/onboardingAddLocation";
+import { onboardCreateCustomer } from "../../actions/onboardCreateCustomer";
 import { useState } from "react";
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -26,19 +26,15 @@ export const AddLocation = ({
   const router = useRouter();
 
   const handleSubmit = async (formData: FormData) => {
-    const res = await onboardingAddLocation(formData);
+    const res = await onboardCreateCustomer(formData);
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload();
-
-      const nextStepRoute =  stripeSessionId
-      ? `/onboard/overview?session_id=${ stripeSessionId}`
-      : `/onboard/overview`;
-
-      router.push(nextStepRoute);
+      router.push(`/onboard/overview`);
     }
     if (res?.errors) {
       setErrors(res?.errors);
+    console.log(res?.eventId); //TODO
     }
   };
 

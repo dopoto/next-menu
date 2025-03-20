@@ -4,6 +4,7 @@ import { SignedIn, SignedOut, useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
 import { type PriceTierId } from "../_domain/price-tiers";
+import { ROUTES } from "../_domain/routes";
 
 export function GetStartedCta(props: {
   tier?: PriceTierId;
@@ -16,7 +17,11 @@ export function GetStartedCta(props: {
         <SignedInCta variant={props.variant} tier={props.tier} />
       </SignedIn>
       <SignedOut>
-        <SignedOutCta variant={props.variant} secondaryText={props.secondaryText} tier={props.tier}/>
+        <SignedOutCta
+          variant={props.variant}
+          secondaryText={props.secondaryText}
+          tier={props.tier}
+        />
       </SignedOut>
     </>
   );
@@ -31,7 +36,7 @@ function SignedInCta(props: {
 
   if (props.tier == null) {
     return (
-      <Link className="w-full" href="/my">
+      <Link className="w-full" href={ROUTES.my}>
         <Button className="w-full" variant={props.variant}>
           Go to my account
         </Button>
@@ -48,7 +53,7 @@ function SignedInCta(props: {
         <span className="text-pop text-center text-xs font-bold">
           You are already on this plan
         </span>
-        <Link href={`/my`} className="w-full">
+        <Link href={ROUTES.my} className="w-full">
           <Button className="w-full" variant={props.variant}>
             Go to my account
           </Button>
@@ -58,7 +63,7 @@ function SignedInCta(props: {
   }
 
   return (
-    <Link className="w-full" href={`/change-plan/${props?.tier}`}>
+    <Link className="w-full" href={ROUTES.changePlanTo(props?.tier)}>
       <Button className="w-full" variant={props.variant}>
         Switch to this plan
       </Button>
@@ -68,11 +73,12 @@ function SignedInCta(props: {
 
 function SignedOutCta(props: {
   tier?: PriceTierId;
-  secondaryText?: string;  
+  secondaryText?: string;
   variant: "default" | "outline";
 }) {
-
-  const signUpLink = props.tier ? `/sign-up?tier=${props.tier}` : '/sign-up'
+  const signUpLink = props.tier
+    ? ROUTES.signUpForPriceTier(props.tier)
+    : ROUTES.signUp;
   return (
     <>
       <Link className="w-full" href={signUpLink}>

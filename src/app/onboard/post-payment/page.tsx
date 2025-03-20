@@ -4,11 +4,12 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { env } from "~/env";
 import { updateCustomerByClerkUserId } from "~/server/queries";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { Redirecting } from "../_components/PostPayment";
+import { Redirecting } from "../_components/Redirecting";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { CookieKey } from "~/app/_domain/cookies";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
+import { ROUTES } from "~/app/_domain/routes";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -21,39 +22,19 @@ export default async function OnboardPostPaymentPage(props: {
   searchParams: SearchParams;
 }) {
   const cookieStore = cookies();
-  (await cookieStore).set(CookieKey.OnboardStripeSessionId, "g");
   const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
   const parsedTier = getValidPaidPriceTier(tier);
   if (!parsedTier) {
-    redirect("/onboard/select-plan");
+    redirect(ROUTES.onboardSelectPlan);
   }
 
   // Get the status of the Stripe payment
   const searchParams = await props.searchParams;
   const stripeSessionId = searchParams.session_id?.toString() ?? "";
-  const session = await stripe.checkout.sessions.retrieve(stripeSessionId, {
-    expand: ["customer"],
-  });
-  const stripeCustomer = session.customer as Stripe.Customer;
-  const { userId } = await auth();
-
-  const isValidPayment =
-    session.status === "complete" &&
-    stripeCustomer &&
-    "id" in stripeCustomer &&
-    userId;
-
-  if (isValidPayment) {
-    await updateCustomerByClerkUserId(userId, stripeCustomer.id);
-  } else {
-    throw new Error(
-      `Stripe - not a valid payment. Payment status: ${session.status}| userId: ${userId}| stripeCustomer: ${JSON.stringify(stripeCustomer)}`,
-    );
-  }
 
   return (
     <SplitScreenContainer
-      mainComponent={<Redirecting stripeSessionId={session.id} />}
+      mainComponent={<Redirecting stripeSessionId={stripeSessionId} />}      
       secondaryComponent={
         <OnboardingStepper currentStep={"pay"} tierId={parsedTier.id} />
       }

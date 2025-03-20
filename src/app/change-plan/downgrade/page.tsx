@@ -23,6 +23,7 @@ import {
   type StripeSubscriptionId,
 } from "~/app/_domain/stripe";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -44,7 +45,7 @@ export default async function DowngradePage(props: {
 async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    redirect("/sign-in");
+    redirect(ROUTES.signIn);
   }
 
   // Expecting a valid paid From tier:
@@ -82,7 +83,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     parsedPaidToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   return (

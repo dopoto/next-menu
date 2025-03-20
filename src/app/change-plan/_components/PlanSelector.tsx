@@ -9,6 +9,7 @@ import {
 } from "~/app/_components/PriceTierCard";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 export async function PlanSelector() {
   const currentUserTier = (await auth()).sessionClaims?.metadata
@@ -40,26 +41,21 @@ export async function PlanSelector() {
             : undefined;
 
         const footerCta = isCurrent ? (
-          <Link href="/view-plan" className="w-full">
+          <Link href={ROUTES.viewPlan} className="w-full">
             <Button variant="secondary" className="w-full">
               View plan usage
             </Button>
           </Link>
+        ) : exceededFeatures.length === 0 ? (
+          <Link href={ROUTES.changePlanTo(tier.id)} className="w-full">
+            <Button variant="default" className="w-full">
+              Change to this plan
+            </Button>
+          </Link>
         ) : (
-          exceededFeatures.length  === 0 ? <Link href={`/change-plan/${tier.id}`} className="w-full">
-            <Button
-              variant="default"              
-              className="w-full"
-            >
-              Change to this plan
-            </Button>
-          </Link> : <Button
-              variant="default"              
-              className="w-full"
-              disabled
-            >
-              Change to this plan
-            </Button>
+          <Button variant="default" className="w-full" disabled>
+            Change to this plan
+          </Button>
         );
 
         return (
@@ -77,14 +73,9 @@ export async function PlanSelector() {
         <p className="pb-4">
           Remember that you can upgrade, downgrade or cancel instantly, anytime.
         </p>
-        <Link href="/my" className="w-full">
+        <Link href={ROUTES.my} className="w-full">
           <Button variant="outline" className="w-full">
             Go back to my account
-          </Button>
-        </Link>
-        <Link href="/view-plan" className="w-full">
-          <Button variant="outline" className="w-full">
-            View plan usage
           </Button>
         </Link>
       </div>

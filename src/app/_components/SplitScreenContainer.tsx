@@ -7,6 +7,9 @@ import SvgIcon from "./SvgIcons";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import React from "react";
 import { AppVersion } from "./AppVersion";
+import { ROUTES } from "../_domain/routes";
+
+//TODO Fix <p> widths
 
 export function SplitScreenContainer(props: {
   title: string;
@@ -23,7 +26,7 @@ export function SplitScreenContainer(props: {
       >
         <div className="py-6">
           <nav className="flex w-full">
-            <Link href="/">
+            <Link href={ROUTES.home}>
               <SvgIcon
                 kind="logo"
                 size={"12"}
