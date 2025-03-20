@@ -18,6 +18,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { type PriceTier } from "../_domain/price-tiers";
 import { type PriceTierFeatureUsage } from "../_domain/price-tier-features";
 import { getAvailableQuota } from "../_utils/quota-utils.server-only";
+import { ROUTES } from "../_domain/routes";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
@@ -72,7 +73,7 @@ export default async function ViewPlanPage() {
                 Go back to my account
               </Button>
             </Link>
-            <Link href="/change-plan" className="w-full">
+            <Link href={ROUTES.changePlan} className="w-full">
               <Button variant="outline" className="w-full">
                 Change plan
               </Button>

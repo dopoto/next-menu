@@ -72,7 +72,7 @@ const config =
         authToken: process.env.SENTRY_AUTH_TOKEN, // Required for source map validation
 
         // Only print logs for uploading source maps in CI
-        silent: !process.env.CI, //TODO use env instead
+        silent: !process.env.CI,
 
         // For all available options, see:
         // https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/

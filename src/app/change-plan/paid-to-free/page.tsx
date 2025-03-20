@@ -17,6 +17,7 @@ import {
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -63,7 +64,7 @@ async function Step1(props: { toTierId?: string }) {
     parsedFreeToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
   
   return (

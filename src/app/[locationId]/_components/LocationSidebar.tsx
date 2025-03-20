@@ -101,8 +101,8 @@ export function LocationSidebar({
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarUserManager />
         <SidebarOrganizationManager />
+        <SidebarUserManager />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

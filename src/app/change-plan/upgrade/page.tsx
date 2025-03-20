@@ -13,6 +13,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { changePlanUpgradeCreateCheckoutSession } from "~/app/_utils/stripe-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
@@ -69,7 +70,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     parsedPaidToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   return (

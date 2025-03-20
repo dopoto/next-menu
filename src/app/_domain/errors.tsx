@@ -1,3 +1,5 @@
+import { ROUTES } from "./routes";
+
 /**
  * @see https://nextjs.org/docs/app/building-your-application/routing/error-handling#using-error-boundaries.
  */
@@ -33,7 +35,7 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     userFriendlyTitle: "An error occurred while changing your plan",
     userFriendlyDescription: "You will need to retry your payment.",
     ctas: [
-      { text: "Start over", href: "/change-plan" },
+      { text: "Start over", href: ROUTES.changePlan },
       { text: "Go back to my account", href: "/my" },
     ],
   },
@@ -42,7 +44,7 @@ export const errorTypes: Record<ErrorTypeId, ApplicationError> = {
     userFriendlyTitle: "An error occurred while changing your plan",
     userFriendlyDescription: "You will need to retry your payment.",
     ctas: [
-      { text: "Start over", href: "/change-plan" },
+      { text: "Start over", href: ROUTES.changePlan },
       { text: "Go back to my account", href: "/my" },
     ],
   },

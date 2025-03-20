@@ -82,11 +82,6 @@ export async function PlanSelector() {
             Go back to my account
           </Button>
         </Link>
-        <Link href="/view-plan" className="w-full">
-          <Button variant="outline" className="w-full">
-            View plan usage
-          </Button>
-        </Link>
       </div>
     </div>
   );

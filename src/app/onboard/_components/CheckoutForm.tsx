@@ -13,7 +13,6 @@ const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export const CheckoutForm = (props: { priceTierId: PriceTierId } ) => {
   const fetchClientSecret = useCallback(async () => {
-    //TODO: move from server action:
     const stripeResponse = await onboardingCreateCheckoutSession({ priceTierId: props.priceTierId });
     return stripeResponse.clientSecret;
   }, [props.priceTierId]);

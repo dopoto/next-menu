@@ -11,11 +11,15 @@ import {
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import Link from "next/link";
 import { priceTiers, type PriceTierId } from "~/app/_domain/price-tiers";
+import { ROUTES } from "~/app/_domain/routes";
 
 export function SidebarOrganizationManager() {
   const { organization } = useOrganization();
@@ -44,22 +48,34 @@ export function SidebarOrganizationManager() {
                 height={32}
               />
               <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="font-semibold truncate" title={organization.name}>{organization.name}</span>
+                <span
+                  className="truncate font-semibold"
+                  title={organization.name}
+                >
+                  {organization.name}
+                </span>
                 <span className="text-xs">{tier.name} plan</span>
               </div>
               <ChevronsUpDown className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-[200px]">
-            <DropdownMenuItem onClick={() => openOrganizationProfile()}>
-              Manage organization
-            </DropdownMenuItem>
-            <Link href="/change-plan">
-              <DropdownMenuItem>Change plan</DropdownMenuItem>
-            </Link>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Your organization</DropdownMenuLabel>
+              <DropdownMenuItem onClick={() => openOrganizationProfile()}>
+                Manage organization
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>Your plan</DropdownMenuLabel>
             <Link href="/view-plan">
-              <DropdownMenuItem>View plan usage</DropdownMenuItem>
+              <DropdownMenuItem>View plan details</DropdownMenuItem>
             </Link>
+            <Link href={ROUTES.changePlan}>
+              <DropdownMenuItem>Change your plan</DropdownMenuItem>
+            </Link>
+            </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

@@ -14,6 +14,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { FreeToPaidStripeCheckoutForm } from "../_components/FreeToPaidStripeCheckoutForm";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
+import { ROUTES } from "~/app/_domain/routes";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -61,7 +62,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     parsedPaidToTier.id,
   );
   if (exceededFeatures?.length > 0) {
-    return redirect("/change-plan");
+    return redirect(ROUTES.changePlan);
   }
 
   return (

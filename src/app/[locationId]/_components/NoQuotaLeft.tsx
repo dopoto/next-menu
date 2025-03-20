@@ -1,5 +1,6 @@
 import { CloudAlert } from "lucide-react";
 import Link from "next/link";
+import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 
 export function NoQuotaLeft(props: { title: string }) {
@@ -12,7 +13,7 @@ export function NoQuotaLeft(props: { title: string }) {
           Not to worry, you can get more by upgrading your plan
         </p>
         <Button className="w-full" variant="default" asChild>
-          <Link href={"/change-plan"}>Change plan</Link>
+          <Link href={ROUTES.changePlan}>Change plan</Link>
         </Button>
         <Button className="w-full" variant="secondary" asChild>
           <Link href={"/view-plan"}>View plan usage</Link>
