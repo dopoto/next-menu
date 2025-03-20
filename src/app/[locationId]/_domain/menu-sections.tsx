@@ -4,11 +4,12 @@ import {
   ScanQrCode,
 } from "lucide-react";
 import { type ReactNode } from "react";
+import { ApplicationRoute, ROUTES } from "~/app/_domain/routes";
 
 type MenuItem = {
   icon: ReactNode;
   title: string;
-  url: string;
+  route: ApplicationRoute;
   parentId: "dashboard" | "locationManager";
 };
 
@@ -16,19 +17,19 @@ export const menuItems: MenuItem[] = [
   {
     icon: <LayoutDashboard size={16} />,
     title: "Open orders",
-    url: "live",
+    route: ROUTES.live,
     parentId: "dashboard",
   },
   {
     icon: <ChartPie size={16} />,
     title: "Reports",
-    url: "reports",
+    route: ROUTES.reports,
     parentId: "dashboard",
   },
   {
     icon: <ScanQrCode size={16} />,
     title: "Menus",
-    url: "manage/menus",
+    route: ROUTES.menus,
     parentId: "locationManager",
   },
 ];

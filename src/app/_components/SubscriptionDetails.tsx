@@ -24,11 +24,13 @@ export async function SubscriptionDetails() {
     const stripeCustomerId = (await getCustomerByOrgId(orgId))
       .stripeCustomerId as StripeCustomerId;
     const stripeSub = await getActiveStripeSubscription(stripeCustomerId);
-    const subId = stripeSub?.id?.toString() ?? "--";
+    const subPrice = `USD ${parsedTier.monthlyUsdPrice.toFixed(2)}/month`;
     const currentPeriodEnd = stripeSub?.current_period_end
       ? new Date(stripeSub?.current_period_end * 1000).toLocaleDateString()
       : "--";
 
+    //TODO More stripe info - invoices, email ?
+    
     return (
       <OverviewCard
         title={"Subscription"}
@@ -37,8 +39,30 @@ export async function SubscriptionDetails() {
             title: "",
             content: (
               <div className="mt-2 flex flex-col flex-nowrap gap-2">
-                <Labeled label={"Subscription Id"} text={subId} />
-                <Labeled label={"Renewal date"} text={currentPeriodEnd} />
+                <Labeled label={"Price"} text={subPrice} />
+                <Labeled
+                  label={"NEXT BILLING PERIOD START"}
+                  text={currentPeriodEnd}
+                />
+              </div>
+            ),
+          },
+        ]}
+        variant="neutral"
+      />
+    );
+  }
+
+  if (parsedTier && isFreePriceTier(parsedTier.id)) {
+    return (
+      <OverviewCard
+        title={"Subscription"}
+        sections={[
+          {
+            title: "",
+            content: (
+              <div className="mt-2 flex flex-col flex-nowrap gap-2">
+                <Labeled label={"Price"} text="FREE" />
               </div>
             ),
           },

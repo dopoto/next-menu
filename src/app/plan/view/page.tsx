@@ -37,6 +37,9 @@ export default async function ViewPlanPage() {
     <SplitScreenContainer
       mainComponent={
         <>
+          <Suspense fallback="Loading...">
+            <SubscriptionDetails />
+          </Suspense>
           <Suspense
             fallback={
               <OverviewCard
@@ -60,9 +63,6 @@ export default async function ViewPlanPage() {
               ]}
               variant="neutral"
             />
-          </Suspense>
-          <Suspense fallback="Loading...">
-            <SubscriptionDetails />
           </Suspense>
           <div className="flex w-full flex-col gap-2">
             <Link href={ROUTES.my} className="w-full">

@@ -19,7 +19,7 @@ export async function OpenOrdersList( ) {
         title={title}
         secondary={secondary}
         cta={hasAddedMenus ? undefined : "Add menu"}
-        ctaHref={hasAddedMenus ? undefined : ROUTES.manageRelativeMenusAdd}
+        ctaHref={hasAddedMenus ? undefined : ROUTES.menusAdd}
       />
     );
   }

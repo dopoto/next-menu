@@ -10,7 +10,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "dev": "taskkill /F /IM node.exe && cross-env NODE_ENV=development next dev",
+    "dev": "taskkill /F /IM node.exe || echo 'No node to kill' && cross-env NODE_ENV=development next dev",
     "dev-inspect": "cross-env NODE_OPTIONS='--inspect' next dev",
     "dev-turbo": "next dev --turbopack",
     "lint": "next lint",

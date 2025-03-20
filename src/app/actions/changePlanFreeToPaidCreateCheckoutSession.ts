@@ -33,7 +33,8 @@ export const changePlanFreeToPaidCreateCheckoutSession = async (props: {
       `Missing or invalid To tier in props.toTierId: ${props.toTierId}`,
     );
   }
-  const returnUrl = `${env.NEXT_PUBLIC_APP_URL}/change-plan/free-to-paid/post-payment/${parsedPaidToTier.id}?session_id={CHECKOUT_SESSION_ID}`;
+  // TODO put in ROUTES:
+  const returnUrl = `${env.NEXT_PUBLIC_APP_URL}/plan/change/free-to-paid/post-payment/${parsedPaidToTier.id}?session_id={CHECKOUT_SESSION_ID}`;
 
   const session = await stripe.checkout.sessions.create({
     ui_mode: "embedded",

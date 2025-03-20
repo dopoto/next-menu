@@ -28,7 +28,10 @@ export const ROUTES = {
 
   // MANAGE
   //manager: (locationId: LocationId) => `/manage/${locationId}`,
-  manageRelativeMenusAdd: "manage/menus/add", // TODO
+  live: "live", // TODO
+  reports: "reports", // TODO
+  menus: "menus", // TODO
+  menusAdd: "menus/add", // TODO
 
   // PLAN
   changePlan: "/plan/change",
