@@ -30,7 +30,7 @@ const formDataSchema = z.object({
   stripeSessionId: z.string(),
 });
 
-export const onboardingAddLocation = async (formData: FormData) => {
+export const onboardCreateCustomer = async (formData: FormData) => {
   const { userId, orgId } = await auth();
 
   // TODO Validate user role
