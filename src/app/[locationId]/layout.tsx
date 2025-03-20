@@ -18,10 +18,9 @@ export default async function Layout({
 }: {
   children: React.ReactNode;
 }) {
-  // TODO Revisit
-  //   if ((await auth()).sessionClaims?.metadata.onboardingComplete === true) {
-  //     redirect("/onboarded");
-  //   }
+  // TODO all basic checks  
+  // valid stripe and clerk?
+  // valid location id, matches claims?
 
   return (
     <SidebarProvider>

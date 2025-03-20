@@ -4,13 +4,8 @@ import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { Button } from "~/components/ui/button";
 
-export async function LocationCreated(props: { stripeSessionId?: string }) {
+export async function LocationCreated() {
   const { sessionClaims } = await auth();
-
-  const nextStepRoute = props.stripeSessionId
-    ? `/onboard/overview?session_id=${props.stripeSessionId}`
-    : `/onboard/overview`;
-
   return (
     <>
       <OverviewCard
@@ -31,7 +26,7 @@ export async function LocationCreated(props: { stripeSessionId?: string }) {
         variant="neutral"
       />
       <div className="flex w-full flex-col gap-2">
-        <Link href={nextStepRoute} className="w-full">
+        <Link href={`/onboard/overview`} className="w-full">
           <Button variant="outline" className="w-full">
             Go to next step
           </Button>

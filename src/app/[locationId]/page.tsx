@@ -1,4 +1,5 @@
-export default async function MenusPage() {
-  // TODO content
-  return <>empty</>;
+import { redirect } from "next/navigation";
+
+export default async function Page() {
+  redirect("/my")
 }

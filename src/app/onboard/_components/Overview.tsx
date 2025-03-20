@@ -1,18 +1,18 @@
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
+import { Suspense } from "react";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
-import { type PublicStripeSubscriptionDetails } from "~/app/_domain/stripe";
+import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Button } from "~/components/ui/button";
 
 export const Overview = async (props: {
   claims: CustomJwtSessionClaims;
-  publicStripeSubscriptionDetails: PublicStripeSubscriptionDetails;
 }) => {
   const priceTierId = props.claims?.metadata?.tier;
   const parsedTier = getValidPriceTier(priceTierId);
-  const user = await currentUser()
+  const user = await currentUser();
   return (
     <div className="flex w-full flex-col gap-1">
       <OverviewCard
@@ -67,32 +67,9 @@ export const Overview = async (props: {
         ]}
         variant="neutral"
       />
-      {props.publicStripeSubscriptionDetails && (
-        <OverviewCard
-          title={"Your subscription details"}
-          sections={[
-            {
-              title: "",
-              content: (
-                <div className="mt-2 flex flex-col flex-nowrap gap-2">
-                  <Labeled
-                    label={"Subscription Id"}
-                    text={props.publicStripeSubscriptionDetails.id?.toString()}
-                  />
-                  <Labeled
-                    label={"Renewal date"}
-                    text={new Date(
-                      props.publicStripeSubscriptionDetails.current_period_end *
-                        1000,
-                    ).toLocaleDateString()}
-                  />
-                </div>
-              ),
-            },
-          ]}
-          variant="neutral"
-        />
-      )}
+      <Suspense>
+        <SubscriptionDetails />
+      </Suspense>
       <div className="flex flex-col gap-6">
         <Link className="w-full" href={"/my"}>
           <Button className="w-full">Take me to my dashboard</Button>

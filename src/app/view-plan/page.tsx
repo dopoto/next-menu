@@ -19,6 +19,7 @@ import { type PriceTier } from "../_domain/price-tiers";
 import { type PriceTierFeatureUsage } from "../_domain/price-tier-features";
 import { getAvailableQuota } from "../_utils/quota-utils.server-only";
 import { ROUTES } from "../_domain/routes";
+import { SubscriptionDetails } from "../_components/SubscriptionDetails";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
@@ -60,13 +61,9 @@ export default async function ViewPlanPage() {
               variant="neutral"
             />
           </Suspense>
-          {/* <Suspense fallback="Loading...">
-            <OverviewCard
-              title={"Plan billing"}
-              sections={[{ title: "", content: <PlanBilling /> }]}
-              variant="neutral"
-            />
-          </Suspense> */}
+          <Suspense fallback="Loading...">
+            <SubscriptionDetails />
+          </Suspense>
           <div className="flex w-full flex-col gap-2">
             <Link href="/my" className="w-full">
               <Button variant="outline" className="w-full">
@@ -93,7 +90,12 @@ async function PlanUsage(props: { tier: PriceTier }) {
     await Promise.all(
       featuresInCurrentTier.map(async (feature) => {
         const available = await getAvailableQuota(feature.id);
-        return { id: feature.id, planQuota: feature.quota, available, used: feature.quota - available };
+        return {
+          id: feature.id,
+          planQuota: feature.quota,
+          available,
+          used: feature.quota - available,
+        };
       }),
     );
 

@@ -46,7 +46,7 @@ export default async function OnboardAddLocationPage(props: {
 
   let mainComponent;
   if (sessionClaims.metadata.currentLocationId) {
-    mainComponent = <LocationCreated stripeSessionId={stripeSessionId} />;
+    mainComponent = <LocationCreated />;
   } else if (isFreePriceTier(parsedTierId)) {
     mainComponent = <AddLocation priceTierId="start" />;
   } else {
