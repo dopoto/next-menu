@@ -13,6 +13,11 @@ import {
 import { OrgCreated } from "../_components/OrgCreated";
 import * as React from "react";
 import { ROUTES, ApplicationRoute } from "~/app/_domain/routes";
+import { APP_CONFIG } from "~/app/_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Onboard > Add organization`,
+}
 
 export const dynamic = "force-dynamic";
 

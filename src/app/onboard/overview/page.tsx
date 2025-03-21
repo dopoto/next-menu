@@ -6,6 +6,11 @@ import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Overview } from "../_components/Overview";
 import { ROUTES } from "~/app/_domain/routes";
 import { SuccessAnimation } from "~/app/_components/SuccessAnimation";
+import { APP_CONFIG } from "~/app/_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Onboard > Overview`,
+}
 
 export default async function OverviewPage() {
   const { userId, sessionClaims } = await auth();

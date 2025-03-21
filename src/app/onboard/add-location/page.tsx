@@ -15,6 +15,11 @@ import { AddLocation } from "../_components/AddLocation";
 import { LocationCreated } from "../_components/LocationCreated";
 import * as React from "react";
 import { ROUTES } from "~/app/_domain/routes";
+import { APP_CONFIG } from "~/app/_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Onboard > Add location`,
+}
 
 export const dynamic = "force-dynamic";
 

@@ -1,6 +1,11 @@
 import { SignOutButton } from "@clerk/nextjs";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { Button } from "~/components/ui/button";
+import { APP_CONFIG } from "../_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Sign out`,
+}
 
 export default async function SignOutPage() {
   return (

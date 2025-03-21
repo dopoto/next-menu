@@ -4,6 +4,11 @@ import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { OnboardingStepper } from "../../onboard/_components/OnboardingStepper";
 import { redirect } from "next/navigation";
 import { ROUTES } from "~/app/_domain/routes";
+import { APP_CONFIG } from "~/app/_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Sign up`,
+}
 
 type SearchParams = Promise<Record<"tier", string | undefined>>;
 
