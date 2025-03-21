@@ -18,7 +18,7 @@ export const LandingHero: React.FC = () => {
               congue nisi id lobortis. Nullam pharetra orci eros, id interdum
               ipsum sagittis ac.
             </p>
-            <div className="mt-4 h-[36px] sm:mx-auto sm:max-w-lg sm:text-center lg:mx-0 lg:text-left">
+            <div className="mt-4 h-[36px] sm:mx-auto sm:max-w-[270px] sm:text-center lg:mx-0 lg:text-left">
               <GetStartedCta secondaryText="Start for free now - no credit card required!" variant={"default"} />
             </div>
           </div>

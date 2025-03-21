@@ -39,7 +39,8 @@ export const locations = createTable(
   "location",
   {
     id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
-    name: varchar("name", { length: 256 }),
+    name: varchar("name", { length: 50 }),
+    slug: varchar("slug", { length: 50 }),
     orgId: varchar("org_id", { length: 256 })
       .notNull()
       .references(() => customers.orgId),
