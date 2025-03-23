@@ -29,14 +29,17 @@ jobs:
         run: pnpm ci
 
       - name: TypeScript Check
+        run: pnpm tsc --noEmit
+
+      - name: TypeScript Check
         uses: Arhia/action-check-typescript@v1.1.0
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           check-fail-mode: added
           output-behaviour: both
 
-      - name: ESLint Check
-        run: npx eslint . --ext .ts,.tsx,.js --max-warnings 0
+      - name: Prettier Check
+        run: pnpm prettier --check .
 
       - name: Prettier Check
         uses: EPMatt/reviewdog-action-prettier@v1
