@@ -1,0 +1,44 @@
+name: Code Quality Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+    types: [opened, synchronize, reopened]
+
+concurrency:
+  group: ${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code-checks:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.x
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm ci
+
+      - name: TypeScript Check
+        uses: Arhia/action-check-typescript@v1.1.0
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          check-fail-mode: added
+          output-behaviour: both
+
+      - name: ESLint Check
+        run: npx eslint . --ext .ts,.tsx,.js --max-warnings 0
+
+      - name: Prettier Check
+        uses: EPMatt/reviewdog-action-prettier@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: github-check
+          filter_mode: added
+          fail_on_error: true
