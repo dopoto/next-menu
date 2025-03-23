@@ -1,14 +1,17 @@
-'use client'
+"use client";
 
-import { useActionState } from 'react'
-import { mergeForm, useForm, useTransform } from '@tanstack/react-form'
-import { initialFormState } from '@tanstack/react-form/nextjs'
-import { useStore } from '@tanstack/react-store'
-import { addLocationFormOptions } from '~/app/_domain/locations'
-import someAction from '~/app/actions/onboardCreateCustomer'
-import { Button } from '~/components/ui/button'
-import { PriceTierId } from '~/app/_domain/price-tiers'
- 
+import * as React from "react";
+import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { onboardCreateCustomer } from "../../actions/onboardCreateCustomer";
+import { useState } from "react";
+import { cn } from "~/lib/utils";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Label } from "~/components/ui/label";
+import { type PriceTierId } from "~/app/_domain/price-tiers";
+import { OverviewCard } from "~/app/_components/OverviewCard";
+
 export const AddLocation = ({
   priceTierId,
   stripeSessionId,
@@ -18,60 +21,67 @@ export const AddLocation = ({
   stripeSessionId?: string;
   className?: string;
 }) => {
-  const [state, action] = useActionState(someAction, initialFormState)
+  const [errors, setErrors] = useState<string[]>();
+  const { user } = useUser();
+  const router = useRouter();
 
-  const form = useForm({
-    ...addLocationFormOptions,
-    transform: useTransform(
-      (baseForm) => mergeForm(baseForm, state ?? {}),
-      [state],
-    ),
-  })
-
- 
-  const formErrors = useStore(form.store, (formState) => formState.errors)
+  const handleSubmit = async (formData: FormData) => {
+    const res = await onboardCreateCustomer(formData);
+    if (res?.message) {
+      // Reloads the user's data from the Clerk API
+      await user?.reload();
+      router.push(`/onboard/overview`);
+    }
+    if (res?.errors) {
+      setErrors(res?.errors);
+    console.log(res?.eventId); //TODO
+    }
+  };
 
   return (
-    <form action={action as never} onSubmit={() => form.handleSubmit()}>
-      {formErrors.map((error) => (
-        <p key={error as unknown as string}>{error}</p>
-      ))}
+    <div className={cn("flex w-full flex-col gap-6", className)}>
+      <OverviewCard
+        title={"Add a location"}
+        subtitle={`This can be changed anytime later from your account.`}
+        sections={[
+          {
+            title: "",
+            content: (
+              <form action={handleSubmit}>
+                <input type="hidden" name="priceTierId" value={priceTierId} />
+                <input
+                  type="hidden"
+                  name="stripeSessionId"
+                  value={stripeSessionId}
+                />
+                <div className="flex flex-col gap-6 w-full mt-6">
+                  <div className="grid gap-2">
+                    <Label htmlFor="locationName">The name of your restaurant, pub or bar</Label>
+                    <Input
+                      id="locationName"
+                      name="locationName"
+                      placeholder="My Fancy Restaurant"
+                      required
+                    />
+                  </div>
+                  {errors && errors.length > 0 && (
+                    <div className="text-red-600">
+                      {errors.map((err) => (
+                        <p key={err}>{err}</p>
+                      ))}
+                    </div>
+                  )}
 
-      <form.Field
-        name="locationName"
-        validators={{
-          onSubmit: async ({ value }) => {
-            // Do something with form data
-            console.log(value)
-            },
-          onChange: ({ value }) =>
-            value === 'y' ? 'Client validation: You must be at least 8' : undefined,
-        }}
-      >
-        {(field) => {
-          return (
-            <div>
-              <input
-                name="locationName"                
-                value={field.state.value}
-                onChange={(e) => field.handleChange(e.target.value)}
-              />
-              {field.state.meta.errors.map((error) => (
-                <p key={error as string}>{error?.toString()}</p>
-              ))}
-            </div>
-          )
-        }}
-      </form.Field>
-      <form.Subscribe
-        selector={(formState) => [formState.canSubmit, formState.isSubmitting]}
-      >
-        {([canSubmit, isSubmitting]) => (
-          <Button type="submit" disabled={!canSubmit}>
-            {isSubmitting ? '...' : 'Submit'}
-          </Button>
-        )}
-      </form.Subscribe>
-    </form>
-  )
-}
+                  <Button type="submit" className="w-full">
+                    Submit
+                  </Button>
+                </div>
+              </form>
+            ),
+          },
+        ]}
+        variant={"neutral"}
+      />
+    </div>
+  );
+};
