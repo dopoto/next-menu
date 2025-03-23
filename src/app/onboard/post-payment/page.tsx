@@ -1,8 +1,6 @@
-import { auth } from "@clerk/nextjs/server";
 import Stripe from "stripe";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { env } from "~/env";
-import { updateCustomerByClerkUserId } from "~/server/queries";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
 import { Redirecting } from "../_components/Redirecting";
 import { cookies } from "next/headers";
@@ -10,9 +8,6 @@ import { redirect } from "next/navigation";
 import { CookieKey } from "~/app/_domain/cookies";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
 import { ROUTES } from "~/app/_domain/routes";
-
-const stripeApiKey = env.STRIPE_SECRET_KEY;
-const stripe = new Stripe(stripeApiKey);
 
 type SearchParams = Promise<
   Record<"session_id", string | string[] | undefined>

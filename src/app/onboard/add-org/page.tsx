@@ -7,12 +7,11 @@ import { cookies } from "next/headers";
 import { CookieKey } from "~/app/_domain/cookies";
 import {
   getValidPriceTier,
-  isFreePriceTier,
   isPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
 import * as React from "react";
-import { ROUTES, ApplicationRoute } from "~/app/_domain/routes";
+import { ROUTES, type ApplicationRoute } from "~/app/_domain/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
