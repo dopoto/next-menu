@@ -5,7 +5,7 @@ import { Reports } from "./_components/Reports";
 
 type Params = Promise<{ locationId: string }>;
 
- export default async function ReportsPage(props: { params: Params }) {
+export default async function ReportsPage(props: { params: Params }) {
   const params = await props.params;
 
   //TODO org checks
@@ -14,10 +14,10 @@ type Params = Promise<{ locationId: string }>;
   if (!validationResult.success) {
     throw new Error(`Invalid location: ${params.locationId}`);
   }
- 
+
   return (
     <Suspense fallback={<LoadingSection />}>
-      <Reports   />
+      <Reports />
     </Suspense>
   );
 }

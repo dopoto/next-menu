@@ -1,18 +1,22 @@
 import { auth } from "@clerk/nextjs/server";
-import "server-only"; 
+import "server-only";
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
 import { eq } from "drizzle-orm";
 import { type LocationId } from "~/app/[locationId]/_domain/locations";
 
-export async function addCustomer(clerkUserId: string, orgId: string, stripeCustomerId?: string) {
+export async function addCustomer(
+  clerkUserId: string,
+  orgId: string,
+  stripeCustomerId?: string,
+) {
   // TODO Checks ? auth etc
   const [insertedCustomer] = await db
     .insert(customers)
     .values({
       clerkUserId: clerkUserId,
       orgId: orgId,
-      stripeCustomerId: stripeCustomerId
+      stripeCustomerId: stripeCustomerId,
     })
     .returning({ id: customers.id });
   return insertedCustomer;

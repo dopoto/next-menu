@@ -1,8 +1,8 @@
 import { type ReactNode } from "react";
 
-export type  Step = {
+export type Step = {
   id: string;
-  status: 'completed' | 'active' | 'pending';
+  status: "completed" | "active" | "pending";
   icon: ReactNode;
   title: string | ReactNode;
 };
@@ -23,7 +23,7 @@ export function MultiStepper(props: { steps: Array<Step> }) {
 }
 
 const MultistepperStep = (props: {
-  step:  Step;
+  step: Step;
   isFirst: boolean;
   isLast: boolean;
 }) => {
@@ -39,7 +39,7 @@ const MultistepperStep = (props: {
       </div>
       <div>
         <h3
-          className={`mt-1 text-sm pb-3 text-gray-800 dark:text-gray-100 ${props.step.status === 'active' ? "font-medium" : "font-light"} `}
+          className={`mt-1 pb-3 text-sm text-gray-800 dark:text-gray-100 ${props.step.status === "active" ? "font-medium" : "font-light"} `}
         >
           {props.step.title}
         </h3>
@@ -88,4 +88,3 @@ export const CheckSVG = () => (
     />
   </svg>
 );
-

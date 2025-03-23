@@ -1,11 +1,11 @@
 "use client";
 
-import React from 'react'
-import { useWindowSize } from 'react-use'
-import Confetti from 'react-confetti'
+import React from "react";
+import { useWindowSize } from "react-use";
+import Confetti from "react-confetti";
 
 export const SuccessAnimation = () => {
-  const { width, height } = useWindowSize()
+  const { width, height } = useWindowSize();
   return (
     <Confetti
       width={width}
@@ -13,5 +13,5 @@ export const SuccessAnimation = () => {
       numberOfPieces={180}
       recycle={false}
     />
-  )
+  );
 };

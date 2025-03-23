@@ -1,3 +1,3 @@
-import AddMenuModal from '../add/page';
+import AddMenuModal from "../add/page";
 
-export default AddMenuModal; 
+export default AddMenuModal;

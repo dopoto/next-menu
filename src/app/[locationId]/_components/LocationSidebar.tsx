@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 import {
   Sidebar,
   SidebarHeader,
@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { menuItems } from "../_domain/menu-sections";
 import { SidebarOrganizationManager } from "./SidebarOrganizationManager";
+import { type ApplicationRoute } from "~/app/_domain/routes";
 
 export function LocationSidebar({
   ...props
@@ -28,13 +29,13 @@ export function LocationSidebar({
   const pathname = usePathname();
   const { locationId } = params as { locationId: string };
 
-  const isActive = (url: string) => {
-    const fullPath = `/${locationId}/${url}`;
+  const isActive = (routeSegment: ApplicationRoute) => {
+    const fullPath = `/${locationId}/${routeSegment.toString()}`;
     return pathname === fullPath || `${pathname}/` === fullPath;
   };
 
-  const buildUrl = (url: string) => {
-    return `/${locationId}/${url}`;
+  const buildUrl = (routeSegment: ApplicationRoute) => {
+    return `/${locationId}/${routeSegment.toString()}`;
   };
 
   const dashboardMenuSection = menuItems.filter(

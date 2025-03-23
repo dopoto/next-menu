@@ -1,10 +1,6 @@
-import {
-  ChartPie,
-  LayoutDashboard,
-  ScanQrCode,
-} from "lucide-react";
+import { ChartPie, LayoutDashboard, ScanQrCode } from "lucide-react";
 import { type ReactNode } from "react";
-import { ApplicationRoute, ROUTES } from "~/app/_domain/routes";
+import { type ApplicationRoute, ROUTES } from "~/app/_domain/routes";
 
 type MenuItem = {
   icon: ReactNode;

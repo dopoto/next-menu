@@ -110,7 +110,7 @@ export default async function UpgradePostPaymentPage(props: {
   await stripe.subscriptions.update(subscriptionId, {
     items: [
       {
-        id: (await getActiveSubscriptionItemId(subscription)),
+        id: await getActiveSubscriptionItemId(subscription),
         price: parsedPaidToTier.stripePriceId,
       },
     ],

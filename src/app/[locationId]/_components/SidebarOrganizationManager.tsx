@@ -70,12 +70,12 @@ export function SidebarOrganizationManager() {
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuLabel>Your plan</DropdownMenuLabel>
-            <Link href={ROUTES.viewPlan}>
-              <DropdownMenuItem>View plan details</DropdownMenuItem>
-            </Link>
-            <Link href={ROUTES.changePlan}>
-              <DropdownMenuItem>Change your plan</DropdownMenuItem>
-            </Link>
+              <Link href={ROUTES.viewPlan}>
+                <DropdownMenuItem>View plan details</DropdownMenuItem>
+              </Link>
+              <Link href={ROUTES.changePlan}>
+                <DropdownMenuItem>Change your plan</DropdownMenuItem>
+              </Link>
             </DropdownMenuGroup>
           </DropdownMenuContent>
         </DropdownMenu>

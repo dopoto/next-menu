@@ -1,14 +1,12 @@
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Fireworks } from "~/app/_components/SuccessAnimation";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
 import { ROUTES } from "~/app/_domain/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Button } from "~/components/ui/button";
-
 
 // TODO Location in overview?
 
@@ -17,7 +15,7 @@ export const Overview = async (props: { claims: CustomJwtSessionClaims }) => {
   const parsedTier = getValidPriceTier(priceTierId);
   const user = await currentUser();
   return (
-    <div className="flex w-full flex-col gap-1">      
+    <div className="flex w-full flex-col gap-1">
       <OverviewCard
         title={"Account"}
         sections={[

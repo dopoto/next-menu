@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React from "react";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 import { dark } from "@clerk/themes";
@@ -33,7 +33,7 @@ function ClerkThemeWrapper({ children }: { children: React.ReactNode }) {
   }, [theme]);
 
   return (
-    <ClerkProvider appearance={{ baseTheme: clerkTheme }} afterSignOutUrl="/" >
+    <ClerkProvider appearance={{ baseTheme: clerkTheme }} afterSignOutUrl="/">
       {children}
     </ClerkProvider>
   );

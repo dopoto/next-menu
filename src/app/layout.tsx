@@ -1,5 +1,5 @@
 import "~/styles/globals.css";
-import 'react-loading-skeleton/dist/skeleton.css'
+import "react-loading-skeleton/dist/skeleton.css";
 import { type Metadata } from "next";
 import { type ReactNode } from "react";
 import { Toaster } from "~/components/ui/toaster";
@@ -26,7 +26,7 @@ export default function RootLayout(props: {
           {props.modal}
           <div id="modal-root" />
           <Toaster />
-          <GoogleAnalytics gaId={env.NEXT_PUBLIC_GOOGLE_TAG ?? ''} />
+          <GoogleAnalytics gaId={env.NEXT_PUBLIC_GOOGLE_TAG ?? ""} />
         </Providers>
       </body>
     </html>

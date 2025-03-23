@@ -16,6 +16,11 @@ import { obj2str } from "~/app/_utils/string-utils";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
+import { APP_CONFIG } from "~/app/_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Change Plan > Review`,
+};
 
 export type Params = Promise<{ tier: string }>;
 

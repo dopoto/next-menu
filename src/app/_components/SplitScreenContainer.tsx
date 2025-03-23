@@ -34,19 +34,19 @@ export function SplitScreenContainer(props: {
               />
             </Link>
             <SignedIn>
-              <div className="flex items-end ml-auto">
-              <UserButton
-                userProfileMode="navigation"
-                userProfileUrl="/my"
-                appearance={{
-                  elements: {
-                    userButtonAvatarBox: {
-                      width: "48px",
-                      height: "48px",
+              <div className="ml-auto flex items-end">
+                <UserButton
+                  userProfileMode="navigation"
+                  userProfileUrl="/my"
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: {
+                        width: "48px",
+                        height: "48px",
+                      },
                     },
-                  },
-                }}
-              />
+                  }}
+                />
               </div>
             </SignedIn>
           </nav>

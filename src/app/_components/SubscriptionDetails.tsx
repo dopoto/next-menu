@@ -20,6 +20,17 @@ export async function SubscriptionDetails() {
   const tierId = sessionClaims?.metadata.tier;
   const parsedTier = getValidPriceTier(tierId);
 
+  //TODO
+  /**
+   *    PLAN
+   *
+   * Name \: premuim
+   * Price
+   * Next billing period/ if paid
+   * Organization
+   *
+   */
+
   if (parsedTier && isPaidPriceTier(parsedTier.id)) {
     const stripeCustomerId = (await getCustomerByOrgId(orgId))
       .stripeCustomerId as StripeCustomerId;
@@ -30,7 +41,7 @@ export async function SubscriptionDetails() {
       : "--";
 
     //TODO More stripe info - invoices, email ?
-    
+
     return (
       <OverviewCard
         title={"Subscription"}

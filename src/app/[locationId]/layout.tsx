@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   SidebarInset,
   SidebarProvider,
@@ -11,15 +11,15 @@ import { PageBreadcrumb } from "./_components/PageBreadcrumb";
 import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
 import { APP_CONFIG } from "../_config/app-config";
-import { AppVersion } from '../_components/AppVersion';
-import { ROUTES } from '../_domain/routes';
+import { AppVersion } from "../_components/AppVersion";
+import { ROUTES } from "../_domain/routes";
 
 export default async function Layout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // TODO all basic checks  
+  // TODO all basic checks
   // valid stripe and clerk?
   // valid location id, matches claims?
 

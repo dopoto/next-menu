@@ -1,4 +1,5 @@
 export const APP_CONFIG = {
-    contactEmail: "contact@yourcompany.com",
-    supportEmail: "support@yourcompany.com"
-}
+  appName: "The Menu",
+  contactEmail: "contact@yourcompany.com",
+  supportEmail: "support@yourcompany.com",
+};

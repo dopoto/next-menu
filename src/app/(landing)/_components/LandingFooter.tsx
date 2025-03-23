@@ -18,7 +18,7 @@ export function LandingFooter() {
   return (
     <footer className="bg-background">
       {/* Main Footer Section */}
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 bg-background">
+      <div className="bg-background mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-6">
           {/* Company Info */}
           <div className="lg:col-span-2">
@@ -154,11 +154,11 @@ export function LandingFooter() {
       </div>
 
       {/* Bottom Footer Section */}
-      <div className="border-t border-border bg-background">
+      <div className="border-border bg-background border-t">
         <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-            <div className="text-sm ">
-            <AppVersion />
+            <div className="text-sm">
+              <AppVersion />
               {`© ${currentYear} All rights reserved.`}
             </div>
             <div className="ml-auto">

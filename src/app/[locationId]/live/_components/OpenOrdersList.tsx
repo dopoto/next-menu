@@ -3,8 +3,8 @@ import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
 import { ROUTES } from "~/app/_domain/routes";
 import { getUsedQuota } from "~/app/_utils/quota-utils.server-only";
 
-export async function OpenOrdersList( ) {
-  //TODO: Fetch actual open orders  
+export async function OpenOrdersList() {
+  //TODO: Fetch actual open orders
   const items = await Promise.resolve([]);
 
   if (items.length === 0) {

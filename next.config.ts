@@ -33,7 +33,11 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
 
-  transpilePackages: ["@opentelemetry/instrumentation", "import-in-the-middle", "require-in-the-middle"],
+  transpilePackages: [
+    "@opentelemetry/instrumentation",
+    "import-in-the-middle",
+    "require-in-the-middle",
+  ],
 
   async headers() {
     return [

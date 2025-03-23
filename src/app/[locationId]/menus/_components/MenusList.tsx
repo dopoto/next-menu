@@ -6,7 +6,7 @@ import MenuCard from "./MenuCard";
 import { ROUTES } from "~/app/_domain/routes";
 
 export async function MenusList(props: { locationId: LocationId }) {
-  const items = await getMenusByLocation(props.locationId)
+  const items = await getMenusByLocation(props.locationId);
 
   if (items.length === 0) {
     return (

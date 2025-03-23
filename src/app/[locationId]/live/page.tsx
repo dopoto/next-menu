@@ -1,4 +1,4 @@
-import { Suspense } from "react"; 
+import { Suspense } from "react";
 import { locationIdSchema } from "../_domain/locations";
 import LoadingSection from "../_components/LoadingSection";
 import { OpenOrdersList } from "./_components/OpenOrdersList";
@@ -15,7 +15,7 @@ export default async function OpenOrdersPage(props: { params: Params }) {
 
   return (
     <Suspense fallback={<LoadingSection />}>
-      <OpenOrdersList   />
+      <OpenOrdersList />
     </Suspense>
   );
 }

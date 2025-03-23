@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 
-export function BoxWarning(props: { title: string; ctas?: ReactNode[]; }) {
+export function BoxWarning(props: { title: string; ctas?: ReactNode[] }) {
   return (
     <div className="shadow" role="alert">
       <div className="flex">

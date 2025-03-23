@@ -34,7 +34,7 @@ export const AddLocation = ({
     }
     if (res?.errors) {
       setErrors(res?.errors);
-    console.log(res?.eventId); //TODO
+      console.log(res?.eventId); //TODO
     }
   };
 
@@ -54,9 +54,11 @@ export const AddLocation = ({
                   name="stripeSessionId"
                   value={stripeSessionId}
                 />
-                <div className="flex flex-col gap-6 w-full mt-6">
+                <div className="mt-6 flex w-full flex-col gap-6">
                   <div className="grid gap-2">
-                    <Label htmlFor="locationName">The name of your restaurant, pub or bar</Label>
+                    <Label htmlFor="locationName">
+                      The name of your restaurant, pub or bar
+                    </Label>
                     <Input
                       id="locationName"
                       name="locationName"

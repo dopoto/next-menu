@@ -7,6 +7,11 @@ import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
 import { CheckoutForm } from "../_components/CheckoutForm";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
 import { ROUTES } from "~/app/_domain/routes";
+import { APP_CONFIG } from "~/app/_config/app-config";
+
+export const metadata = {
+  title: `${APP_CONFIG.appName} - Onboard > Payment`,
+};
 
 export default async function OnboardPaymentPage() {
   const { userId, orgId } = await auth();

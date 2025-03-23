@@ -25,7 +25,7 @@ export type CardCustomizations = {
 export function PriceTierCard(props: {
   tier: PriceTier;
   cardCustomizations?: CardCustomizations;
-  exceededFeatures?:  Array<ExceededFeature>;
+  exceededFeatures?: Array<ExceededFeature>;
   footerCta?: ReactNode;
 }) {
   const { name, description, monthlyUsdPrice, features } = props.tier;
@@ -133,10 +133,14 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
 
 const getExceededFeatureRow = (tier: PriceTier, feature: ExceededFeature) => {
   const featureDetails = priceTierFeatures[feature.id];
- 
+
   return (
     <div className="flex flex-row items-center gap-1 text-red-600 dark:text-red-400">
-     <CircleXIcon strokeWidth={3} className="size-4 stroke-red-600 dark:stroke-red-400" /> 0 {featureDetails.resourcePluralName} (you are using {feature.used})
+      <CircleXIcon
+        strokeWidth={3}
+        className="size-4 stroke-red-600 dark:stroke-red-400"
+      />{" "}
+      0 {featureDetails.resourcePluralName} (you are using {feature.used})
     </div>
   );
 };
