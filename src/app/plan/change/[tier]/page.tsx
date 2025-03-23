@@ -20,8 +20,7 @@ import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Change Plan > Review`,
-}
-
+};
 
 export type Params = Promise<{ tier: string }>;
 

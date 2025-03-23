@@ -11,8 +11,8 @@ export default async function AddMenuPage(props: { params: Params }) {
     // TODO Test
     throw new Error("Location issue");
   }
- 
-  const availableQuota = await getAvailableQuota('menus');
+
+  const availableQuota = await getAvailableQuota("menus");
 
   return <AddMenuDialog availableQuota={availableQuota} />;
 }

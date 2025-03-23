@@ -8,8 +8,8 @@ export async function SignUpPlanSelector() {
   return (
     <div className="flex flex-col gap-3">
       <p className="pb-4 text-sm">
-          You can upgrade, downgrade or cancel your plan instantly anytime later.
-        </p>
+        You can upgrade, downgrade or cancel your plan instantly anytime later.
+      </p>
       {Object.entries(priceTiers).map(([, tier]) => {
         if (!tier.isPublic) {
           return null;

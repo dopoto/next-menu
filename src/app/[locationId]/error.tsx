@@ -9,10 +9,8 @@ import { generateErrorId, logException } from "~/app/_utils/error-logger-utils";
 
 export default function ManageError({
   error,
-   
 }: {
   error: ErrorBoundaryException;
-       
 }) {
   const errorTypeId: ErrorTypeId = "ORG_MANAGER_ERROR";
   const errorClientSideId = generateErrorId();

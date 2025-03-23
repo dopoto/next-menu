@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 
@@ -13,15 +13,13 @@ export default function ProcessingPlanChange({ progress }: LoadingProps) {
       subtitle="This should be done in a sec..."
       mainComponent={
         <div className="w-full space-y-4">
-          <div className="h-2 bg-gray-200 rounded-full">
-            <div 
-              className="h-2 bg-blue-600 rounded-full transition-all duration-300" 
+          <div className="h-2 rounded-full bg-gray-200">
+            <div
+              className="h-2 rounded-full bg-blue-600 transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-center text-gray-600">
-            Progress: {progress}%
-          </p>
+          <p className="text-center text-gray-600">Progress: {progress}%</p>
         </div>
       }
     />

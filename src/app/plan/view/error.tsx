@@ -5,7 +5,7 @@ import { ErrorCard } from "~/app/_components/ErrorCard";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { ErrorBoundaryException, ErrorTypeId } from "~/app/_domain/errors";
 import { generateErrorId, logException } from "~/app/_utils/error-logger-utils";
- 
+
 export default function ViewPlanError({
   error,
 }: {

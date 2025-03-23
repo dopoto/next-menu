@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import { Card } from "~/components/ui/card";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { sections } from "../../_domain/landing-content";
@@ -33,16 +33,16 @@ const testimonials: Testimonial[] = [
     company: "Greystone Inc",
   },
 ];
- const { label, title, secondary } = sections.testimonials!.header;
+const { label, title, secondary } = sections.testimonials!.header;
 
 export const LandingTestimonials: React.FC = () => {
   return (
     <div
-      className="bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950 py-16 scroll-mt-[100px]"
+      className="scroll-mt-[100px] bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 py-16 dark:from-indigo-950 dark:via-purple-950 dark:to-pink-950"
       id="testimonials"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-         <LandingSectionTitle
+        <LandingSectionTitle
           label={label}
           title={title}
           secondary={secondary}
@@ -51,10 +51,12 @@ export const LandingTestimonials: React.FC = () => {
           {testimonials.map((testimonial, index) => (
             <Card
               key={index}
-              className="flex h-full flex-col rounded-xl bg-card p-6 shadow-sm"
+              className="bg-card flex h-full flex-col rounded-xl p-6 shadow-sm"
             >
               <div className="flex-grow">
-                <p className="text-gray-600 italic">&quot;{testimonial.content}&quot;</p>
+                <p className="text-gray-600 italic">
+                  &quot;{testimonial.content}&quot;
+                </p>
               </div>
               <div className="mt-6 flex items-center">
                 <div className="ml-3">

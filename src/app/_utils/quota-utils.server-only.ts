@@ -4,7 +4,7 @@ import {
   type PriceTierFeatureId,
 } from "../_domain/price-tier-features";
 import { auth } from "@clerk/nextjs/server";
-import {  getValidPriceTier } from "./price-tier-utils";
+import { getValidPriceTier } from "./price-tier-utils";
 import { obj2str } from "./string-utils";
 
 /**

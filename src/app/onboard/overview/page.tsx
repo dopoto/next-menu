@@ -10,7 +10,7 @@ import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Onboard > Overview`,
-}
+};
 
 export default async function OverviewPage() {
   const { userId, sessionClaims } = await auth();

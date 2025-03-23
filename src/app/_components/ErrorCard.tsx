@@ -12,7 +12,7 @@ export function ErrorCard(props: {
   const ctas = errorTypes[props.errorTypeId]?.ctas ?? [];
 
   return (
-    <div className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-dashed border-red-300  p-4 text-xs">
+    <div className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-dashed border-red-300 p-4 text-xs">
       <div className="flex flex-col justify-center gap-1">
         <div className="flex justify-center">
           <CloudAlert strokeWidth={2} className="size-8 stroke-red-500" />
@@ -42,14 +42,14 @@ export function ErrorCard(props: {
         </Link>
       ))}
       <div className="text-sm font-semibold">Additional info</div>
-      <div >
+      <div>
         {`The details of this error have been logged automatically and we have been notified 
         about it, so you don't need to report it.`}
       </div>
       <div className="text-sm font-semibold">
         Request support with this error
       </div>
-      <div >
+      <div>
         {`If you want to send an inquiry about this issue to our customer support, please use the link below.`}
       </div>
 

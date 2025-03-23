@@ -53,21 +53,19 @@ export function SidebarLocationManager() {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem> */}
-            <SidebarMenuItem>
+      <SidebarMenuItem>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
-              <div className="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-                {locationName.slice(0,3).toLocaleUpperCase()}
+              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
+                {locationName.slice(0, 3).toLocaleUpperCase()}
               </div>
               <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="text-tiny truncate antialiased">
-                    LOCATION
-                  </span>
-                  <span className="truncate font-semibold">{locationName}</span>
+                <span className="text-tiny truncate antialiased">LOCATION</span>
+                <span className="truncate font-semibold">{locationName}</span>
               </div>
               <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
@@ -78,10 +76,7 @@ export function SidebarLocationManager() {
             side={isMobile ? "bottom" : "right"}
             sideOffset={4}
           >
-            <DropdownMenuLabel className="text-xs text-muted-foreground">
-               
-            </DropdownMenuLabel>
-              
+            <DropdownMenuLabel className="text-muted-foreground text-xs"></DropdownMenuLabel>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

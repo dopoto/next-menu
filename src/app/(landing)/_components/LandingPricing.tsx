@@ -1,9 +1,12 @@
-import React from 'react';
+import React from "react";
 import { sections } from "../../_domain/landing-content";
 import { priceTiers } from "../../_domain/price-tiers";
 import { GetStartedCta } from "../../_components/GetStartedCta";
 import { LandingSectionTitle } from "./LandingSectionTitle";
-import { PriceTierCard, type CardCustomizations } from "../../_components/PriceTierCard";
+import {
+  PriceTierCard,
+  type CardCustomizations,
+} from "../../_components/PriceTierCard";
 
 export const LandingPricing: React.FC = () => {
   const { label, title, secondary } = sections.pricing!.header;

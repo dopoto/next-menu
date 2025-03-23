@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import Image from "next/image";
 import { GetStartedCta } from "../../_components/GetStartedCta";
 
@@ -19,7 +19,10 @@ export const LandingHero: React.FC = () => {
               ipsum sagittis ac.
             </p>
             <div className="mt-4 h-[36px] sm:mx-auto sm:max-w-[270px] sm:text-center lg:mx-0 lg:text-left">
-              <GetStartedCta secondaryText="Start for free now - no credit card required!" variant={"default"} />
+              <GetStartedCta
+                secondaryText="Start for free now - no credit card required!"
+                variant={"default"}
+              />
             </div>
           </div>
           <div className="relative mt-12 flex items-center justify-center sm:mx-auto sm:max-w-lg lg:col-span-6 lg:mx-0 lg:mt-0">

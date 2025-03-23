@@ -66,7 +66,7 @@ async function Step1(props: { toTierId?: string }) {
   if (exceededFeatures?.length > 0) {
     return redirect(ROUTES.changePlan);
   }
-  
+
   return (
     <Suspense fallback={<ProcessingPlanChange progress={40} />}>
       <Step2

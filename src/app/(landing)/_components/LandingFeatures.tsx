@@ -1,5 +1,12 @@
-import React from 'react';
-import { Clock, Users, Globe, ScanQrCode, Utensils, Airplay } from "lucide-react";
+import React from "react";
+import {
+  Clock,
+  Users,
+  Globe,
+  ScanQrCode,
+  Utensils,
+  Airplay,
+} from "lucide-react";
 import { LandingSectionTitle } from "./LandingSectionTitle";
 import { sections } from "../../_domain/landing-content";
 

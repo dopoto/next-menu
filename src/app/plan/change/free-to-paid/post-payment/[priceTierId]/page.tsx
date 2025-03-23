@@ -45,11 +45,14 @@ export default async function FreeToPaidPostPaymentPage(props: {
   }
 
   // Expecting a valid free From tier:
-  const parsedFreeFromTier = getValidFreePriceTier(session.metadata?.fromTierId);
+  const parsedFreeFromTier = getValidFreePriceTier(
+    session.metadata?.fromTierId,
+  );
   if (!parsedFreeFromTier) {
-    throw new Error(`Missing or invalid From tier metadata: ${obj2str(session?.metadata ?? {})}`);
+    throw new Error(
+      `Missing or invalid From tier metadata: ${obj2str(session?.metadata ?? {})}`,
+    );
   }
- 
 
   //TODO check status = complete?
   // const subscription = await stripe.subscriptions.retrieve(

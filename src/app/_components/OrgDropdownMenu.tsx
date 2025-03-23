@@ -15,7 +15,7 @@ export function OrgDropdownMenu() {
 
   return (
     <div
-      className="mt-6 flex cursor-pointer gap-3 items-center"
+      className="mt-6 flex cursor-pointer items-center gap-3"
       onClick={() => openOrganizationProfile()}
     >
       <Image

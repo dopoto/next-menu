@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { env } from "~/env";
-import {  type PriceTierFeatureId } from "./price-tier-features";
+import { type PriceTierFeatureId } from "./price-tier-features";
 
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
@@ -14,7 +14,7 @@ export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
 export const defaultTier: PriceTierId = "start";
 
-export type Feature = { id: PriceTierFeatureId; quota: number   };
+export type Feature = { id: PriceTierFeatureId; quota: number };
 
 export type PriceTier = {
   id: PriceTierId;
@@ -38,8 +38,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPublic: true,
     isPopular: false,
     features: [
-      {id: 'locations', quota: 1},
-      {id: 'menus', quota: 1}
+      { id: "locations", quota: 1 },
+      { id: "menus", quota: 1 },
     ],
   },
   start2: {
@@ -50,10 +50,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     yearlyUsdPrice: 0,
     isPublic: true,
     isPopular: false,
-    features: [
-      {id: 'locations', quota: 1},
-       
-    ],
+    features: [{ id: "locations", quota: 1 }],
   },
   pro: {
     id: "pro",
@@ -65,8 +62,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPublic: true,
     isPopular: true,
     features: [
-      {id: 'locations', quota: 1},
-      {id: 'menus', quota: 1}
+      { id: "locations", quota: 1 },
+      { id: "menus", quota: 1 },
     ],
   },
   enterprise: {
@@ -79,8 +76,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     isPublic: true,
     isPopular: false,
     features: [
-      {id: 'locations', quota: 1},
-      {id: 'menus', quota: 100}
+      { id: "locations", quota: 1 },
+      { id: "menus", quota: 100 },
     ],
   },
   custom1: {

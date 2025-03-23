@@ -8,7 +8,6 @@ import { ROUTES } from "~/app/_domain/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Button } from "~/components/ui/button";
 
-
 // TODO Location in overview?
 
 export const Overview = async (props: { claims: CustomJwtSessionClaims }) => {
@@ -16,7 +15,7 @@ export const Overview = async (props: { claims: CustomJwtSessionClaims }) => {
   const parsedTier = getValidPriceTier(priceTierId);
   const user = await currentUser();
   return (
-    <div className="flex w-full flex-col gap-1">      
+    <div className="flex w-full flex-col gap-1">
       <OverviewCard
         title={"Account"}
         sections={[

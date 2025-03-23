@@ -9,9 +9,9 @@ import { generateErrorId, logException } from "~/app/_utils/error-logger-utils";
 export default function ChangePlanError({
   error,
 }: {
-  error: ErrorBoundaryException,
+  error: ErrorBoundaryException;
 }) {
-  const errorTypeId: ErrorTypeId = 'CHANGE_PLAN_ERROR';
+  const errorTypeId: ErrorTypeId = "CHANGE_PLAN_ERROR";
   const errorClientSideId = generateErrorId();
 
   useEffect(() => {
@@ -22,7 +22,14 @@ export default function ChangePlanError({
     <SplitScreenContainer
       title={`Change plan`}
       subtitle="Sorry, could not complete this operation..."
-      mainComponent={<ErrorCard title="An error occurred" errorTypeId={errorTypeId} errorDigest={error.digest} errorClientSideId={errorClientSideId}  />}
+      mainComponent={
+        <ErrorCard
+          title="An error occurred"
+          errorTypeId={errorTypeId}
+          errorDigest={error.digest}
+          errorClientSideId={errorClientSideId}
+        />
+      }
     />
   );
 }

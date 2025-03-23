@@ -48,7 +48,6 @@ export const priceTierUsageFunctions: Record<
   menus: getMenusPlanUsage,
 };
 
-
 export type ExceededFeature = PriceTierFeatureUsage & {
   candidateQuota?: number;
-}
+};

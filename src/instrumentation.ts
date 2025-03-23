@@ -9,10 +9,7 @@ export async function register() {
     await import("../sentry.server.config");
   }
 
-  if (
-    process.env.NEXT_RUNTIME &&
-    env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
-  ) {
+  if (process.env.NEXT_RUNTIME && env.NEXT_PUBLIC_LOG_TO_SENTRY === "true") {
     await import("../sentry.edge.config");
   }
 }

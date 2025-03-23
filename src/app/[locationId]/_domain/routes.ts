@@ -73,7 +73,9 @@ export function buildBreadcrumbs(pathname: string): BreadcrumbSegment[] {
           );
         }
       } else {
-        siblingRoutes = routes.filter(route => route.path !== activeRoute.path)
+        siblingRoutes = routes.filter(
+          (route) => route.path !== activeRoute.path,
+        );
       }
 
       segments.push({

@@ -4,14 +4,17 @@ import { useEffect } from "react";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { ErrorCard } from "../_components/ErrorCard";
 import { generateErrorId, logException } from "../_utils/error-logger-utils";
-import { type ErrorTypeId, type ErrorBoundaryException } from "../_domain/errors";
+import {
+  type ErrorTypeId,
+  type ErrorBoundaryException,
+} from "../_domain/errors";
 
 export default function OnboardError({
   error,
 }: {
-  error: ErrorBoundaryException,
+  error: ErrorBoundaryException;
 }) {
-  const errorTypeId: ErrorTypeId = 'ONBOARD_ERROR';
+  const errorTypeId: ErrorTypeId = "ONBOARD_ERROR";
   const errorClientSideId = generateErrorId();
 
   useEffect(() => {
@@ -22,7 +25,14 @@ export default function OnboardError({
     <SplitScreenContainer
       title={`Onboarding`}
       subtitle="Sorry, could not complete this operation..."
-      mainComponent={<ErrorCard title="An error occurred" errorTypeId={errorTypeId} errorDigest={error.digest} errorClientSideId={errorClientSideId}  />}
+      mainComponent={
+        <ErrorCard
+          title="An error occurred"
+          errorTypeId={errorTypeId}
+          errorDigest={error.digest}
+          errorClientSideId={errorClientSideId}
+        />
+      }
     />
   );
 }

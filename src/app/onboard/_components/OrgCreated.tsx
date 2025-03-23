@@ -9,13 +9,13 @@ export function OrgCreated(props: { nextStepRoute: ApplicationRoute }) {
     <>
       <OverviewCard
         title={"Organization created"}
-        subtitle={"You'll be able to change this anytime later from your account."}
+        subtitle={
+          "You'll be able to change this anytime later from your account."
+        }
         sections={[
           {
             title: "",
-            content: (
-              <OrgDropdownMenu />
-            ),
+            content: <OrgDropdownMenu />,
           },
         ]}
         variant="neutral"

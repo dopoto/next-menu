@@ -1,8 +1,5 @@
 import { type ExceededFeature } from "../_domain/price-tier-features";
-import {
-  priceTiers,
-  type PriceTierId,
-} from "../_domain/price-tiers";
+import { priceTiers, type PriceTierId } from "../_domain/price-tiers";
 import { getAvailableQuota } from "./quota-utils.server-only";
 
 export async function getExceededFeatures(

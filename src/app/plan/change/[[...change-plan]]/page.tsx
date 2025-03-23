@@ -4,7 +4,7 @@ import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Change plan > Select your next plan`,
-}
+};
 
 export default function ChangePlanPage() {
   return (
@@ -15,4 +15,3 @@ export default function ChangePlanPage() {
     ></SplitScreenContainer>
   );
 }
-

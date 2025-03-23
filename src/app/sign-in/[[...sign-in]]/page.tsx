@@ -6,14 +6,13 @@ import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Sign in`,
-}
+};
 
 export default function Page() {
   return (
     <SplitScreenContainer
       mainComponent={
         <SignIn
-           
           appearance={{
             elements: {
               headerTitle: "hidden",

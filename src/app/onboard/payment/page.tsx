@@ -11,7 +11,7 @@ import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Onboard > Payment`,
-}
+};
 
 export default async function OnboardPaymentPage() {
   const { userId, orgId } = await auth();
