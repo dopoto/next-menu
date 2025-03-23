@@ -29,7 +29,7 @@ jobs:
         run: npm install -g pnpm          
 
       - name: Install dependencies
-        run: pnpm ci
+        run: pnpm i
 
       - name: TypeScript Check
         run: pnpm tsc --noEmit
