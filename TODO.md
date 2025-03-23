@@ -4,6 +4,7 @@ Handle users that reuse their existing account in Sign Up
 Validate Stripe / Clerk on sign in / (& regularly?)
 Delete my account
 Manage org > remove Invite Members
+onboard error boundary > show under title and navigator
 
 Typesafe routes
 Google Analytics

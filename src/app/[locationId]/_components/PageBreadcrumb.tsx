@@ -23,14 +23,15 @@ export function PageBreadcrumb() {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {currentMenuItem?.route !== "" && (
-          <><BreadcrumbItem className="hidden md:block">
-            <BreadcrumbLink href={ROUTES.my}>
-              <HomeIcon size={16} />
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        <BreadcrumbSeparator className="hidden md:block" />
-        </>
+        {currentMenuItem?.route && (
+          <>
+            <BreadcrumbItem className="hidden md:block">
+              <BreadcrumbLink href={ROUTES.my}>
+                <HomeIcon size={16} />
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator className="hidden md:block" />
+          </>
         )}
         <BreadcrumbItem>
           <BreadcrumbPage>{pageTitle}</BreadcrumbPage>

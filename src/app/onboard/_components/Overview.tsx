@@ -1,7 +1,6 @@
 import { currentUser } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { Suspense } from "react";
-import { Fireworks } from "~/app/_components/SuccessAnimation";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";

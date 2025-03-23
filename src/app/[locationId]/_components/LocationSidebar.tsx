@@ -20,6 +20,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { menuItems } from "../_domain/menu-sections";
 import { SidebarOrganizationManager } from "./SidebarOrganizationManager";
+import { ApplicationRoute } from '~/app/_domain/routes';
 
 export function LocationSidebar({
   ...props
@@ -28,13 +29,13 @@ export function LocationSidebar({
   const pathname = usePathname();
   const { locationId } = params as { locationId: string };
 
-  const isActive = (url: string) => {
-    const fullPath = `/${locationId}/${url}`;
+  const isActive = (routeSegment: ApplicationRoute) => {
+    const fullPath = `/${locationId}/${routeSegment}`;
     return pathname === fullPath || `${pathname}/` === fullPath;
   };
 
-  const buildUrl = (url: string) => {
-    return `/${locationId}/${url}`;
+  const buildUrl = (routeSegment: ApplicationRoute) => {
+    return `/${locationId}/${routeSegment}`;
   };
 
   const dashboardMenuSection = menuItems.filter(
