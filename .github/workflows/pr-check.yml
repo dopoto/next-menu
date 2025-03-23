@@ -34,13 +34,6 @@ jobs:
       - name: TypeScript Check
         run: pnpm tsc --noEmit
 
-      - name: TypeScript Check
-        uses: Arhia/action-check-typescript@v1.1.0
-        with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          check-fail-mode: added
-          output-behaviour: both
-
       - name: Prettier Check
         run: pnpm prettier --check .
 
