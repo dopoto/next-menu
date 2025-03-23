@@ -30,12 +30,12 @@ export function LocationSidebar({
   const { locationId } = params as { locationId: string };
 
   const isActive = (routeSegment: ApplicationRoute) => {
-    const fullPath = `/${locationId}/${routeSegment}`;
+    const fullPath = `/${locationId}/${routeSegment.toString()}`;
     return pathname === fullPath || `${pathname}/` === fullPath;
   };
 
   const buildUrl = (routeSegment: ApplicationRoute) => {
-    return `/${locationId}/${routeSegment}`;
+    return `/${locationId}/${routeSegment.toString()}`;
   };
 
   const dashboardMenuSection = menuItems.filter(

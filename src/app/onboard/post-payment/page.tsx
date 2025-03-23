@@ -1,6 +1,4 @@
-import Stripe from "stripe";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { env } from "~/env";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
 import { Redirecting } from "../_components/Redirecting";
 import { cookies } from "next/headers";

@@ -1,4 +1,3 @@
-import { LocationId } from "../[locationId]/_domain/locations";
 import type { PriceTierId } from "./price-tiers";
 
 type PlanChangeType =
