@@ -20,7 +20,7 @@ import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { menuItems } from "../_domain/menu-sections";
 import { SidebarOrganizationManager } from "./SidebarOrganizationManager";
-import { UserRouteFn, type AppRouteKey } from "~/app/_domain/routes";
+import { UserRouteFn } from "~/app/_domain/routes";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
 export function LocationSidebar({

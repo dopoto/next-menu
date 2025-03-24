@@ -1,5 +1,5 @@
 import React from "react";
-import { LocationId } from "../u/[locationId]/_domain/locations";
+import { LocationId, LocationSlug } from "../u/[locationId]/_domain/locations";
 import type { PriceTierId } from "./price-tiers";
 
 type PlanChangeType =
@@ -44,7 +44,7 @@ export const ROUTES = {
   viewPlan: "/u/plan/view",
 
   // PUBLIC
-  publicLocation: (locationId: LocationId) => `/p/${locationId}`,
+  publicLocation: (locationSlug: LocationSlug) => `/p/${locationSlug}`,
 } as const;
 
 export type UserRouteFn = (locationId: LocationId) => string;
