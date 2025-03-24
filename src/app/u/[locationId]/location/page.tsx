@@ -1,6 +1,6 @@
 import { LocationDetails } from "~/app/_components/LocationDetails";
 import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
-import LocationDialog from "~/app/u/[locationId]/location/_components/LocationDialog";
+import { LocationDialog } from "~/app/u/[locationId]/location/_components/LocationDialog";
 
 type Params = Promise<{ locationId: string }>;
 

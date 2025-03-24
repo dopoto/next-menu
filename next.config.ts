@@ -25,6 +25,10 @@ const cspHeader = `
 `;
 
 const nextConfig: NextConfig = {
+  experimental: {
+    clientInstrumentationHook: true,
+  },
+
   typescript: {
     ignoreBuildErrors: true,
   },
