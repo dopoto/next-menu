@@ -43,7 +43,7 @@ export async function LocationDetails(props: { id: LocationId }) {
           <span className="truncate font-semibold">{locationName}</span>
         </div>
       </div>
-      <p className="text-sm text-center">Your location is live here:</p>
+      <p className="text-center text-sm">Your location is live here:</p>
 
       <div className="flex w-full flex-row flex-nowrap gap-2 rounded">
         <ExternalLinkIcon className="stroke-gray-700" />
