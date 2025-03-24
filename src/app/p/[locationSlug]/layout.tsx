@@ -1,4 +1,4 @@
-import {  locationSlugSchema } from "~/app/u/[locationId]/_domain/locations";
+import { locationSlugSchema } from "~/app/u/[locationId]/_domain/locations";
 
 //TODO Use cache
 

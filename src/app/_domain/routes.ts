@@ -12,7 +12,7 @@ type PlanChangeType =
 
 export const ROUTES = {
   home: "/",
-  
+
   // SIGN-IN / SIGN UP
   signUp: "/sign-up",
   signUpForPriceTier: (tier?: PriceTierId) => `/sign-up?tier=${tier}`,
@@ -42,13 +42,9 @@ export const ROUTES = {
   ) => `/u/plan/change/${planChangeType}?toTierId=${priceTierId}`,
   viewPlan: "/u/plan/view",
 
-
   // PUBLIC
   location: (locationId: LocationId) => `/p/${locationId}/live`,
 } as const;
-
-
-
 
 export type UserRouteFn = (locationId: LocationId) => string;
 

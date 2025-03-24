@@ -13,7 +13,7 @@ export const menuItems: MenuItem[] = [
   {
     icon: <LayoutDashboard size={16} />,
     title: "Open orders",
-    route: ROUTES.myRedirect,
+    route: ROUTES.live,
     parentId: "dashboard",
   },
   {

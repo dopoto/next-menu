@@ -30,7 +30,7 @@ export function LocationSidebar({
   const pathname = usePathname();
   const { locationId } = params as { locationId: string };
 
-  const isActive = (route: string) => {    
+  const isActive = (route: string) => {
     return pathname === route || `${pathname}/` === route;
   };
 
@@ -92,10 +92,7 @@ export function LocationSidebar({
                       isActive={isActive(href)}
                       tooltip={item.title}
                     >
-                      <Link
-                        href={href}
-                        className="flex items-center gap-2"
-                      >
+                      <Link href={href} className="flex items-center gap-2">
                         <span title={item.title} className="flex-shrink-0">
                           {item.icon}
                         </span>

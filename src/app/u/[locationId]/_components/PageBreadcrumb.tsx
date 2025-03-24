@@ -17,7 +17,7 @@ import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
 export function PageBreadcrumb(props: { locationId: LocationId }) {
   const pathname = usePathname();
-   
+
   const currentMenuItem = menuItems.find((item) => {
     const itemFn = item.route as UserRouteFn;
     const itemRoute = itemFn(props.locationId);

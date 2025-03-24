@@ -5,7 +5,7 @@ import { getUsedQuota } from "~/app/_utils/quota-utils.server-only";
 import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
-export async function OpenOrdersList(props: {locationId: LocationId}) {
+export async function OpenOrdersList(props: { locationId: LocationId }) {
   //TODO: Fetch actual open orders
   const items = await Promise.resolve([]);
 
