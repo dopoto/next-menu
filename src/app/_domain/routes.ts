@@ -13,7 +13,6 @@ type PlanChangeType =
 export const ROUTES = {
   home: "/",
   
-
   // SIGN-IN / SIGN UP
   signUp: "/sign-up",
   signUpForPriceTier: (tier?: PriceTierId) => `/sign-up?tier=${tier}`,
@@ -27,12 +26,8 @@ export const ROUTES = {
   onboardPayment: "/onboard/payment",
   onboardOverview: "/onboard/payment",
 
-  // My 
+  // AUTH_PROTECTED
   my: "/my",
-  myRedirect: (locationId: LocationId) => `/u/${locationId}/live`,
-
-  // MANAGE
-  //manager: (locationId: LocationId) => `/manage/${locationId}`,
   live: (locationId: LocationId) => `/u/${locationId}/live`,
   reports: (locationId: LocationId) => `/u/${locationId}/reports`,
   menus: (locationId: LocationId) => `/u/${locationId}/menus`,
@@ -46,7 +41,14 @@ export const ROUTES = {
     priceTierId?: PriceTierId,
   ) => `/u/plan/change/${planChangeType}?toTierId=${priceTierId}`,
   viewPlan: "/u/plan/view",
+
+
+  // PUBLIC
+  location: (locationId: LocationId) => `/p/${locationId}/live`,
 } as const;
+
+
+
 
 export type UserRouteFn = (locationId: LocationId) => string;
 

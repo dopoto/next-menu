@@ -3,7 +3,6 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
 import { CookieKey } from "./app/_domain/cookies";
 import { ROUTES } from "./app/_domain/routes";
-import { LocationId } from "./app/u/[locationId]/_domain/locations";
 
 const redirectTo = (req: NextRequest, route: string) =>
   NextResponse.redirect(new URL(route, req.url));
@@ -16,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   `${ROUTES.signOut}(.*)`,
   "/onboard/select-plan(.*)",
   `${ROUTES.signUp}(.*)`,
+  // TODO /p/? 
 ]);
 
 export default clerkMiddleware(
@@ -65,7 +65,7 @@ export default clerkMiddleware(
         return redirectTo(req, `/onboard/add-org`);
       }
       //TODO validate currentLocationId
-      const myDashboardRoute = ROUTES.myRedirect(Number(currentLocationId));
+      const myDashboardRoute = ROUTES.live(Number(currentLocationId));
       console.log(
         `DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`,
       );
