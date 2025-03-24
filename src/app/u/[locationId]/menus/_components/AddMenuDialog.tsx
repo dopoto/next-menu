@@ -16,6 +16,7 @@ export default function AddMenuDialog(props: { availableQuota: number }) {
 
   const handleOpenChange = (open: boolean) => {
     if (!open) {
+      //TODO detect if there's no page to go back to - e.g. when route is opened directly from bookmark
       router.back();
     }
   };

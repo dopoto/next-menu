@@ -2,7 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import "server-only";
 import { db } from "~/server/db";
 import { customers, locations, type Menu } from "./db/schema";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
 export async function addCustomer(
@@ -85,9 +85,15 @@ export async function addLocation(orgId: string, name: string) {
   return insertedLocation;
 }
 
-export async function getLocation(id: number) {
+export async function getLocation(id: LocationId) {
+  const { userId, sessionClaims } = await auth();
+  if (!userId) throw new Error("Unauthorized");
+
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) throw new Error("No organization ID found");
+
   const item = await db.query.locations.findFirst({
-    where: (model, { eq }) => eq(model.id, id),
+    where: (model, { eq }) => and(eq(model.id, id), eq(model.orgId, orgId)),
   });
 
   if (!item) throw new Error("Not found");

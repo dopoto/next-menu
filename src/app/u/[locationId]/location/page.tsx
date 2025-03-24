@@ -1,3 +1,4 @@
+import { LocationDetails } from "~/app/_components/LocationDetails";
 import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
 import LocationDialog from "~/app/u/[locationId]/location/_components/LocationDialog";
 
@@ -10,7 +11,10 @@ export default async function LocationPage(props: { params: Params }) {
     // TODO Test
     throw new Error("Location issue");
   }
- 
 
-  return <LocationDialog   />;
+  return (
+    <LocationDialog>
+      <LocationDetails id={validationResult.data} />
+    </LocationDialog>
+  );
 }
