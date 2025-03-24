@@ -1,3 +1,5 @@
+import React from "react";
+import { LocationId } from "../u/[locationId]/_domain/locations";
 import type { PriceTierId } from "./price-tiers";
 
 type PlanChangeType =
@@ -10,7 +12,7 @@ type PlanChangeType =
 
 export const ROUTES = {
   home: "/",
-  my: "/my",
+  
 
   // SIGN-IN / SIGN UP
   signUp: "/sign-up",
@@ -25,21 +27,30 @@ export const ROUTES = {
   onboardPayment: "/onboard/payment",
   onboardOverview: "/onboard/payment",
 
+  // My 
+  my: "/my",
+  myRedirect: (locationId: LocationId) => `/u/${locationId}/live`,
+
   // MANAGE
   //manager: (locationId: LocationId) => `/manage/${locationId}`,
-  live: "live", // TODO
-  reports: "reports", // TODO
-  menus: "menus", // TODO
-  menusAdd: "menus/add", // TODO
+  live: (locationId: LocationId) => `/u/${locationId}/live`,
+  reports: (locationId: LocationId) => `/u/${locationId}/reports`,
+  menus: (locationId: LocationId) => `/u/${locationId}/menus`,
+  menusAdd: (locationId: LocationId) => `/u/${locationId}/menus/add`,
 
   // PLAN
-  changePlan: "/plan/change",
-  changePlanTo: (priceTierId?: PriceTierId) => `/plan/change/${priceTierId}`,
+  changePlan: "/u/plan/change",
+  changePlanTo: (priceTierId?: PriceTierId) => `/u/plan/change/${priceTierId}`,
   changePlanToPlan: (
     planChangeType: PlanChangeType,
     priceTierId?: PriceTierId,
-  ) => `/plan/change/${planChangeType}?toTierId=${priceTierId}`,
-  viewPlan: "/plan/view",
+  ) => `/u/plan/change/${planChangeType}?toTierId=${priceTierId}`,
+  viewPlan: "/u/plan/view",
 } as const;
 
-export type ApplicationRoute = (typeof ROUTES)[keyof typeof ROUTES];
+export type UserRouteFn = (locationId: LocationId) => string;
+
+export type AppRouteKey = (typeof ROUTES)[keyof typeof ROUTES];
+export type AppRoute = ValueOf<typeof ROUTES>;
+
+type ValueOf<T> = T[keyof T];

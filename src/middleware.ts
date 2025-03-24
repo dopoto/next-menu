@@ -3,6 +3,7 @@ import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
 import { CookieKey } from "./app/_domain/cookies";
 import { ROUTES } from "./app/_domain/routes";
+import { LocationId } from "./app/u/[locationId]/_domain/locations";
 
 const redirectTo = (req: NextRequest, route: string) =>
   NextResponse.redirect(new URL(route, req.url));
@@ -63,8 +64,8 @@ export default clerkMiddleware(
         );
         return redirectTo(req, `/onboard/add-org`);
       }
-
-      const myDashboardRoute = `/${currentLocationId}/live`;
+      //TODO validate currentLocationId
+      const myDashboardRoute = ROUTES.myRedirect(Number(currentLocationId));
       console.log(
         `DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`,
       );

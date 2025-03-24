@@ -8,14 +8,14 @@ type Params = Promise<{ locationId: string }>;
 export default async function OpenOrdersPage(props: { params: Params }) {
   const params = await props.params;
 
-  const validationResult = locationIdSchema.safeParse(params.locationId);
-  if (!validationResult.success) {
+  const locationValidationResult = locationIdSchema.safeParse(params.locationId);
+  if (!locationValidationResult.success) {
     throw new Error(`Invalid location: ${params.locationId}`);
   }
 
   return (
     <Suspense fallback={<LoadingSection />}>
-      <OpenOrdersList />
+      <OpenOrdersList locationId={locationValidationResult.data}  />
     </Suspense>
   );
 }

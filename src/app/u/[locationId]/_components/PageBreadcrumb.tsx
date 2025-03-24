@@ -12,12 +12,17 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import React from "react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES, UserRouteFn } from "~/app/_domain/routes";
+import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
-export function PageBreadcrumb() {
+export function PageBreadcrumb(props: { locationId: LocationId }) {
   const pathname = usePathname();
-  const currentPath = pathname.split("/").slice(2).join("/");
-  const currentMenuItem = menuItems.find((item) => item.route === currentPath);
+   
+  const currentMenuItem = menuItems.find((item) => {
+    const itemFn = item.route as UserRouteFn;
+    const itemRoute = itemFn(props.locationId);
+    return itemRoute === pathname;
+  });
   const pageTitle = currentMenuItem?.title ?? "Dashboard";
 
   return (

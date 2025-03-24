@@ -1,11 +1,11 @@
 import { ChartPie, LayoutDashboard, ScanQrCode } from "lucide-react";
 import { type ReactNode } from "react";
-import { type ApplicationRoute, ROUTES } from "~/app/_domain/routes";
+import { type AppRouteKey, ROUTES } from "~/app/_domain/routes";
 
 type MenuItem = {
   icon: ReactNode;
   title: string;
-  route: ApplicationRoute;
+  route: AppRouteKey;
   parentId: "dashboard" | "locationManager";
 };
 
@@ -13,7 +13,7 @@ export const menuItems: MenuItem[] = [
   {
     icon: <LayoutDashboard size={16} />,
     title: "Open orders",
-    route: ROUTES.live,
+    route: ROUTES.myRedirect,
     parentId: "dashboard",
   },
   {

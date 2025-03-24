@@ -12,8 +12,8 @@ type Params = Promise<{ locationId: string }>;
 export default async function MenusPage(props: { params: Params }) {
   const params = await props.params;
 
-  const validationResult = locationIdSchema.safeParse(params.locationId);
-  if (!validationResult.success) {
+  const locationValidationResult = locationIdSchema.safeParse(params.locationId);
+  if (!locationValidationResult.success) {
     throw new Error(`Invalid location: ${params.locationId}`);
   }
 
@@ -21,14 +21,14 @@ export default async function MenusPage(props: { params: Params }) {
     <div className="flex h-full flex-col gap-2">
       <div className="flex flex-row justify-end">
         <Button asChild>
-          <Link href={ROUTES.menusAdd}>
+          <Link href={ROUTES.menusAdd(locationValidationResult.data)}>
             <PlusCircle className="mr-2 h-4 w-4" />
             Add menu
           </Link>
         </Button>
       </div>
       <Suspense fallback={<LoadingSection />}>
-        <MenusList locationId={validationResult.data} />
+        <MenusList locationId={locationValidationResult.data} />
       </Suspense>
     </div>
   );
