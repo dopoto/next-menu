@@ -20,7 +20,7 @@ export async function LocationDetails(props: { id: LocationId }) {
   }
 
   const locationData = await getLocation(validationResult.data);
-  console.log(JSON.stringify(locationData))
+  console.log(JSON.stringify(locationData));
 
   return (
     <div>
