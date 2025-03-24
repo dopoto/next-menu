@@ -10,18 +10,29 @@ import { Separator } from "~/components/ui/separator";
 import { PageBreadcrumb } from "./_components/PageBreadcrumb";
 import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
-import { APP_CONFIG } from "../_config/app-config";
-import { AppVersion } from "../_components/AppVersion";
-import { ROUTES } from "../_domain/routes";
+import { AppVersion } from "~/app/_components/AppVersion";
+import { ROUTES } from "~/app/_domain/routes";
+import { APP_CONFIG } from "~/app/_config/app-config";
+import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
+
+type Params = Promise<{ locationId: string }>;
 
 export default async function Layout({
+  params,
   children,
 }: {
+  params: Params;
   children: React.ReactNode;
 }) {
   // TODO all basic checks
   // valid stripe and clerk?
   // valid location id, matches claims?
+
+  const locationId = (await params).locationId;
+  const locationValidationResult = locationIdSchema.safeParse(locationId);
+  if (!locationValidationResult.success) {
+    throw new Error(`Invalid location: ${locationId}`);
+  }
 
   return (
     <SidebarProvider>
@@ -31,7 +42,7 @@ export default async function Layout({
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4!" />
-            <PageBreadcrumb />
+            <PageBreadcrumb locationId={locationValidationResult.data} />
           </div>
           <div className="ml-auto px-4">
             <ThemeSwitch />

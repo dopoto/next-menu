@@ -11,7 +11,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
 import * as React from "react";
-import { ROUTES, type ApplicationRoute } from "~/app/_domain/routes";
+import { ROUTES, type AppRouteKey } from "~/app/_domain/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
@@ -33,7 +33,7 @@ export default async function OnboardAddOrgPage() {
   if (!parsedTier) {
     redirect(ROUTES.onboardSelectPlan);
   }
-  const nextStep: ApplicationRoute = isPaidPriceTier(parsedTier.id)
+  const nextStep: AppRouteKey = isPaidPriceTier(parsedTier.id)
     ? ROUTES.onboardPayment
     : ROUTES.onboardAddLocation;
 

@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { OrgDropdownMenu } from "~/app/_components/OrgDropdownMenu";
 import { OverviewCard } from "~/app/_components/OverviewCard";
-import { type ApplicationRoute } from "~/app/_domain/routes";
+import { type AppRouteKey } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 
-export function OrgCreated(props: { nextStepRoute: ApplicationRoute }) {
+export function OrgCreated(props: { nextStepRoute: AppRouteKey }) {
   return (
     <>
       <OverviewCard

@@ -15,6 +15,7 @@ const isPublicRoute = createRouteMatcher([
   `${ROUTES.signOut}(.*)`,
   "/onboard/select-plan(.*)",
   `${ROUTES.signUp}(.*)`,
+  // TODO /p/?
 ]);
 
 export default clerkMiddleware(
@@ -63,8 +64,8 @@ export default clerkMiddleware(
         );
         return redirectTo(req, `/onboard/add-org`);
       }
-
-      const myDashboardRoute = `/${currentLocationId}/live`;
+      //TODO validate currentLocationId
+      const myDashboardRoute = ROUTES.live(Number(currentLocationId));
       console.log(
         `DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`,
       );

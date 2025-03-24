@@ -1,9 +1,10 @@
 import { LayoutDashboard } from "lucide-react";
-import { EmptyState } from "~/app/[locationId]/_components/EmptyState";
 import { ROUTES } from "~/app/_domain/routes";
 import { getUsedQuota } from "~/app/_utils/quota-utils.server-only";
+import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
+import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
-export async function OpenOrdersList() {
+export async function OpenOrdersList(props: { locationId: LocationId }) {
   //TODO: Fetch actual open orders
   const items = await Promise.resolve([]);
 
@@ -19,7 +20,7 @@ export async function OpenOrdersList() {
         title={title}
         secondary={secondary}
         cta={hasAddedMenus ? undefined : "Add menu"}
-        ctaHref={hasAddedMenus ? undefined : ROUTES.menusAdd}
+        ctaHref={hasAddedMenus ? undefined : ROUTES.menusAdd(props.locationId)}
       />
     );
   }
