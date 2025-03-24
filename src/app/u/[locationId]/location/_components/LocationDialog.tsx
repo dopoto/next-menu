@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { Dialog, DialogContent } from "~/components/ui/dialog";
 
-export   function LocationDialog(props: { children: ReactNode }) {
+export function LocationDialog(props: { children: ReactNode }) {
   const router = useRouter();
 
   const handleOpenChange = (open: boolean) => {
