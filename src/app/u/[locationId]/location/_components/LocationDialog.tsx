@@ -23,10 +23,10 @@ export default function LocationDialog(props: { children: ReactNode }) {
   return (
     <Dialog open={true} onOpenChange={handleOpenChange}>
       <DialogContent>
-        <DialogHeader>
+        {/* <DialogHeader>
           <DialogTitle>Location</DialogTitle>
-          <DialogDescription>{/* TODO */}</DialogDescription>
-        </DialogHeader>
+          <DialogDescription> </DialogDescription>
+        </DialogHeader> */}
         {props.children}
       </DialogContent>
     </Dialog>
