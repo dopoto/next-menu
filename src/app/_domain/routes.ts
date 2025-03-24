@@ -28,6 +28,7 @@ export const ROUTES = {
 
   // AUTH_PROTECTED
   my: "/my",
+  location: (locationId: LocationId) => `/u/${locationId}/location`,
   live: (locationId: LocationId) => `/u/${locationId}/live`,
   reports: (locationId: LocationId) => `/u/${locationId}/reports`,
   menus: (locationId: LocationId) => `/u/${locationId}/menus`,
@@ -43,7 +44,7 @@ export const ROUTES = {
   viewPlan: "/u/plan/view",
 
   // PUBLIC
-  location: (locationId: LocationId) => `/p/${locationId}/live`,
+  publicLocation: (locationId: LocationId) => `/p/${locationId}`,
 } as const;
 
 export type UserRouteFn = (locationId: LocationId) => string;

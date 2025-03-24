@@ -11,6 +11,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { type PriceTierId } from "~/app/_domain/price-tiers";
 import { OverviewCard } from "~/app/_components/OverviewCard";
+import { ROUTES } from "~/app/_domain/routes";
 
 export const AddLocation = ({
   priceTierId,
@@ -30,7 +31,7 @@ export const AddLocation = ({
     if (res?.message) {
       // Reloads the user's data from the Clerk API
       await user?.reload();
-      router.push(`/onboard/overview`);
+      router.push(ROUTES.onboardOverview);
     }
     if (res?.errors) {
       setErrors(res?.errors);

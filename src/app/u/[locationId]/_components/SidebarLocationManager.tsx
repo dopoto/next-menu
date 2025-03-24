@@ -15,71 +15,42 @@ import {
   SidebarMenuButton,
 } from "~/components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
+import { ROUTES } from "~/app/_domain/routes";
 
 export function SidebarLocationManager() {
   const { isMobile } = useSidebar();
   const { user } = useUser();
-
+  const router = useRouter();
   const claims = user?.publicMetadata as CustomJwtSessionClaims;
+  const locationId = claims?.currentLocationId?.toString() ?? "";
   const locationName = claims?.currentLocationName?.toString() ?? "Loading...";
 
+  const openLocation = () => {
+    // TODO Validate location id
+    const route = ROUTES.location(Number(locationId));
+    router.push(route);
+  };
+
   return (
-    <SidebarMenu>
-      {/* <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground data-[state=open]:border-t-2 data-[state=open]:border-b-2 rounded-none border-dotted border-gray-200 dark:border-gray-600"
-            >
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="text-tiny truncate antialiased">
-                  LOCATION
-                </span>
-                <span className="truncate font-semibold">{locationName}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="bg-popover border-border w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg border p-2 shadow-md"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="text-muted-foreground">
-              <div className="w-full bg-amber-50">TODO</div>
-            </DropdownMenuLabel>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem> */}
-      <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <SidebarMenuButton
-              size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-            >
-              <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
-                {locationName.slice(0, 3).toLocaleUpperCase()}
-              </div>
-              <div className="grid flex-1 text-left text-sm leading-tight">
-                <span className="text-tiny truncate antialiased">LOCATION</span>
-                <span className="truncate font-semibold">{locationName}</span>
-              </div>
-              <ChevronsUpDown className="ml-auto" />
-            </SidebarMenuButton>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-            align="start"
-            side={isMobile ? "bottom" : "right"}
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="text-muted-foreground text-xs"></DropdownMenuLabel>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </SidebarMenuItem>
-    </SidebarMenu>
+    <>
+      <SidebarMenuButton
+        onClick={openLocation}
+        size="lg"
+        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+      >
+        <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
+          {locationName.slice(0, 3).toLocaleUpperCase()}
+        </div>
+        <div className="grid flex-1 text-left text-sm leading-tight">
+          <span className="text-tiny truncate antialiased">LOCATION</span>
+          <span className="truncate font-semibold">{locationName}</span>
+        </div>
+        <ChevronsUpDown className="ml-auto" />
+      </SidebarMenuButton>
+      <div className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg">
+        <DropdownMenuLabel className="text-muted-foreground text-xs"></DropdownMenuLabel>
+      </div>
+    </>
   );
 }
