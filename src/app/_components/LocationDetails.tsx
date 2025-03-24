@@ -1,5 +1,5 @@
 import React from "react";
-import { Labeled } from "./Labeled";
+import QRCode from "react-qr-code";
 import { auth } from "@clerk/nextjs/server";
 import { getLocation } from "~/server/queries";
 import {
@@ -9,7 +9,8 @@ import {
 import { CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { env } from "~/env";
 import { ROUTES } from "~/app/_domain/routes";
- 
+import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
+
 export async function LocationDetails(props: { id: LocationId }) {
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
@@ -32,7 +33,7 @@ export async function LocationDetails(props: { id: LocationId }) {
   const locationName = locationData.name ?? "";
 
   return (
-    <div className="flex w-full flex-col flex-nowrap gap-2">
+    <div className="flex w-full flex-col flex-nowrap gap-4">
       <div className="flex w-full gap-2">
         <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
           {locationName.slice(0, 3).toLocaleUpperCase()}
@@ -42,8 +43,10 @@ export async function LocationDetails(props: { id: LocationId }) {
           <span className="truncate font-semibold">{locationName}</span>
         </div>
       </div>
-      <p className="text-sm">Customers can access your location here:</p>
-      <div className="flex w-full flex-row flex-nowrap gap-2 rounded bg-gray-200 p-2">
+      <p className="text-sm text-center">Your location is live here:</p>
+
+      <div className="flex w-full flex-row flex-nowrap gap-2 rounded">
+        <ExternalLinkIcon className="stroke-gray-700" />
         <div className="grow">
           <a
             href={locationUrl}
@@ -54,7 +57,10 @@ export async function LocationDetails(props: { id: LocationId }) {
           </a>
         </div>
         <CopyIcon className="stroke-gray-700" />
-        <ExternalLinkIcon className="stroke-gray-700" />
+      </div>
+      <SeparatorWithText title="OR" />
+      <div className="flex w-full items-center justify-center">
+        <QRCode value={locationUrl} size={128} />
       </div>
     </div>
   );
