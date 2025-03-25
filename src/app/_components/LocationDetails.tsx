@@ -49,10 +49,12 @@ export async function LocationDetails(props: { id: LocationId }) {
         <ExternalLinkIcon className="stroke-gray-700" />
         <div className="grow">
           <a
+            title={locationUrl}
             href={locationUrl}
             target="_blank"
-            className="truncate font-normal text-blue-600 underline underline-offset-4"
+            className="overflow-hidden font-normal text-ellipsis whitespace-nowrap text-blue-600 underline underline-offset-4"
           >
+            {/* TODO 'https://start...end' at smaller resolutions */}
             {locationUrl}
           </a>
         </div>

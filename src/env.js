@@ -38,7 +38,7 @@ export const env = createEnv({
     NEXT_PUBLIC_STRIPE_PRICE_ID_PRO_TIER: z.string(),
     NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_TIER: z.string(),
     NEXT_PUBLIC_CLERK_SUBDOMAIN: z.string(),
-    NEXT_PUBLIC_GOOGLE_TAG: z.string().optional(),
+    NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID: z.string().optional(),
     NEXT_PUBLIC_CSP_REPORT_URI: z.string().optional(),
   },
 
@@ -75,7 +75,8 @@ export const env = createEnv({
     NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_TIER:
       process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE_TIER,
     NEXT_PUBLIC_CLERK_SUBDOMAIN: process.env.NEXT_PUBLIC_CLERK_SUBDOMAIN,
-    NEXT_PUBLIC_GOOGLE_TAG: process.env.NEXT_PUBLIC_GOOGLE_TAG,
+    NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID:
+      process.env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID,
     NEXT_PUBLIC_CSP_REPORT_URI: process.env.NEXT_PUBLIC_CSP_REPORT_URI,
   },
   /**
