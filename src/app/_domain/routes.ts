@@ -1,4 +1,7 @@
-import { type LocationId, type LocationSlug } from "../u/[locationId]/_domain/locations";
+import {
+  type LocationId,
+  type LocationSlug,
+} from "../u/[locationId]/_domain/locations";
 import type { PriceTierId } from "./price-tiers";
 
 type PlanChangeType =
