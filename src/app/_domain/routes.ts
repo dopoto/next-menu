@@ -1,4 +1,3 @@
-import React from "react";
 import { LocationId, LocationSlug } from "../u/[locationId]/_domain/locations";
 import type { PriceTierId } from "./price-tiers";
 

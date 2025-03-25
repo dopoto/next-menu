@@ -2,24 +2,13 @@
 
 import * as React from "react";
 import { ChevronsUpDown } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-} from "@radix-ui/react-dropdown-menu";
-import {
-  useSidebar,
-  SidebarMenu,
-  SidebarMenuItem,
-  SidebarMenuButton,
-} from "~/components/ui/sidebar";
+import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
+import { SidebarMenuButton } from "~/components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { ROUTES } from "~/app/_domain/routes";
 
 export function SidebarLocationManager() {
-  const { isMobile } = useSidebar();
   const { user } = useUser();
   const router = useRouter();
   const claims = user?.publicMetadata as CustomJwtSessionClaims;

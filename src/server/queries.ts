@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import "server-only";
 import { db } from "~/server/db";
-import { customers, locations, type Menu } from "./db/schema";
+import { customers, locations } from "./db/schema";
 import { and, eq } from "drizzle-orm";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
@@ -100,5 +100,3 @@ export async function getLocation(id: LocationId) {
 
   return item;
 }
-
-

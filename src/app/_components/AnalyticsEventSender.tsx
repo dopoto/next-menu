@@ -17,6 +17,6 @@ export function AnalyticsEventSender<T extends AnalyticsEventId>({
       eventId,
       ...payload,
     });
-  }, []);
+  }, [eventId, payload]);
   return null;
 }
