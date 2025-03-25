@@ -2,11 +2,11 @@ import { auth } from "@clerk/nextjs/server";
 import "server-only";
 import { db } from "~/server/db";
 import {
-  LocationId,
-  LocationSlug,
+  type LocationId,
+  type LocationSlug,
 } from "~/app/u/[locationId]/_domain/locations";
-import { Menu } from "~/server/db/schema";
-import { Location } from "~/server/db/schema";
+import { type Menu } from "~/server/db/schema";
+import { type Location } from "~/server/db/schema";
 
 // export async function getLocations() {
 //   const items = await db.query.locations.findMany({

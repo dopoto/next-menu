@@ -8,9 +8,9 @@ onboard error boundary > show under title and navigator
 
 Typesafe routes
 Google Analytics
-ESLint 10
-nuqs https://blog.logrocket.com/managing-search-parameters-next-js-nuqs/
+nuqs  https://nuqs.47ng.com/docs/server-side
 Errors with context
 Page titles
 Knip
 Use next-menu-test_* tables in non-prod
+https://www.npmjs.com/package/@changesets/changelog-github

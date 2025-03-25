@@ -3,8 +3,8 @@
 import { useEffect } from "react";
 import { sendGTMEvent } from "@next/third-parties/google";
 import {
-  AnalyticsEventSenderProps,
-  AnalyticsEventId,
+  type AnalyticsEventSenderProps,
+  type AnalyticsEventId,
 } from "~/domain/analytics";
 
 export function AnalyticsEventSender<T extends AnalyticsEventId>({

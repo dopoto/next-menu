@@ -12,6 +12,7 @@ interface ProviderConfig<P> {
   props?: P;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function composeProviders<T extends Array<ProviderConfig<any>>>(configs: T) {
   return ({ children }: { children: React.ReactNode }) =>
     configs.reduceRight((acc, { Component, shouldRender, props }) => {

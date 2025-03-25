@@ -3,7 +3,7 @@ import QRCode from "react-qr-code";
 import { auth } from "@clerk/nextjs/server";
 import { getLocation } from "~/server/queries";
 import {
-  LocationId,
+  type LocationId,
   locationIdSchema,
 } from "~/app/u/[locationId]/_domain/locations";
 import { CopyIcon, ExternalLinkIcon } from "lucide-react";
