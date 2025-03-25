@@ -1,5 +1,6 @@
 import { AnalyticsEventSender } from "~/app/_components/AnalyticsEventSender";
 import { locationSlugSchema } from "~/app/u/[locationId]/_domain/locations";
+import { getLocationPublicData } from "~/server/queries/location";
 
 //TODO Use cache
 
@@ -13,16 +14,26 @@ export default async function Layout({
   children: React.ReactNode;
 }) {
   const locationSlug = (await params).locationSlug;
-  const locationValidationResult = locationSlugSchema.safeParse(locationSlug);
-  if (!locationValidationResult.success) {
+  const locationSlugValidationResult =
+    locationSlugSchema.safeParse(locationSlug);
+  if (!locationSlugValidationResult.success) {
     throw new Error(`Invalid location: ${locationSlug}`);
   }
   
+  const parsedLocationSlug = locationSlugValidationResult.data
+  const location = await getLocationPublicData(parsedLocationSlug);
+
   return (
     <>
-      <p>Welcome to {locationValidationResult.data}</p>
+      <p>Welcome to {parsedLocationSlug} in org {location.orgId}</p>
       <p>{children}</p>
-      <AnalyticsEventSender />
+      <AnalyticsEventSender
+        eventId="publicMenuVisit"
+        payload={{
+          orgId: location.orgId,
+          locationSlug: parsedLocationSlug
+        }}
+      />
     </>
   );
 }
