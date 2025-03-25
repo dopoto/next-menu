@@ -1,3 +1,4 @@
+import { AnalyticsEventSender } from "~/app/_components/AnalyticsEventSender";
 import { locationSlugSchema } from "~/app/u/[locationId]/_domain/locations";
 
 //TODO Use cache
@@ -16,11 +17,12 @@ export default async function Layout({
   if (!locationValidationResult.success) {
     throw new Error(`Invalid location: ${locationSlug}`);
   }
-
+  
   return (
     <>
       <p>Welcome to {locationValidationResult.data}</p>
       <p>{children}</p>
+      <AnalyticsEventSender />
     </>
   );
 }

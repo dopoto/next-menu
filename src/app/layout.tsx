@@ -5,7 +5,7 @@ import { type ReactNode } from "react";
 import { Toaster } from "~/components/ui/toaster";
 import { buildHtmlClass } from "./_utils/theme-utils";
 import Providers from "./_components/Providers";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleTagManager } from "@next/third-parties/google";
 import { env } from "~/env";
 
 export const metadata: Metadata = {
@@ -26,7 +26,7 @@ export default function RootLayout(props: {
           {props.modal}
           <div id="modal-root" />
           <Toaster />
-          <GoogleAnalytics gaId={env.NEXT_PUBLIC_GOOGLE_TAG ?? ""} />
+          <GoogleTagManager gtmId={env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""} />
         </Providers>
       </body>
     </html>
