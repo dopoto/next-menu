@@ -30,7 +30,7 @@ export default async function Layout({
       </p>
       <p>{children}</p>
       <AnalyticsEventSender
-        eventId="publicMenuVisit"
+        eventId="publicLocationVisit"
         payload={{
           orgId: location.orgId,
           locationSlug: parsedLocationSlug,
