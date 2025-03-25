@@ -38,4 +38,4 @@ jobs:
         run: pnpm format:check
 
       - name: Lint check
-        run: pnpm lint 
+        run: SKIP_ENV_VALIDATION=true pnpm lint 
