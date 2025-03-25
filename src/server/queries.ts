@@ -3,7 +3,7 @@ import "server-only";
 import { db } from "~/server/db";
 import { customers, locations } from "./db/schema";
 import { and, eq } from "drizzle-orm";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 
 export async function addCustomer(
   clerkUserId: string,

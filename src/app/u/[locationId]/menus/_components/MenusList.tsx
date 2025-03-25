@@ -2,7 +2,7 @@ import { ScanQrCode } from "lucide-react";
 import MenuCard from "./MenuCard";
 import { ROUTES } from "~/app/_domain/routes";
 import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { getMenusByLocation } from "~/server/queries/location";
 
 export async function MenusList(props: { locationId: LocationId }) {

@@ -12,8 +12,8 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import React from "react";
-import { ROUTES, UserRouteFn } from "~/app/_domain/routes";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { ROUTES, type UserRouteFn } from "~/app/_domain/routes";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 
 export function PageBreadcrumb(props: { locationId: LocationId }) {
   const pathname = usePathname();
