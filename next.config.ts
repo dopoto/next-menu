@@ -27,7 +27,6 @@ const cspHeader = `
 const nextConfig: NextConfig = {
   experimental: {
     // TODO dynamicIO
-    
   },
 
   typescript: {

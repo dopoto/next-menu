@@ -10,9 +10,8 @@ export interface AnalyticsEventMap {
   };
 }
 
- 
 export type AnalyticsEventId = keyof AnalyticsEventMap;
- 
+
 export interface AnalyticsEventSenderProps<T extends AnalyticsEventId> {
   eventId: T;
   payload: AnalyticsEventMap[T];

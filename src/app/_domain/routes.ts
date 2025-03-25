@@ -43,7 +43,7 @@ export const ROUTES = {
   viewPlan: "/u/plan/view",
 
   // PUBLIC
-  public:  `/p`,
+  public: `/p`,
   publicLocation: (locationSlug: LocationSlug) => `/p/${locationSlug}`,
 } as const;
 

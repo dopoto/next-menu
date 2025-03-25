@@ -54,7 +54,7 @@ export async function LocationDetails(props: { id: LocationId }) {
             target="_blank"
             className="overflow-hidden font-normal text-ellipsis whitespace-nowrap text-blue-600 underline underline-offset-4"
           >
-             {/* TODO 'https://start...end' at smaller resolutions */}
+            {/* TODO 'https://start...end' at smaller resolutions */}
             {locationUrl}
           </a>
         </div>

@@ -19,19 +19,21 @@ export default async function Layout({
   if (!locationSlugValidationResult.success) {
     throw new Error(`Invalid location: ${locationSlug}`);
   }
-  
-  const parsedLocationSlug = locationSlugValidationResult.data
+
+  const parsedLocationSlug = locationSlugValidationResult.data;
   const location = await getLocationPublicData(parsedLocationSlug);
 
   return (
     <>
-      <p>Welcome to {parsedLocationSlug} in org {location.orgId}</p>
+      <p>
+        Welcome to {parsedLocationSlug} in org {location.orgId}
+      </p>
       <p>{children}</p>
       <AnalyticsEventSender
         eventId="publicMenuVisit"
         payload={{
           orgId: location.orgId,
-          locationSlug: parsedLocationSlug
+          locationSlug: parsedLocationSlug,
         }}
       />
     </>

@@ -26,7 +26,9 @@ export default function RootLayout(props: {
           {props.modal}
           <div id="modal-root" />
           <Toaster />
-          <GoogleTagManager gtmId={env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""} />
+          <GoogleTagManager
+            gtmId={env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
+          />
         </Providers>
       </body>
     </html>
