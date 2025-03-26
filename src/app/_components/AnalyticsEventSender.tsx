@@ -20,7 +20,7 @@ export function AnalyticsEventSender<T extends AnalyticsEventId>({
     });
   }, [eventId, payload]);
 
-  // TODO Revisit 
+  // TODO Revisit
   // Getting error [PostHog.js] You must initialize PostHog before calling posthog.capture
   // (prod build only)
 

@@ -13,7 +13,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
       capture_pageview: false, // We capture pageviews manually
       capture_pageleave: true, // Enable pageleave capture
     });
-    console.log(`DBG ph init`)
+    console.log(`DBG ph init`);
   }, []);
 
   return (

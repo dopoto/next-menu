@@ -39,7 +39,7 @@ export default async function Layout({
   const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
 
   posthog.capture({
-    distinctId: machineId ?? '-- missing machine id --',
+    distinctId: machineId ?? "-- missing machine id --",
     event,
     properties: {
       orgId: location.orgId,
