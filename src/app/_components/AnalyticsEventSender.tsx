@@ -23,6 +23,8 @@ export function AnalyticsEventSender<T extends AnalyticsEventId>({
 
   // Send PostHog event
   useEffect(() => {
+    posthog.debug();
+    console.log(`DBG posthog capture`)
     posthog.capture(eventId, { ...payload });
   }, [eventId, payload]);
 
