@@ -52,13 +52,12 @@ html {
   scroll-behavior: smooth;
 }
 
-
 .workflow {
   line-height: 33px;
   padding-left: 12px;
 }
 
- /* TODO CLEANUP */
+/* TODO CLEANUP */
 
 .modal-backdrop {
   position: absolute;
@@ -155,8 +154,7 @@ html {
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.87 0 0);
   /* Custom: */
-  --pop: var(--color-blue-800, currentColor)
-  
+  --pop: var(--color-blue-800, currentColor);
 }
 
 /*
@@ -271,13 +269,17 @@ html {
 
 @layer utilities {
   .heading-label {
-    @apply   font-semibold tracking-wide text-pop uppercase;
+    @apply text-pop font-semibold tracking-wide uppercase;
   }
   .heading-main {
     @apply mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl dark:text-white;
   }
   .heading-secondary {
     @apply mx-auto mt-4 max-w-2xl text-xl text-gray-500 dark:text-gray-300;
+  }
+
+  .blue-link {
+    @apply cursor-pointer text-blue-500 underline;
   }
 }
 

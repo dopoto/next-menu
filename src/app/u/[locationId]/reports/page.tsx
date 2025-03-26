@@ -15,9 +15,11 @@ export default async function ReportsPage(props: { params: Params }) {
     throw new Error(`Invalid location: ${params.locationId}`);
   }
 
+  const parsedLocationId = validationResult.data
+
   return (
     <Suspense fallback={<LoadingSection />}>
-      <Reports />
+      <Reports locationId={parsedLocationId} />
     </Suspense>
   );
 }
