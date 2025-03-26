@@ -26,7 +26,7 @@ export function SidebarLocationManager() {
       <SidebarMenuButton
         onClick={openLocation}
         size="lg"
-        className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+        className="cursor-pointer data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
       >
         <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-md">
           {locationName.slice(0, 3).toLocaleUpperCase()}
