@@ -24,6 +24,8 @@ export default clerkMiddleware(
     const { currentLocationId } = sessionClaims?.metadata ?? {};
     const orgId = sessionClaims?.org_id;
 
+    const res = NextResponse.next();
+
     if (isSignUpRoute(req)) {
       console.log(`DBG-MIDDLEWARE [${req.url}] Is sign-up route`);
       const url = new URL(req.url);
@@ -32,7 +34,6 @@ export default clerkMiddleware(
         console.log(
           `DBG-MIDDLEWARE [${req.url}] Setting onboard-plan cookie to ${tierParam}`,
         );
-        const res = NextResponse.next();
         res.cookies.set(CookieKey.OnboardPlan, tierParam, {
           path: "/",
           httpOnly: false,
@@ -70,6 +71,19 @@ export default clerkMiddleware(
         `DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`,
       );
       return redirectTo(req, myDashboardRoute);
+    }
+
+    // For public routes, ensure we have a machineId cookie
+    if (isPublicRoute(req)) {
+      const machineId = req.cookies.get(CookieKey.MachineId);
+      if (!machineId) {
+        res.cookies.set(CookieKey.MachineId, crypto.randomUUID(), {
+          path: "/",
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+        });
+        return res;
+      }
     }
 
     // If the user is logged in and the route is protected, let them use it.

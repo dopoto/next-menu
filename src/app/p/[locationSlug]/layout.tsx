@@ -5,6 +5,8 @@ import { PostHog } from "posthog-node";
 import { env } from "~/env";
 import React from "react";
 import type { AnalyticsEventId } from "~/domain/analytics";
+import { CookieKey } from "~/app/_domain/cookies";
+import { cookies } from "next/headers";
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
   host: env.NEXT_PUBLIC_POSTHOG_HOST,
@@ -33,13 +35,16 @@ export default async function Layout({
 
   const event: AnalyticsEventId = "publicLocationVisit";
 
+  const cookieStore = cookies();
+  const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
+
   posthog.capture({
-    distinctId: "leeserver@vercel.com", //TODO machine id for public users
+    distinctId: machineId ?? '-- missing machine id --',
     event,
     properties: {
       orgId: location.orgId,
       locationSlug: parsedLocationSlug,
-    }
+    },
   });
 
   return (
