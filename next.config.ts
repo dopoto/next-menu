@@ -67,7 +67,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  
+
   async rewrites() {
     return [
       {
@@ -84,7 +84,7 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-  
+
   // This is required to support PostHog trailing slash API requests
   skipTrailingSlashRedirect: true,
 };
