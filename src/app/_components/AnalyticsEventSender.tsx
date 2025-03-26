@@ -6,7 +6,6 @@ import {
   type AnalyticsEventSenderProps,
   type AnalyticsEventId,
 } from "~/domain/analytics";
-import posthog from "posthog-js";
 
 export function AnalyticsEventSender<T extends AnalyticsEventId>({
   eventId,
@@ -21,12 +20,20 @@ export function AnalyticsEventSender<T extends AnalyticsEventId>({
     });
   }, [eventId, payload]);
 
+  // TODO Revisit
+  // Getting error [PostHog.js] You must initialize PostHog before calling posthog.capture
+  // (prod build only)
+
   // Send PostHog event
-  useEffect(() => {
-    posthog.debug();
-    console.log(`DBG posthog capture`)
-    posthog.capture(eventId, { ...payload });
-  }, [eventId, payload]);
+  // useEffect(() => {
+  //   if(!posthog){
+  //     console.log(`DBG no posthog`)
+  //     return;
+  //   }
+  //   posthog.debug();
+  //   console.log(`DBG posthog capture`)
+  //   posthog.capture(eventId, { ...payload });
+  // }, [posthog, eventId, payload]);
 
   return null;
 }

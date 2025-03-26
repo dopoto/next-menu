@@ -1,6 +1,16 @@
 import { AnalyticsEventSender } from "~/app/_components/AnalyticsEventSender";
 import { locationSlugSchema } from "~/app/u/[locationId]/_domain/locations";
 import { getLocationPublicData } from "~/server/queries/location";
+import { PostHog } from "posthog-node";
+import { env } from "~/env";
+import React from "react";
+import type { AnalyticsEventId } from "~/domain/analytics";
+import { CookieKey } from "~/app/_domain/cookies";
+import { cookies } from "next/headers";
+
+const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
+  host: env.NEXT_PUBLIC_POSTHOG_HOST,
+});
 
 //TODO Use cache
 
@@ -22,6 +32,20 @@ export default async function Layout({
 
   const parsedLocationSlug = locationSlugValidationResult.data;
   const location = await getLocationPublicData(parsedLocationSlug);
+
+  const event: AnalyticsEventId = "publicLocationVisit";
+
+  const cookieStore = cookies();
+  const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
+
+  posthog.capture({
+    distinctId: machineId ?? "-- missing machine id --",
+    event,
+    properties: {
+      orgId: location.orgId,
+      locationSlug: parsedLocationSlug,
+    },
+  });
 
   return (
     <>

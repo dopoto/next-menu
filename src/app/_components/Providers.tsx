@@ -5,7 +5,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider, useTheme } from "./ThemeProvider";
 import { dark } from "@clerk/themes";
 import { useEffect, useState } from "react";
-import { PostHogProvider } from "~/app/_components/PostHogProvider";
 
 interface ProviderConfig<P> {
   Component: React.ComponentType<P>;
@@ -43,7 +42,6 @@ function ClerkThemeWrapper({ children }: { children: React.ReactNode }) {
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const AppProviders = composeProviders([
-    { Component: PostHogProvider },
     { Component: ThemeProvider },
     { Component: ClerkThemeWrapper },
   ]);
