@@ -55,7 +55,7 @@ export function PriceTierCard(props: {
           ))}
           {props.exceededFeatures?.map((exceededFeature) => (
             <Fragment key={exceededFeature.id}>
-              {getExceededFeatureRow(props.tier, exceededFeature)}
+              {getExceededFeatureRow(exceededFeature)}
             </Fragment>
           ))}
         </div>
@@ -131,7 +131,7 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
   );
 };
 
-const getExceededFeatureRow = (tier: PriceTier, feature: ExceededFeature) => {
+const getExceededFeatureRow = (feature: ExceededFeature) => {
   const featureDetails = priceTierFeatures[feature.id];
 
   return (
