@@ -6,11 +6,13 @@ import {
   type AnalyticsEventSenderProps,
   type AnalyticsEventId,
 } from "~/domain/analytics";
+import posthog from "posthog-js";
 
 export function AnalyticsEventSender<T extends AnalyticsEventId>({
   eventId,
   payload,
 }: AnalyticsEventSenderProps<T>) {
+  // Send Google Tag manager (GTM) event
   useEffect(() => {
     sendGTMEvent({
       event: "custom_event",
@@ -18,5 +20,11 @@ export function AnalyticsEventSender<T extends AnalyticsEventId>({
       ...payload,
     });
   }, [eventId, payload]);
+
+  // Send PostHog event
+  useEffect(() => {
+    posthog.capture(eventId, { ...payload });
+  }, [eventId, payload]);
+
   return null;
 }
