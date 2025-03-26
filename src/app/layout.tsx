@@ -23,7 +23,6 @@ export default function RootLayout(props: {
       {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
       <body>
         <PostHogProvider>
-          ROOT2
           <Providers>
             <main className="h-full w-full">{props.children}</main>
             {props.modal}
