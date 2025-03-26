@@ -65,6 +65,7 @@
     "stripe": "^17.7.0",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
+    "truncate-middle": "^2.0.0",
     "zod": "^3.24.2"
   },
   "devDependencies": {

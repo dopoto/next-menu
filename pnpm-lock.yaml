@@ -137,6 +137,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@4.0.15)
+      truncate-middle:
+        specifier: ^2.0.0
+        version: 2.0.0
       zod:
         specifier: ^3.24.2
         version: 3.24.2
@@ -4099,6 +4102,10 @@ packages:
 
   tr46@0.0.3:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+
+  truncate-middle@2.0.0:
+    resolution: {integrity: sha512-eBRrxfdG80vMeU8mToWqRE4otZwMewMdqNQZD8Gqw7pLrwv45OHf2q50K7rRIkjkCFbU2gsI+8N2Bz8ecXr00A==}
+    engines: {node: '>=18'}
 
   ts-api-utils@2.0.1:
     resolution: {integrity: sha512-dnlgjFSVetynI8nzgJ+qF62efpglpWRk8isUEWZGWlJYySCTD6aKvbUDu+zbPeDakk3bg5H4XpitHukgfL1m9w==}
@@ -8339,6 +8346,8 @@ snapshots:
   toggle-selection@1.0.6: {}
 
   tr46@0.0.3: {}
+
+  truncate-middle@2.0.0: {}
 
   ts-api-utils@2.0.1(typescript@5.8.2):
     dependencies:

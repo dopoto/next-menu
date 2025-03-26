@@ -10,6 +10,8 @@ import { CopyIcon, ExternalLinkIcon } from "lucide-react";
 import { env } from "~/env";
 import { ROUTES } from "~/app/_domain/routes";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
+import truncateMiddle from "truncate-middle";
+import { CopyButton } from "~/app/_components/CopyButton";
 
 export async function LocationDetails(props: { id: LocationId }) {
   const { userId, orgId } = await auth();
@@ -44,21 +46,26 @@ export async function LocationDetails(props: { id: LocationId }) {
         </div>
       </div>
       <p className="text-center text-sm">Your location is live here:</p>
-
-      <div className="  flex w-full flex-row flex-nowrap gap-2 rounded">
-        <ExternalLinkIcon className="stroke-gray-700" />
-        <div className="grow  ">
+      <div className="flex w-full flex-row flex-nowrap gap-2 rounded">
+        <a title={locationUrl} href={locationUrl} target="_blank">
+          <ExternalLinkIcon className="stroke-gray-700" />
+        </a>
+        <div className="grow">
           <a
             title={locationUrl}
             href={locationUrl}
             target="_blank"
-            className=" overflow-hidden font-normal text-ellipsis whitespace-nowrap text-blue-600 underline underline-offset-4"
+            className="font-normal text-blue-600 underline underline-offset-4"
           >
-            {/* TODO 'https://start...end' at smaller resolutions */}
-            {locationUrl}
+            <span className="max-[500px]:visible min-[501px]:hidden">
+              {truncateMiddle(locationUrl, 10, 10, "...")}
+            </span>
+            <span className="max-[500px]:hidden min-[501px]:visible">
+              {locationUrl}
+            </span>
           </a>
         </div>
-        <CopyIcon className="stroke-gray-700" />
+        <CopyButton textToCopy={locationUrl} />
       </div>
       <SeparatorWithText title="OR" />
       <div className="flex w-full items-center justify-center">
