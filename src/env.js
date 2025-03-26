@@ -10,6 +10,8 @@ export const env = createEnv({
     POSTGRES_URL: z.string().url(),
     STRIPE_SECRET_KEY: z.string(),
     SENTRY_AUTH_TOKEN: z.string(),
+    POSTHOG_ANALYTICS_QUERIES_API_KEY: z.string(),
+    POSTHOG_PROJECT_ID: z.string(),
     NODE_ENV: z
       .enum(["development", "test", "production"])
       .default("development"),
@@ -82,6 +84,8 @@ export const env = createEnv({
     NEXT_PUBLIC_CSP_REPORT_URI: process.env.NEXT_PUBLIC_CSP_REPORT_URI,
     NEXT_PUBLIC_POSTHOG_KEY: process.env.NEXT_PUBLIC_POSTHOG_KEY,
     NEXT_PUBLIC_POSTHOG_HOST: process.env.NEXT_PUBLIC_POSTHOG_HOST,
+    POSTHOG_ANALYTICS_QUERIES_API_KEY: process.env.POSTHOG_ANALYTICS_QUERIES_API_KEY,
+    POSTHOG_PROJECT_ID: process.env.POSTHOG_PROJECT_ID
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
