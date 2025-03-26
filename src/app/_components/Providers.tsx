@@ -6,7 +6,6 @@ import { ThemeProvider, useTheme } from "./ThemeProvider";
 import { dark } from "@clerk/themes";
 import { useEffect, useState } from "react";
 import { PostHogProvider } from "~/app/_components/PostHogProvider";
- 
 
 interface ProviderConfig<P> {
   Component: React.ComponentType<P>;
