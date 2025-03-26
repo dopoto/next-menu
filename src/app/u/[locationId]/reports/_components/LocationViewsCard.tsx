@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import React from "react";
-import { AnalyticsEventId } from "~/domain/analytics";
+import { type AnalyticsEventId } from "~/domain/analytics";
 import { env } from "~/env";
 
 export async function LocationViewsCard() {
@@ -34,7 +34,9 @@ export async function LocationViewsCard() {
     body: JSON.stringify(payload),
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const data = await response.json();
 
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return <div>{data.results[0]}</div>;
 }

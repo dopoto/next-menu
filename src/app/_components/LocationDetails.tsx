@@ -6,7 +6,7 @@ import {
   type LocationId,
   locationIdSchema,
 } from "~/app/u/[locationId]/_domain/locations";
-import { CopyIcon, ExternalLinkIcon } from "lucide-react";
+import { ExternalLinkIcon } from "lucide-react";
 import { env } from "~/env";
 import { ROUTES } from "~/app/_domain/routes";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
