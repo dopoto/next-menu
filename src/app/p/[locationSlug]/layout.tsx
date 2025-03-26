@@ -1,6 +1,14 @@
 import { AnalyticsEventSender } from "~/app/_components/AnalyticsEventSender";
 import { locationSlugSchema } from "~/app/u/[locationId]/_domain/locations";
 import { getLocationPublicData } from "~/server/queries/location";
+import { PostHog } from "posthog-node";
+import { env } from "~/env";
+import React from "react";
+import type { AnalyticsEventId } from "~/domain/analytics";
+
+const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
+  host: env.NEXT_PUBLIC_POSTHOG_HOST,
+});
 
 //TODO Use cache
 
@@ -22,6 +30,17 @@ export default async function Layout({
 
   const parsedLocationSlug = locationSlugValidationResult.data;
   const location = await getLocationPublicData(parsedLocationSlug);
+
+  const event: AnalyticsEventId = "publicLocationVisit";
+
+  posthog.capture({
+    distinctId: "leeserver@vercel.com", //TODO machine id for public users
+    event,
+    properties: {
+      orgId: location.orgId,
+      locationSlug: parsedLocationSlug,
+    }
+  });
 
   return (
     <>
