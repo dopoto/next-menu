@@ -8,7 +8,7 @@ import { type PriceTierFeatureUsage } from "~/app/_domain/price-tier-features";
 import { type PriceTier } from "~/app/_domain/price-tiers";
 import { ROUTES } from "~/app/_domain/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
-import { getAvailableQuota } from "~/app/_utils/quota-utils.server-only";
+import { getAvailableFeatureQuota } from "~/app/_utils/quota-utils.server-only";
 import { obj2str } from "~/app/_utils/string-utils";
 import { Button } from "~/components/ui/button";
 import { Skeleton } from "~/components/ui/skeleton";
@@ -89,7 +89,7 @@ async function PlanUsage(props: { tier: PriceTier }) {
   const featuresInCurrentTierWithUsage: PriceTierFeatureUsage[] =
     await Promise.all(
       featuresInCurrentTier.map(async (feature) => {
-        const available = await getAvailableQuota(feature.id);
+        const available = await getAvailableFeatureQuota(feature.id);
         return {
           id: feature.id,
           planQuota: feature.quota,
