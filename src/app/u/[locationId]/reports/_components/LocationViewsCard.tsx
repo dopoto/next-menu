@@ -9,7 +9,7 @@ export async function LocationViewsCard(props: {
   mode: "regular" | "placeholder" | "locked";
   locationId: LocationId;
 }) {
-  const title = "Total views"
+  const title = "Total views";
   const footer = (
     <div className="text-muted-foreground">
       Visitors of your{" "}

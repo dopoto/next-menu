@@ -27,7 +27,7 @@ export async function getViews(orgId: string): Promise<number> {
     body: JSON.stringify(payload),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment  
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const data: PostHogResponse = await response.json();
   return data?.results?.[0]?.visit_count
     ? Number(data.results[0].visit_count)
@@ -35,5 +35,5 @@ export async function getViews(orgId: string): Promise<number> {
 }
 
 interface PostHogResponse {
-  results: Array<{visit_count: string}>
+  results: Array<{ visit_count: string }>;
 }
