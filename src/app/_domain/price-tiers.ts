@@ -14,7 +14,7 @@ export type PriceTierId = z.infer<typeof PriceTierIdSchema>;
 
 export const defaultTier: PriceTierId = "start";
 
-export type Feature = { id: PriceTierFeatureId; quota: number };
+export type Feature = { id: PriceTierFeatureId; quota: number|boolean };
 
 export type PriceTier = {
   id: PriceTierId;
@@ -40,6 +40,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "reports", quota: false },
     ],
   },
   start2: {
@@ -50,7 +51,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     yearlyUsdPrice: 0,
     isPublic: true,
     isPopular: false,
-    features: [{ id: "locations", quota: 1 }],
+    features: [{ id: "locations", quota: 1 },
+      { id: "reports", quota: true }],
   },
   pro: {
     id: "pro",
@@ -64,6 +66,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "reports", quota: true }
     ],
   },
   enterprise: {
@@ -78,6 +81,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 100 },
+      { id: "reports", quota: true }
     ],
   },
   custom1: {

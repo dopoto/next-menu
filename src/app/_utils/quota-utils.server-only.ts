@@ -13,7 +13,7 @@ import { obj2str } from "./string-utils";
  */
 export async function getIncludedQuota(
   featureId: PriceTierFeatureId,
-): Promise<number> {
+): Promise<number | boolean> {
   const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
 
   const parsedTier = getValidPriceTier(priceTierId);
@@ -21,14 +21,23 @@ export async function getIncludedQuota(
     throw new Error(`Missing or invalid From tier in session claims.`);
   }
 
-  const included = parsedTier.features.find((f) => f.id === featureId)?.quota;
-  if (!included) {
+  const quota = parsedTier.features.find((f) => f.id === featureId)?.quota;
+
+  if (quota == null) {
     throw new Error(
       `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
     );
   }
 
-  return included;
+  if (quota === true || quota === false) {
+    return quota
+  }
+
+  if (!isNaN(Number(quota)) && quota > 0) {
+    return true;
+  }
+
+  return false
 }
 
 /**

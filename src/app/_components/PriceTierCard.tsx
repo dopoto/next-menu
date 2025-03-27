@@ -113,6 +113,15 @@ const getDisplayValue = (
           : featureDetails.resourceSingularName}
       </>
     );
+  if (typeof quota === "boolean")
+    return (
+      <>
+        <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
+        {quota === true
+          ? featureDetails.resourcePluralName
+          : featureDetails.resourceSingularName}
+      </>
+    );
   return "--";
 };
 
@@ -125,7 +134,9 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
   }
 
   return (
-    <div className="flex flex-row items-center gap-1">
+    <div
+      className={`flex flex-row items-center gap-1 ${typeof quota === "boolean" ? "capitalize" : ""}`}
+    >
       {getDisplayValue(featureDetails, quota)}
     </div>
   );

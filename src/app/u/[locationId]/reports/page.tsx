@@ -19,33 +19,14 @@ export default async function ReportsPage(props: { params: Params }) {
   if (!userId || !orgId) {
     throw new Error(`No userId or orgId found in auth.`);
   }
-
-  // Location Views card
-  const locationViewsIsLocked = false;
-  const locationViewsTitle = "Total views";
-
-  const locationViewsFooter = (
-    <div className="text-muted-foreground">
-      Visitors of your{" "}
-      <a className="blue-link" href={ROUTES.location(parsedLocationId)}>
-        public location page
-      </a>
-    </div>
-  );
+ 
 
   return (
     <div>
       <Suspense
-        fallback={
-          <GenericReportsCard
-            isLocked={locationViewsIsLocked}
-            title={locationViewsTitle}
-            value={"..."}
-            footer={locationViewsFooter}
-          />
-        }
+        fallback={<LocationViewsCard mode="placeholder" locationId={parsedLocationId} />}
       >
-        <LocationViewsCard locationId={parsedLocationId} />
+        <LocationViewsCard mode="regular" locationId={parsedLocationId} />
       </Suspense>
     </div>
   );
