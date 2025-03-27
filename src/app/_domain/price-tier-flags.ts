@@ -16,7 +16,7 @@ export type PriceTierFlag = {
   resourcePluralName: string;
 };
 
-export const priceTierFeatures: Record<PriceTierFlagId, PriceTierFlag> = {
+export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
   reports: {
     id: "reports",
     resourceSingularName: "report",

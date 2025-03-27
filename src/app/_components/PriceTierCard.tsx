@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { type Feature, type PriceTier } from "../_domain/price-tiers";
+import { Flag, type Feature, type PriceTier } from "../_domain/price-tiers";
 import { Fragment, type ReactNode } from "react";
 import {
   type ExceededFeature,
@@ -15,6 +15,7 @@ import {
 } from "../_domain/price-tier-features";
 import { CheckIcon, CircleXIcon } from "lucide-react";
 import { PageSubtitle } from "./PageSubtitle";
+import { PriceTierFlag, priceTierFlags } from "~/app/_domain/price-tier-flags";
 
 export type CardCustomizations = {
   containerStyle?: string;
@@ -28,7 +29,7 @@ export function PriceTierCard(props: {
   exceededFeatures?: Array<ExceededFeature>;
   footerCta?: ReactNode;
 }) {
-  const { name, description, monthlyUsdPrice, features } = props.tier;
+  const { name, description, monthlyUsdPrice, features, flags } = props.tier;
 
   return (
     <Card className={`${props.cardCustomizations?.containerStyle}`}>
@@ -56,6 +57,11 @@ export function PriceTierCard(props: {
           {props.exceededFeatures?.map((exceededFeature) => (
             <Fragment key={exceededFeature.id}>
               {getExceededFeatureRow(exceededFeature)}
+            </Fragment>
+          ))}
+          {flags.map((flag) => (
+            <Fragment key={flag.id}>
+              {getFlagRow(props.tier, flag)}
             </Fragment>
           ))}
         </div>
@@ -99,8 +105,8 @@ const getPrice = (monthlyUsdPrice: number) => {
   );
 };
 
-const getDisplayValue = (
-  featureDetails: PriceTierFeature,
+const getFeatureDisplayValue = (
+  itemDetails: PriceTierFeature ,
   quota: Feature["quota"],
 ) => {
   if (typeof quota === "number")
@@ -109,8 +115,8 @@ const getDisplayValue = (
         <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
         {quota.toString()}{" "}
         {quota > 1
-          ? featureDetails.resourcePluralName
-          : featureDetails.resourceSingularName}
+          ? itemDetails.resourcePluralName
+          : itemDetails.resourceSingularName}
       </>
     );
   return "--";
@@ -126,7 +132,38 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
 
   return (
     <div className="flex flex-row items-center gap-1">
-      {getDisplayValue(featureDetails, quota)}
+      {getFeatureDisplayValue(featureDetails, quota)}
+    </div>
+  );
+};
+
+const getFlagDisplayValue = (
+  itemDetails: PriceTierFlag ,
+  isEnabled: boolean
+) => {
+   
+  if(!isEnabled) return null;
+
+    return (
+      <>
+        <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
+        {itemDetails.resourcePluralName}
+      </>
+    );
+  
+};
+
+const getFlagRow = (tier: PriceTier, flag: Flag) => {
+  const flagDetails = priceTierFlags[flag.id];
+  const isEnabled = tier.flags.find((f) => f.id === flag.id)?.isEnabled ?? false;
+
+  if (!isEnabled) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-row items-center gap-1 capitalize">
+      {getFlagDisplayValue(flagDetails, isEnabled)}
     </div>
   );
 };

@@ -26,17 +26,17 @@ export   function GenericReportsCard(props: {
         <CardContent className="space-y-4">
           {props.isLocked ? (
             <>
-              <div className="pointer-events-none space-y-2 text-3xl opacity-60 blur-[5px] filter select-none">
+              <div className="pointer-events-none space-y-2 text-3xl opacity-60 blur-[4px] filter select-none">
                 {props.value}
               </div>
 
               <div className="bg-background/50 absolute inset-1 flex items-center justify-center backdrop-blur-[1px]">
                 <div className="p-3 text-center">
                   <Crown className="mx-auto mb-2 h-8 w-8 text-amber-500" />
-                  <h3 className="mb-1 text-lg font-medium">Premium Feature</h3>
+                  <h3 className="mb-1 text-lg font-medium">Not available in your plan</h3>
                   <p className="text-muted-foreground mb-4 text-sm">
                     <a className="blue-link" href={ROUTES.changePlan}>
-                      Upgrade your plan
+                      Change your plan
                     </a>{" "}
                     to unlock this widget.
                   </p>
