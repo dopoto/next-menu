@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Flag, type Feature, type PriceTier } from "../_domain/price-tiers";
+import { type Flag, type Feature, type PriceTier } from "../_domain/price-tiers";
 import { Fragment, type ReactNode } from "react";
 import {
   type ExceededFeature,
@@ -15,7 +15,7 @@ import {
 } from "../_domain/price-tier-features";
 import { CheckIcon, CircleXIcon } from "lucide-react";
 import { PageSubtitle } from "./PageSubtitle";
-import { PriceTierFlag, priceTierFlags } from "~/app/_domain/price-tier-flags";
+import { type PriceTierFlag, priceTierFlags } from "~/app/_domain/price-tier-flags";
 
 export type CardCustomizations = {
   containerStyle?: string;

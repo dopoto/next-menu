@@ -2,10 +2,7 @@ import { Suspense } from "react";
 import { locationIdSchema } from "../_domain/locations";
 import { auth } from "@clerk/nextjs/server";
 import { LocationViewsCard } from "~/app/u/[locationId]/reports/_components/LocationViewsCard";
-import {
-  getAvailableFeatureQuota,
-  isFlagAvailableInCurrentTier,
-} from "~/app/_utils/quota-utils.server-only";
+import { isFlagAvailableInCurrentTier } from "~/app/_utils/quota-utils.server-only";
 
 type Params = Promise<{ locationId: string }>;
 

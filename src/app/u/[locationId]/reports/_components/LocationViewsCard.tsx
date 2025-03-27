@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import * as React from "react";
 import { ROUTES } from "~/app/_domain/routes";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { GenericReportsCard } from "~/app/u/[locationId]/reports/_components/GenericReportsCard";
 import { getViews } from "~/app/u/[locationId]/reports/_utils/posthog-utils";
 
@@ -9,6 +9,7 @@ export async function LocationViewsCard(props: {
   mode: "regular" | "placeholder" | "locked";
   locationId: LocationId;
 }) {
+  const title = "Total views"
   const footer = (
     <div className="text-muted-foreground">
       Visitors of your{" "}
@@ -22,7 +23,7 @@ export async function LocationViewsCard(props: {
     return (
       <GenericReportsCard
         isLocked={false}
-        title={"Total views"}
+        title={title}
         value={"..."}
         footer={footer}
       />
@@ -33,7 +34,7 @@ export async function LocationViewsCard(props: {
     return (
       <GenericReportsCard
         isLocked={true}
-        title={"Total views"}
+        title={title}
         value={"683562"}
         footer={footer}
       />
@@ -50,7 +51,7 @@ export async function LocationViewsCard(props: {
   return (
     <GenericReportsCard
       isLocked={false}
-      title={"Total views"}
+      title={title}
       value={locationViewsValue}
       footer={footer}
     />

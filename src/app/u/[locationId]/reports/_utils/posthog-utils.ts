@@ -1,5 +1,5 @@
 import { env } from "process";
-import { AnalyticsEventId } from "~/domain/analytics";
+import { type AnalyticsEventId } from "~/domain/analytics";
 
 export async function getViews(orgId: string) {
   const eventName: AnalyticsEventId = "publicLocationVisit";
@@ -29,7 +29,6 @@ export async function getViews(orgId: string) {
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const data = await response.json();
-  //await new Promise((resolve) => setTimeout(resolve, 3000));
-  const views = data.results[0];
+  const views = data.results[0] as string;
   return views;
 }
