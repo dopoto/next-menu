@@ -1,7 +1,7 @@
 import { env } from "process";
 import { type AnalyticsEventId } from "~/domain/analytics";
 
-export async function getViews(orgId: string) {
+export async function getViews(orgId: string): Promise<number> {
   const eventName: AnalyticsEventId = "publicLocationVisit";
   const url = `${env.NEXT_PUBLIC_POSTHOG_HOST}/api/projects/${env.POSTHOG_PROJECT_ID}/query/`;
   const headers = {
@@ -27,8 +27,13 @@ export async function getViews(orgId: string) {
     body: JSON.stringify(payload),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const data = await response.json();
-  const views = data.results[0] as string;
-  return views;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment  
+  const data: PostHogResponse = await response.json();
+  return data?.results?.[0]?.visit_count
+    ? Number(data.results[0].visit_count)
+    : 0;
+}
+
+interface PostHogResponse {
+  results: Array<{visit_count: string}>
 }
