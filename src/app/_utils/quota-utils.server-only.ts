@@ -41,11 +41,12 @@ export async function getIncludedQuota(
 }
 
 /**
- * Returns the number of items used by the current organization in a feature - E.G. "menus".
+ * Returns the number of items used by the current organization in a 
+ * feature (E.G. "menus") or boolean - for boolean features (E.G. "reports").
  */
 export async function getUsedQuota(
   featureId: PriceTierFeatureId,
-): Promise<number> {
+): Promise<number|boolean> {
   const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
 
   const parsedTier = getValidPriceTier(priceTierId);
@@ -59,11 +60,17 @@ export async function getUsedQuota(
   return used;
 }
 
+/**
+ * Returns the available quota of the current organization in a 
+ * feature (E.G. "menus") or null - for boolean features (E.G. "reports").
+ */
 export async function getAvailableQuota(
   featureId: PriceTierFeatureId,
-): Promise<number> {
+): Promise<number|boolean> {
   const included = await getIncludedQuota(featureId);
+  if (included === true || included === false) return included;
   const used = await getUsedQuota(featureId);
+  if (used === null) return null;
   const available = included - used;
   return available;
 }
