@@ -60,9 +60,7 @@ export function PriceTierCard(props: {
             </Fragment>
           ))}
           {flags.map((flag) => (
-            <Fragment key={flag.id}>
-              {getFlagRow(props.tier, flag)}
-            </Fragment>
+            <Fragment key={flag.id}>{getFlagRow(props.tier, flag)}</Fragment>
           ))}
         </div>
       </CardContent>
@@ -106,7 +104,7 @@ const getPrice = (monthlyUsdPrice: number) => {
 };
 
 const getFeatureDisplayValue = (
-  itemDetails: PriceTierFeature ,
+  itemDetails: PriceTierFeature,
   quota: Feature["quota"],
 ) => {
   if (typeof quota === "number")
@@ -138,24 +136,23 @@ const getFeatureRow = (tier: PriceTier, feature: Feature) => {
 };
 
 const getFlagDisplayValue = (
-  itemDetails: PriceTierFlag ,
-  isEnabled: boolean
+  itemDetails: PriceTierFlag,
+  isEnabled: boolean,
 ) => {
-   
-  if(!isEnabled) return null;
+  if (!isEnabled) return null;
 
-    return (
-      <>
-        <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-        {itemDetails.resourcePluralName}
-      </>
-    );
-  
+  return (
+    <>
+      <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
+      {itemDetails.resourcePluralName}
+    </>
+  );
 };
 
 const getFlagRow = (tier: PriceTier, flag: Flag) => {
   const flagDetails = priceTierFlags[flag.id];
-  const isEnabled = tier.flags.find((f) => f.id === flag.id)?.isEnabled ?? false;
+  const isEnabled =
+    tier.flags.find((f) => f.id === flag.id)?.isEnabled ?? false;
 
   if (!isEnabled) {
     return null;

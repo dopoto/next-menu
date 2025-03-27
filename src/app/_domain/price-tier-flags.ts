@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const PriceTierFlagIdSchema = z.literal("reports")
+export const PriceTierFlagIdSchema = z.literal("reports");
 
 export type PriceTierFlagId = z.infer<typeof PriceTierFlagIdSchema>;
 
