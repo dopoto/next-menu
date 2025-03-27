@@ -22,9 +22,9 @@ export type PriceTierFeature = {
 
 export type PriceTierFeatureUsage = {
   id: PriceTierFeatureId;
-  planQuota: number ;
-  used: number ;
-  available: number ;
+  planQuota: number;
+  used: number;
+  available: number;
 };
 
 export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
@@ -42,15 +42,12 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
 
 export const priceTierUsageFunctions: Record<
   PriceTierFeatureId,
-  () => Promise<number> | null
+  () => Promise<number>
 > = {
   locations: getLocationsPlanUsage,
   menus: getMenusPlanUsage,
 };
 
 export type ExceededFeature = PriceTierFeatureUsage & {
-  candidateQuota?: number | boolean;
-  planChangeOutcome: PlanChangeOutcome
+  candidateQuota?: number;
 };
-
-export type PlanChangeOutcome = 'ok' | 'less-features-warning'  | 'data-loss-error' 
