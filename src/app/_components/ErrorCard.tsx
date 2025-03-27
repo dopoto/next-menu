@@ -30,11 +30,7 @@ export function ErrorCard(props: {
         <div className="text-sm font-semibold">What can I try next?</div>
       )}
       {ctas.map((cta) => (
-        <Link
-          href={cta.href}
-          key={cta.href}
-          className="cursor-pointer text-blue-500 underline"
-        >
+        <Link href={cta.href} key={cta.href} className="blue-link">
           <div className="flex flex-row items-center gap-1">
             <ChevronsRight size={12} />
             {cta.text}

@@ -6,6 +6,7 @@ import {
 import { auth } from "@clerk/nextjs/server";
 import { getValidPriceTier } from "./price-tier-utils";
 import { obj2str } from "./string-utils";
+import { type PriceTierFlagId } from "~/app/_domain/price-tier-flags";
 
 /**
  * Returns the number of items included in a feature (E.G. "menus")
@@ -34,7 +35,7 @@ export async function getIncludedQuota(
 /**
  * Returns the number of items used by the current organization in a feature - E.G. "menus".
  */
-export async function getUsedQuota(
+export async function getUsedFeatureQuota(
   featureId: PriceTierFeatureId,
 ): Promise<number> {
   const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
@@ -50,11 +51,25 @@ export async function getUsedQuota(
   return used;
 }
 
-export async function getAvailableQuota(
+export async function getAvailableFeatureQuota(
   featureId: PriceTierFeatureId,
 ): Promise<number> {
   const included = await getIncludedQuota(featureId);
-  const used = await getUsedQuota(featureId);
+  const used = await getUsedFeatureQuota(featureId);
   const available = included - used;
   return available;
+}
+
+export async function isFlagAvailableInCurrentTier(
+  flagId: PriceTierFlagId,
+): Promise<boolean> {
+  const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
+  const parsedTier = getValidPriceTier(priceTierId);
+  if (!parsedTier) {
+    throw new Error(`Missing or invalid From tier in session claims.`);
+  }
+
+  return parsedTier.flags.find((flag) => flag.id === flagId)?.isEnabled === true
+    ? true
+    : false;
 }

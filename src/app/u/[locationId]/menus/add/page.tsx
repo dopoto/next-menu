@@ -1,5 +1,5 @@
 import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
-import { getAvailableQuota } from "~/app/_utils/quota-utils.server-only";
+import { getAvailableFeatureQuota } from "~/app/_utils/quota-utils.server-only";
 import AddMenuDialog from "~/app/u/[locationId]/menus/_components/AddMenuDialog";
 
 type Params = Promise<{ locationId: string }>;
@@ -12,7 +12,7 @@ export default async function AddMenuPage(props: { params: Params }) {
     throw new Error("Location issue");
   }
 
-  const availableQuota = await getAvailableQuota("menus");
+  const availableQuota = await getAvailableFeatureQuota("menus");
 
   return <AddMenuDialog availableQuota={availableQuota} />;
 }

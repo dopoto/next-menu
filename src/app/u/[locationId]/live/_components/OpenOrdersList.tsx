@@ -1,6 +1,6 @@
 import { LayoutDashboard } from "lucide-react";
 import { ROUTES } from "~/app/_domain/routes";
-import { getUsedQuota } from "~/app/_utils/quota-utils.server-only";
+import { getUsedFeatureQuota } from "~/app/_utils/quota-utils.server-only";
 import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 
@@ -9,7 +9,7 @@ export async function OpenOrdersList(props: { locationId: LocationId }) {
   const items = await Promise.resolve([]);
 
   if (items.length === 0) {
-    const hasAddedMenus = (await getUsedQuota("menus")) > 0;
+    const hasAddedMenus = (await getUsedFeatureQuota("menus")) > 0;
     const title = "No open orders at the moment";
     const secondary = hasAddedMenus
       ? "Please come back in a while."

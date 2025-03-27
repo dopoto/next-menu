@@ -1,42 +1,59 @@
 import { auth } from "@clerk/nextjs/server";
-import React from "react";
-import { type AnalyticsEventId } from "~/domain/analytics";
-import { env } from "~/env";
+import * as React from "react";
+import { ROUTES } from "~/app/_domain/routes";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { GenericReportsCard } from "~/app/u/[locationId]/reports/_components/GenericReportsCard";
+import { getViews } from "~/app/u/[locationId]/reports/_utils/posthog-utils";
 
-export async function LocationViewsCard() {
+export async function LocationViewsCard(props: {
+  mode: "regular" | "placeholder" | "locked";
+  locationId: LocationId;
+}) {
+  const title = "Total views";
+  const footer = (
+    <div className="text-muted-foreground">
+      Visitors of your{" "}
+      <a className="blue-link" href={ROUTES.location(props.locationId)}>
+        public location page
+      </a>
+    </div>
+  );
+
+  if (props.mode === "placeholder") {
+    return (
+      <GenericReportsCard
+        isLocked={false}
+        title={title}
+        value={"..."}
+        footer={footer}
+      />
+    );
+  }
+
+  if (props.mode === "locked") {
+    return (
+      <GenericReportsCard
+        isLocked={true}
+        title={title}
+        value={"683562"}
+        footer={footer}
+      />
+    );
+  }
+
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
     throw new Error(`No userId or orgId found in auth.`);
   }
 
-  const eventName: AnalyticsEventId = "publicLocationVisit";
-  const url = `${env.NEXT_PUBLIC_POSTHOG_HOST}/api/projects/${env.POSTHOG_PROJECT_ID}/query/`;
-  const headers = {
-    "Content-Type": "application/json",
-    Authorization: `Bearer ${env.POSTHOG_ANALYTICS_QUERIES_API_KEY}`,
-  };
-  const payload = {
-    query: {
-      kind: "HogQLQuery",
-      query: `
-        SELECT 
-          COUNT(*) AS visit_count 
-        FROM 
-          events 
-        WHERE 
-          event = '${eventName}' AND properties.orgId = '${orgId}'
-          `,
-    },
-  };
-  const response = await fetch(url, {
-    method: "POST",
-    headers: headers,
-    body: JSON.stringify(payload),
-  });
+  const locationViewsValue = await getViews(orgId);
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const data = await response.json();
-
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return <div>{data.results[0]}</div>;
+  return (
+    <GenericReportsCard
+      isLocked={false}
+      title={title}
+      value={locationViewsValue}
+      footer={footer}
+    />
+  );
 }

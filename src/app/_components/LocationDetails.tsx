@@ -24,11 +24,12 @@ export async function LocationDetails(props: { id: LocationId }) {
     // TODO Test
     throw new Error("Location issue");
   }
+  const parsedLocationId = validationResult.data;
 
-  const locationData = await getLocation(validationResult.data);
+  const locationData = await getLocation(parsedLocationId);
 
   if (!locationData.slug) {
-    throw new Error("missinfg  slug ");
+    throw new Error(`Missing slug for location ${parsedLocationId}`);
   }
 
   const locationUrl = `${env.NEXT_PUBLIC_APP_URL}${ROUTES.publicLocation(locationData.slug)}`;
