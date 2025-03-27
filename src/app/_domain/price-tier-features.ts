@@ -4,7 +4,6 @@ import { getLocationsPlanUsage, getMenusPlanUsage } from "~/server/queries";
 export const PriceTierFeatureIdSchema = z.union([
   z.literal("locations"),
   z.literal("menus"),
-  z.literal("reports"),
 ]);
 
 export type PriceTierFeatureId = z.infer<typeof PriceTierFeatureIdSchema>;
@@ -23,9 +22,9 @@ export type PriceTierFeature = {
 
 export type PriceTierFeatureUsage = {
   id: PriceTierFeatureId;
-  planQuota: number | boolean;
-  used: number | boolean;
-  available: number | boolean;
+  planQuota: number ;
+  used: number ;
+  available: number ;
 };
 
 export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
@@ -39,11 +38,6 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
     resourceSingularName: "menu",
     resourcePluralName: "menus",
   },
-  reports: {
-    id: "reports",
-    resourceSingularName: "report",
-    resourcePluralName: "reports",
-  },
 };
 
 export const priceTierUsageFunctions: Record<
@@ -52,7 +46,6 @@ export const priceTierUsageFunctions: Record<
 > = {
   locations: getLocationsPlanUsage,
   menus: getMenusPlanUsage,
-  reports: () => {return null}
 };
 
 export type ExceededFeature = PriceTierFeatureUsage & {
