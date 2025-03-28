@@ -1,7 +1,8 @@
 import { env } from "process";
+import { logException } from "~/app/_utils/error-logger-utils";
 import { type AnalyticsEventId } from "~/domain/analytics";
 
-export async function getViews(orgId: string): Promise<number> {
+export async function getViews(orgId: string): Promise<number | null> {
   const eventName: AnalyticsEventId = "publicLocationVisit";
   const url = `${env.NEXT_PUBLIC_POSTHOG_HOST}/api/projects/${env.POSTHOG_PROJECT_ID}/query/`;
   const headers = {
@@ -11,14 +12,7 @@ export async function getViews(orgId: string): Promise<number> {
   const payload = {
     query: {
       kind: "HogQLQuery",
-      query: `
-          SELECT
-            COUNT(*) AS visit_count
-          FROM
-            events
-          WHERE
-            event = '${eventName}' AND properties.orgId = '${orgId}'
-            `,
+      query: `SELECT COUNT(*) AS visit_count FROM events WHERE event = '${eventName}' AND properties.orgId = '${orgId}' AND timestamp >= parseDateTimeBestEffort('2025-01-01 00:00:00')`,
     },
   };
   const response = await fetch(url, {
@@ -27,13 +21,20 @@ export async function getViews(orgId: string): Promise<number> {
     body: JSON.stringify(payload),
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const data: PostHogResponse = await response.json();
-  return data?.results?.[0]?.visit_count
-    ? Number(data.results[0].visit_count)
-    : 0;
+  const data: ApiResponse = (await response.json()) as ApiResponse;
+  const output = data?.results?.[0];
+  if (typeof output === "number") {
+    return output;
+  } else {
+    logException(
+      new Error(`Unexpected Posthog response: ${JSON.stringify(data)}`),
+      "ORG_MANAGER_ERROR",
+      "",
+    );
+    return null;
+  }
 }
 
-interface PostHogResponse {
-  results: Array<{ visit_count: string }>;
+interface ApiResponse {
+  results?: number[];
 }
