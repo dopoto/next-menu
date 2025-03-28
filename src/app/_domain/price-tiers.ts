@@ -54,7 +54,10 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     yearlyUsdPrice: 0,
     isPublic: true,
     isPopular: false,
-    features: [{ id: "locations", quota: 1 }],
+    features: [
+      { id: "locations", quota: 1 },
+      { id: "menus", quota: 1 },
+    ],
     flags: [{ id: "reports", isEnabled: true }],
   },
   pro: {

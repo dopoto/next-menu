@@ -18,7 +18,7 @@ import { SidebarLocationManager } from "./SidebarLocationManager";
 import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { menuItems } from "../_domain/menu-sections";
+import { menuTree } from "../_domain/menu-sections";
 import { SidebarOrganizationManager } from "./SidebarOrganizationManager";
 import { type UserRouteFn } from "~/app/_domain/routes";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
@@ -30,21 +30,28 @@ export function LocationSidebar({
   const pathname = usePathname();
   const { locationId } = params as { locationId: string };
 
-  const isActive = (route: string) => {
-    return pathname === route || `${pathname}/` === route;
+  const isActive = (
+    route: string,
+    children?: typeof menuTree.children,
+  ): boolean => {
+    if (pathname === route || `${pathname}/` === route) return true;
+    if (!children) return false;
+    return children.some((child) => {
+      const childRoute = buildUrl(
+        child.route as (locationId: LocationId) => string,
+      );
+      return isActive(childRoute, child.children);
+    });
   };
 
   const buildUrl = (routeFn: UserRouteFn) => {
-    // TODO Validate route
     return routeFn(Number(locationId));
   };
 
-  const dashboardMenuSection = menuItems.filter(
-    (i) => i.parentId === "dashboard",
-  );
-  const locationManagerMenuSection = menuItems.filter(
-    (i) => i.parentId === "locationManager",
-  );
+  const dashboardMenuSection =
+    menuTree.children?.find((i) => i.id === "dashboard")?.children ?? [];
+  const locationManagerMenuSection =
+    menuTree.children?.find((i) => i.id === "locationManager")?.children ?? [];
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -63,7 +70,7 @@ export function LocationSidebar({
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      isActive={isActive(href)}
+                      isActive={isActive(href, item.children)}
                       tooltip={item.title}
                     >
                       <Link href={href} className="flex items-center gap-2">
@@ -89,7 +96,7 @@ export function LocationSidebar({
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
-                      isActive={isActive(href)}
+                      isActive={isActive(href, item.children)}
                       tooltip={item.title}
                     >
                       <Link href={href} className="flex items-center gap-2">

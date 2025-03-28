@@ -16,6 +16,7 @@ const isPublicRoute = createRouteMatcher([
   `${ROUTES.onboardSelectPlan}(.*)`,
   `${ROUTES.signUp}(.*)`,
   `${ROUTES.public}(.*)`,
+  `/ingest/(.*)`,
 ]);
 
 export default clerkMiddleware(

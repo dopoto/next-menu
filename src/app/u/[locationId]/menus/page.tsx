@@ -21,14 +21,6 @@ export default async function MenusPage(props: { params: Params }) {
 
   return (
     <div className="flex h-full flex-col gap-2">
-      <div className="flex flex-row justify-end">
-        <Button asChild>
-          <Link href={ROUTES.menusAdd(locationValidationResult.data)}>
-            <PlusCircle className="mr-2 h-4 w-4" />
-            Add menu
-          </Link>
-        </Button>
-      </div>
       <Suspense fallback={<LoadingSection />}>
         <MenusList locationId={locationValidationResult.data} />
       </Suspense>

@@ -1,6 +1,6 @@
-import { UserRouteFn } from "~/app/_domain/routes";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
-import { menuTree } from "~/app/u/[locationId]/_domain/menu-sections";
+import { type UserRouteFn } from "~/app/_domain/routes";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type menuTree } from "~/app/u/[locationId]/_domain/menu-sections";
 
 export function findMenuItemByPath(
   node: typeof menuTree,

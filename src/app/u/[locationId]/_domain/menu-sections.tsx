@@ -16,7 +16,6 @@ type MenuItem = {
   icon?: ReactNode;
   title?: string;
   route?: AppRouteKey;
-  parentId?: RouteId;
   children?: MenuItem[];
 };
 
@@ -60,27 +59,3 @@ export const menuTree: MenuItem = {
     },
   ],
 };
-
-export const menuItems: MenuItem[] = [
-  {
-    id: "live",
-    icon: <LayoutDashboard size={16} />,
-    title: "Open orders",
-    route: ROUTES.live,
-    parentId: "dashboard",
-  },
-  {
-    id: "ROOT",
-    icon: <ChartPie size={16} />,
-    title: "Reports",
-    route: ROUTES.reports,
-    parentId: "dashboard",
-  },
-  {
-    icon: <ScanQrCode size={16} />,
-    title: "Menus",
-    route: ROUTES.menus,
-    parentId: "locationManager",
-    id: "ROOT",
-  },
-];
