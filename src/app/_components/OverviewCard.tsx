@@ -13,6 +13,7 @@ export function OverviewCard(props: {
   subtitle?: string;
   sections: Section[];
   variant: "preview" | "confirmation" | "neutral";
+  className?: string;
 }) {
   const containerStyle =
     props.variant === "preview"
@@ -23,7 +24,7 @@ export function OverviewCard(props: {
 
   return (
     <div
-      className={`${containerStyle} mb-4 flex flex-col rounded-xl border-1 p-4 text-xs`}
+      className={`${props.className} ${containerStyle} mb-4 flex flex-col rounded-xl border-1 p-4 text-xs`}
     >
       <div className="text-center text-sm font-semibold text-gray-500 uppercase">
         {props.title}

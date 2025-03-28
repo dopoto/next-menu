@@ -114,18 +114,22 @@ export default async function ChangePlanPage(props: { params: Params }) {
     { title: "when", content: theWhen },
   ];
 
+  const fromTierCardCustomizations = getCurrentPlanCardCustomizations();
+  fromTierCardCustomizations.containerStyle += " w-full";
+
   return (
     <SplitScreenContainer
       mainComponent={
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col items-center gap-4">
           <OverviewCard
             title={"Overview"}
             sections={overviewSections}
             variant="preview"
+            className="w-full"
           />
           <PriceTierCard
             tier={parsedFromTier}
-            cardCustomizations={getCurrentPlanCardCustomizations()}
+            cardCustomizations={fromTierCardCustomizations}
           />
           <SvgIcon
             kind={"arrowDoodle"}
@@ -133,7 +137,10 @@ export default async function ChangePlanPage(props: { params: Params }) {
               "fill-gray-500 stroke-gray-500 dark:fill-gray-400 dark:stroke-gray-400"
             }
           />
-          <PriceTierCard tier={parsedToTier} />
+          <PriceTierCard
+            tier={parsedToTier}
+            cardCustomizations={{ containerStyle: "w-full" }}
+          />
           <div className="flex w-full flex-col gap-2 pt-4">
             <Link href={changeUrl} className="w-full">
               <Button variant={"default"} className="w-full">

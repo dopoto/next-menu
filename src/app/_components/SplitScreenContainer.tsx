@@ -22,7 +22,7 @@ export function SplitScreenContainer(props: {
     <div className="flex min-h-full w-full min-w-0 flex-auto flex-col bg-amber-50 sm:flex-row sm:justify-center dark:bg-[#202027]">
       <div
         id="mainContent"
-        className="relative flex h-full w-full flex-col flex-nowrap gap-3 px-4 py-2 sm:h-auto sm:w-auto sm:min-w-[500px] sm:px-6 xl:min-w-[750px] xl:px-36"
+        className="relative flex h-full w-full flex-col flex-nowrap gap-3 px-4 py-2 sm:h-auto sm:w-[500px] sm:px-6 xl:w-[750px] xl:px-36"
       >
         <div className="py-6">
           <nav className="flex w-full">

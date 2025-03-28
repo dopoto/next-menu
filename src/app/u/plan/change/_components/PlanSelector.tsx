@@ -17,11 +17,10 @@ export async function PlanSelector() {
 
   return (
     <div className="flex flex-col gap-3">
-      <p className="max-w-md text-sm">
-        {
-          "Next, we'll show you an overview page where you'll be able to complete the plan change."
-        }
-      </p>
+      <div className="pb-4">
+        {`Next, we'll show you an overview page where you'll be able to complete
+        the plan changes.`}
+      </div>
       {Object.entries(priceTiers).map(async ([, tier]) => {
         if (!tier.isPublic) {
           return null;
@@ -69,10 +68,11 @@ export async function PlanSelector() {
         );
       })}
       <SeparatorWithText title={"Not ready for a change yet?"} />
-      <div className="flex w-full flex-col gap-2">
-        <p className="pb-4">
-          Remember that you can upgrade, downgrade or cancel instantly, anytime.
-        </p>
+      <div className="flex w-full flex-col gap-0">
+        <div className="pb-6">
+          Remember that you can upgrade, downgrade, cancel or delete your
+          account instantly, anytime.
+        </div>
         <Link href={ROUTES.my} className="w-full">
           <Button variant="outline" className="w-full">
             Go back to my account
