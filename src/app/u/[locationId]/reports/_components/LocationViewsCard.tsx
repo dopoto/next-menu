@@ -4,6 +4,7 @@ import { ROUTES } from "~/app/_domain/routes";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { GenericReportsCard } from "~/app/u/[locationId]/reports/_components/GenericReportsCard";
 import { getViews } from "~/app/u/[locationId]/reports/_utils/posthog-utils";
+import { Skeleton } from "~/components/ui/skeleton";
 
 export async function LocationViewsCard(props: {
   mode: "regular" | "placeholder" | "locked";
@@ -24,7 +25,7 @@ export async function LocationViewsCard(props: {
       <GenericReportsCard
         isLocked={false}
         title={title}
-        value={"..."}
+        value={<Skeleton className="h-[45px] w-[40px]" />}
         footer={footer}
       />
     );
@@ -47,10 +48,12 @@ export async function LocationViewsCard(props: {
   }
 
   const locationViewsValue = await getViews(orgId);
+  const isError = locationViewsValue === null;
 
   return (
     <GenericReportsCard
       isLocked={false}
+      isError={isError}
       title={title}
       value={locationViewsValue}
       footer={footer}
