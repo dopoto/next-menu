@@ -14,5 +14,6 @@ export default async function AddMenuPage(props: { params: Params }) {
 
   const availableQuota = await getAvailableFeatureQuota("menus");
 
-  return <AddMenuDialog availableQuota={availableQuota} />;
+  //return <AddMenuDialog availableQuota={availableQuota} />;
+  return <>hi</>;
 }
