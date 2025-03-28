@@ -18,8 +18,8 @@ export async function PlanSelector() {
   return (
     <div className="flex flex-col gap-3">
       <div className="pb-4">
-        Next, we'll show you an overview page where you'll be able to complete
-        the plan changes.
+        {`Next, we'll show you an overview page where you'll be able to complete
+        the plan changes.`}
       </div>
       {Object.entries(priceTiers).map(async ([, tier]) => {
         if (!tier.isPublic) {
