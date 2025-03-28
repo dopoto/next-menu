@@ -13,7 +13,7 @@ export function OverviewCard(props: {
   subtitle?: string;
   sections: Section[];
   variant: "preview" | "confirmation" | "neutral";
-  className: string;
+  className?: string;
 }) {
   const containerStyle =
     props.variant === "preview"
