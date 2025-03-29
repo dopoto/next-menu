@@ -22,7 +22,7 @@ export async function getViews(orgId: string): Promise<number | null> {
   });
 
   const data: ApiResponse = (await response.json()) as ApiResponse;
-  const output = data?.results?.[0];
+  const output = data?.results?.[0]?.[0];
   if (typeof output === "number") {
     return output;
   } else {
@@ -36,5 +36,5 @@ export async function getViews(orgId: string): Promise<number | null> {
 }
 
 interface ApiResponse {
-  results?: number[];
+  results?: number[][];
 }
