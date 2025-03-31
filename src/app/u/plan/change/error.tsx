@@ -2,13 +2,13 @@
 
 import { ErrorCard } from "~/app/_components/ErrorCard";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { PublicErrorMessage } from "~/lib/error-utils.server";
+import { PublicError } from "~/domain/error-handling";
 
 export default function ChangePlanError({
   error,
   reset,
 }: {
-  error: Error & { message: PublicErrorMessage; digest?: string };
+  error: PublicError;
   reset: () => void;
 }) {
   return (
@@ -17,7 +17,7 @@ export default function ChangePlanError({
       subtitle="Sorry, could not complete this operation..."
       mainComponent={
         <ErrorCard
-          publicErrorMessage={error.message}
+          publicErrorMessage={error.digest}
           errorDigest={error.digest}
           onReset={reset}
         />

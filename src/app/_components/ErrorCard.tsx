@@ -1,22 +1,22 @@
 import { ChevronsRight, CloudAlert } from "lucide-react";
-import { errorTypes, type ErrorTypeId } from "../_domain/errors";
 import Link from "next/link";
 import { APP_CONFIG } from "../_config/app-config";
+import { startTransition } from "react";
+import { useRouter } from "next/navigation";
 import {
   PUBLIC_ERROR_DELIMITER,
   PublicErrorMessage,
-} from "~/lib/error-utils.server";
-import { startTransition } from "react";
-import { useRouter } from "next/navigation";
+} from "~/domain/error-handling";
+import { Labeled } from "~/app/_components/Labeled";
 
 export function ErrorCard(props: {
-  publicErrorMessage: PublicErrorMessage;
+  publicErrorMessage?: PublicErrorMessage;
   errorDigest?: string;
   onReset: () => void;
 }) {
   const pem = props.publicErrorMessage?.split(PUBLIC_ERROR_DELIMITER);
-  const publicErrorId = pem[0];
-  const publicErrorMessage = pem[1];
+  const publicErrorId = pem && pem[0] ? pem[0] : "N/A";
+  const publicErrorMessage = pem && pem[1] ? pem[1] : "Unknwon error";
 
   const router = useRouter();
 
@@ -34,12 +34,12 @@ export function ErrorCard(props: {
           <CloudAlert strokeWidth={2} className="size-8 stroke-red-500" />
         </div>
         <div className="text-center text-sm font-semibold text-red-500 uppercase">
-          {publicErrorMessage}
+          An error occurred
         </div>
       </div>
-      <div className="text-sm font-semibold">Error details</div>
-      <div className="text-xs">Digest: {props.errorDigest ?? "--"}</div>
-      <div className="text-xs">Id: {publicErrorId}</div>
+
+      <Labeled label={"Reference number"} text={publicErrorId} />
+      <Labeled label={"Error details"} text={publicErrorMessage} />
 
       <button className="cursor-pointer underline" onClick={refresh}>
         Try again
@@ -65,7 +65,7 @@ export function ErrorCard(props: {
         Request support with this error
       </div>
       <div>
-        {`If you want to send an inquiry about this issue to our customer support, please use the link below.`}
+        {`If you want to send an inquiry about this error to our customer support, please use the link below.`}
       </div>
 
       <Link

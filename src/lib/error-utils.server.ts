@@ -1,7 +1,8 @@
-export const PUBLIC_ERROR_DELIMITER = "|";
-type PublicErrorId = `${number}-${string}`;
-export type PublicErrorMessage =
-  `${PublicErrorId}${typeof PUBLIC_ERROR_DELIMITER}${string}`;
+import {
+  PUBLIC_ERROR_DELIMITER,
+  PublicErrorId,
+  PublicErrorMessage,
+} from "~/domain/error-handling";
 
 export class AppError extends Error {
   //public readonly publicErrorMessage: PublicErrorMessage;
