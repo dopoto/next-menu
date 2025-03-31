@@ -17,6 +17,7 @@ import { OverviewCard } from "~/app/_components/OverviewCard";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
+import { AppError } from "~/lib/error-utils.server";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Change Plan > Review`,
@@ -35,15 +36,17 @@ export default async function ChangePlanPage(props: { params: Params }) {
   // Expecting a valid To tier:
   const parsedToTier = getValidPriceTier(params.tier);
   if (!parsedToTier) {
-    throw new Error(`Missing or invalid To tier in params: ${obj2str(params)}`);
+    throw new AppError({
+      message: `Missing or invalid To tier in params: ${obj2str(params)}`,
+    });
   }
 
   // Expecting a valid From tier:
   const parsedFromTier = getValidPriceTier(sessionClaims?.metadata?.tier);
   if (!parsedFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:

@@ -14,6 +14,7 @@ import {
   type UpgradeTiersStripeMetadata,
 } from "~/app/_domain/stripe";
 import { getActiveSubscriptionItemId } from "~/app/_utils/stripe-utils";
+import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -29,26 +30,26 @@ export default async function UpgradePostPaymentPage(props: {
 }) {
   const { userId, orgId } = await auth();
   if (!userId) {
-    throw new Error(`No auth userId found.`);
+    throw new AppError({ message: `No auth userId found.` });
   }
 
   const { session_id: sessionId } = await props.searchParams;
   if (!sessionId) {
-    throw new Error("No session_id param");
+    throw new AppError({ message: `No session_id param` });
   }
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   if (!session) {
-    throw new Error(
-      `No Stripe session found for session_id param "${sessionId}"`,
-    );
+    throw new AppError({
+      message: `No Stripe session found for session_id param "${sessionId}"`,
+    });
   }
 
   // Expecting a complete payment
   if (session.status !== "complete") {
-    throw new Error(
-      `Expected a session with status=complete, got ${session.status}.`,
-    );
+    throw new AppError({
+      message: `Expected a session with status=complete, got ${session.status}.`,
+    });
   }
 
   const metadata: UpgradeTiersStripeMetadata | null =
@@ -57,17 +58,17 @@ export default async function UpgradePostPaymentPage(props: {
   //Expecting a valid paid From tier:
   const parsedPaidFromTier = getValidPaidPriceTier(metadata?.fromTierId);
   if (!parsedPaidFromTier) {
-    throw new Error(
-      `Missing or invalid From tier metadata: ${obj2str(metadata ?? {})}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid From tier metadata: ${obj2str(metadata ?? {})}`,
+    });
   }
 
   // Expecting a valid paid To tier:
   const parsedPaidToTier = getValidPaidPriceTier(metadata?.toTierId);
   if (!parsedPaidToTier) {
-    throw new Error(
-      `Missing or invalid To tier metadata: ${obj2str(metadata ?? {})}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid To tier metadata: ${obj2str(metadata ?? {})}`,
+    });
   }
 
   // Expecting an upgrade scenario
@@ -76,9 +77,9 @@ export default async function UpgradePostPaymentPage(props: {
     parsedPaidToTier.id,
   );
   if (changePlanScenario !== "paid-to-paid-upgrade") {
-    throw new Error(
-      `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
-    );
+    throw new AppError({
+      message: `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
+    });
   }
 
   const subscriptionId: StripeSubscriptionId | null =
@@ -88,22 +89,22 @@ export default async function UpgradePostPaymentPage(props: {
   // Validate Stripe customer Id
   const stripeCustomerId = subscription.customer;
   if (!stripeCustomerId) {
-    throw new Error(
-      `No stripeCustomerId found in subscription ${obj2str(subscription)}`,
-    );
+    throw new AppError({
+      message: `No stripeCustomerId found in subscription ${obj2str(subscription)}`,
+    });
   }
   if (typeof stripeCustomerId !== "string") {
-    throw new Error(
-      `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
-    );
+    throw new AppError({
+      message: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
+    });
   }
 
   // Expecting the customer Id returned by Stripe for this sub to match our records
   const dbCustomer = await getCustomerByOrgId(orgId ?? "");
   if (stripeCustomerId !== dbCustomer.stripeCustomerId) {
-    throw new Error(
-      `Expected db match for Stripe customer id ${stripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
-    );
+    throw new AppError({
+      message: `Expected db match for Stripe customer id ${stripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
+    });
   }
 
   // Move the customer to the upgraded tier in Stripe

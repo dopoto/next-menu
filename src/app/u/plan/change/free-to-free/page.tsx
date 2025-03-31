@@ -9,6 +9,7 @@ import ProcessingPlanChange from "../_components/ProcessingPlanChange";
 import { getValidFreePriceTier } from "~/app/_utils/price-tier-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
+import { AppError } from "~/lib/error-utils.server";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
@@ -34,17 +35,17 @@ async function Step1(props: { toTierId?: string }) {
     sessionClaims?.metadata?.tier,
   );
   if (!parsedFreeFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   // Expecting a valid free To tier:
   const parsedFreeToTier = getValidFreePriceTier(props.toTierId);
   if (!parsedFreeToTier) {
-    throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+    });
   }
 
   // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
@@ -66,7 +67,7 @@ async function Step1(props: { toTierId?: string }) {
 async function FinalStep(props: { fromTier: PriceTier; toTier: PriceTier }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new Error(`No Clerk user id found"`);
+    throw new AppError({ message: `No Clerk user id found` });
   }
 
   // Update Clerk with new tier

@@ -15,6 +15,7 @@ import {
 import { FreeToPaidStripeCheckoutForm } from "../_components/FreeToPaidStripeCheckoutForm";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
+import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -43,17 +44,17 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     sessionClaims?.metadata?.tier,
   );
   if (!parsedFreeFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   // Expecting a valid paid To tier:
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
-    throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+    });
   }
 
   // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
@@ -82,16 +83,16 @@ async function Step2CreateStripeCustomerAndSubscription(props: {
   orgId: string;
 }) {
   if (!props.toTier.stripePriceId) {
-    throw new Error(
-      `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
-    );
+    throw new AppError({
+      message: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
+    });
   }
   const stripeCustomerId = (await getCustomerByOrgId(props.orgId))
     .stripeCustomerId;
   if (stripeCustomerId) {
-    throw new Error(
-      `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,
-    );
+    throw new AppError({
+      message: `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,
+    });
   }
 
   const newStripeCustomer = await stripe.customers.create({
@@ -119,7 +120,7 @@ async function FinalStepShowStripeCheckoutForm(props: {
 }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new Error(`No Clerk user id found"`);
+    throw new AppError({ message: `No Clerk user id found` });
   }
 
   return (

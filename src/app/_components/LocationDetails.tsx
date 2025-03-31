@@ -13,6 +13,7 @@ import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import truncateMiddle from "truncate-middle";
 import { CopyButton } from "~/app/_components/CopyButton";
 import { AppError } from "~/lib/error-utils.server";
+import * as React from "react";
 
 export async function LocationDetails(props: { id: LocationId }) {
   const { userId, orgId } = await auth();
@@ -23,7 +24,9 @@ export async function LocationDetails(props: { id: LocationId }) {
   const validationResult = locationIdSchema.safeParse(props.id);
   if (!validationResult.success) {
     // TODO Test
-    throw new AppError({ message: `Location issue` });
+    throw new AppError({
+      message: `Location validation failed. params: ${JSON.stringify(props)}`,
+    });
   }
   const parsedLocationId = validationResult.data;
 

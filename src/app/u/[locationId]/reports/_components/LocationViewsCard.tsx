@@ -44,7 +44,7 @@ export async function LocationViewsCard(props: {
 
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new Error(`No userId or orgId found in auth.`);
+    throw new AppError({ message: `No userId or orgId found in auth.` });
   }
 
   const locationViewsValue = await getViews(orgId);

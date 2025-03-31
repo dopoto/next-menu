@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { locationIdSchema } from "../_domain/locations";
 import LoadingSection from "../_components/LoadingSection";
 import { OpenOrdersList } from "./_components/OpenOrdersList";
+import * as React from "react";
+import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -12,7 +14,7 @@ export default async function OpenOrdersPage(props: { params: Params }) {
     params.locationId,
   );
   if (!locationValidationResult.success) {
-    throw new Error(`Invalid location: ${params.locationId}`);
+    throw new AppError({ message: `Invalid location: ${params.locationId}` });
   }
 
   return (

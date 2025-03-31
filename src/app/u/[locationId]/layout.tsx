@@ -14,6 +14,7 @@ import { AppVersion } from "~/app/_components/AppVersion";
 import { ROUTES } from "~/app/_domain/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
+import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -31,7 +32,7 @@ export default async function Layout({
   const locationId = (await params).locationId;
   const locationValidationResult = locationIdSchema.safeParse(locationId);
   if (!locationValidationResult.success) {
-    throw new Error(`Invalid location: ${locationId}`);
+    throw new AppError({ message: `Invalid location: ${locationId}` });
   }
 
   return (

@@ -20,17 +20,23 @@ import {
   TableHeader,
   TableRow,
 } from "~/components/ui/table";
+import { AppError } from "~/lib/error-utils.server";
 
 export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) {
+    throw new AppError({
+      message: "Unauthorized",
+      userMessage: "Unauthorized",
+    });
+  }
 
   const tierId = sessionClaims?.metadata.tier;
   const parsedTier = getValidPriceTier(tierId);
   if (!parsedTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   return (

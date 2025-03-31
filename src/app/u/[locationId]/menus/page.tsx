@@ -6,6 +6,8 @@ import { Suspense } from "react";
 import LoadingSection from "../_components/LoadingSection";
 import { locationIdSchema } from "../_domain/locations";
 import { MenusList } from "./_components/MenusList";
+import * as React from "react";
+import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;
 
@@ -16,7 +18,9 @@ export default async function MenusPage(props: { params: Params }) {
     params.locationId,
   );
   if (!locationValidationResult.success) {
-    throw new Error(`Invalid location: ${params.locationId}`);
+    throw new AppError({
+      message: `Location validation failed. params: ${JSON.stringify(params)}`,
+    });
   }
 
   return (
