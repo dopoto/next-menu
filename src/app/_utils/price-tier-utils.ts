@@ -1,3 +1,4 @@
+import { AppError } from "~/lib/error-utils.server";
 import {
   type PriceTierChangeScenario,
   priceTiers,
@@ -64,22 +65,27 @@ export const isPriceTierId = (value?: string): value is PriceTierId => {
   return priceTiers[value as PriceTierId].isPublic;
 };
 
+// TODO revisit throw
 export function isFreePriceTier(priceTierId: PriceTierId): boolean {
   if (!priceTiers[priceTierId]) {
-    throw new Error(`PriceTierId ${priceTierId} is not defined`);
+    throw new AppError({
+      message: `PriceTierId ${priceTierId} is not defined`,
+    });
   }
   if (priceTiers[priceTierId].isPublic !== true) {
-    throw new Error(`PriceTierId ${priceTierId} is not public`);
+    throw new AppError({ message: `PriceTierId ${priceTierId} is not public` });
   }
   return priceTiers[priceTierId].monthlyUsdPrice === 0;
 }
 
 export function isPaidPriceTier(priceTierId: PriceTierId): boolean {
   if (!priceTiers[priceTierId]) {
-    throw new Error(`PriceTierId ${priceTierId} is not defined`);
+    throw new AppError({
+      message: `PriceTierId ${priceTierId} is not defined`,
+    });
   }
   if (priceTiers[priceTierId].isPublic !== true) {
-    throw new Error(`PriceTierId ${priceTierId} is not public`);
+    throw new AppError({ message: `PriceTierId ${priceTierId} is not public` });
   }
   return priceTiers[priceTierId].monthlyUsdPrice > 0;
 }

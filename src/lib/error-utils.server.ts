@@ -8,10 +8,12 @@ export class AppError extends Error {
   //public readonly publicErrorMessage: PublicErrorMessage;
   public digest: string;
   constructor({
+    error,
     message,
     userMessage,
   }: {
-    message: string;
+    error?: unknown;
+    message?: string;
     userMessage?: string;
   }) {
     const publicMessageOrDefault = userMessage || "Something went wrong";

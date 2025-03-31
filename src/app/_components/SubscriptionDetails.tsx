@@ -1,4 +1,3 @@
-import React from "react";
 import { Labeled } from "./Labeled";
 import { OverviewCard } from "./OverviewCard";
 import type { StripeCustomerId } from "../_domain/stripe";
@@ -10,11 +9,12 @@ import {
   isFreePriceTier,
   isPaidPriceTier,
 } from "../_utils/price-tier-utils";
+import { AppError } from "~/lib/error-utils.server";
 
 export async function SubscriptionDetails() {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    throw new Error(`No orgId found in auth.`);
+    throw new AppError({ message: `No userid or orgId found in auth.` });
   }
 
   const tierId = sessionClaims?.metadata.tier;

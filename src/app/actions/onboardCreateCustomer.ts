@@ -14,6 +14,7 @@ import { isPaidPriceTier } from "~/app/_utils/price-tier-utils";
 import { stripeCustomerIdSchema } from "../_domain/stripe";
 import { generateErrorId } from "../_utils/error-logger-utils";
 import { CookieKey } from "../_domain/cookies";
+import { AppError } from "~/lib/error-utils.server";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -70,9 +71,10 @@ export const onboardCreateCustomer = async (formData: FormData) => {
 
         if (isPaidPriceTier(validatedFormFields.data.priceTierId)) {
           if (validatedFormFields.data.stripeSessionId?.length === 0) {
-            throw new Error(
-              "Stripe payment data not found. Please try onboarding again.",
-            );
+            throw new AppError({
+              userMessage:
+                "Stripe payment data not found. Please try onboarding again.",
+            });
           }
 
           const session = await stripe.checkout.sessions.retrieve(
@@ -83,7 +85,7 @@ export const onboardCreateCustomer = async (formData: FormData) => {
             session.customer,
           );
           if (!validationResult.success) {
-            throw new Error(`Invalid Stripe data`);
+            throw new AppError({ userMessage: `Invalid Stripe data` });
           }
           validatedStripeCustomerIdOrNull = validationResult.data;
 
@@ -92,15 +94,17 @@ export const onboardCreateCustomer = async (formData: FormData) => {
               // The only happy path => continue
               break;
             case "expired":
-              throw new Error(
-                `Stripe payment data expired. Please try onboarding again.`,
-              );
+              throw new AppError({
+                userMessage: `Stripe payment data expired. Please try onboarding again.`,
+              });
             case "open":
-              throw new Error(
-                `Stripe payment not completed. Please try onboarding again.`,
-              );
+              throw new AppError({
+                userMessage: `Stripe payment not completed. Please try onboarding again.`,
+              });
             default:
-              throw new Error(`Unexpected Stripe payment data.`);
+              throw new AppError({
+                userMessage: `Unexpected Stripe payment data.`,
+              });
           }
         }
 
@@ -115,7 +119,10 @@ export const onboardCreateCustomer = async (formData: FormData) => {
         }
 
         if (!orgId || !orgName) {
-          throw new Error(`No valid organization found. Please start over.`);
+          throw new AppError({
+            message: `No valid organization found.`,
+            userMessage: `No valid organization found. Please restart your onboarding.`,
+          });
         }
 
         // TODO

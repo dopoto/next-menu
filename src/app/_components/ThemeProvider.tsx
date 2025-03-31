@@ -1,8 +1,9 @@
 "use client";
 
-import React from "react";
 import { createContext, useContext, useState, useEffect } from "react";
 import { buildHtmlClass } from "../_utils/theme-utils";
+import React from "react";
+import { AppError } from "~/lib/error-utils.server";
 
 const getInitialTheme = () => {
   // Handle server-side rendering scenario
@@ -58,7 +59,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 export function useTheme() {
   const context = useContext(ThemeContext);
   if (context === undefined) {
-    throw new Error("useTheme must be used within a ThemeProvider");
+    throw new AppError({
+      message: "useTheme must be used within a ThemeProvider",
+    });
   }
   return context;
 }
