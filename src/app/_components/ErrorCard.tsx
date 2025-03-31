@@ -2,14 +2,30 @@ import { ChevronsRight, CloudAlert } from "lucide-react";
 import { errorTypes, type ErrorTypeId } from "../_domain/errors";
 import Link from "next/link";
 import { APP_CONFIG } from "../_config/app-config";
+import {
+  PUBLIC_ERROR_DELIMITER,
+  PublicErrorMessage,
+} from "~/lib/error-utils.server";
+import { startTransition } from "react";
+import { useRouter } from "next/navigation";
 
 export function ErrorCard(props: {
-  title: string;
-  errorTypeId: ErrorTypeId;
+  publicErrorMessage: PublicErrorMessage;
   errorDigest?: string;
-  errorClientSideId: string;
+  onReset: () => void;
 }) {
-  const ctas = errorTypes[props.errorTypeId]?.ctas ?? [];
+  const pem = props.publicErrorMessage?.split(PUBLIC_ERROR_DELIMITER);
+  const publicErrorId = pem[0];
+  const publicErrorMessage = pem[1];
+
+  const router = useRouter();
+
+  function refresh() {
+    startTransition(() => {
+      router.refresh();
+      props.onReset();
+    });
+  }
 
   return (
     <div className="mb-4 flex flex-col gap-3 rounded-xl border-2 border-dashed border-red-300 p-4 text-xs">
@@ -18,15 +34,18 @@ export function ErrorCard(props: {
           <CloudAlert strokeWidth={2} className="size-8 stroke-red-500" />
         </div>
         <div className="text-center text-sm font-semibold text-red-500 uppercase">
-          {props.title}
+          {publicErrorMessage}
         </div>
       </div>
       <div className="text-sm font-semibold">Error details</div>
-      <div className="text-xs">Type: {props.errorTypeId}</div>
       <div className="text-xs">Digest: {props.errorDigest ?? "--"}</div>
-      <div className="text-xs">Id: {props.errorClientSideId}</div>
+      <div className="text-xs">Id: {publicErrorId}</div>
 
-      {ctas?.length > 0 && (
+      <button className="cursor-pointer underline" onClick={refresh}>
+        Try again
+      </button>
+
+      {/* {ctas?.length > 0 && (
         <div className="text-sm font-semibold">What can I try next?</div>
       )}
       {ctas.map((cta) => (
@@ -36,7 +55,7 @@ export function ErrorCard(props: {
             {cta.text}
           </div>
         </Link>
-      ))}
+      ))} */}
       <div className="text-sm font-semibold">Additional info</div>
       <div>
         {`The details of this error have been logged automatically and we have been notified 
@@ -50,7 +69,7 @@ export function ErrorCard(props: {
       </div>
 
       <Link
-        href={`mailto: ${APP_CONFIG.supportEmail}?subject=Support Request - error ${props.errorClientSideId}&body=%0D%0A------------%0D%0APlease do not write below this line%0D%0AError ${props.errorClientSideId}`}
+        href={`mailto: ${APP_CONFIG.supportEmail}?subject=Support Request - error ${publicErrorId}&body=%0D%0A------------%0D%0APlease do not write below this line%0D%0AError ${publicErrorId}`}
         prefetch={false}
         className="cursor-pointer py-1 text-blue-500 underline"
       >

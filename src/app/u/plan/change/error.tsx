@@ -1,36 +1,25 @@
 "use client"; // Error boundaries must be Client Components
 
-import { useEffect } from "react";
 import { ErrorCard } from "~/app/_components/ErrorCard";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import {
-  type ErrorBoundaryException,
-  type ErrorTypeId,
-} from "~/app/_domain/errors";
-import { generateErrorId, logException } from "~/app/_utils/error-logger-utils";
+import { PublicErrorMessage } from "~/lib/error-utils.server";
 
 export default function ChangePlanError({
   error,
+  reset,
 }: {
-  error: ErrorBoundaryException;
+  error: Error & { message: PublicErrorMessage; digest?: string };
+  reset: () => void;
 }) {
-  const errorTypeId: ErrorTypeId = "CHANGE_PLAN_ERROR";
-  const errorClientSideId = generateErrorId();
-
-  useEffect(() => {
-    logException(error, errorTypeId, errorClientSideId);
-  }, [error, errorClientSideId]);
-
   return (
     <SplitScreenContainer
       title={`Change plan`}
       subtitle="Sorry, could not complete this operation..."
       mainComponent={
         <ErrorCard
-          title="An error occurred"
-          errorTypeId={errorTypeId}
+          publicErrorMessage={error.message}
           errorDigest={error.digest}
-          errorClientSideId={errorClientSideId}
+          onReset={reset}
         />
       }
     />
