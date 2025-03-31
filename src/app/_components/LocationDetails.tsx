@@ -13,7 +13,6 @@ import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import truncateMiddle from "truncate-middle";
 import { CopyButton } from "~/app/_components/CopyButton";
 import { AppError } from "~/lib/error-utils.server";
-import * as React from "react";
 
 export async function LocationDetails(props: { id: LocationId }) {
   const { userId, orgId } = await auth();

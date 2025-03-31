@@ -2,7 +2,7 @@
 
 import { Stripe } from "stripe";
 import { env } from "~/env";
-import { priceTiers, type PriceTierId } from "../_domain/price-tiers";
+import { type PriceTierId } from "../_domain/price-tiers";
 import {
   getValidFreePriceTier,
   getValidPaidPriceTier,

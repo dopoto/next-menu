@@ -7,7 +7,7 @@ import React from "react";
 import type { AnalyticsEventId } from "~/domain/analytics";
 import { CookieKey } from "~/app/_domain/cookies";
 import { cookies } from "next/headers";
-import * as React from "react";
+import { AppError } from "~/lib/error-utils.server";
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
   host: env.NEXT_PUBLIC_POSTHOG_HOST,
