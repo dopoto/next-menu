@@ -5,7 +5,7 @@ export type PublicErrorMessage =
 
 export class AppError extends Error {
   //public readonly publicErrorMessage: PublicErrorMessage;
-
+  public digest: string;
   constructor({
     message,
     userMessage,
@@ -20,7 +20,7 @@ export class AppError extends Error {
     const pb: PublicErrorMessage = `${generateErrorId()}${PUBLIC_ERROR_DELIMITER}${publicMessageOrDefault}`;
     super(pb);
     //this.publicErrorMessage = pb;
-
+    this.digest = pb;
     // TODO Log error here
     console.log(message);
   }
