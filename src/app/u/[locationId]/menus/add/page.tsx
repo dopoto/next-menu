@@ -1,6 +1,4 @@
 import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
-import { getAvailableFeatureQuota } from "~/app/_utils/quota-utils.server-only";
-import AddMenuDialog from "~/app/u/[locationId]/menus/_components/AddMenuDialog";
 import * as React from "react";
 import { AppError } from "~/lib/error-utils.server";
 
@@ -16,8 +14,7 @@ export default async function AddMenuPage(props: { params: Params }) {
     });
   }
 
-  const availableQuota = await getAvailableFeatureQuota("menus");
+  // TODO const availableQuota = await getAvailableFeatureQuota("menus");
 
-  //return <AddMenuDialog availableQuota={availableQuota} />;
   return <>hi</>;
 }

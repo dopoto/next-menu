@@ -1,6 +1,6 @@
 "use client"; // Error boundaries must be Client Components
 import { ErrorCard } from "~/app/_components/ErrorCard";
-import { PublicError } from "~/domain/error-handling";
+import { type PublicError } from "~/domain/error-handling";
 
 export default function ManageError({
   error,

@@ -2,7 +2,7 @@
 
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { ErrorCard } from "../_components/ErrorCard";
-import { PublicError } from "~/domain/error-handling";
+import { type PublicError } from "~/domain/error-handling";
 
 export default function OnboardError({
   error,

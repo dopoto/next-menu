@@ -1,7 +1,7 @@
 import {
   PUBLIC_ERROR_DELIMITER,
-  PublicErrorId,
-  PublicErrorMessage,
+  type PublicErrorId,
+  type PublicErrorMessage,
 } from "~/domain/error-handling";
 
 export class AppError extends Error {
@@ -16,7 +16,7 @@ export class AppError extends Error {
     message?: string;
     userMessage?: string;
   }) {
-    const publicMessageOrDefault = userMessage || "Something went wrong";
+    const publicMessageOrDefault = userMessage ?? "Something went wrong";
 
     // The only error fields that we can send to the client-side are a string message and a string digest, so
     // ensure that we form a predefined-format string that can be later parsed by our client-side error.tsx:
@@ -26,6 +26,7 @@ export class AppError extends Error {
     this.digest = pb;
     // TODO Log error here
     console.log(message);
+    console.log(error);
   }
 }
 

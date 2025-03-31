@@ -5,7 +5,7 @@ import { startTransition } from "react";
 import { useRouter } from "next/navigation";
 import {
   PUBLIC_ERROR_DELIMITER,
-  PublicErrorMessage,
+  type PublicErrorMessage,
 } from "~/domain/error-handling";
 import { Labeled } from "~/app/_components/Labeled";
 
@@ -15,8 +15,8 @@ export function ErrorCard(props: {
   onReset: () => void;
 }) {
   const pem = props.publicErrorMessage?.split(PUBLIC_ERROR_DELIMITER);
-  const publicErrorId = pem && pem[0] ? pem[0] : "N/A";
-  const publicErrorMessage = pem && pem[1] ? pem[1] : "Unknwon error";
+  const publicErrorId = pem?.[0] ?? "N/A";
+  const publicErrorMessage = pem?.[1] ?? "Unknown error";
 
   const router = useRouter();
 

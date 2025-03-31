@@ -2,7 +2,7 @@
 
 import { ErrorCard } from "~/app/_components/ErrorCard";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { PublicError } from "~/domain/error-handling";
+import { type PublicError } from "~/domain/error-handling";
 
 export default function ViewPlanError({
   error,
