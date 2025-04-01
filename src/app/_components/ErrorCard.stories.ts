@@ -3,10 +3,12 @@ import { ErrorCard } from "./ErrorCard";
 import { PUBLIC_ERROR_DELIMITER } from "~/domain/error-handling";
 
 const meta: Meta<typeof ErrorCard> = {
+  title: "Components/ErrorCard",
   component: ErrorCard,
   parameters: {
     layout: "centered",
   },
+  tags: ["autodocs"],
 };
 export default meta;
 

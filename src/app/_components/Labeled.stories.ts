@@ -12,10 +12,12 @@ import { Labeled } from "~/app/_components/Labeled";
 // } satisfies Meta<typeof Labeled>;
 
 const meta: Meta<typeof Labeled> = {
+  title: "Components/Labeled",
   component: Labeled,
   parameters: {
     layout: "centered",
   },
+  tags: ["autodocs"],
 };
 export default meta;
 
