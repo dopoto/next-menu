@@ -3,7 +3,6 @@ import { locationIdSchema } from "../_domain/locations";
 import { auth } from "@clerk/nextjs/server";
 import { LocationViewsCard } from "~/app/u/[locationId]/reports/_components/LocationViewsCard";
 import { isFlagAvailableInCurrentTier } from "~/app/_utils/quota-utils.server-only";
-import * as React from "react";
 import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;

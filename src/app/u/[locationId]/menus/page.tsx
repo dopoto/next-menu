@@ -2,7 +2,6 @@ import { Suspense } from "react";
 import LoadingSection from "../_components/LoadingSection";
 import { locationIdSchema } from "../_domain/locations";
 import { MenusList } from "./_components/MenusList";
-import * as React from "react";
 import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;

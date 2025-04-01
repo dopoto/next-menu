@@ -209,9 +209,7 @@ async function Step2StripeProcessing(props: {
     }
   }
 
-  const details = {
-    success: true,
-    internalMessage: "Subscription successfully downgraded from Tier2 to Tier1",
+  const details: StripeDowngradeTxDetails = {
     subscription: {
       id: updatedSubscription.id as StripeSubscriptionId,
       status: updatedSubscription.status,
@@ -227,8 +225,6 @@ async function Step2StripeProcessing(props: {
     },
     refund: refundDetails,
   };
-
-  lg(details);
 
   // Move user to new tier
   const clerk = await clerkClient();
