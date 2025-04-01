@@ -45,7 +45,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   );
   if (!parsedFreeFromTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     });
   }
 
@@ -53,7 +53,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
     });
   }
 
@@ -84,14 +84,14 @@ async function Step2CreateStripeCustomerAndSubscription(props: {
 }) {
   if (!props.toTier.stripePriceId) {
     throw new AppError({
-      message: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
+      internalMessage: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
     });
   }
   const stripeCustomerId = (await getCustomerByOrgId(props.orgId))
     .stripeCustomerId;
   if (stripeCustomerId) {
     throw new AppError({
-      message: `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,
+      internalMessage: `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,
     });
   }
 
@@ -120,7 +120,7 @@ async function FinalStepShowStripeCheckoutForm(props: {
 }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new AppError({ message: `No Clerk user id found` });
+    throw new AppError({ internalMessage: `No Clerk user id found` });
   }
 
   return (

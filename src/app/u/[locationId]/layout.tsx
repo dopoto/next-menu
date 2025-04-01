@@ -32,7 +32,7 @@ export default async function Layout({
   const locationId = (await params).locationId;
   const locationValidationResult = locationIdSchema.safeParse(locationId);
   if (!locationValidationResult.success) {
-    throw new AppError({ message: `Invalid location: ${locationId}` });
+    throw new AppError({ internalMessage: `Invalid location: ${locationId}` });
   }
 
   return (

@@ -36,7 +36,7 @@ async function Step1(props: { toTierId?: string }) {
   );
   if (!parsedFreeFromTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     });
   }
 
@@ -44,7 +44,7 @@ async function Step1(props: { toTierId?: string }) {
   const parsedFreeToTier = getValidFreePriceTier(props.toTierId);
   if (!parsedFreeToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
     });
   }
 
@@ -67,7 +67,7 @@ async function Step1(props: { toTierId?: string }) {
 async function FinalStep(props: { fromTier: PriceTier; toTier: PriceTier }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new AppError({ message: `No Clerk user id found` });
+    throw new AppError({ internalMessage: `No Clerk user id found` });
   }
 
   // Update Clerk with new tier

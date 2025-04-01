@@ -17,14 +17,16 @@ import { AppError } from "~/lib/error-utils.server";
 export async function LocationDetails(props: { id: LocationId }) {
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new AppError({ message: `No orgId or userid found in auth.` });
+    throw new AppError({
+      internalMessage: `No orgId or userid found in auth.`,
+    });
   }
 
   const validationResult = locationIdSchema.safeParse(props.id);
   if (!validationResult.success) {
     // TODO Test
     throw new AppError({
-      message: `Location validation failed. params: ${JSON.stringify(props)}`,
+      internalMessage: `Location validation failed. params: ${JSON.stringify(props)}`,
     });
   }
   const parsedLocationId = validationResult.data;
@@ -33,7 +35,7 @@ export async function LocationDetails(props: { id: LocationId }) {
 
   if (!locationData.slug) {
     throw new AppError({
-      message: `Missing slug for location ${parsedLocationId}`,
+      internalMessage: `Missing slug for location ${parsedLocationId}`,
     });
   }
 

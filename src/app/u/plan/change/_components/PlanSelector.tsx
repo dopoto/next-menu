@@ -18,7 +18,7 @@ export async function PlanSelector() {
 
   //TODO remove
   throw new AppError({
-    message: "internal msg",
+    internalMessage: "internal msg",
     userMessage: "some user firendly messagw",
   });
 

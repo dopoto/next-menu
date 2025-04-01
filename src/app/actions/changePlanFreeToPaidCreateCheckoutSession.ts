@@ -24,7 +24,7 @@ export const changePlanFreeToPaidCreateCheckoutSession = async (props: {
   if (!parsedFreeFromTier) {
     //TODO Test custonmer errors in server actions
     throw new AppError({
-      message: `Missing or invalid From tier in props.fromTierId: ${props.fromTierId}`,
+      internalMessage: `Missing or invalid From tier in props.fromTierId: ${props.fromTierId}`,
     });
   }
 
@@ -32,7 +32,7 @@ export const changePlanFreeToPaidCreateCheckoutSession = async (props: {
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier in props.toTierId: ${props.toTierId}`,
+      internalMessage: `Missing or invalid To tier in props.toTierId: ${props.toTierId}`,
     });
   }
   // TODO put in ROUTES:
@@ -55,7 +55,7 @@ export const changePlanFreeToPaidCreateCheckoutSession = async (props: {
   });
 
   if (!session.client_secret) {
-    throw new AppError({ message: "Error initiating Stripe session" });
+    throw new AppError({ internalMessage: "Error initiating Stripe session" });
   }
 
   return {

@@ -30,25 +30,25 @@ export default async function UpgradePostPaymentPage(props: {
 }) {
   const { userId, orgId } = await auth();
   if (!userId) {
-    throw new AppError({ message: `No auth userId found.` });
+    throw new AppError({ internalMessage: `No auth userId found.` });
   }
 
   const { session_id: sessionId } = await props.searchParams;
   if (!sessionId) {
-    throw new AppError({ message: `No session_id param` });
+    throw new AppError({ internalMessage: `No session_id param` });
   }
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   if (!session) {
     throw new AppError({
-      message: `No Stripe session found for session_id param "${sessionId}"`,
+      internalMessage: `No Stripe session found for session_id param "${sessionId}"`,
     });
   }
 
   // Expecting a complete payment
   if (session.status !== "complete") {
     throw new AppError({
-      message: `Expected a session with status=complete, got ${session.status}.`,
+      internalMessage: `Expected a session with status=complete, got ${session.status}.`,
     });
   }
 
@@ -59,7 +59,7 @@ export default async function UpgradePostPaymentPage(props: {
   const parsedPaidFromTier = getValidPaidPriceTier(metadata?.fromTierId);
   if (!parsedPaidFromTier) {
     throw new AppError({
-      message: `Missing or invalid From tier metadata: ${obj2str(metadata ?? {})}`,
+      internalMessage: `Missing or invalid From tier metadata: ${obj2str(metadata ?? {})}`,
     });
   }
 
@@ -67,7 +67,7 @@ export default async function UpgradePostPaymentPage(props: {
   const parsedPaidToTier = getValidPaidPriceTier(metadata?.toTierId);
   if (!parsedPaidToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier metadata: ${obj2str(metadata ?? {})}`,
+      internalMessage: `Missing or invalid To tier metadata: ${obj2str(metadata ?? {})}`,
     });
   }
 
@@ -78,7 +78,7 @@ export default async function UpgradePostPaymentPage(props: {
   );
   if (changePlanScenario !== "paid-to-paid-upgrade") {
     throw new AppError({
-      message: `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
+      internalMessage: `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
     });
   }
 
@@ -90,12 +90,12 @@ export default async function UpgradePostPaymentPage(props: {
   const stripeCustomerId = subscription.customer;
   if (!stripeCustomerId) {
     throw new AppError({
-      message: `No stripeCustomerId found in subscription ${obj2str(subscription)}`,
+      internalMessage: `No stripeCustomerId found in subscription ${obj2str(subscription)}`,
     });
   }
   if (typeof stripeCustomerId !== "string") {
     throw new AppError({
-      message: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
+      internalMessage: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
     });
   }
 
@@ -103,7 +103,7 @@ export default async function UpgradePostPaymentPage(props: {
   const dbCustomer = await getCustomerByOrgId(orgId ?? "");
   if (stripeCustomerId !== dbCustomer.stripeCustomerId) {
     throw new AppError({
-      message: `Expected db match for Stripe customer id ${stripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
+      internalMessage: `Expected db match for Stripe customer id ${stripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
     });
   }
 

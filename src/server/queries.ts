@@ -45,7 +45,7 @@ export async function getCustomerByOrgId(orgId: string) {
     where: (model, { eq }) => eq(model.orgId, orgId),
   });
   if (!item) {
-    throw new AppError({ message: `Not found: ${orgId}` });
+    throw new AppError({ internalMessage: `Not found: ${orgId}` });
   }
 
   return item;
@@ -54,12 +54,12 @@ export async function getCustomerByOrgId(orgId: string) {
 export async function getMenusPlanUsage() {
   const { userId, sessionClaims } = await auth();
   if (!userId) {
-    throw new AppError({ message: "Unauthorized" });
+    throw new AppError({ internalMessage: "Unauthorized" });
   }
 
   const orgId = sessionClaims?.org_id;
   if (!orgId) {
-    throw new AppError({ message: "No organization ID found" });
+    throw new AppError({ internalMessage: "No organization ID found" });
   }
 
   const result = await db.query.menus.findMany({
@@ -96,12 +96,12 @@ export async function addLocation(orgId: string, name: string) {
 export async function getLocation(id: LocationId) {
   const { userId, sessionClaims } = await auth();
   if (!userId) {
-    throw new AppError({ message: "Unauthorized" });
+    throw new AppError({ internalMessage: "Unauthorized" });
   }
 
   const orgId = sessionClaims?.org_id;
   if (!orgId) {
-    throw new AppError({ message: "No organization ID found" });
+    throw new AppError({ internalMessage: "No organization ID found" });
   }
 
   const item = await db.query.locations.findFirst({
@@ -109,7 +109,7 @@ export async function getLocation(id: LocationId) {
   });
 
   if (!item) {
-    throw new AppError({ message: `Not found: ${id}` });
+    throw new AppError({ internalMessage: `Not found: ${id}` });
   }
 
   return item;

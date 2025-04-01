@@ -13,7 +13,7 @@ export default async function LocationPage(props: { params: Params }) {
     // TODO Test
 
     throw new AppError({
-      message: `Location validation failed. params: ${JSON.stringify(params)}`,
+      internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
     });
   }
 

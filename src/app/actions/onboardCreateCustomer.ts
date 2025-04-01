@@ -12,9 +12,12 @@ import { env } from "~/env";
 import { addCustomer, addLocation } from "~/server/queries";
 import { isPaidPriceTier } from "~/app/_utils/price-tier-utils";
 import { stripeCustomerIdSchema } from "../_domain/stripe";
-import { generateErrorId } from "../_utils/error-logger-utils";
 import { CookieKey } from "../_domain/cookies";
-import { AppError } from "~/lib/error-utils.server";
+import {
+  AppError,
+  generateErrorId,
+  logException,
+} from "~/lib/error-utils.server";
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -120,7 +123,7 @@ export const onboardCreateCustomer = async (formData: FormData) => {
 
         if (!orgId || !orgName) {
           throw new AppError({
-            message: `No valid organization found.`,
+            internalMessage: `No valid organization found.`,
             userMessage: `No valid organization found. Please restart your onboarding.`,
           });
         }
@@ -168,7 +171,7 @@ export const onboardCreateCustomer = async (formData: FormData) => {
         return { message: res.publicMetadata };
       } catch (error) {
         const eventId = generateErrorId();
-        Sentry.captureException(error, { event_id: eventId });
+        logException(error, eventId);
         const userMessage =
           error instanceof Error
             ? error.message

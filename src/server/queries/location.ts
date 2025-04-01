@@ -21,12 +21,12 @@ export async function getMenusByLocation(
 ): Promise<Menu[]> {
   const { userId, sessionClaims } = await auth();
   if (!userId) {
-    throw new AppError({ message: "Unauthorized" });
+    throw new AppError({ internalMessage: "Unauthorized" });
   }
 
   const orgId = sessionClaims?.org_id;
   if (!orgId) {
-    throw new AppError({ message: "No organization ID found" });
+    throw new AppError({ internalMessage: "No organization ID found" });
   }
 
   // First verify the location belongs to the organization
@@ -36,7 +36,9 @@ export async function getMenusByLocation(
   });
 
   if (!location) {
-    throw new AppError({ message: "Location not found or access denied" });
+    throw new AppError({
+      internalMessage: "Location not found or access denied",
+    });
   }
 
   // Now fetch menus for this location
@@ -57,7 +59,7 @@ export async function getLocationPublicData(
 
   if (!location) {
     throw new AppError({
-      message: `Location not found for slug ${locationSlug}.`,
+      internalMessage: `Location not found for slug ${locationSlug}.`,
     });
   }
 

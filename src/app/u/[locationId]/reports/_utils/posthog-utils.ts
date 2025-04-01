@@ -1,6 +1,6 @@
 import { env } from "process";
-import { logException } from "~/app/_utils/error-logger-utils";
 import { type AnalyticsEventId } from "~/domain/analytics";
+import { generateErrorId, logException } from "~/lib/error-utils.server";
 
 export async function getViews(orgId: string): Promise<number | null> {
   const eventName: AnalyticsEventId = "publicLocationVisit";
@@ -26,10 +26,10 @@ export async function getViews(orgId: string): Promise<number | null> {
   if (typeof output === "number") {
     return output;
   } else {
+    const eventId = generateErrorId();
     logException(
       new Error(`Unexpected Posthog response: ${JSON.stringify(data)}`),
-      "ORG_MANAGER_ERROR",
-      "",
+      eventId,
     );
     return null;
   }

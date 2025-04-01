@@ -28,7 +28,9 @@ export default async function Layout({
   const locationSlugValidationResult =
     locationSlugSchema.safeParse(locationSlug);
   if (!locationSlugValidationResult.success) {
-    throw new AppError({ message: `Invalid location: ${locationSlug}` });
+    throw new AppError({
+      internalMessage: `Invalid location: ${locationSlug}`,
+    });
   }
 
   const parsedLocationSlug = locationSlugValidationResult.data;

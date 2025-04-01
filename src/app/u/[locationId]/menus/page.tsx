@@ -15,7 +15,7 @@ export default async function MenusPage(props: { params: Params }) {
   );
   if (!locationValidationResult.success) {
     throw new AppError({
-      message: `Location validation failed. params: ${JSON.stringify(params)}`,
+      internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
     });
   }
 

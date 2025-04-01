@@ -14,7 +14,9 @@ import { AppError } from "~/lib/error-utils.server";
 export async function SubscriptionDetails() {
   const { userId, orgId, sessionClaims } = await auth();
   if (!userId || !orgId) {
-    throw new AppError({ message: `No userid or orgId found in auth.` });
+    throw new AppError({
+      internalMessage: `No userid or orgId found in auth.`,
+    });
   }
 
   const tierId = sessionClaims?.metadata.tier;

@@ -14,7 +14,9 @@ export default async function OpenOrdersPage(props: { params: Params }) {
     params.locationId,
   );
   if (!locationValidationResult.success) {
-    throw new AppError({ message: `Invalid location: ${params.locationId}` });
+    throw new AppError({
+      internalMessage: `Invalid location: ${params.locationId}`,
+    });
   }
 
   return (

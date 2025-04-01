@@ -34,7 +34,7 @@ export default async function OnboardPaymentPage() {
   const stripePriceId = parsedTier.stripePriceId;
   if (!stripePriceId) {
     throw new AppError({
-      message: `Stripe price id not found for tier ${parsedTier.id}`,
+      internalMessage: `Stripe price id not found for tier ${parsedTier.id}`,
     });
   }
 

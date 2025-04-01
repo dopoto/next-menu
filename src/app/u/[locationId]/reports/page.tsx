@@ -13,14 +13,16 @@ export default async function ReportsPage(props: { params: Params }) {
   const validationResult = locationIdSchema.safeParse(params.locationId);
   if (!validationResult.success) {
     throw new AppError({
-      message: `Location validation failed. params: ${JSON.stringify(params)}`,
+      internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
     });
   }
   const parsedLocationId = validationResult.data;
 
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new AppError({ message: `No userId or orgId found in auth.` });
+    throw new AppError({
+      internalMessage: `No userId or orgId found in auth.`,
+    });
   }
 
   const areReportsAvailable = await isFlagAvailableInCurrentTier("reports");

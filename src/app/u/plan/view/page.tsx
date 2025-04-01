@@ -26,7 +26,7 @@ export default async function ViewPlanPage() {
   const { userId, sessionClaims } = await auth();
   if (!userId) {
     throw new AppError({
-      message: "Unauthorized",
+      internalMessage: "Unauthorized",
       userMessage: "Unauthorized",
     });
   }
@@ -35,7 +35,7 @@ export default async function ViewPlanPage() {
   const parsedTier = getValidPriceTier(tierId);
   if (!parsedTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     });
   }
 

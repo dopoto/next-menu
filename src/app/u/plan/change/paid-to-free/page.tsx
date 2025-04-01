@@ -47,7 +47,7 @@ async function Step1(props: { toTierId?: string }) {
   );
   if (!parsedPaidFromTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     });
   }
 
@@ -55,7 +55,7 @@ async function Step1(props: { toTierId?: string }) {
   const parsedFreeToTier = getValidFreePriceTier(props.toTierId);
   if (!parsedFreeToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
     });
   }
 
@@ -88,7 +88,7 @@ async function Step2(props: {
     .stripeCustomerId;
   if (!stripeCustomerId) {
     throw new AppError({
-      message: `Cannot find Stripe customer for organization ${props.orgId}`,
+      internalMessage: `Cannot find Stripe customer for organization ${props.orgId}`,
     });
   }
 
@@ -100,13 +100,13 @@ async function Step2(props: {
 
   if (!subscriptions || subscriptions.data.length === 0) {
     throw new AppError({
-      message: `No active subscription found for customer ${stripeCustomerId}`,
+      internalMessage: `No active subscription found for customer ${stripeCustomerId}`,
     });
   }
 
   if (subscriptions.data.length > 1) {
     throw new AppError({
-      message: `More than 1 subscription found for customer ${stripeCustomerId}`,
+      internalMessage: `More than 1 subscription found for customer ${stripeCustomerId}`,
     });
   }
 
@@ -114,7 +114,7 @@ async function Step2(props: {
 
   if (!currentSubscription?.items?.data?.[0]?.id) {
     throw new AppError({
-      message: `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
+      internalMessage: `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
     });
   }
 
@@ -136,7 +136,7 @@ async function FinalStep(props: {
 }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new AppError({ message: `No Clerk user id found` });
+    throw new AppError({ internalMessage: `No Clerk user id found` });
   }
 
   // Cancel their Stripe subscription

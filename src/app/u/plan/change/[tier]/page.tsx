@@ -37,7 +37,7 @@ export default async function ChangePlanPage(props: { params: Params }) {
   const parsedToTier = getValidPriceTier(params.tier);
   if (!parsedToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier in params: ${obj2str(params)}`,
+      internalMessage: `Missing or invalid To tier in params: ${obj2str(params)}`,
     });
   }
 
@@ -45,7 +45,7 @@ export default async function ChangePlanPage(props: { params: Params }) {
   const parsedFromTier = getValidPriceTier(sessionClaims?.metadata?.tier);
   if (!parsedFromTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     });
   }
 

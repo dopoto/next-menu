@@ -11,9 +11,9 @@ export type PublicErrorMessage =
  * builds to avoid leaking sensitive details. A digest property is included on this error instance which
  * may provide additional details about the nature of the error.".
  *
- * Therefore, so we can present a user-friendly message and an error reference ID to the users in
- * errors.tsx, we need to hijack the digest field to get the user-friendly error data to the
- * client-side error.tsx, where we then parse it.
+ * Therefore, in order to present a user-friendly message and an error reference ID to the users, we need
+ * to hijack the `digest` field, so we can get the user-friendly error data to the client-side error.tsx,
+ * where we then parse it.
  */
 export type PublicError = Error & {
   digest?: PublicErrorMessage;

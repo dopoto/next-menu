@@ -30,7 +30,7 @@ export const onboardCreateCheckoutSession = async (props: {
   });
 
   if (!session.client_secret) {
-    throw new AppError({ message: "Error initiating Stripe session" });
+    throw new AppError({ internalMessage: "Error initiating Stripe session" });
   }
 
   return {

@@ -55,7 +55,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   );
   if (!parsedPaidFromTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
     });
   }
 
@@ -63,7 +63,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
     throw new AppError({
-      message: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
     });
   }
 
@@ -74,7 +74,7 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
   );
   if (changePlanScenario !== "paid-to-paid-downgrade") {
     throw new AppError({
-      message: `Expected 'paid-to-paid-downgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
+      internalMessage: `Expected 'paid-to-paid-downgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
     });
   }
 
@@ -105,30 +105,32 @@ async function Step2StripeProcessing(props: {
 }) {
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new AppError({ message: `No userId or orgId found in auth.` });
+    throw new AppError({
+      internalMessage: `No userId or orgId found in auth.`,
+    });
   }
 
   const stripeCustomerId = (await getCustomerByOrgId(orgId))
     .stripeCustomerId as StripeCustomerId;
   if (!stripeCustomerId) {
     throw new AppError({
-      message: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
+      internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
     });
   }
 
   const activeStripeSub = await getActiveStripeSubscription(stripeCustomerId);
 
   if (!activeStripeSub) {
-    throw new AppError({ message: `Active sub missing.` });
+    throw new AppError({ internalMessage: `Active sub missing.` });
   }
 
   const currentPriceId = activeStripeSub?.items.data[0]?.price.id;
   if (!currentPriceId) {
-    throw new AppError({ message: `Missing price id` });
+    throw new AppError({ internalMessage: `Missing price id` });
   }
   if (currentPriceId !== props.fromTier.stripePriceId) {
     throw new AppError({
-      message: `From tier mismatch. Expected: ${props.fromTier.stripePriceId}. Got: ${currentPriceId}.`,
+      internalMessage: `From tier mismatch. Expected: ${props.fromTier.stripePriceId}. Got: ${currentPriceId}.`,
     });
   }
 
@@ -165,7 +167,7 @@ async function Step2StripeProcessing(props: {
   const prorationInvoice = invoices.data[0];
 
   if (!prorationInvoice) {
-    throw new AppError({ message: `ProrationInvoice missing` });
+    throw new AppError({ internalMessage: `ProrationInvoice missing` });
   }
 
   let refundDetails: StripeDowngradeRefund | null = null;
@@ -209,7 +211,7 @@ async function Step2StripeProcessing(props: {
 
   const details = {
     success: true,
-    message: "Subscription successfully downgraded from Tier2 to Tier1",
+    internalMessage: "Subscription successfully downgraded from Tier2 to Tier1",
     subscription: {
       id: updatedSubscription.id as StripeSubscriptionId,
       status: updatedSubscription.status,

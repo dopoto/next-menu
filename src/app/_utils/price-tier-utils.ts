@@ -69,11 +69,13 @@ export const isPriceTierId = (value?: string): value is PriceTierId => {
 export function isFreePriceTier(priceTierId: PriceTierId): boolean {
   if (!priceTiers[priceTierId]) {
     throw new AppError({
-      message: `PriceTierId ${priceTierId} is not defined`,
+      internalMessage: `PriceTierId ${priceTierId} is not defined`,
     });
   }
   if (priceTiers[priceTierId].isPublic !== true) {
-    throw new AppError({ message: `PriceTierId ${priceTierId} is not public` });
+    throw new AppError({
+      internalMessage: `PriceTierId ${priceTierId} is not public`,
+    });
   }
   return priceTiers[priceTierId].monthlyUsdPrice === 0;
 }
@@ -81,11 +83,13 @@ export function isFreePriceTier(priceTierId: PriceTierId): boolean {
 export function isPaidPriceTier(priceTierId: PriceTierId): boolean {
   if (!priceTiers[priceTierId]) {
     throw new AppError({
-      message: `PriceTierId ${priceTierId} is not defined`,
+      internalMessage: `PriceTierId ${priceTierId} is not defined`,
     });
   }
   if (priceTiers[priceTierId].isPublic !== true) {
-    throw new AppError({ message: `PriceTierId ${priceTierId} is not public` });
+    throw new AppError({
+      internalMessage: `PriceTierId ${priceTierId} is not public`,
+    });
   }
   return priceTiers[priceTierId].monthlyUsdPrice > 0;
 }

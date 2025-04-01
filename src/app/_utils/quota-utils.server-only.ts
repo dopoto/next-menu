@@ -21,14 +21,14 @@ export async function getIncludedQuota(
   const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in session claims.`,
+      internalMessage: `Missing or invalid From tier in session claims.`,
     });
   }
 
   const included = parsedTier.features.find((f) => f.id === featureId)?.quota;
   if (!included) {
     throw new AppError({
-      message: `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
+      internalMessage: `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
     });
   }
 
@@ -46,7 +46,7 @@ export async function getUsedFeatureQuota(
   const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
     throw new AppError({
-      message: `Missing or invalid tier in session claims.`,
+      internalMessage: `Missing or invalid tier in session claims.`,
     });
   }
 
@@ -72,7 +72,7 @@ export async function isFlagAvailableInCurrentTier(
   const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
     throw new AppError({
-      message: `Missing or invalid From tier in session claims.`,
+      internalMessage: `Missing or invalid From tier in session claims.`,
     });
   }
 

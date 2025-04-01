@@ -78,7 +78,7 @@ export const getMainComponent = async (
 ) => {
   let mainComponent;
   if (stripeSessionId?.length === 0) {
-    throw new AppError({ message: "Stripe - missing stripeSessionId" });
+    throw new AppError({ internalMessage: "Stripe - missing stripeSessionId" });
   } else {
     let sessionStatus: string | null = "";
 
@@ -95,15 +95,15 @@ export const getMainComponent = async (
         break;
       case "expired":
         throw new AppError({
-          message: `Stripe - payment expired for session id ${session.id}`,
+          internalMessage: `Stripe - payment expired for session id ${session.id}`,
         });
       case "open":
         throw new AppError({
-          message: `Stripe - payment is open for session id ${session.id}`,
+          internalMessage: `Stripe - payment is open for session id ${session.id}`,
         });
       default:
         throw new AppError({
-          message: `Stripe - unknown status ${sessionStatus} for session id ${session.id}`,
+          internalMessage: `Stripe - unknown status ${sessionStatus} for session id ${session.id}`,
         });
     }
   }

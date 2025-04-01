@@ -10,7 +10,7 @@ export default async function AddMenuPage(props: { params: Params }) {
   if (!validationResult.success) {
     // TODO Test
     throw new AppError({
-      message: `Location validation failed. params: ${JSON.stringify(params)}`,
+      internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
     });
   }
 
