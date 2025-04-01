@@ -2,7 +2,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { type PriceTier } from "~/app/_domain/price-tiers";
-import { lg, obj2str } from "~/app/_utils/string-utils";
+import { obj2str } from "~/app/_utils/string-utils";
 import { getCustomerByOrgId } from "~/server/queries";
 import { Suspense } from "react";
 import ProcessingPlanChange from "../_components/ProcessingPlanChange";

@@ -8,6 +8,7 @@ import Providers from "./_components/Providers";
 import { GoogleTagManager } from "@next/third-parties/google";
 import { env } from "~/env";
 import { PostHogProvider } from "~/app/_components/PostHogProvider";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "The Menu",
@@ -31,6 +32,7 @@ export default function RootLayout(props: {
             <GoogleTagManager
               gtmId={env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ""}
             />
+            <Analytics />
           </Providers>
         </PostHogProvider>
       </body>
