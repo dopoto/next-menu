@@ -27,7 +27,7 @@ export default async function ViewPlanPage() {
   if (!userId) {
     throw new AppError({
       internalMessage: "Unauthorized",
-      userMessage: "Unauthorized",
+      publicMessage: "Unauthorized",
     });
   }
 

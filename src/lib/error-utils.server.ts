@@ -7,26 +7,30 @@ import {
 import { env } from "~/env";
 
 export class AppError extends Error {
-  //public readonly publicErrorMessage: PublicErrorMessage;
+  public readonly publicErrorId: PublicErrorId;
+  public readonly publicMessage: string;
   public digest: string;
   constructor({
     error,
     internalMessage,
-    userMessage,
+    publicMessage,
   }: {
     error?: unknown;
     internalMessage?: string;
-    userMessage?: string;
+    publicMessage?: string;
   }) {
     const publicErrorId = generateErrorId();
-    const publicMessageOrDefault = userMessage ?? "Something went wrong";
+    const publicMessageOrDefault = publicMessage ?? "Something went wrong";
 
     // The only error fields that we can send to the client-side are a string message and a string digest, so
     // ensure that we form a predefined-format string that can be later parsed by our client-side error.tsx:
     const pb: PublicErrorMessage = `${publicErrorId}${PUBLIC_ERROR_DELIMITER}${publicMessageOrDefault}`;
+
     super(pb);
 
     this.digest = pb;
+    this.publicErrorId = publicErrorId;
+    this.publicMessage = publicMessageOrDefault;
 
     logException(error, publicErrorId, internalMessage);
   }

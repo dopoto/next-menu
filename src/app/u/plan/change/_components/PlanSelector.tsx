@@ -10,17 +10,10 @@ import {
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
-import { AppError } from "~/lib/error-utils.server";
 
 export async function PlanSelector() {
   const currentUserTier = (await auth()).sessionClaims?.metadata
     ?.tier as PriceTierId;
-
-  //TODO remove
-  throw new AppError({
-    internalMessage: "internal msg",
-    userMessage: "some user firendly messagw",
-  });
 
   return (
     <div className="flex flex-col gap-3">
