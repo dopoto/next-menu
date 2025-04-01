@@ -29,14 +29,14 @@
       "~/*": ["./src/*"]
     }
   },
-  "include": [     
+  "include": [
     "next-env.d.ts",
     "**/*.ts",
-    "**/*.tsx",     
+    "**/*.tsx",
     "**/*.js",
     "**/*.config.js",
     "**/*.config.ts",
     ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules", ".next", "out"]
+  "exclude": ["node_modules", ".next", "out", "storybook-static"]
 }
