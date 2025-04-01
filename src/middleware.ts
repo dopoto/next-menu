@@ -7,25 +7,14 @@ import { ROUTES } from "./app/_domain/routes";
 const redirectTo = (req: NextRequest, route: string) =>
   NextResponse.redirect(new URL(route, req.url));
 const isSignUpRoute = createRouteMatcher([ROUTES.signUp]);
-const isSignOutRoute = createRouteMatcher([`${ROUTES.signOut}(.*)`]);
 const isMyRoute = createRouteMatcher([`${ROUTES.my}(.*)`]);
-const isPublicRoute = createRouteMatcher([
-  ROUTES.home,
-  `${ROUTES.signIn}(.*)`,
-  `${ROUTES.signOut}(.*)`,
-  `${ROUTES.onboardSelectPlan}(.*)`,
-  `${ROUTES.signUp}(.*)`,
-  `${ROUTES.public}(.*)`,
-  `/ingest/(.*)`,
-]);
+const isAuthProtectedRoute = createRouteMatcher([`${ROUTES.userRoot}(.*)`]);
 
 export default clerkMiddleware(
   async (auth, req: NextRequest) => {
     const { userId, sessionClaims, redirectToSignIn } = await auth();
     const { currentLocationId } = sessionClaims?.metadata ?? {};
     const orgId = sessionClaims?.org_id;
-
-    const res = NextResponse.next();
 
     if (isSignUpRoute(req)) {
       console.log(`DBG-MIDDLEWARE [${req.url}] Is sign-up route`);
@@ -35,22 +24,18 @@ export default clerkMiddleware(
         console.log(
           `DBG-MIDDLEWARE [${req.url}] Setting onboard-plan cookie to ${tierParam}`,
         );
-        res.cookies.set(CookieKey.OnboardPlan, tierParam, {
+        const signUpResponse = NextResponse.next();
+        signUpResponse.cookies.set(CookieKey.OnboardPlan, tierParam, {
           path: "/",
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
         });
-        return res;
+        return signUpResponse;
       }
     }
 
-    // If user wants to sign out, let them
-    if (isSignOutRoute(req)) {
-      return NextResponse.next();
-    }
-
     // If the user isn't signed in and the route is private, redirect to sign-in
-    if (!userId && !isPublicRoute(req)) {
+    if (!userId && isAuthProtectedRoute(req)) {
       console.log(
         `DBG-MIDDLEWARE [${req.url}] Not public and no user id found => Redirecting to sign in`,
       );
@@ -75,20 +60,18 @@ export default clerkMiddleware(
     }
 
     // For public routes, ensure we have a machineId cookie
-    if (isPublicRoute(req)) {
+    if (!isAuthProtectedRoute(req)) {
       const machineId = req.cookies.get(CookieKey.MachineId);
       if (!machineId) {
-        res.cookies.set(CookieKey.MachineId, crypto.randomUUID(), {
+        const anonResponse = NextResponse.next();
+        anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), {
           path: "/",
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
         });
-        return res;
+        return anonResponse;
       }
     }
-
-    // If the user is logged in and the route is protected, let them use it.
-    if (userId && !isPublicRoute(req)) return NextResponse.next();
   },
   //{ debug: env.NEXT_PUBLIC_ENV === "development" },
   { debug: false },
