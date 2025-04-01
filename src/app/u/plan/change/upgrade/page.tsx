@@ -14,6 +14,7 @@ import {
 import { changePlanUpgradeCreateCheckoutSession } from "~/app/_utils/stripe-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
+import { AppError } from "~/lib/error-utils.server";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;
 
@@ -40,17 +41,17 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     sessionClaims?.metadata?.tier,
   );
   if (!parsedPaidFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   // Expecting a valid paid To tier:
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
-    throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+    });
   }
 
   // Expecting an upgrade:
@@ -59,9 +60,9 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     parsedPaidToTier.id,
   );
   if (changePlanScenario !== "paid-to-paid-upgrade") {
-    throw new Error(
-      `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
-    );
+    throw new AppError({
+      internalMessage: `Expected 'paid-to-paid-upgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
+    });
   }
 
   // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
@@ -90,16 +91,16 @@ async function Step2StripeProcessing(props: {
   orgId: string;
 }) {
   if (!props.toTier.stripePriceId) {
-    throw new Error(
-      `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
-    );
+    throw new AppError({
+      internalMessage: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
+    });
   }
   const stripeCustomerId = (await getCustomerByOrgId(props.orgId))
     .stripeCustomerId;
   if (!stripeCustomerId) {
-    throw new Error(
-      `Expected a stripeCustomerId in our db for ${props.orgId}, got null instead.`,
-    );
+    throw new AppError({
+      internalMessage: `Expected a stripeCustomerId in our db for ${props.orgId}, got null instead.`,
+    });
   }
 
   const clientSecret = await changePlanUpgradeCreateCheckoutSession({
@@ -108,7 +109,9 @@ async function Step2StripeProcessing(props: {
   });
 
   if (!clientSecret) {
-    throw new Error(`Could not initialize Stripe checkout session.`);
+    throw new AppError({
+      internalMessage: `Could not initialize Stripe checkout session.`,
+    });
   }
 
   return (
@@ -123,7 +126,7 @@ async function FinalStepShowStripeCheckoutForm(props: {
 }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new Error(`No Clerk user id found"`);
+    throw new AppError({ internalMessage: `No Clerk user id found` });
   }
 
   return (

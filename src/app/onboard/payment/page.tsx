@@ -8,6 +8,8 @@ import { CheckoutForm } from "../_components/CheckoutForm";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
 import { ROUTES } from "~/app/_domain/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
+import * as React from "react";
+import { AppError } from "~/lib/error-utils.server";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Onboard > Payment`,
@@ -31,7 +33,9 @@ export default async function OnboardPaymentPage() {
 
   const stripePriceId = parsedTier.stripePriceId;
   if (!stripePriceId) {
-    throw new Error(`Stripe price id not found for tier ${parsedTier.id}`);
+    throw new AppError({
+      internalMessage: `Stripe price id not found for tier ${parsedTier.id}`,
+    });
   }
 
   return (

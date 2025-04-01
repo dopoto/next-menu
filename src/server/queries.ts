@@ -4,6 +4,7 @@ import { db } from "~/server/db";
 import { customers, locations } from "./db/schema";
 import { and, eq } from "drizzle-orm";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { AppError } from "~/lib/error-utils.server";
 
 export async function addCustomer(
   clerkUserId: string,
@@ -43,16 +44,23 @@ export async function getCustomerByOrgId(orgId: string) {
   const item = await db.query.customers.findFirst({
     where: (model, { eq }) => eq(model.orgId, orgId),
   });
-  if (!item) throw new Error("Not found");
+  if (!item) {
+    throw new AppError({ internalMessage: `Not found: ${orgId}` });
+  }
+
   return item;
 }
 
 export async function getMenusPlanUsage() {
   const { userId, sessionClaims } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) {
+    throw new AppError({ internalMessage: "Unauthorized" });
+  }
 
   const orgId = sessionClaims?.org_id;
-  if (!orgId) throw new Error("No organization ID found");
+  if (!orgId) {
+    throw new AppError({ internalMessage: "No organization ID found" });
+  }
 
   const result = await db.query.menus.findMany({
     where: (menus, { eq, and, exists }) =>
@@ -87,16 +95,22 @@ export async function addLocation(orgId: string, name: string) {
 
 export async function getLocation(id: LocationId) {
   const { userId, sessionClaims } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) {
+    throw new AppError({ internalMessage: "Unauthorized" });
+  }
 
   const orgId = sessionClaims?.org_id;
-  if (!orgId) throw new Error("No organization ID found");
+  if (!orgId) {
+    throw new AppError({ internalMessage: "No organization ID found" });
+  }
 
   const item = await db.query.locations.findFirst({
     where: (model, { eq }) => and(eq(model.id, id), eq(model.orgId, orgId)),
   });
 
-  if (!item) throw new Error("Not found");
+  if (!item) {
+    throw new AppError({ internalMessage: `Not found: ${id}` });
+  }
 
   return item;
 }

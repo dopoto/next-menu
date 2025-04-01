@@ -18,6 +18,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
+import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -45,17 +46,17 @@ async function Step1(props: { toTierId?: string }) {
     sessionClaims?.metadata?.tier,
   );
   if (!parsedPaidFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   // Expecting a valid free To tier:
   const parsedFreeToTier = getValidFreePriceTier(props.toTierId);
   if (!parsedFreeToTier) {
-    throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+    });
   }
 
   // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
@@ -86,9 +87,9 @@ async function Step2(props: {
   const stripeCustomerId = (await getCustomerByOrgId(props.orgId))
     .stripeCustomerId;
   if (!stripeCustomerId) {
-    throw new Error(
-      `Cannot find Stripe customer for organization ${props.orgId}`,
-    );
+    throw new AppError({
+      internalMessage: `Cannot find Stripe customer for organization ${props.orgId}`,
+    });
   }
 
   // TODO refactor - extract to util fn:
@@ -98,23 +99,23 @@ async function Step2(props: {
   });
 
   if (!subscriptions || subscriptions.data.length === 0) {
-    throw new Error(
-      `No active subscription found for customer ${stripeCustomerId}`,
-    );
+    throw new AppError({
+      internalMessage: `No active subscription found for customer ${stripeCustomerId}`,
+    });
   }
 
   if (subscriptions.data.length > 1) {
-    throw new Error(
-      `More than 1 subscription found for customer ${stripeCustomerId}`,
-    );
+    throw new AppError({
+      internalMessage: `More than 1 subscription found for customer ${stripeCustomerId}`,
+    });
   }
 
   const currentSubscription = subscriptions.data[0];
 
   if (!currentSubscription?.items?.data?.[0]?.id) {
-    throw new Error(
-      `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
-    );
+    throw new AppError({
+      internalMessage: `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
+    });
   }
 
   return (
@@ -135,7 +136,7 @@ async function FinalStep(props: {
 }) {
   const { userId } = await auth();
   if (!userId) {
-    throw new Error(`No Clerk user id found"`);
+    throw new AppError({ internalMessage: `No Clerk user id found` });
   }
 
   // Cancel their Stripe subscription

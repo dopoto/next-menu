@@ -12,6 +12,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getCustomerByOrgId } from "~/server/queries";
 import { env } from "~/env";
 import { obj2str } from "./string-utils";
+import { AppError } from "~/lib/error-utils.server";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -27,15 +28,15 @@ export async function getActiveStripeSubscription(
   } else {
     orgId = (await auth()).orgId;
     if (!orgId) {
-      throw new Error(`No orgId found in auth.`);
+      throw new AppError({ internalMessage: `No orgId found in auth.` });
     }
     customerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
   }
 
   if (!customerId) {
-    throw new Error(
-      `No stripeCustomerId. orgId: ${orgId}. Was passed stripeCustomerId: ${stripeCustomerId}.`,
-    );
+    throw new AppError({
+      internalMessage: `No stripeCustomerId. orgId: ${orgId}. Was passed stripeCustomerId: ${stripeCustomerId}.`,
+    });
   }
 
   // Retrieve user's active subscription
@@ -46,9 +47,9 @@ export async function getActiveStripeSubscription(
   });
 
   if (subscriptions.data.length === 0) {
-    throw new Error(
-      `No active subscriptions found for stripeCustomerId ${customerId}.`,
-    );
+    throw new AppError({
+      internalMessage: `No active subscriptions found for stripeCustomerId ${customerId}.`,
+    });
   }
 
   return subscriptions.data[0];
@@ -60,15 +61,19 @@ export async function getActiveSubscriptionItemId(
   const subscription = sub ?? (await getActiveStripeSubscription());
 
   if (!subscription) {
-    throw new Error(`No subscription.`);
+    throw new AppError({ internalMessage: `No subscription.` });
   }
 
   if (subscription.items?.data?.[0]?.plan.active !== true) {
-    throw new Error(`Subscription item not active for sub ${subscription.id}`);
+    throw new AppError({
+      internalMessage: `Subscription item not active for sub ${subscription.id}`,
+    });
   }
 
   if (!subscription.items?.data?.[0]?.id) {
-    throw new Error(`Subscription item not found for sub ${subscription.id}`);
+    throw new AppError({
+      internalMessage: `Subscription item not found for sub ${subscription.id}`,
+    });
   }
 
   return subscription.items.data[0].id as StripeSubscriptionItemId;
@@ -83,30 +88,30 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
   // Expecting a valid paid From tier:
   const parsedPaidFromTier = getValidPaidPriceTier(props.fromTierId);
   if (!parsedPaidFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in props.fromTierId: ${props.fromTierId}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier in props.fromTierId: ${props.fromTierId}`,
+    });
   }
 
   // Expecting a valid paid To tier:
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
-    throw new Error(
-      `Missing or invalid To tier in props.toTierId: ${props.toTierId}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid To tier in props.toTierId: ${props.toTierId}`,
+    });
   }
 
   const { orgId } = await auth();
 
   if (!orgId) {
-    throw new Error(`No orgId found in auth.`);
+    throw new AppError({ internalMessage: `No orgId found in auth.` });
   }
 
   const stripeCustomerId = (await getCustomerByOrgId(orgId)).stripeCustomerId;
   if (!stripeCustomerId) {
-    throw new Error(
-      `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
-    );
+    throw new AppError({
+      internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
+    });
   }
 
   // Retrieve user's active subscription
@@ -117,15 +122,15 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
   });
 
   if (subscriptions.data.length === 0) {
-    throw new Error(
-      `No active subscriptions found for stripeCustomerId ${stripeCustomerId}.`,
-    );
+    throw new AppError({
+      internalMessage: `No active subscriptions found for stripeCustomerId ${stripeCustomerId}.`,
+    });
   }
 
   if (subscriptions.data.length > 1) {
-    throw new Error(
-      `Several active subscriptions found for stripeCustomerId ${stripeCustomerId}.`,
-    );
+    throw new AppError({
+      internalMessage: `Several active subscriptions found for stripeCustomerId ${stripeCustomerId}.`,
+    });
   }
 
   const subscription = subscriptions.data[0];
@@ -133,17 +138,17 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
   const subscriptionId = subscription?.id as StripeSubscriptionId;
 
   if (!subscriptionId) {
-    throw new Error(
-      `Cannot find subscriptionId for stripeCustomerId ${stripeCustomerId}.`,
-    );
+    throw new AppError({
+      internalMessage: `Cannot find subscriptionId for stripeCustomerId ${stripeCustomerId}.`,
+    });
   }
 
   const currentSubscription = subscriptions.data[0];
 
   if (!currentSubscription?.items?.data?.[0]?.id) {
-    throw new Error(
-      `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
-    );
+    throw new AppError({
+      internalMessage: `An id was not found in currentSubscription?.items?.data?.[0] for subscription ${obj2str(currentSubscription)}`,
+    });
   }
   const subscriptionItemId = currentSubscription.items.data[0].id; //'si_RvhYtqKirxQTR2'
 

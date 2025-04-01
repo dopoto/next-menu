@@ -7,6 +7,7 @@ import React from "react";
 import type { AnalyticsEventId } from "~/domain/analytics";
 import { CookieKey } from "~/app/_domain/cookies";
 import { cookies } from "next/headers";
+import { AppError } from "~/lib/error-utils.server";
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
   host: env.NEXT_PUBLIC_POSTHOG_HOST,
@@ -27,7 +28,9 @@ export default async function Layout({
   const locationSlugValidationResult =
     locationSlugSchema.safeParse(locationSlug);
   if (!locationSlugValidationResult.success) {
-    throw new Error(`Invalid location: ${locationSlug}`);
+    throw new AppError({
+      internalMessage: `Invalid location: ${locationSlug}`,
+    });
   }
 
   const parsedLocationSlug = locationSlugValidationResult.data;

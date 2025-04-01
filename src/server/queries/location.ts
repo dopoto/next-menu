@@ -7,6 +7,7 @@ import {
 } from "~/app/u/[locationId]/_domain/locations";
 import { type Menu } from "~/server/db/schema";
 import { type Location } from "~/server/db/schema";
+import { AppError } from "~/lib/error-utils.server";
 
 // export async function getLocations() {
 //   const items = await db.query.locations.findMany({
@@ -19,10 +20,14 @@ export async function getMenusByLocation(
   locationId: LocationId,
 ): Promise<Menu[]> {
   const { userId, sessionClaims } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) {
+    throw new AppError({ internalMessage: "Unauthorized" });
+  }
 
   const orgId = sessionClaims?.org_id;
-  if (!orgId) throw new Error("No organization ID found");
+  if (!orgId) {
+    throw new AppError({ internalMessage: "No organization ID found" });
+  }
 
   // First verify the location belongs to the organization
   const location = await db.query.locations.findFirst({
@@ -31,7 +36,9 @@ export async function getMenusByLocation(
   });
 
   if (!location) {
-    throw new Error("Location not found or access denied");
+    throw new AppError({
+      internalMessage: "Location not found or access denied",
+    });
   }
 
   // Now fetch menus for this location
@@ -51,7 +58,9 @@ export async function getLocationPublicData(
   });
 
   if (!location) {
-    throw new Error("Location not found.");
+    throw new AppError({
+      internalMessage: `Location not found for slug ${locationSlug}.`,
+    });
   }
 
   return location;

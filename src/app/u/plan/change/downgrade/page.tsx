@@ -24,6 +24,7 @@ import {
 } from "~/app/_domain/stripe";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
 import { ROUTES } from "~/app/_domain/routes";
+import { AppError } from "~/lib/error-utils.server";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -53,17 +54,17 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     sessionClaims?.metadata?.tier,
   );
   if (!parsedPaidFromTier) {
-    throw new Error(
-      `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier in sessionClaims: ${obj2str(sessionClaims)}`,
+    });
   }
 
   // Expecting a valid paid To tier:
   const parsedPaidToTier = getValidPaidPriceTier(props.toTierId);
   if (!parsedPaidToTier) {
-    throw new Error(
-      `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid To tier in props.toTierId. got: ${props.toTierId}`,
+    });
   }
 
   // Expecting a downgrade:
@@ -72,9 +73,9 @@ async function Step1PreChangeValidations(props: { toTierId?: string }) {
     parsedPaidToTier.id,
   );
   if (changePlanScenario !== "paid-to-paid-downgrade") {
-    throw new Error(
-      `Expected 'paid-to-paid-downgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
-    );
+    throw new AppError({
+      internalMessage: `Expected 'paid-to-paid-downgrade', got ${changePlanScenario} for ${obj2str(parsedPaidToTier)} to ${obj2str(parsedPaidFromTier)}.`,
+    });
   }
 
   // If user tries to downgrade to a tier that cannot accomodate their current usage, redirect back:
@@ -104,31 +105,33 @@ async function Step2StripeProcessing(props: {
 }) {
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new Error(`No orgId found in auth.`);
+    throw new AppError({
+      internalMessage: `No userId or orgId found in auth.`,
+    });
   }
 
   const stripeCustomerId = (await getCustomerByOrgId(orgId))
     .stripeCustomerId as StripeCustomerId;
   if (!stripeCustomerId) {
-    throw new Error(
-      `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
-    );
+    throw new AppError({
+      internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
+    });
   }
 
   const activeStripeSub = await getActiveStripeSubscription(stripeCustomerId);
 
   if (!activeStripeSub) {
-    throw new Error(`Active sub missing.`);
+    throw new AppError({ internalMessage: `Active sub missing.` });
   }
 
   const currentPriceId = activeStripeSub?.items.data[0]?.price.id;
   if (!currentPriceId) {
-    throw new Error(`Missing price id`);
+    throw new AppError({ internalMessage: `Missing price id` });
   }
   if (currentPriceId !== props.fromTier.stripePriceId) {
-    throw new Error(
-      `From tier mismatch. Expected: ${props.fromTier.stripePriceId}. Got: ${currentPriceId}.`,
-    );
+    throw new AppError({
+      internalMessage: `From tier mismatch. Expected: ${props.fromTier.stripePriceId}. Got: ${currentPriceId}.`,
+    });
   }
 
   const activeStripeSubItemId =
@@ -164,7 +167,7 @@ async function Step2StripeProcessing(props: {
   const prorationInvoice = invoices.data[0];
 
   if (!prorationInvoice) {
-    throw new Error(`ProrationInvoice missing`);
+    throw new AppError({ internalMessage: `ProrationInvoice missing` });
   }
 
   let refundDetails: StripeDowngradeRefund | null = null;
@@ -206,9 +209,7 @@ async function Step2StripeProcessing(props: {
     }
   }
 
-  const details = {
-    success: true,
-    message: "Subscription successfully downgraded from Tier2 to Tier1",
+  const details: StripeDowngradeTxDetails = {
     subscription: {
       id: updatedSubscription.id as StripeSubscriptionId,
       status: updatedSubscription.status,
@@ -224,8 +225,6 @@ async function Step2StripeProcessing(props: {
     },
     refund: refundDetails,
   };
-
-  lg(details);
 
   // Move user to new tier
   const clerk = await clerkClient();

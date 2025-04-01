@@ -7,6 +7,7 @@ import { auth } from "@clerk/nextjs/server";
 import { getValidPriceTier } from "./price-tier-utils";
 import { obj2str } from "./string-utils";
 import { type PriceTierFlagId } from "~/app/_domain/price-tier-flags";
+import { AppError } from "~/lib/error-utils.server";
 
 /**
  * Returns the number of items included in a feature (E.G. "menus")
@@ -19,14 +20,16 @@ export async function getIncludedQuota(
 
   const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
-    throw new Error(`Missing or invalid From tier in session claims.`);
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier in session claims.`,
+    });
   }
 
   const included = parsedTier.features.find((f) => f.id === featureId)?.quota;
   if (!included) {
-    throw new Error(
-      `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
-    );
+    throw new AppError({
+      internalMessage: `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
+    });
   }
 
   return included;
@@ -42,7 +45,9 @@ export async function getUsedFeatureQuota(
 
   const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
-    throw new Error(`Missing or invalid tier in session claims.`);
+    throw new AppError({
+      internalMessage: `Missing or invalid tier in session claims.`,
+    });
   }
 
   const usedQuotaFn = priceTierUsageFunctions[featureId];
@@ -66,7 +71,9 @@ export async function isFlagAvailableInCurrentTier(
   const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
   const parsedTier = getValidPriceTier(priceTierId);
   if (!parsedTier) {
-    throw new Error(`Missing or invalid From tier in session claims.`);
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier in session claims.`,
+    });
   }
 
   return parsedTier.flags.find((flag) => flag.id === flagId)?.isEnabled === true

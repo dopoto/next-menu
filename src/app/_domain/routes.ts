@@ -26,10 +26,11 @@ export const ROUTES = {
   onboardCreateOrg: "/onboard/create-org",
   onboardAddLocation: "/onboard/add-location",
   onboardPayment: "/onboard/payment",
-  onboardOverview: "/onboard/payment",
+  onboardOverview: "/onboard/overview",
 
   // AUTH_PROTECTED
   my: "/my",
+  userRoot: "/u",
   location: (locationId: LocationId) => `/u/${locationId}/location`,
   live: (locationId: LocationId) => `/u/${locationId}/live`,
   reports: (locationId: LocationId) => `/u/${locationId}/reports`,

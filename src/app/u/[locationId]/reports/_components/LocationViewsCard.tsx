@@ -5,6 +5,7 @@ import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { GenericReportsCard } from "~/app/u/[locationId]/reports/_components/GenericReportsCard";
 import { getViews } from "~/app/u/[locationId]/reports/_utils/posthog-utils";
 import { Skeleton } from "~/components/ui/skeleton";
+import { AppError } from "~/lib/error-utils.server";
 
 export async function LocationViewsCard(props: {
   mode: "regular" | "placeholder" | "locked";
@@ -44,7 +45,9 @@ export async function LocationViewsCard(props: {
 
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new Error(`No userId or orgId found in auth.`);
+    throw new AppError({
+      internalMessage: `No userId or orgId found in auth.`,
+    });
   }
 
   const locationViewsValue = await getViews(orgId);

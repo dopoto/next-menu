@@ -9,6 +9,7 @@ import {
 import { obj2str } from "~/app/_utils/string-utils";
 import { updateCustomerByClerkUserId } from "~/server/queries";
 import { PlanChanged } from "../../../_components/PlanChanged";
+import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -24,24 +25,26 @@ export default async function FreeToPaidPostPaymentPage(props: {
   // Expecting a valid paid To tier:
   const parsedPaidToTier = getValidPaidPriceTier(priceTierId);
   if (!parsedPaidToTier) {
-    throw new Error(`Missing or invalid To tier param: ${priceTierId}`);
+    throw new AppError({
+      internalMessage: `Missing or invalid To tier param: ${priceTierId}`,
+    });
   }
 
   const { session_id: sessionId } = await props.searchParams;
   if (!sessionId) {
-    throw new Error("No session_id param");
+    throw new AppError({ internalMessage: "No session_id param" });
   }
 
   const session = await stripe.checkout.sessions.retrieve(sessionId);
   if (!session) {
-    throw new Error(
-      `No Stripe session found for session_id param "${sessionId}"`,
-    );
+    throw new AppError({
+      internalMessage: `No Stripe session found for session_id param "${sessionId}"`,
+    });
   }
   if (!session.subscription || typeof session.subscription !== "string") {
-    throw new Error(
-      `Missing or invalid Stripe subscription. session_id: "${sessionId} | session: ${obj2str(session)}"`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid Stripe subscription. session_id: "${sessionId} | session: ${obj2str(session)}"`,
+    });
   }
 
   // Expecting a valid free From tier:
@@ -49,9 +52,9 @@ export default async function FreeToPaidPostPaymentPage(props: {
     session.metadata?.fromTierId,
   );
   if (!parsedFreeFromTier) {
-    throw new Error(
-      `Missing or invalid From tier metadata: ${obj2str(session?.metadata ?? {})}`,
-    );
+    throw new AppError({
+      internalMessage: `Missing or invalid From tier metadata: ${obj2str(session?.metadata ?? {})}`,
+    });
   }
 
   //TODO check status = complete?
@@ -62,14 +65,14 @@ export default async function FreeToPaidPostPaymentPage(props: {
   const lineItems = await stripe.checkout.sessions.listLineItems(sessionId);
   const priceId = lineItems?.data?.[0]?.price?.id;
   if (priceId !== parsedPaidToTier.stripePriceId) {
-    throw new Error(
-      `Tier not matching = Stripe: ${priceId} | param: ${priceTierId}`,
-    );
+    throw new AppError({
+      internalMessage: `Tier not matching = Stripe: ${priceId} | param: ${priceTierId}`,
+    });
   }
 
   const { userId } = await auth();
   if (!userId) {
-    throw new Error(`No Clerk user id found"`);
+    throw new AppError({ internalMessage: `No Clerk user id found` });
   }
 
   //TODO validate that current tier read from session claims matches parsedPaidFromTier
@@ -77,12 +80,14 @@ export default async function FreeToPaidPostPaymentPage(props: {
   // Validate stripeCustomerId and update user records in our db
   const stripeCustomerId = session.customer;
   if (!stripeCustomerId) {
-    throw new Error(`No stripeCustomerId found in session ${obj2str(session)}`);
+    throw new AppError({
+      internalMessage: `No stripeCustomerId found in session ${obj2str(session)}`,
+    });
   }
   if (typeof stripeCustomerId !== "string") {
-    throw new Error(
-      `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
-    );
+    throw new AppError({
+      internalMessage: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
+    });
   }
   await updateCustomerByClerkUserId(userId, stripeCustomerId);
 

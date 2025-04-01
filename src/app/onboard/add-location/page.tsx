@@ -16,6 +16,7 @@ import { LocationCreated } from "../_components/LocationCreated";
 import * as React from "react";
 import { ROUTES } from "~/app/_domain/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
+import { AppError } from "~/lib/error-utils.server";
 
 export const metadata = {
   title: `${APP_CONFIG.appName} - Onboard > Add location`,
@@ -77,7 +78,7 @@ export const getMainComponent = async (
 ) => {
   let mainComponent;
   if (stripeSessionId?.length === 0) {
-    throw new Error("Stripe - missing stripeSessionId");
+    throw new AppError({ internalMessage: "Stripe - missing stripeSessionId" });
   } else {
     let sessionStatus: string | null = "";
 
@@ -93,17 +94,17 @@ export const getMainComponent = async (
         );
         break;
       case "expired":
-        throw new Error(
-          `Stripe - payment expired for session id ${session.id}`,
-        );
+        throw new AppError({
+          internalMessage: `Stripe - payment expired for session id ${session.id}`,
+        });
       case "open":
-        throw new Error(
-          `Stripe - payment is open for session id ${session.id}`,
-        );
+        throw new AppError({
+          internalMessage: `Stripe - payment is open for session id ${session.id}`,
+        });
       default:
-        throw new Error(
-          `Stripe - unknown status ${sessionStatus} for session id ${session.id}`,
-        );
+        throw new AppError({
+          internalMessage: `Stripe - unknown status ${sessionStatus} for session id ${session.id}`,
+        });
     }
   }
 

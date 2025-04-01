@@ -12,24 +12,31 @@ import { ROUTES } from "~/app/_domain/routes";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import truncateMiddle from "truncate-middle";
 import { CopyButton } from "~/app/_components/CopyButton";
+import { AppError } from "~/lib/error-utils.server";
 
 export async function LocationDetails(props: { id: LocationId }) {
   const { userId, orgId } = await auth();
   if (!userId || !orgId) {
-    throw new Error(`No orgId found in auth.`);
+    throw new AppError({
+      internalMessage: `No orgId or userid found in auth.`,
+    });
   }
 
   const validationResult = locationIdSchema.safeParse(props.id);
   if (!validationResult.success) {
     // TODO Test
-    throw new Error("Location issue");
+    throw new AppError({
+      internalMessage: `Location validation failed. params: ${JSON.stringify(props)}`,
+    });
   }
   const parsedLocationId = validationResult.data;
 
   const locationData = await getLocation(parsedLocationId);
 
   if (!locationData.slug) {
-    throw new Error(`Missing slug for location ${parsedLocationId}`);
+    throw new AppError({
+      internalMessage: `Missing slug for location ${parsedLocationId}`,
+    });
   }
 
   const locationUrl = `${env.NEXT_PUBLIC_APP_URL}${ROUTES.publicLocation(locationData.slug)}`;

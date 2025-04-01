@@ -3,6 +3,7 @@
 import { Stripe } from "stripe";
 import { env } from "~/env";
 import { type PriceTierId, priceTiers } from "../_domain/price-tiers";
+import { AppError } from "~/lib/error-utils.server";
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -28,8 +29,9 @@ export const onboardCreateCheckoutSession = async (props: {
     return_url: returnUrl,
   });
 
-  if (!session.client_secret)
-    throw new Error("Error initiating Stripe session");
+  if (!session.client_secret) {
+    throw new AppError({ internalMessage: "Error initiating Stripe session" });
+  }
 
   return {
     clientSecret: session.client_secret,
