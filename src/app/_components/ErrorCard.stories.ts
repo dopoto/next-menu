@@ -4,6 +4,9 @@ import { PUBLIC_ERROR_DELIMITER } from "~/domain/error-handling";
 
 const meta: Meta<typeof ErrorCard> = {
   component: ErrorCard,
+  parameters: {
+    layout: "centered",
+  },
 };
 export default meta;
 
