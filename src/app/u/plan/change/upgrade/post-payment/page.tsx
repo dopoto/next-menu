@@ -11,14 +11,10 @@ import { getCustomerByOrgId } from "~/server/queries";
 import { PlanChanged } from "../../_components/PlanChanged";
 import {
   stripeCustomerIdSchema,
-  type StripeCustomerId,
   type StripeSubscriptionId,
   type UpgradeTiersStripeMetadata,
 } from "~/app/_domain/stripe";
-import {
-  getActiveStripeSubscriptionItem,
-  getActiveSubscriptionItemId,
-} from "~/app/_utils/stripe-utils";
+import { getActiveStripeSubscriptionItem } from "~/app/_utils/stripe-utils";
 import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);

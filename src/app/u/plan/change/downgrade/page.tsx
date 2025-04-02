@@ -188,6 +188,11 @@ async function Step2StripeProcessing(props: {
         charge.amount >= Math.abs(prorationInvoice.total),
     );
 
+    if (typeof eligibleCharge?.payment_intent !== "string") {
+      const intMsg = `Unexpected payment_intent: ${JSON.stringify(eligibleCharge?.payment_intent)}.`;
+      throw new AppError({ internalMessage: intMsg });
+    }
+
     if (eligibleCharge) {
       // Process a refund for the credit amount
       const refund = await stripe.refunds.create({
