@@ -11,7 +11,7 @@ import {
   getValidPaidPriceTier,
 } from "~/app/_utils/price-tier-utils";
 import {
-  getActiveStripeSubscription,
+  getActiveStripeSubscriptionItem,
   getActiveSubscriptionItemId,
 } from "~/app/_utils/stripe-utils";
 import Stripe from "stripe";
@@ -118,13 +118,14 @@ async function Step2StripeProcessing(props: {
     });
   }
 
-  const activeStripeSub = await getActiveStripeSubscription(stripeCustomerId);
+  const activeStripeSubItem =
+    await getActiveStripeSubscriptionItem(stripeCustomerId);
 
-  if (!activeStripeSub) {
-    throw new AppError({ internalMessage: `Active sub missing.` });
+  if (!activeStripeSubItem) {
+    throw new AppError({ internalMessage: `Active sub item missing.` });
   }
 
-  const currentPriceId = activeStripeSub?.items.data[0]?.price.id;
+  const currentPriceId = activeStripeSubItem?.price.id;
   if (!currentPriceId) {
     throw new AppError({ internalMessage: `Missing price id` });
   }
@@ -135,11 +136,11 @@ async function Step2StripeProcessing(props: {
   }
 
   const activeStripeSubItemId =
-    await getActiveSubscriptionItemId(activeStripeSub);
+    await getActiveSubscriptionItemId(activeStripeSubItem);
 
   // Update the Stripe subscription to the downgraded tier
   const updatedSubscription = await stripe.subscriptions.update(
-    activeStripeSub.id,
+    activeStripeSubItem.id,
     {
       items: [
         {
@@ -156,7 +157,7 @@ async function Step2StripeProcessing(props: {
 
   // Find the proration invoice that was just created
   const invoices = await stripe.invoices.list({
-    subscription: activeStripeSub.id,
+    subscription: activeStripeSubItem.id,
     limit: 1,
     created: {
       // Look for invoices created in the last minute
@@ -190,12 +191,12 @@ async function Step2StripeProcessing(props: {
     if (eligibleCharge) {
       // Process a refund for the credit amount
       const refund = await stripe.refunds.create({
-        charge: eligibleCharge.id,
+        payment_intent: eligibleCharge.payment_intent?.toString(), //TODO validate 1st
         amount: Math.abs(prorationInvoice.total),
         reason: "requested_by_customer",
         metadata: {
-          subscription_id: activeStripeSub.id,
-          invoice_id: prorationInvoice.id,
+          subscription_id: activeStripeSubItem.id,
+          invoice_id: prorationInvoice.id ?? "",
           downgrade_from: props.fromTier.id,
           downgrade_to: props.toTier.id,
         },
@@ -214,11 +215,11 @@ async function Step2StripeProcessing(props: {
       id: updatedSubscription.id as StripeSubscriptionId,
       status: updatedSubscription.status,
       currentPeriodEnd: new Date(
-        updatedSubscription.current_period_end * 1000,
+        activeStripeSubItem.current_period_end * 1000,
       ).toISOString(),
     },
     invoice: {
-      id: prorationInvoice.id,
+      id: prorationInvoice.id ?? "",
       amount: prorationInvoice.total / 100, // Convert from cents
       currency: prorationInvoice.currency,
       status: prorationInvoice.status,

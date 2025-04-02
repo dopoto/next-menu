@@ -10,10 +10,15 @@ import { obj2str } from "~/app/_utils/string-utils";
 import { getCustomerByOrgId } from "~/server/queries";
 import { PlanChanged } from "../../_components/PlanChanged";
 import {
+  stripeCustomerIdSchema,
+  type StripeCustomerId,
   type StripeSubscriptionId,
   type UpgradeTiersStripeMetadata,
 } from "~/app/_domain/stripe";
-import { getActiveSubscriptionItemId } from "~/app/_utils/stripe-utils";
+import {
+  getActiveStripeSubscriptionItem,
+  getActiveSubscriptionItemId,
+} from "~/app/_utils/stripe-utils";
 import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
@@ -87,23 +92,36 @@ export default async function UpgradePostPaymentPage(props: {
   const subscription = await stripe.subscriptions.retrieve(subscriptionId);
 
   // Validate Stripe customer Id
-  const stripeCustomerId = subscription.customer;
-  if (!stripeCustomerId) {
+  const tmpStripeCustomerId = subscription.customer;
+  if (!tmpStripeCustomerId) {
     throw new AppError({
       internalMessage: `No stripeCustomerId found in subscription ${obj2str(subscription)}`,
     });
   }
-  if (typeof stripeCustomerId !== "string") {
+  const stripeCustomerIdValidationResult =
+    stripeCustomerIdSchema.safeParse(tmpStripeCustomerId);
+  if (!stripeCustomerIdValidationResult.success) {
     throw new AppError({
-      internalMessage: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
+      internalMessage: `Unexpected value received for Stripe customer id: ${JSON.stringify(tmpStripeCustomerId)}`,
     });
   }
+  const parsedStripeCustomerId = stripeCustomerIdValidationResult.data;
 
   // Expecting the customer Id returned by Stripe for this sub to match our records
   const dbCustomer = await getCustomerByOrgId(orgId ?? "");
-  if (stripeCustomerId !== dbCustomer.stripeCustomerId) {
+  if (parsedStripeCustomerId.toString() !== dbCustomer.stripeCustomerId) {
     throw new AppError({
-      internalMessage: `Expected db match for Stripe customer id ${stripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
+      internalMessage: `Expected db match for Stripe customer id ${parsedStripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
+    });
+  }
+
+  const activeStripeSubItem = await getActiveStripeSubscriptionItem(
+    parsedStripeCustomerId,
+  );
+
+  if (!activeStripeSubItem?.id) {
+    throw new AppError({
+      internalMessage: `Stripe sub item not found for Stripe customer id: ${parsedStripeCustomerId}.`,
     });
   }
 
@@ -111,7 +129,16 @@ export default async function UpgradePostPaymentPage(props: {
   await stripe.subscriptions.update(subscriptionId, {
     items: [
       {
-        id: await getActiveSubscriptionItemId(subscription),
+        id: activeStripeSubItem.id,
+        price: parsedPaidToTier.stripePriceId,
+      },
+    ],
+  });
+
+  await stripe.subscriptions.update(subscriptionId, {
+    items: [
+      {
+        id: activeStripeSubItem.id,
         price: parsedPaidToTier.stripePriceId,
       },
     ],

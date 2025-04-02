@@ -17,9 +17,9 @@ import { AppError } from "~/lib/error-utils.server";
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
 
-export async function getActiveStripeSubscription(
+export async function getActiveStripeSubscriptionItem(
   stripeCustomerId?: StripeCustomerId,
-): Promise<Stripe.Subscription | undefined> {
+): Promise<Stripe.SubscriptionItem | undefined> {
   let customerId;
   let orgId;
 
@@ -52,31 +52,30 @@ export async function getActiveStripeSubscription(
     });
   }
 
-  return subscriptions.data[0];
+  return subscriptions.data[0]?.items.data[0];
 }
 
 export async function getActiveSubscriptionItemId(
-  sub?: Stripe.Subscription,
+  subItem?: Stripe.SubscriptionItem,
 ): Promise<StripeSubscriptionItemId> {
-  const subscription = sub ?? (await getActiveStripeSubscription());
-
-  if (!subscription) {
-    throw new AppError({ internalMessage: `No subscription.` });
+  if (!subItem) {
+    throw new AppError({ internalMessage: `No subscription item.` });
   }
+  const subscriptionItem = subItem ?? (await getActiveStripeSubscriptionItem());
 
-  if (subscription.items?.data?.[0]?.plan.active !== true) {
+  if (subscriptionItem?.plan.active !== true) {
     throw new AppError({
-      internalMessage: `Subscription item not active for sub ${subscription.id}`,
+      internalMessage: `Subscription item not active for sub ${subscriptionItem.id}`,
     });
   }
 
-  if (!subscription.items?.data?.[0]?.id) {
+  if (!subscriptionItem.id) {
     throw new AppError({
-      internalMessage: `Subscription item not found for sub ${subscription.id}`,
+      internalMessage: `Subscription item not found for sub ${subscriptionItem.id}`,
     });
   }
 
-  return subscription.items.data[0].id as StripeSubscriptionItemId;
+  return subscriptionItem.id as StripeSubscriptionItemId;
 }
 
 export const changePlanUpgradeCreateCheckoutSession = async (props: {
@@ -153,19 +152,21 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
   const subscriptionItemId = currentSubscription.items.data[0].id; //'si_RvhYtqKirxQTR2'
 
   // Calculate the prorated amount by previewing an invoice
-  const invoicePreview = await stripe.invoices.retrieveUpcoming({
+  const invoicePreview = await stripe.invoices.createPreview({
     customer: stripeCustomerId,
     subscription: subscriptionId,
-    subscription_items: [
-      {
-        id: subscriptionItemId,
-        price: parsedPaidToTier.stripePriceId,
-      },
-    ],
-    subscription_proration_behavior: "always_invoice",
+    subscription_details: {
+      items: [
+        {
+          id: subscriptionItemId,
+          price: parsedPaidToTier.stripePriceId,
+        },
+      ],
+      proration_behavior: "always_invoice",
+    },
   });
 
-  // TODO ensure payment is made before redirecting t osuccerss
+  // TODO ensure payment is made before redirecting to success
   // Create a checkout session for the prorated amount
 
   const metadata: UpgradeTiersStripeMetadata = {
