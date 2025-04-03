@@ -4,12 +4,12 @@ import { env } from "./env";
 export async function register() {
   if (
     process.env.NEXT_RUNTIME === "nodejs" &&
-    env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
+    env.NEXT_PUBLIC_LOG_TO_SENTRY === "yes"
   ) {
     await import("../sentry.server.config");
   }
 
-  if (process.env.NEXT_RUNTIME && env.NEXT_PUBLIC_LOG_TO_SENTRY === "true") {
+  if (process.env.NEXT_RUNTIME && env.NEXT_PUBLIC_LOG_TO_SENTRY === "yes") {
     await import("../sentry.edge.config");
   }
 }

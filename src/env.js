@@ -25,8 +25,8 @@ export const env = createEnv({
   client: {
     NEXT_PUBLIC_APP_URL: z.string().url(),
     NEXT_PUBLIC_ENV: z.string(),
-    NEXT_PUBLIC_LOG_TO_SENTRY: z.string(),
-    NEXT_PUBLIC_LOG_TO_CONSOLE: z.string(),
+    NEXT_PUBLIC_LOG_TO_SENTRY: z.enum(["yes", "no"]),
+    NEXT_PUBLIC_LOG_TO_CONSOLE: z.enum(["yes", "no"]),
     NEXT_PUBLIC_SENTRY_DSN: z.string(),
     NEXT_PUBLIC_SENTRY_ORG: z.string(),
     NEXT_PUBLIC_SENTRY_PROJECT: z.string(),

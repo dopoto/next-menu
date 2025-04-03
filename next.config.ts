@@ -8,7 +8,7 @@ import { env } from "~/env";
  */
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://*.googletagmanager.com;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://*.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js;
     script-src-elem 'self' 'unsafe-inline' https://checkout.stripe.com https://js.stripe.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://www.googletagmanager.com;
     style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com;
     img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://*.google-analytics.com https://*.googletagmanager.com https://fonts.gstatic.com;
@@ -90,7 +90,7 @@ const nextConfig: NextConfig = {
 };
 
 const config =
-  env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
+  env.NEXT_PUBLIC_LOG_TO_SENTRY === "yes"
     ? withSentryConfig(nextConfig, {
         // For all available options, see:
         // https://github.com/getsentry/sentry-webpack-plugin#options

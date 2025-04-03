@@ -1,7 +1,7 @@
 import { Labeled } from "./Labeled";
 import { OverviewCard } from "./OverviewCard";
 import type { StripeCustomerId } from "../_domain/stripe";
-import { getActiveStripeSubscription } from "../_utils/stripe-utils";
+import { getActiveStripeSubscriptionItem } from "../_utils/stripe-utils";
 import { auth } from "@clerk/nextjs/server";
 import { getCustomerByOrgId } from "~/server/queries";
 import {
@@ -36,7 +36,7 @@ export async function SubscriptionDetails() {
   if (parsedTier && isPaidPriceTier(parsedTier.id)) {
     const stripeCustomerId = (await getCustomerByOrgId(orgId))
       .stripeCustomerId as StripeCustomerId;
-    const stripeSub = await getActiveStripeSubscription(stripeCustomerId);
+    const stripeSub = await getActiveStripeSubscriptionItem(stripeCustomerId);
     const subPrice = `USD ${parsedTier.monthlyUsdPrice.toFixed(2)}/month`;
     const currentPeriodEnd = stripeSub?.current_period_end
       ? new Date(stripeSub?.current_period_end * 1000).toLocaleDateString()

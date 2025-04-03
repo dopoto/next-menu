@@ -48,7 +48,10 @@ export function logException(
   errorClientSideId: string,
   internalMessage?: string,
 ) {
-  if (env.NEXT_PUBLIC_LOG_TO_CONSOLE) {
+  console.log(env.NEXT_PUBLIC_LOG_TO_CONSOLE);
+  console.log(env.NEXT_PUBLIC_LOG_TO_SENTRY);
+
+  if (env.NEXT_PUBLIC_LOG_TO_CONSOLE === "yes") {
     const errorString = `[APP_ERROR] 
       ${errorClientSideId}
       ${internalMessage}
@@ -56,16 +59,20 @@ export function logException(
     console.error(errorString);
   }
 
-  if (env.NEXT_PUBLIC_LOG_TO_SENTRY) {
+  if (env.NEXT_PUBLIC_LOG_TO_SENTRY === "yes") {
     Sentry.withScope((scope) => {
       scope.setTag("errorClientSideId", errorClientSideId);
       if (internalMessage) {
-        scope.setTag("internalMessage", internalMessage);
+        scope.setTag("internalMessage", toSentryTagValue(internalMessage));
       }
       Sentry.captureException(error);
     });
   }
 }
+
+const toSentryTagValue = (input: string) => {
+  return input.replace(/\n/g, "");
+};
 
 // Helper function to wrap server functions
 // export async function withErrorHandling<T>(fn: () => Promise<T>): Promise<T> {
