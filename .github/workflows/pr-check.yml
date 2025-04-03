@@ -2,7 +2,7 @@ name: Code Quality Checks
 
 on:
   pull_request:
-    branches: [ main ]
+    branches: [main]
     types: [opened, synchronize, reopened]
 
 concurrency:
@@ -23,10 +23,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22.x
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install pnpm
-        run: npm install -g pnpm          
+        run: npm install -g pnpm
 
       - name: Install dependencies
         run: pnpm i
@@ -38,4 +38,7 @@ jobs:
         run: pnpm format:check
 
       - name: Lint check
-        run: SKIP_ENV_VALIDATION=true pnpm lint 
+        run: SKIP_ENV_VALIDATION=true pnpm lint
+
+      - name: Run unit tests
+        run: SKIP_ENV_VALIDATION=true pnpm test
