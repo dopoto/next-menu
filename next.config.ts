@@ -90,7 +90,7 @@ const nextConfig: NextConfig = {
 };
 
 const config =
-  env.NEXT_PUBLIC_LOG_TO_SENTRY === "true"
+  env.NEXT_PUBLIC_LOG_TO_SENTRY === "yes"
     ? withSentryConfig(nextConfig, {
         // For all available options, see:
         // https://github.com/getsentry/sentry-webpack-plugin#options
