@@ -150,9 +150,6 @@ importers:
         specifier: ^3.24.2
         version: 3.24.2
     devDependencies:
-      '@babel/preset-react':
-        specifier: ^7.26.3
-        version: 7.26.3(@babel/core@7.26.9)
       '@chromatic-com/storybook':
         specifier: '3'
         version: 3.2.6(react@19.1.0)(storybook@8.6.12(bufferutil@4.0.9)(prettier@3.5.3))

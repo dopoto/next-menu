@@ -36,7 +36,8 @@
     "**/*.js",
     "**/*.config.js",
     "**/*.config.ts",
-    ".next/types/**/*.ts"
-, "src/app/_components/ErrorCard.test.jsx"  ],
+    ".next/types/**/*.ts",
+    "src/app/_components/ErrorCard.test.tsx"
+  ],
   "exclude": ["node_modules", ".next", "out", "storybook-static"]
 }

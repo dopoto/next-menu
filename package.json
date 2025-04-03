@@ -75,7 +75,6 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@babel/preset-react": "^7.26.3",
     "@chromatic-com/storybook": "3",
     "@eslint/eslintrc": "^3.3.1",
     "@storybook/addon-essentials": "8.6.12",

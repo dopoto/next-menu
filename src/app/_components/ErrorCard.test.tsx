@@ -1,15 +1,19 @@
 import "@testing-library/jest-dom";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { ErrorCard } from "./ErrorCard";
-import { useRouter } from "next/navigation";
+
+const mockRouterRefresh = jest.fn(() => null);
 
 jest.mock("next/navigation", () => ({
-  useRouter: jest.fn(),
+  useRouter() {
+    return {
+      refresh: mockRouterRefresh,
+    };
+  },
 }));
 
 describe("ErrorCard", () => {
   const mockOnReset = jest.fn();
-  const mockRouterRefresh = jest.fn();
 
   it("renders error details correctly", () => {
     render(
@@ -22,7 +26,7 @@ describe("ErrorCard", () => {
 
     expect(screen.getByText("An error occurred")).toBeInTheDocument();
     expect(screen.getByText("Reference number")).toBeInTheDocument();
-    expect(screen.getByText("123")).toBeInTheDocument();
+    expect(screen.getByText("123-ab")).toBeInTheDocument();
     expect(screen.getByText("Error details")).toBeInTheDocument();
     expect(screen.getByText("Something went wrong")).toBeInTheDocument();
   });
@@ -47,7 +51,7 @@ describe("ErrorCard", () => {
   it("renders support link with correct href", () => {
     render(
       <ErrorCard
-        publicErrorMessage="123|Something went wrong"
+        publicErrorMessage="123-ab|Something went wrong"
         onReset={mockOnReset}
       />,
     );
