@@ -5,7 +5,7 @@ import {
   type LocationId,
   type LocationSlug,
 } from "~/app/u/[locationId]/_domain/locations";
-import { type Menu } from "~/server/db/schema";
+import { MenuItem, type Menu } from "~/server/db/schema";
 import { type Location } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
 
@@ -45,6 +45,40 @@ export async function getMenusByLocation(
   const items = await db.query.menus.findMany({
     where: (menus, { eq }) => eq(menus.locationId, locationId),
     orderBy: (menus, { desc }) => desc(menus.name),
+  });
+
+  return items;
+}
+
+export async function getMenuItemsByLocation(
+  locationId: LocationId,
+): Promise<MenuItem[]> {
+  const { userId, sessionClaims } = await auth();
+  if (!userId) {
+    throw new AppError({ internalMessage: "Unauthorized" });
+  }
+
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) {
+    throw new AppError({ internalMessage: "No organization ID found" });
+  }
+
+  // First verify the location belongs to the organization
+  const location = await db.query.locations.findFirst({
+    where: (locations, { and, eq }) =>
+      and(eq(locations.id, locationId), eq(locations.orgId, orgId)),
+  });
+
+  if (!location) {
+    throw new AppError({
+      internalMessage: "Location not found or access denied",
+    });
+  }
+
+  // Now fetch menus for this location
+  const items = await db.query.menuItems.findMany({
+    where: (menuItems, { eq }) => eq(menuItems.locationId, locationId),
+    orderBy: (menuItems, { desc }) => desc(menuItems.name),
   });
 
   return items;

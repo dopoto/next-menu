@@ -1,9 +1,14 @@
 import { z } from "zod";
-import { getLocationsPlanUsage, getMenusPlanUsage } from "~/server/queries";
+import {
+  getLocationsPlanUsage,
+  getMenuItemsPlanUsage,
+  getMenusPlanUsage,
+} from "~/server/queries";
 
 export const PriceTierFeatureIdSchema = z.union([
   z.literal("locations"),
   z.literal("menus"),
+  z.literal("menuItems"),
 ]);
 
 export type PriceTierFeatureId = z.infer<typeof PriceTierFeatureIdSchema>;
@@ -38,6 +43,11 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
     resourceSingularName: "menu",
     resourcePluralName: "menus",
   },
+  menuItems: {
+    id: "menuItems",
+    resourceSingularName: "menu item",
+    resourcePluralName: "menu items",
+  },
 };
 
 export const priceTierUsageFunctions: Record<
@@ -46,6 +56,7 @@ export const priceTierUsageFunctions: Record<
 > = {
   locations: getLocationsPlanUsage,
   menus: getMenusPlanUsage,
+  menuItems: getMenuItemsPlanUsage,
 };
 
 export type ExceededFeature = PriceTierFeatureUsage & {

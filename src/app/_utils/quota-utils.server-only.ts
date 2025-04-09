@@ -25,12 +25,8 @@ export async function getIncludedQuota(
     });
   }
 
-  const included = parsedTier.features.find((f) => f.id === featureId)?.quota;
-  if (!included) {
-    throw new AppError({
-      internalMessage: `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
-    });
-  }
+  const included =
+    parsedTier.features.find((f) => f.id === featureId)?.quota ?? 0;
 
   return included;
 }

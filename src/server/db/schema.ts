@@ -4,6 +4,8 @@
 import { sql } from "drizzle-orm";
 import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 import {
+  boolean,
+  decimal,
   index,
   integer,
   pgTableCreator,
@@ -25,7 +27,7 @@ export const customers = createTable("customer", {
    * @example 'user_...'
    */
   clerkUserId: varchar("clerk_user_id", { length: 256 }).notNull(),
-  orgId: varchar("org_id", { length: 256 }).notNull().unique(),
+  orgId: varchar("org_id", { length: 256 }).notNull(),
   stripeCustomerId: varchar("stripe_customer_id", { length: 256 }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .default(sql`CURRENT_TIMESTAMP`)
@@ -76,9 +78,36 @@ export const menus = createTable(
   }),
 );
 
+export const menuItems = createTable(
+  "menu_item",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity(),
+    locationId: integer("location_id")
+      .notNull()
+      .references(() => locations.id),
+    name: varchar("name", { length: 256 }),
+    description: varchar("description", { length: 256 }),
+    price: decimal("price").notNull(),
+    isNew: boolean("is_new").default(false),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
+      () => new Date(),
+    ),
+  },
+  (example) => ({
+    nameIndex: index("menu_item_name_idx").on(example.name),
+  }),
+);
+
 // Type definitions TODO move from here
-export type Menu = InferSelectModel<typeof menus>;
-export type NewMenu = InferInsertModel<typeof menus>;
 
 export type Location = InferSelectModel<typeof locations>;
 export type NewLocation = InferInsertModel<typeof locations>;
+
+export type Menu = InferSelectModel<typeof menus>;
+export type NewMenu = InferInsertModel<typeof menus>;
+
+export type MenuItem = InferSelectModel<typeof menuItems>;
+export type NewMenuItem = InferInsertModel<typeof menuItems>;

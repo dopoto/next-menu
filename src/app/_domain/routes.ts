@@ -36,6 +36,8 @@ export const ROUTES = {
   reports: (locationId: LocationId) => `/u/${locationId}/reports`,
   menus: (locationId: LocationId) => `/u/${locationId}/menus`,
   menusAdd: (locationId: LocationId) => `/u/${locationId}/menus/add`,
+  menuItems: (locationId: LocationId) => `/u/${locationId}/menu-items`,
+  menuItemsAdd: (locationId: LocationId) => `/u/${locationId}/menu-items/add`,
 
   // PLAN
   changePlan: "/u/plan/change",
