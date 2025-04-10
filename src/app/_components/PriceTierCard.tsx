@@ -15,7 +15,6 @@ import { Fragment, type ReactNode } from "react";
 import {
   type ExceededFeature,
   type PriceTierFeature,
-  priceTierFeatures,
 } from "../_domain/price-tier-features";
 import { CheckIcon, CircleXIcon } from "lucide-react";
 import { PageSubtitle } from "./PageSubtitle";
@@ -23,6 +22,7 @@ import {
   type PriceTierFlag,
   priceTierFlags,
 } from "~/app/_domain/price-tier-flags";
+import { priceTierFeatures } from "~/app/_domain/price-tier-features-config";
 
 export type CardCustomizations = {
   containerStyle?: string;
@@ -92,7 +92,7 @@ export const getExceededPlanCardCustomizations = (): CardCustomizations => {
   };
 };
 
-const getPrice = (monthlyUsdPrice: number) => {
+export const getPrice = (monthlyUsdPrice: number) => {
   if (monthlyUsdPrice === -1) return `__.__`;
   if (monthlyUsdPrice === 0)
     return (
@@ -127,7 +127,7 @@ const getFeatureDisplayValue = (
   return "--";
 };
 
-const getFeatureRow = (tier: PriceTier, feature: Feature) => {
+export const getFeatureRow = (tier: PriceTier, feature: Feature) => {
   const featureDetails = priceTierFeatures[feature.id];
   const quota = tier.features.find((f) => f.id === feature.id)?.quota;
 
@@ -156,7 +156,7 @@ const getFlagDisplayValue = (
   );
 };
 
-const getFlagRow = (tier: PriceTier, flag: Flag) => {
+export const getFlagRow = (tier: PriceTier, flag: Flag) => {
   const flagDetails = priceTierFlags[flag.id];
   const isEnabled =
     tier.flags.find((f) => f.id === flag.id)?.isEnabled ?? false;
@@ -172,7 +172,7 @@ const getFlagRow = (tier: PriceTier, flag: Flag) => {
   );
 };
 
-const getExceededFeatureRow = (feature: ExceededFeature) => {
+export const getExceededFeatureRow = (feature: ExceededFeature) => {
   const featureDetails = priceTierFeatures[feature.id];
 
   return (

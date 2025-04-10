@@ -32,24 +32,6 @@ export type PriceTierFeatureUsage = {
   available: number;
 };
 
-export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
-  locations: {
-    id: "locations",
-    resourceSingularName: "location",
-    resourcePluralName: "locations",
-  },
-  menus: {
-    id: "menus",
-    resourceSingularName: "menu",
-    resourcePluralName: "menus",
-  },
-  menuItems: {
-    id: "menuItems",
-    resourceSingularName: "menu item",
-    resourcePluralName: "menu items",
-  },
-};
-
 export const priceTierUsageFunctions: Record<
   PriceTierFeatureId,
   () => Promise<number>
