@@ -21,14 +21,28 @@ export type CardCustomizations = {
   badgeText?: string;
 };
 
+const enabledTextColor = "text-gray-900 dark:text-white";
+const disabledTextColor = "text-gray-400 dark:text-gray-500";
+
 function FeatureBadge({ quota }: { quota: number | boolean }) {
-  const color = quota ? "text-green-700" : "text-gray-400";
   const content =
-    typeof quota === "number" ? <>{quota}</> : <>{quota ? "yes" : "no"}</>;
+    typeof quota === "number" ? <>{quota}</> : <>{quota ? "YES" : "NO"}</>;
   return (
-    <Badge variant="outline" className={`h-[22px] w-[45px] font-bold ${color}`}>
+    <Badge
+      variant={quota ? "secondary" : "outline"}
+      className={`h-[22px] w-[45px] font-bold ${quota ? enabledTextColor : disabledTextColor}`}
+    >
       {content}
     </Badge>
+  );
+}
+
+function DashedLine() {
+  return (
+    <div
+      // className={`mx-2 flex-grow self-center border-b border-dotted ${isEnabled ? "border-gray-400 dark:border-gray-300" : "border-gray-200 dark:border-gray-500"}`}
+      className={`mx-2 flex-grow self-center border-b border-dotted border-gray-600`}
+    ></div>
   );
 }
 
@@ -62,14 +76,14 @@ export function PriceTierCard(props: {
             const featureDetails = priceTierFeatures[feature.id];
             const quota =
               props.tier.features.find((f) => f.id === feature.id)?.quota ?? 0;
-
             return (
               <div className="flex items-center">
-                <div className="flex-shrink-0 text-left capitalize">
+                <div
+                  className={`flex-shrink-0 text-left capitalize ${quota ? enabledTextColor : disabledTextColor}`}
+                >
                   {featureDetails.resourcePluralName}
                 </div>
-                <div className="mx-2 flex-grow self-center border-b border-dashed border-gray-300"></div>
-
+                <DashedLine />
                 <div className="flex-shrink-0 text-right">
                   <FeatureBadge quota={quota} />
                 </div>
@@ -88,8 +102,7 @@ export function PriceTierCard(props: {
                   <div className="flex-shrink-0 text-left text-red-600 capitalize dark:text-red-400">
                     {featureDetails.resourcePluralName}
                   </div>
-                  <div className="mx-2 flex-grow self-center border-b border-dashed border-gray-300"></div>
-
+                  <DashedLine />
                   <div className="flex-shrink-0 text-right">
                     <FeatureBadge quota={quota} />
                   </div>
@@ -108,10 +121,12 @@ export function PriceTierCard(props: {
               false;
             return (
               <div className="flex items-center">
-                <div className="flex-shrink-0 text-left capitalize">
+                <div
+                  className={`${isEnabled ? enabledTextColor : disabledTextColor} flex-shrink-0 text-left capitalize`}
+                >
                   {flagDetails.resourcePluralName}
                 </div>
-                <div className="mx-2 flex-grow self-center border-b border-dashed border-gray-300"></div>
+                <DashedLine />
                 <div className="flex-shrink-0 text-right">
                   <div className="flex-shrink-0 text-right">
                     <FeatureBadge quota={isEnabled} />
