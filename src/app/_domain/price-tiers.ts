@@ -58,6 +58,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "menuItems", quota: 0 },
     ],
     flags: [{ id: "reports", isEnabled: true }],
   },
@@ -73,6 +74,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "menuItems", quota: 0 },
     ],
     flags: [{ id: "reports", isEnabled: true }],
   },
@@ -88,6 +90,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 100 },
+      { id: "menuItems", quota: 0 },
     ],
     flags: [{ id: "reports", isEnabled: true }],
   },

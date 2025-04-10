@@ -6,29 +6,31 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import {
-  type Flag,
-  type Feature,
-  type PriceTier,
-} from "../_domain/price-tiers";
-import { Fragment, type ReactNode } from "react";
-import {
-  type ExceededFeature,
-  type PriceTierFeature,
-} from "../_domain/price-tier-features";
-import { CheckIcon, CircleXIcon } from "lucide-react";
+import { type PriceTier } from "../_domain/price-tiers";
+import { type ReactNode } from "react";
+import { type ExceededFeature } from "../_domain/price-tier-features";
+import { CircleXIcon } from "lucide-react";
 import { PageSubtitle } from "./PageSubtitle";
-import {
-  type PriceTierFlag,
-  priceTierFlags,
-} from "~/app/_domain/price-tier-flags";
+import { priceTierFlags } from "~/app/_domain/price-tier-flags";
 import { priceTierFeatures } from "~/app/_domain/price-tier-features-config";
+import { Badge } from "~/components/ui/badge";
 
 export type CardCustomizations = {
   containerStyle?: string;
   badgeStyle?: string;
   badgeText?: string;
 };
+
+function FeatureBadge({ quota }: { quota: number | boolean }) {
+  const color = quota ? "text-green-700" : "text-gray-400";
+  const content =
+    typeof quota === "number" ? <>{quota}</> : <>{quota ? "yes" : "no"}</>;
+  return (
+    <Badge variant="outline" className={`h-[22px] w-[45px] font-bold ${color}`}>
+      {content}
+    </Badge>
+  );
+}
 
 export function PriceTierCard(props: {
   tier: PriceTier;
@@ -56,19 +58,68 @@ export function PriceTierCard(props: {
       </CardHeader>
       <CardContent>
         <div className="flex flex-col flex-nowrap gap-2 text-sm">
-          {features.map((feature) => (
-            <Fragment key={feature.id}>
-              {getFeatureRow(props.tier, feature)}
-            </Fragment>
-          ))}
-          {props.exceededFeatures?.map((exceededFeature) => (
-            <Fragment key={exceededFeature.id}>
-              {getExceededFeatureRow(exceededFeature)}
-            </Fragment>
-          ))}
-          {flags.map((flag) => (
-            <Fragment key={flag.id}>{getFlagRow(props.tier, flag)}</Fragment>
-          ))}
+          {features.map((feature) => {
+            const featureDetails = priceTierFeatures[feature.id];
+            const quota =
+              props.tier.features.find((f) => f.id === feature.id)?.quota ?? 0;
+
+            return (
+              <div className="flex items-center">
+                <div className="flex-shrink-0 text-left capitalize">
+                  {featureDetails.resourcePluralName}
+                </div>
+                <div className="mx-2 flex-grow self-center border-b border-dashed border-gray-300"></div>
+
+                <div className="flex-shrink-0 text-right">
+                  <FeatureBadge quota={quota} />
+                </div>
+              </div>
+            );
+          })}
+          {props.exceededFeatures?.map((exceededFeature) => {
+            const featureDetails = priceTierFeatures[exceededFeature.id];
+            const quota =
+              props.tier.features.find((f) => f.id === exceededFeature.id)
+                ?.quota ?? 0;
+
+            return (
+              <div>
+                <div className="flex items-center">
+                  <div className="flex-shrink-0 text-left text-red-600 capitalize dark:text-red-400">
+                    {featureDetails.resourcePluralName}
+                  </div>
+                  <div className="mx-2 flex-grow self-center border-b border-dashed border-gray-300"></div>
+
+                  <div className="flex-shrink-0 text-right">
+                    <FeatureBadge quota={quota} />
+                  </div>
+                </div>
+                <div className="relative mt-2 rounded-md bg-red-700 p-2 text-center text-sm text-white">
+                  <div className="absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[8px] border-b-[8px] border-l-[8px] border-r-transparent border-b-red-700 border-l-transparent"></div>
+                  Your current usage: {exceededFeature.used}
+                </div>
+              </div>
+            );
+          })}
+          {flags.map((flag) => {
+            const flagDetails = priceTierFlags[flag.id];
+            const isEnabled =
+              props.tier.flags.find((f) => f.id === flag.id)?.isEnabled ??
+              false;
+            return (
+              <div className="flex items-center">
+                <div className="flex-shrink-0 text-left capitalize">
+                  {flagDetails.resourcePluralName}
+                </div>
+                <div className="mx-2 flex-grow self-center border-b border-dashed border-gray-300"></div>
+                <div className="flex-shrink-0 text-right">
+                  <div className="flex-shrink-0 text-right">
+                    <FeatureBadge quota={isEnabled} />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </CardContent>
       {props.footerCta && <CardFooter>{props.footerCta}</CardFooter>}
@@ -92,7 +143,7 @@ export const getExceededPlanCardCustomizations = (): CardCustomizations => {
   };
 };
 
-export const getPrice = (monthlyUsdPrice: number) => {
+const getPrice = (monthlyUsdPrice: number) => {
   if (monthlyUsdPrice === -1) return `__.__`;
   if (monthlyUsdPrice === 0)
     return (
@@ -106,82 +157,6 @@ export const getPrice = (monthlyUsdPrice: number) => {
       <span className="text-muted-foreground ml-1 text-xl font-light">
         /month
       </span>
-    </div>
-  );
-};
-
-const getFeatureDisplayValue = (
-  itemDetails: PriceTierFeature,
-  quota: Feature["quota"],
-) => {
-  if (typeof quota === "number")
-    return (
-      <>
-        <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-        {quota.toString()}{" "}
-        {quota > 1
-          ? itemDetails.resourcePluralName
-          : itemDetails.resourceSingularName}
-      </>
-    );
-  return "--";
-};
-
-export const getFeatureRow = (tier: PriceTier, feature: Feature) => {
-  const featureDetails = priceTierFeatures[feature.id];
-  const quota = tier.features.find((f) => f.id === feature.id)?.quota;
-
-  if (!quota) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-row items-center gap-1">
-      {getFeatureDisplayValue(featureDetails, quota)}
-    </div>
-  );
-};
-
-const getFlagDisplayValue = (
-  itemDetails: PriceTierFlag,
-  isEnabled: boolean,
-) => {
-  if (!isEnabled) return null;
-
-  return (
-    <>
-      <CheckIcon strokeWidth={3} className="size-4 stroke-green-600" />
-      {itemDetails.resourcePluralName}
-    </>
-  );
-};
-
-export const getFlagRow = (tier: PriceTier, flag: Flag) => {
-  const flagDetails = priceTierFlags[flag.id];
-  const isEnabled =
-    tier.flags.find((f) => f.id === flag.id)?.isEnabled ?? false;
-
-  if (!isEnabled) {
-    return null;
-  }
-
-  return (
-    <div className="flex flex-row items-center gap-1 capitalize">
-      {getFlagDisplayValue(flagDetails, isEnabled)}
-    </div>
-  );
-};
-
-export const getExceededFeatureRow = (feature: ExceededFeature) => {
-  const featureDetails = priceTierFeatures[feature.id];
-
-  return (
-    <div className="flex flex-row items-center gap-1 text-red-600 dark:text-red-400">
-      <CircleXIcon
-        strokeWidth={3}
-        className="size-4 stroke-red-600 dark:stroke-red-400"
-      />{" "}
-      0 {featureDetails.resourcePluralName} (you are using {feature.used})
     </div>
   );
 };

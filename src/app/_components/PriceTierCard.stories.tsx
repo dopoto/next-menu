@@ -56,7 +56,7 @@ export const WithExceededFeatures: Story = {
       {
         id: "menus",
         planQuota: 1,
-        used: 1,
+        used: 2,
         available: 0,
         candidateQuota: 2,
       },
