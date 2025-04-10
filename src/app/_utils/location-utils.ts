@@ -1,5 +1,5 @@
 import {
-  LocationId,
+  type LocationId,
   locationIdSchema,
 } from "~/app/u/[locationId]/_domain/locations";
 import { AppError } from "~/lib/error-utils.server";

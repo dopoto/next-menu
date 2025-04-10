@@ -1,6 +1,6 @@
 import {
-  PriceTierFeatureId,
-  PriceTierFeature,
+  type PriceTierFeatureId,
+  type PriceTierFeature,
 } from "~/app/_domain/price-tier-features";
 
 // TODO move back to price-tier-features.ts (moved here as it broke Storybook builds)

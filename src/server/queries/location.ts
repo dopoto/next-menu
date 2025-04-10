@@ -5,7 +5,7 @@ import {
   type LocationId,
   type LocationSlug,
 } from "~/app/u/[locationId]/_domain/locations";
-import { MenuItem, type Menu } from "~/server/db/schema";
+import { type MenuItem, type Menu } from "~/server/db/schema";
 import { type Location } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
 

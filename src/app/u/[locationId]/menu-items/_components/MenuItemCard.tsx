@@ -1,4 +1,4 @@
-import { MenuItem } from "~/server/db/schema";
+import { type MenuItem } from "~/server/db/schema";
 
 export default function MenuItemCard(props: { item: MenuItem }) {
   return (

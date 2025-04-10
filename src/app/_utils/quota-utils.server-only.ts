@@ -5,7 +5,6 @@ import {
 } from "../_domain/price-tier-features";
 import { auth } from "@clerk/nextjs/server";
 import { getValidPriceTier } from "./price-tier-utils";
-import { obj2str } from "./string-utils";
 import { type PriceTierFlagId } from "~/app/_domain/price-tier-flags";
 import { AppError } from "~/lib/error-utils.server";
 
