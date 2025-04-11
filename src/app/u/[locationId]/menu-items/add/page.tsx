@@ -2,7 +2,7 @@ import * as React from "react";
 import { Suspense } from "react";
 import LoadingSection from "../../_components/LoadingSection";
 import { locationIdSchema } from "../../_domain/locations";
-import { AddMenuItem } from "./_components/AddMenuItem";
+import { AddOrEditMenuItem } from "./_components/AddOrEditMenuItem";
 import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;
@@ -22,7 +22,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
   return (
     <div className="flex h-full flex-col gap-2">
       <Suspense fallback={<LoadingSection />}>
-        <AddMenuItem locationId={locationValidationResult.data} />
+        <AddOrEditMenuItem locationId={locationValidationResult.data} />
       </Suspense>
     </div>
   );

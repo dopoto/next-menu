@@ -21,6 +21,7 @@ import { toast } from "~/hooks/use-toast";
 import { addMenuItem } from "../actions";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import type { FieldValues } from "react-hook-form";
+import { DeviceMockup } from "~/app/_components/DeviceMockup";
 
 const formSchema = z.object({
   name: z
@@ -41,7 +42,7 @@ const formSchema = z.object({
 
 type FormData = z.infer<typeof formSchema>;
 
-export function AddMenuItem({ locationId }: { locationId: LocationId }) {
+export function AddOrEditMenuItem({ locationId }: { locationId: LocationId }) {
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
@@ -174,6 +175,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
           </div>
         </form>
       </Form>
+      <DeviceMockup />
     </div>
   );
 }
