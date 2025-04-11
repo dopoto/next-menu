@@ -23,27 +23,27 @@ import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import type { FieldValues } from "react-hook-form";
 
 const formSchema = z.object({
-  name: z.string({
-    required_error: "Name is required",
-  }).min(2, "Name must be at least 2 characters").max(256, "Name must be at most 256 characters"),
+  name: z
+    .string({
+      required_error: "Name is required",
+    })
+    .min(2, "Name must be at least 2 characters")
+    .max(256, "Name must be at most 256 characters"),
   description: z.string().default(""),
-  price: z.number({
-    required_error: "Price is required",
-    invalid_type_error: "Price must be a number",
-  }).min(0, "Price must be positive"),
+  price: z
+    .number({
+      required_error: "Price is required",
+      invalid_type_error: "Price must be a number",
+    })
+    .min(0, "Price must be positive"),
   isNew: z.boolean().default(false),
 });
 
-type FormData = {
-  name: string;
-  description: string;
-  price: number;
-  isNew: boolean;
-};
+type FormData = z.infer<typeof formSchema>;
 
 export function AddMenuItem({ locationId }: { locationId: LocationId }) {
   const router = useRouter();
-  const form = useForm<FormData>({
+  const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
       name: "",
       description: "",
@@ -68,7 +68,8 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
     } catch (error) {
       toast({
         title: "Failed to add menu item",
-        description: error instanceof Error ? error.message : "Please try again",
+        description:
+          error instanceof Error ? error.message : "Please try again",
         variant: "destructive",
       });
     }
@@ -85,10 +86,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
               <FormItem>
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="Enter the item name" 
-                    {...field}
-                  />
+                  <Input placeholder="Enter the item name" {...field} />
                 </FormControl>
                 <FormDescription>
                   The name of your menu item as it will appear on the menu
@@ -105,8 +103,8 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Input 
-                    placeholder="Enter a description (optional)" 
+                  <Input
+                    placeholder="Enter a description (optional)"
                     {...field}
                   />
                 </FormControl>
@@ -125,19 +123,19 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
+                  <Input
+                    type="number"
                     step="0.01"
                     min="0"
                     placeholder="0.00"
                     {...field}
                     value={field.value}
-                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      field.onChange(parseFloat(e.target.value) || 0)
+                    }
                   />
                 </FormControl>
-                <FormDescription>
-                  The price of the menu item
-                </FormDescription>
+                <FormDescription>The price of the menu item</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -147,7 +145,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
             control={form.control as never}
             name="isNew"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start space-y-0 space-x-3">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -166,8 +164,8 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
 
           <div className="flex gap-4">
             <Button type="submit">Add Menu Item</Button>
-            <Button 
-              type="button" 
+            <Button
+              type="button"
               variant="outline"
               onClick={() => router.push(ROUTES.menuItems(locationId))}
             >
