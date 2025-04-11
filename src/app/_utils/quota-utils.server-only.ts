@@ -1,13 +1,10 @@
 import "server-only";
-import {
-  priceTierUsageFunctions,
-  type PriceTierFeatureId,
-} from "../_domain/price-tier-features";
+import { priceTierUsageFunctions } from "../_domain/price-tier-usage";
 import { auth } from "@clerk/nextjs/server";
 import { getValidPriceTier } from "./price-tier-utils";
-import { obj2str } from "./string-utils";
 import { type PriceTierFlagId } from "~/app/_domain/price-tier-flags";
 import { AppError } from "~/lib/error-utils.server";
+import { type PriceTierFeatureId } from "~/app/_domain/price-tier-features";
 
 /**
  * Returns the number of items included in a feature (E.G. "menus")
@@ -25,12 +22,8 @@ export async function getIncludedQuota(
     });
   }
 
-  const included = parsedTier.features.find((f) => f.id === featureId)?.quota;
-  if (!included) {
-    throw new AppError({
-      internalMessage: `Could not find feature ${featureId} in tier ${obj2str(parsedTier)}`,
-    });
-  }
+  const included =
+    parsedTier.features.find((f) => f.id === featureId)?.quota ?? 0;
 
   return included;
 }

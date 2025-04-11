@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
-import { type PriceTierFeatureUsage } from "~/app/_domain/price-tier-features";
+import { type PriceTierFeatureUsage } from "~/app/_domain/price-tier-usage";
 import { type PriceTier } from "~/app/_domain/price-tiers";
 import { ROUTES } from "~/app/_domain/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";

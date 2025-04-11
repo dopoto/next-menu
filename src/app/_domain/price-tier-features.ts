@@ -1,14 +1,13 @@
 import { z } from "zod";
-import { getLocationsPlanUsage, getMenusPlanUsage } from "~/server/queries";
 
 export const PriceTierFeatureIdSchema = z.union([
   z.literal("locations"),
   z.literal("menus"),
+  z.literal("menuItems"),
 ]);
-
 export type PriceTierFeatureId = z.infer<typeof PriceTierFeatureIdSchema>;
 
-export type PriceTierFeature = {
+type PriceTierFeature = {
   id: PriceTierFeatureId;
   /**
    * @example "menu"
@@ -18,13 +17,6 @@ export type PriceTierFeature = {
    * @example "menus"
    */
   resourcePluralName: string;
-};
-
-export type PriceTierFeatureUsage = {
-  id: PriceTierFeatureId;
-  planQuota: number;
-  used: number;
-  available: number;
 };
 
 export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
@@ -38,16 +30,9 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
     resourceSingularName: "menu",
     resourcePluralName: "menus",
   },
-};
-
-export const priceTierUsageFunctions: Record<
-  PriceTierFeatureId,
-  () => Promise<number>
-> = {
-  locations: getLocationsPlanUsage,
-  menus: getMenusPlanUsage,
-};
-
-export type ExceededFeature = PriceTierFeatureUsage & {
-  candidateQuota?: number;
+  menuItems: {
+    id: "menuItems",
+    resourceSingularName: "menu item",
+    resourcePluralName: "menu items",
+  },
 };

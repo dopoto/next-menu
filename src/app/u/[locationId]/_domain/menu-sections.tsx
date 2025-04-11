@@ -1,4 +1,9 @@
-import { ChartPie, LayoutDashboard, ScanQrCode } from "lucide-react";
+import {
+  ChartPie,
+  LayoutDashboardIcon,
+  ScanQrCodeIcon,
+  UtensilsCrossedIcon,
+} from "lucide-react";
 import { type ReactNode } from "react";
 import { type AppRouteKey, ROUTES } from "~/app/_domain/routes";
 
@@ -9,7 +14,9 @@ type RouteId =
   | "live"
   | "reports"
   | "menus"
-  | "menusAdd";
+  | "menusAdd"
+  | "menuItems"
+  | "menuItemsAdd";
 
 type MenuItem = {
   id: RouteId;
@@ -27,7 +34,7 @@ export const menuTree: MenuItem = {
       children: [
         {
           id: "live",
-          icon: <LayoutDashboard size={16} />,
+          icon: <LayoutDashboardIcon size={16} />,
           title: "Open orders",
           route: ROUTES.live,
         },
@@ -44,7 +51,7 @@ export const menuTree: MenuItem = {
       children: [
         {
           id: "menus",
-          icon: <ScanQrCode size={16} />,
+          icon: <ScanQrCodeIcon size={16} />,
           title: "Menus",
           route: ROUTES.menus,
           children: [
@@ -52,6 +59,19 @@ export const menuTree: MenuItem = {
               id: "menusAdd",
               title: "Add menu",
               route: ROUTES.menusAdd,
+            },
+          ],
+        },
+        {
+          id: "menuItems",
+          icon: <UtensilsCrossedIcon size={16} />,
+          title: "Dishes & Drinks",
+          route: ROUTES.menuItems,
+          children: [
+            {
+              id: "menuItemsAdd",
+              title: "Add menu item",
+              route: ROUTES.menuItemsAdd,
             },
           ],
         },

@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { env } from "~/env";
-import { type PriceTierFeatureId } from "./price-tier-features";
+
 import { type PriceTierFlagId } from "~/app/_domain/price-tier-flags";
+import { type PriceTierFeatureId } from "~/app/_domain/price-tier-features";
 
 export const PriceTierIdSchema = z.union([
   z.literal("start"),
@@ -43,6 +44,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "menuItems", quota: 1 },
     ],
     flags: [{ id: "reports", isEnabled: false }],
   },
@@ -57,6 +59,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "menuItems", quota: 0 },
     ],
     flags: [{ id: "reports", isEnabled: true }],
   },
@@ -72,6 +75,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 1 },
+      { id: "menuItems", quota: 0 },
     ],
     flags: [{ id: "reports", isEnabled: true }],
   },
@@ -87,6 +91,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
     features: [
       { id: "locations", quota: 1 },
       { id: "menus", quota: 100 },
+      { id: "menuItems", quota: 0 },
     ],
     flags: [{ id: "reports", isEnabled: true }],
   },

@@ -49,10 +49,7 @@ function SignedInCta(props: {
 
   if (isOnThisTier) {
     return (
-      <div className="flex w-full flex-col gap-1">
-        <span className="text-pop text-center text-xs font-bold">
-          You are already on this plan
-        </span>
+      <div className="relative flex w-full flex-col gap-1">
         <Link href={ROUTES.my} className="w-full">
           <Button className="w-full" variant={props.variant}>
             Go to my account

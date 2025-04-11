@@ -29,6 +29,13 @@ const nextConfig: NextConfig = {
     // TODO dynamicIO
   },
 
+  // See https://nextjs.org/docs/app/building-your-application/data-fetching/incremental-static-regeneration#debugging-cached-data-in-local-development.
+  logging: {
+    fetches: {
+      fullUrl: true,
+    },
+  },
+
   typescript: {
     ignoreBuildErrors: true,
   },

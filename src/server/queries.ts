@@ -77,6 +77,35 @@ export async function getMenusPlanUsage() {
   return result.length;
 }
 
+export async function getMenuItemsPlanUsage() {
+  const { userId, sessionClaims } = await auth();
+  if (!userId) {
+    throw new AppError({ internalMessage: "Unauthorized" });
+  }
+
+  const orgId = sessionClaims?.org_id;
+  if (!orgId) {
+    throw new AppError({ internalMessage: "No organization ID found" });
+  }
+
+  const result = await db.query.menuItems.findMany({
+    where: (menuItems, { eq, and, exists }) =>
+      exists(
+        db
+          .select()
+          .from(locations)
+          .where(
+            and(
+              eq(locations.id, menuItems.locationId),
+              eq(locations.orgId, orgId),
+            ),
+          ),
+      ),
+  });
+
+  return result.length;
+}
+
 export async function getLocationsPlanUsage() {
   //TODO
   return Promise.resolve(1);
