@@ -9,7 +9,6 @@ import {
 import { type PriceTier } from "../_domain/price-tiers";
 import { type ReactNode } from "react";
 import { type ExceededFeature } from "../_domain/price-tier-usage";
-import { CircleXIcon } from "lucide-react";
 import { PageSubtitle } from "./PageSubtitle";
 import { priceTierFlags } from "~/app/_domain/price-tier-flags";
 
@@ -77,7 +76,7 @@ export function PriceTierCard(props: {
             const quota =
               props.tier.features.find((f) => f.id === feature.id)?.quota ?? 0;
             return (
-              <div className="flex items-center">
+              <div key={feature.id} className="flex items-center">
                 <div
                   className={`flex-shrink-0 text-left capitalize ${quota ? enabledTextColor : disabledTextColor}`}
                 >
@@ -97,7 +96,7 @@ export function PriceTierCard(props: {
                 ?.quota ?? 0;
 
             return (
-              <div>
+              <div key={exceededFeature.id}>
                 <div className="flex items-center">
                   <div className="flex-shrink-0 text-left text-red-600 capitalize dark:text-red-400">
                     {featureDetails.resourcePluralName}
@@ -120,7 +119,7 @@ export function PriceTierCard(props: {
               props.tier.flags.find((f) => f.id === flag.id)?.isEnabled ??
               false;
             return (
-              <div className="flex items-center">
+              <div key={flag.id} className="flex items-center">
                 <div
                   className={`${isEnabled ? enabledTextColor : disabledTextColor} flex-shrink-0 text-left capitalize`}
                 >
