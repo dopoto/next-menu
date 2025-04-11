@@ -8,12 +8,13 @@ import {
 } from "~/components/ui/card";
 import { type PriceTier } from "../_domain/price-tiers";
 import { type ReactNode } from "react";
-import { type ExceededFeature } from "../_domain/price-tier-features";
+import { type ExceededFeature } from "../_domain/price-tier-usage";
 import { CircleXIcon } from "lucide-react";
 import { PageSubtitle } from "./PageSubtitle";
 import { priceTierFlags } from "~/app/_domain/price-tier-flags";
-import { priceTierFeatures } from "~/app/_domain/price-tier-features-config";
+
 import { Badge } from "~/components/ui/badge";
+import { priceTierFeatures } from "~/app/_domain/price-tier-features";
 
 export type CardCustomizations = {
   containerStyle?: string;
@@ -40,9 +41,8 @@ function FeatureBadge({ quota }: { quota: number | boolean }) {
 function DashedLine() {
   return (
     <div
-      // className={`mx-2 flex-grow self-center border-b border-dotted ${isEnabled ? "border-gray-400 dark:border-gray-300" : "border-gray-200 dark:border-gray-500"}`}
       className={`mx-2 flex-grow self-center border-b border-dotted border-gray-600`}
-    ></div>
+    />
   );
 }
 
