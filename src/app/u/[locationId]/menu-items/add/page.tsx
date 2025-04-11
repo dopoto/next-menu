@@ -1,17 +1,29 @@
 import * as React from "react";
-import { getValidLocationIdOrThrow } from "~/app/_utils/location-utils";
-import { getAvailableFeatureQuota } from "~/app/_utils/quota-utils.server-only";
+import { Suspense } from "react";
+import LoadingSection from "../../_components/LoadingSection";
+import { locationIdSchema } from "../../_domain/locations";
+import { AddMenuItem } from "./_components/AddMenuItem";
+import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function AddMenuItemPage(props: { params: Params }) {
   const params = await props.params;
 
-  //TODO
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const parsedlocationId = getValidLocationIdOrThrow(params.locationId);
+  const locationValidationResult = locationIdSchema.safeParse(
+    params.locationId,
+  );
+  if (!locationValidationResult.success) {
+    throw new AppError({
+      internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
+    });
+  }
 
-  const availableQuota = await getAvailableFeatureQuota("menuItems");
-
-  return <>hi [{availableQuota}]</>;
+  return (
+    <div className="flex h-full flex-col gap-2">
+      <Suspense fallback={<LoadingSection />}>
+        <AddMenuItem locationId={locationValidationResult.data} />
+      </Suspense>
+    </div>
+  );
 }
