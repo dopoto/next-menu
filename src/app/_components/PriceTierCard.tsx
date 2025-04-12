@@ -106,8 +106,8 @@ export function PriceTierCard(props: {
                     <FeatureBadge quota={quota} />
                   </div>
                 </div>
-                <div className="relative mt-2 rounded-md bg-red-700 p-2 text-center text-sm text-white">
-                  <div className="absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[8px] border-b-[8px] border-l-[8px] border-r-transparent border-b-red-700 border-l-transparent"></div>
+                <div className="relative mt-2 rounded-md bg-red-800 p-2 text-center text-sm text-white">
+                  <div className="absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[8px] border-b-[8px] border-l-[8px] border-r-transparent border-b-red-800 border-l-transparent"></div>
                   Your current usage: {exceededFeature.used}
                 </div>
               </div>
@@ -151,7 +151,7 @@ export const getCurrentPlanCardCustomizations = (): CardCustomizations => {
 
 export const getExceededPlanCardCustomizations = (): CardCustomizations => {
   return {
-    containerStyle: "border-2 border-red-700 bg-gray-100 dark:bg-gray-800",
+    containerStyle: "border-2 border-red-800 bg-gray-100 dark:bg-gray-800",
     badgeStyle: "bg-red-800",
     badgeText: "Does not fit your current usage",
   };

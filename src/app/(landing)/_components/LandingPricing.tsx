@@ -27,7 +27,7 @@ export const LandingPricing: React.FC = () => {
               tier.isPopular
                 ? {
                     containerStyle: " ",
-                    badgeStyle: "bg-red-700",
+                    badgeStyle: "bg-yellow-600",
                     badgeText: "Our most popular plan!",
                   }
                 : undefined;
