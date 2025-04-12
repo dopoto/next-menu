@@ -20,38 +20,22 @@ import { Checkbox } from "~/components/ui/checkbox";
 import { toast } from "~/hooks/use-toast";
 import { addMenuItem } from "../actions";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
-import type { FieldValues } from "react-hook-form";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
+import { MenuItemFormSchema } from "~/app/_domain/menu-items";
+import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 
-const formSchema = z.object({
-  name: z
-    .string({
-      required_error: "Name is required",
-    })
-    .min(2, "Name must be at least 2 characters")
-    .max(256, "Name must be at most 256 characters"),
-  description: z.string().default(""),
-  price: z
-    .number({
-      required_error: "Price is required",
-      invalid_type_error: "Price must be a number",
-    })
-    .min(0, "Price must be positive"),
-  isNew: z.boolean().default(false),
-});
-
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof MenuItemFormSchema>;
 
 export function AddOrEditMenuItem({ locationId }: { locationId: LocationId }) {
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<z.infer<typeof MenuItemFormSchema>>({
     defaultValues: {
       name: "",
       description: "",
       price: 0,
       isNew: false,
     },
-    resolver: zodResolver(formSchema) as never,
+    resolver: zodResolver(MenuItemFormSchema) as never,
   });
 
   const onSubmit = form.handleSubmit(async (data: FormData) => {
@@ -77,7 +61,7 @@ export function AddOrEditMenuItem({ locationId }: { locationId: LocationId }) {
   });
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-row gap-6">
       <Form {...form}>
         <form onSubmit={onSubmit} className="space-y-8">
           <FormField
@@ -90,7 +74,7 @@ export function AddOrEditMenuItem({ locationId }: { locationId: LocationId }) {
                   <Input placeholder="Enter the item name" {...field} />
                 </FormControl>
                 <FormDescription>
-                  The name of your menu item as it will appear on the menu
+                  The name of your menu item, as it will appear on the menu
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -175,7 +159,18 @@ export function AddOrEditMenuItem({ locationId }: { locationId: LocationId }) {
           </div>
         </form>
       </Form>
-      <DeviceMockup />
+      <DeviceMockup>
+        <div className="flex h-full w-full items-center justify-center rounded-[2rem] bg-gray-100 dark:bg-gray-800">
+          <PublicMenuItem
+            item={{
+              name: form.watch("name"),
+              description: form.watch("description"),
+              price: form.watch("price").toString(),
+              isNew: form.watch("isNew"),
+            }}
+          />
+        </div>
+      </DeviceMockup>
     </div>
   );
 }

@@ -108,6 +108,3 @@ export type NewLocation = InferInsertModel<typeof locations>;
 
 export type Menu = InferSelectModel<typeof menus>;
 export type NewMenu = InferInsertModel<typeof menus>;
-
-export type MenuItem = InferSelectModel<typeof menuItems>;
-export type NewMenuItem = InferInsertModel<typeof menuItems>;
