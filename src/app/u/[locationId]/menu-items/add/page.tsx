@@ -2,7 +2,7 @@ import * as React from "react";
 import { Suspense } from "react";
 import LoadingSection from "../../_components/LoadingSection";
 import { locationIdSchema } from "../../_domain/locations";
-import { AddOrEditMenuItem } from "./_components/AddOrEditMenuItem";
+import { AddOrEditMenuItem } from "../_components/AddOrEditMenuItem";
 import { AppError } from "~/lib/error-utils.server";
 
 type Params = Promise<{ locationId: string }>;

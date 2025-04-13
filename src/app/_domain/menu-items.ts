@@ -2,6 +2,9 @@ import { InferInsertModel, InferSelectModel } from "drizzle-orm";
 import { z } from "zod";
 import { menuItems } from "~/server/db/schema";
 
+export const menuItemIdSchema = z.coerce.number().positive().int();
+export type MenuItemId = z.infer<typeof menuItemIdSchema>;
+
 export type MenuItem = InferSelectModel<typeof menuItems>;
 export type NewMenuItem = InferInsertModel<typeof menuItems>;
 

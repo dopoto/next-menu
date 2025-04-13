@@ -52,8 +52,8 @@ export async function PlanSelector() {
             </Button>
           </Link>
         ) : (
-          <Button variant="default" className="w-full" disabled>
-            Change to this plan
+          <Button variant="default" className="w-full italic" disabled>
+            Cannot change to this plan
           </Button>
         );
 

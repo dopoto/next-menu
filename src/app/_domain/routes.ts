@@ -1,3 +1,4 @@
+import { MenuItemId } from "~/app/_domain/menu-items";
 import {
   type LocationId,
   type LocationSlug,
@@ -38,6 +39,8 @@ export const ROUTES = {
   menusAdd: (locationId: LocationId) => `/u/${locationId}/menus/add`,
   menuItems: (locationId: LocationId) => `/u/${locationId}/menu-items`,
   menuItemsAdd: (locationId: LocationId) => `/u/${locationId}/menu-items/add`,
+  menuItemsEdit: (locationId: LocationId, menuItemId: MenuItemId) =>
+    `/u/${locationId}/menu-items/edit/${menuItemId}`,
 
   // PLAN
   changePlan: "/u/plan/change",

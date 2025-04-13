@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 import {
@@ -18,23 +18,43 @@ import {
 import { Input } from "~/components/ui/input";
 import { Checkbox } from "~/components/ui/checkbox";
 import { toast } from "~/hooks/use-toast";
-import { addMenuItem } from "../actions";
+import { addMenuItem } from "../../../../actions/addMenuItem";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
-import { MenuItemFormSchema } from "~/app/_domain/menu-items";
+import {
+  MenuItem,
+  MenuItemFormSchema,
+  MenuItemId,
+} from "~/app/_domain/menu-items";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 
 type FormData = z.infer<typeof MenuItemFormSchema>;
 
-export function AddOrEditMenuItem({ locationId }: { locationId: LocationId }) {
+export function AddOrEditMenuItem({
+  locationId,
+  menuItem,
+}: {
+  locationId: LocationId;
+  menuItem?: MenuItem;
+}) {
   const router = useRouter();
+
+  const initialValues = menuItem
+    ? {
+        name: menuItem.name ?? "",
+        description: menuItem.description ?? "",
+        price: parseFloat(menuItem.price) || 0,
+        isNew: menuItem.isNew ?? false,
+      }
+    : {
+        name: "",
+        description: "",
+        price: 0,
+        isNew: false,
+      };
+
   const form = useForm<z.infer<typeof MenuItemFormSchema>>({
-    defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      isNew: false,
-    },
+    defaultValues: initialValues,
     resolver: zodResolver(MenuItemFormSchema) as never,
   });
 
