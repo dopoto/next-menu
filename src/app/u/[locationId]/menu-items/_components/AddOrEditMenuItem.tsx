@@ -21,14 +21,11 @@ import { toast } from "~/hooks/use-toast";
 import { addMenuItem } from "../../../../actions/addMenuItem";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
-import {
-  MenuItem,
-  MenuItemFormSchema,
-  MenuItemId,
-} from "~/app/_domain/menu-items";
+import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
+import { editMenuItem } from "~/app/actions/editMenuItem";
 
-type FormData = z.infer<typeof MenuItemFormSchema>;
+type FormData = z.infer<typeof menuItemFormSchema>;
 
 export function AddOrEditMenuItem({
   locationId,
@@ -37,6 +34,8 @@ export function AddOrEditMenuItem({
   locationId: LocationId;
   menuItem?: MenuItem;
 }) {
+  const mode = menuItem ? "edit" : "add";
+
   const router = useRouter();
 
   const initialValues = menuItem
@@ -53,12 +52,16 @@ export function AddOrEditMenuItem({
         isNew: false,
       };
 
-  const form = useForm<z.infer<typeof MenuItemFormSchema>>({
+  const form = useForm<z.infer<typeof menuItemFormSchema>>({
     defaultValues: initialValues,
-    resolver: zodResolver(MenuItemFormSchema) as never,
+    resolver: zodResolver(menuItemFormSchema) as never,
   });
 
   const onSubmit = form.handleSubmit(async (data: FormData) => {
+    mode === "add" ? await add(data) : await edit(data);
+  });
+
+  const add = async (data: FormData) => {
     try {
       await addMenuItem({
         ...data,
@@ -78,7 +81,34 @@ export function AddOrEditMenuItem({
         variant: "destructive",
       });
     }
-  });
+  };
+
+  const edit = async (data: FormData) => {
+    try {
+      const menuItemId = menuItem?.id;
+      if (!menuItemId) {
+        throw new Error("Menu item ID is required for editing.");
+      }
+
+      await editMenuItem(menuItemId, {
+        ...data,
+        locationId: Number(locationId),
+      });
+
+      toast({
+        title: "Menu item updated successfully",
+      });
+
+      router.push(ROUTES.menuItems(locationId));
+    } catch (error) {
+      toast({
+        title: "Failed to update menu item",
+        description:
+          error instanceof Error ? error.message : "Please try again",
+        variant: "destructive",
+      });
+    }
+  };
 
   return (
     <div className="flex flex-row gap-6">

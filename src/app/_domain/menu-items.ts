@@ -8,14 +8,17 @@ export type MenuItemId = z.infer<typeof menuItemIdSchema>;
 export type MenuItem = InferSelectModel<typeof menuItems>;
 export type NewMenuItem = InferInsertModel<typeof menuItems>;
 
-export const MenuItemFormSchema = z.object({
+export const menuItemFormSchema = z.object({
   name: z
     .string({
       required_error: "Name is required",
     })
     .min(2, "Name must be at least 2 characters")
     .max(256, "Name must be at most 256 characters"),
-  description: z.string().default(""),
+  description: z
+    .string()
+    .max(256, "Description must be at most 256 characters")
+    .optional(),
   price: z
     .number({
       required_error: "Price is required",
@@ -23,4 +26,7 @@ export const MenuItemFormSchema = z.object({
     })
     .min(0, "Price must be positive"),
   isNew: z.boolean().default(false),
+  locationId: z.number({
+    required_error: "Location ID is required",
+  }),
 });

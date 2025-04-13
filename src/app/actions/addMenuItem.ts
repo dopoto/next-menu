@@ -6,23 +6,9 @@ import { auth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
+import { menuItemFormSchema } from "~/app/_domain/menu-items";
 
-const addMenuItemSchema = z.object({
-  name: z.string({
-    required_error: "Name is required",
-  }).min(2, "Name must be at least 2 characters").max(256, "Name must be at most 256 characters"),
-  description: z.string().max(256, "Description must be at most 256 characters").optional(),
-  price: z.number({
-    required_error: "Price is required",
-    invalid_type_error: "Price must be a number",
-  }).min(0, "Price must be positive"),
-  isNew: z.boolean().default(false),
-  locationId: z.number({
-    required_error: "Location ID is required",
-  }),
-});
-
-export async function addMenuItem(data: z.infer<typeof addMenuItemSchema>) {
+export async function addMenuItem(data: z.infer<typeof menuItemFormSchema>) {
   const { userId, sessionClaims } = await auth();
   if (!userId) {
     throw new AppError({ internalMessage: "Unauthorized" });
@@ -34,7 +20,7 @@ export async function addMenuItem(data: z.infer<typeof addMenuItemSchema>) {
   }
 
   // Validate the input data
-  const validationResult = addMenuItemSchema.safeParse(data);
+  const validationResult = menuItemFormSchema.safeParse(data);
   if (!validationResult.success) {
     throw new AppError({
       internalMessage: `Invalid menu item data: ${JSON.stringify(
@@ -50,6 +36,7 @@ export async function addMenuItem(data: z.infer<typeof addMenuItemSchema>) {
   };
 
   // Insert the menu item
+  // TODO use queries fn
   await db.insert(menuItems).values(dbData);
 
   // Revalidate the menu items page
