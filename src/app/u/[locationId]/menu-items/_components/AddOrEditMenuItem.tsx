@@ -18,7 +18,7 @@ import {
 import { Input } from "~/components/ui/input";
 import { Checkbox } from "~/components/ui/checkbox";
 import { toast } from "~/hooks/use-toast";
-import { addMenuItem } from "~/app/actions/addMenuItem";
+import { addMenuItem, FormState } from "~/app/actions/addMenuItem";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
 import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
@@ -26,7 +26,7 @@ import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 import { editMenuItem } from "~/app/actions/editMenuItem";
 import { useFormState } from "react-dom";
 import { XIcon } from "lucide-react";
-import { useRef } from "react";
+import { useActionState, useRef } from "react";
 
 type FormData = z.infer<typeof menuItemFormSchema>;
 
@@ -41,11 +41,12 @@ export function AddOrEditMenuItem({
 
   const router = useRouter();
 
-  const [state, formAction] = useFormState(addMenuItem, {
-    status: "loading",
-    message: "",
-  });
-
+  const [state, formAction] = useActionState<FormState, FormData>(
+    (prevState, formData) => addMenuItem(formData),
+    {
+      message: "",
+    },
+  );
   const initialValues = menuItem
     ? {
         name: menuItem.name ?? "",
@@ -237,7 +238,7 @@ export function AddOrEditMenuItem({
 
           <div className="flex gap-2">
             <Button type="submit" variant="default">
-              {mode === "edit" ? "Update" : "Add"}
+              {mode === "edit" ? "Update" : "Add!"}
             </Button>
             <Button
               type="button"
