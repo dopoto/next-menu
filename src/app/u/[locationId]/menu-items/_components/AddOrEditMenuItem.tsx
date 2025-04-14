@@ -1,9 +1,12 @@
 "use client";
 
+import { useRef } from "react";
+import * as React from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useFormState } from "react-dom";
 import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 import {
@@ -24,9 +27,7 @@ import { DeviceMockup } from "~/app/_components/DeviceMockup";
 import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 import { editMenuItem } from "~/app/actions/editMenuItem";
-import { useFormState } from "react-dom";
 import { XIcon } from "lucide-react";
-import { useActionState, useRef } from "react";
 
 type FormData = z.infer<typeof menuItemFormSchema>;
 
@@ -38,15 +39,31 @@ export function AddOrEditMenuItem({
   menuItem?: MenuItem;
 }) {
   const mode = menuItem ? "edit" : "add";
-
   const router = useRouter();
+  const formRef = useRef<HTMLFormElement>(null);
 
-  const [state, formAction] = useActionState<FormState, FormData>(
-    (prevState, formData) => addMenuItem(formData),
-    {
-      message: "",
+  const [state, formAction] = useFormState(
+    async (prevState: FormState, formData: FormData) => {
+      try {
+        if (mode === "add") {
+          return await addMenuItem(formData);
+        } else {
+          await editMenuItem(menuItem?.id!, {
+            ...formData,
+            locationId: Number(locationId),
+          });
+          return { message: "success" };
+        }
+      } catch (error) {
+        return {
+          message: "An error occurred while saving the menu item",
+          issues: [(error as Error).message],
+        };
+      }
     },
+    { message: "" },
   );
+
   const initialValues = menuItem
     ? {
         name: menuItem.name ?? "",
@@ -61,71 +78,38 @@ export function AddOrEditMenuItem({
         isNew: false,
       };
 
-  const form = useForm<z.output<typeof menuItemFormSchema>>({
+  const form = useForm<FormData>({
     defaultValues: initialValues,
     resolver: zodResolver(menuItemFormSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
-    console.log("DBG ON SUB");
-    mode === "add" ? await add(data) : await edit(data);
-  };
-
-  const add = async (data: FormData) => {
-    console.log("DBG ON ADD");
-    try {
-      await addMenuItem(data);
-
+  React.useEffect(() => {
+    if (state?.message === "success") {
       toast({
-        title: "Menu item added successfully",
+        title: `Menu item ${mode === "add" ? "added" : "updated"} successfully`,
       });
-
       router.push(ROUTES.menuItems(locationId));
-    } catch (error) {
+    } else if (state?.message && !state.issues) {
       toast({
-        title: "Failed to add menu item",
-        description:
-          error instanceof Error ? error.message : "Please try again",
+        title: `Failed to ${mode === "add" ? "add" : "update"} menu item`,
+        description: state.message,
         variant: "destructive",
       });
     }
-  };
-
-  const edit = async (data: FormData) => {
-    try {
-      const menuItemId = menuItem?.id;
-      if (!menuItemId) {
-        throw new Error("Menu item ID is required for editing.");
-      }
-
-      await editMenuItem(menuItemId, {
-        ...data,
-        locationId: Number(locationId),
-      });
-
-      toast({
-        title: "Menu item updated successfully",
-      });
-
-      router.push(ROUTES.menuItems(locationId));
-    } catch (error) {
-      toast({
-        title: "Failed to update menu item",
-        description:
-          error instanceof Error ? error.message : "Please try again",
-        variant: "destructive",
-      });
-    }
-  };
-
-  const formRef = useRef<HTMLFormElement>(null);
+  }, [state?.message, mode, router, locationId]);
 
   return (
     <div className="flex flex-row gap-6">
       <Form {...form}>
         <form
           ref={formRef}
-          onSubmit={form.handleSubmit(onSubmit)}
+          action={async () => {
+            const valid = await form.trigger();
+            if (!valid) return;
+
+            const data = form.getValues();
+            formAction({ ...data, locationId: Number(locationId) });
+          }}
           className="space-y-8"
         >
           {state?.message !== "" && !state.issues && (
