@@ -50,17 +50,17 @@ export function AddOrEditMenuItem({
     ? {
         name: menuItem.name ?? "",
         description: menuItem.description ?? "",
-        price: (parseFloat(menuItem.price) || 0).toString(),
-        isNew: menuItem.isNew ?? (false as boolean),
+        price: parseFloat(menuItem.price) || 0,
+        isNew: menuItem.isNew,
       }
     : {
         name: "",
         description: "",
-        price: "0",
+        price: 0,
         isNew: false,
       };
 
-  const form = useForm<FormData>({
+  const form = useForm<z.output<typeof menuItemFormSchema>>({
     defaultValues: initialValues,
     resolver: zodResolver(menuItemFormSchema),
   });
@@ -246,14 +246,6 @@ export function AddOrEditMenuItem({
             >
               Cancel
             </Button>
-          </div>
-
-          <div className="flex gap-2">
-            {form.formState.errors.root?.serverError && (
-              <p className="text-sm text-red-600">
-                {form.formState.errors.root.serverError.message}
-              </p>
-            )}
           </div>
         </form>
       </Form>
