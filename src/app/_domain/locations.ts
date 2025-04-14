@@ -22,10 +22,8 @@ export const addLocationFormOptions = formOptions({
 export const addLocationFormDataSchema = z.object({
   locationName: z
     .string({
-      error: (issue) =>
-        issue.input === undefined
-          ? "Location Name is required"
-          : "Location Name must be a string",
+      required_error: "Location Name is required",
+      invalid_type_error: "Location Name must be a string",
     })
     .min(2, {
       message: "Location Name must be 2 or more characters long",
