@@ -27,12 +27,11 @@ export const menuItemFormSchema = z.object({
     })
     .min(0, "Price must be positive"),
   isNew: z.boolean(),
-  // locationId: z
-  //   .number({
-  //     required_error: "Location ID is required",
-  //   })
-  //   .int()
-  //   .positive(),
+  locationId: z
+    .number({
+      required_error: "Location ID is required",
+    })
+    .min(0, "Location Id must be positive"),
 });
 
 export function validateAndFormatMenuItemData(

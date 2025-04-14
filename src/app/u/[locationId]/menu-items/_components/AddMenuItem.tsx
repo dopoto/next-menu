@@ -27,6 +27,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
       description: "",
       price: 0,
       isNew: false,
+      locationId,
     },
   });
 
@@ -34,6 +35,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
   function onSubmit(values: z.infer<typeof menuItemFormSchema>) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
+
     console.log(values);
   }
 
@@ -122,7 +124,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
             </FormItem>
           )}
         />
-        <FormField
+        {/* <FormField
           control={form.control as never}
           name="locationId"
           render={({ field }) => (
@@ -131,7 +133,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
               {locationId}]
             </FormItem>
           )}
-        />
+        /> */}
         <Button type="submit">Submit</Button>
       </form>
     </Form>
