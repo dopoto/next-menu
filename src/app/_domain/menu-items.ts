@@ -1,7 +1,6 @@
 import { InferSelectModel, InferInsertModel, eq } from "drizzle-orm";
 import { z } from "zod";
 import { auth } from "@clerk/nextjs/server";
-import { db } from "~/server/db";
 import { menuItems } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
 
@@ -37,15 +36,7 @@ export const menuItemFormSchema = z.object({
     .positive(),
 });
 
-async function validateUser() {
-  const { userId } = await auth();
-  if (!userId) {
-    throw new AppError({ internalMessage: "Unauthorized" });
-  }
-  return userId;
-}
-
-function validateAndFormatMenuItemData(
+export function validateAndFormatMenuItemData(
   data: z.infer<typeof menuItemFormSchema>,
 ) {
   const validationResult = menuItemFormSchema.safeParse(data);
@@ -62,32 +53,4 @@ function validateAndFormatMenuItemData(
     ...validationResult.data,
     price: validationResult.data.price.toString(), // Convert price to string for database
   };
-}
-
-export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
-  await validateUser();
-  const dbData = validateAndFormatMenuItemData(data);
-
-  // Insert the menu item
-  await db.insert(menuItems).values(dbData);
-}
-
-export async function updateMenuItem(
-  menuItemId: MenuItemId,
-  data: z.infer<typeof menuItemFormSchema>,
-) {
-  await validateUser();
-  const dbData = validateAndFormatMenuItemData(data);
-
-  // Update the menu item
-  const result = await db
-    .update(menuItems)
-    .set(dbData)
-    .where(eq(menuItems.id, menuItemId));
-
-  if (result.rowCount === 0) {
-    throw new AppError({
-      internalMessage: `Menu item with ID ${menuItemId} not found or not authorized for update`,
-    });
-  }
 }

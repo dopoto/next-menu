@@ -2,7 +2,8 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { menuItemFormSchema, createMenuItem } from "~/app/_domain/menu-items";
+import { menuItemFormSchema } from "~/app/_domain/menu-items";
+import { createMenuItem } from "~/server/queries/menu-items";
 
 export async function addMenuItem(data: z.infer<typeof menuItemFormSchema>) {
   await createMenuItem(data);

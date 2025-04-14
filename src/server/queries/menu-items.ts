@@ -1,8 +1,18 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
-import { MenuItem, MenuItemId } from "~/app/_domain/menu-items";
+import {
+  MenuItem,
+  menuItemFormSchema,
+  MenuItemId,
+  validateAndFormatMenuItemData,
+  validateUser,
+} from "~/app/_domain/menu-items";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AppError } from "~/lib/error-utils.server";
+import { z } from "node_modules/zod/lib/external";
+import { menuItems } from "~/server/db/schema";
+import { and, eq } from "drizzle-orm";
+import { validateOrganization } from "~/app/_utils/security-utils.server-only";
 
 export async function getMenuItemsByLocation(
   locationId: LocationId,
@@ -71,4 +81,34 @@ export async function getMenuItemById(
   });
 
   return item;
+}
+
+export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
+  await validateUser();
+  await validateOrganization();
+
+  const dbData = validateAndFormatMenuItemData(data);
+  await db.insert(menuItems).values(dbData);
+}
+
+export async function updateMenuItem(
+  menuItemId: MenuItemId,
+  locationId: LocationId,
+  data: z.infer<typeof menuItemFormSchema>,
+) {
+  await validateUser();
+
+  const dbData = validateAndFormatMenuItemData(data);
+  const result = await db
+    .update(menuItems)
+    .set(dbData)
+    .where(
+      and(eq(menuItems.locationId, locationId), eq(menuItems.id, menuItemId)),
+    );
+
+  if (result.rowCount === 0) {
+    throw new AppError({
+      internalMessage: `Menu item with ID ${menuItemId} not found or not authorized for update`,
+    });
+  }
 }

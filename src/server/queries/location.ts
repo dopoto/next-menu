@@ -17,6 +17,19 @@ import { MenuItem } from "~/app/_domain/menu-items";
 //   return items;
 // }
 
+export async function getLocation(
+  locationId: LocationId,
+  orgId: string,
+  userId: string,
+): Promise<LocationId> {
+  const location = await db.query.locations.findFirst({
+    where: (locations, { and, eq }) =>
+      and(eq(locations.id, locationId), eq(locations.orgId, orgId)),
+  });
+
+  return location.id;
+}
+
 export async function getMenusByLocation(
   locationId: LocationId,
 ): Promise<Menu[]> {
