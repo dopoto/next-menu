@@ -5,14 +5,17 @@ import {
   menuItemFormSchema,
   MenuItemId,
   validateAndFormatMenuItemData,
-  validateUser,
 } from "~/app/_domain/menu-items";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AppError } from "~/lib/error-utils.server";
-import { z } from "node_modules/zod/lib/external";
+import { z } from "zod";
 import { menuItems } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
-import { validateOrganization } from "~/app/_utils/security-utils.server-only";
+import {
+  validateLocation,
+  validateOrganization,
+  validateUser,
+} from "~/app/_utils/security-utils.server-only";
 
 export async function getMenuItemsByLocation(
   locationId: LocationId,
@@ -84,8 +87,9 @@ export async function getMenuItemById(
 }
 
 export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
-  await validateUser();
-  await validateOrganization();
+  const userId = await validateUser();
+  const orgId = await validateOrganization();
+  await validateLocation(data.locationId, orgId, userId);
 
   const dbData = validateAndFormatMenuItemData(data);
   await db.insert(menuItems).values(dbData);

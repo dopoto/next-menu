@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { notFound, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { ROUTES } from "~/app/_domain/routes";
 import { Button } from "~/components/ui/button";
 import {
@@ -18,12 +18,15 @@ import {
 import { Input } from "~/components/ui/input";
 import { Checkbox } from "~/components/ui/checkbox";
 import { toast } from "~/hooks/use-toast";
-import { addMenuItem } from "../../../../actions/addMenuItem";
+import { addMenuItem } from "~/app/actions/addMenuItem";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
 import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 import { editMenuItem } from "~/app/actions/editMenuItem";
+import { useFormState } from "react-dom";
+import { XIcon } from "lucide-react";
+import { useRef } from "react";
 
 type FormData = z.infer<typeof menuItemFormSchema>;
 
@@ -38,35 +41,39 @@ export function AddOrEditMenuItem({
 
   const router = useRouter();
 
+  const [state, formAction] = useFormState(addMenuItem, {
+    status: "loading",
+    message: "",
+  });
+
   const initialValues = menuItem
     ? {
         name: menuItem.name ?? "",
         description: menuItem.description ?? "",
-        price: parseFloat(menuItem.price) || 0,
-        isNew: menuItem.isNew ?? false,
+        price: (parseFloat(menuItem.price) || 0).toString(),
+        isNew: menuItem.isNew ?? (false as boolean),
       }
     : {
         name: "",
         description: "",
-        price: 0,
+        price: "0",
         isNew: false,
       };
 
-  const form = useForm<z.infer<typeof menuItemFormSchema>>({
+  const form = useForm<FormData>({
     defaultValues: initialValues,
-    resolver: zodResolver(menuItemFormSchema) as never,
+    resolver: zodResolver(menuItemFormSchema),
   });
 
-  const onSubmit = form.handleSubmit(async (data: FormData) => {
+  const onSubmit = async (data: FormData) => {
+    console.log("DBG ON SUB");
     mode === "add" ? await add(data) : await edit(data);
-  });
+  };
 
   const add = async (data: FormData) => {
+    console.log("DBG ON ADD");
     try {
-      await addMenuItem({
-        ...data,
-        locationId: Number(locationId),
-      });
+      await addMenuItem(data);
 
       toast({
         title: "Menu item added successfully",
@@ -110,10 +117,31 @@ export function AddOrEditMenuItem({
     }
   };
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   return (
     <div className="flex flex-row gap-6">
       <Form {...form}>
-        <form onSubmit={onSubmit} className="space-y-8">
+        <form
+          ref={formRef}
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="space-y-8"
+        >
+          {state?.message !== "" && !state.issues && (
+            <div className="text-red-500">{state.message}</div>
+          )}
+          {state?.issues && (
+            <div className="text-red-500">
+              <ul>
+                {state.issues.map((issue) => (
+                  <li key={issue} className="flex gap-1">
+                    <XIcon fill="red" />
+                    {issue}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <FormField
             control={form.control as never}
             name="name"
@@ -196,9 +224,21 @@ export function AddOrEditMenuItem({
               </FormItem>
             )}
           />
+          <FormField
+            control={form.control as never}
+            name="locationId"
+            render={({ field }) => (
+              <FormItem>
+                <input type="hidden" name={field.name} value={locationId} />[
+                {locationId}]
+              </FormItem>
+            )}
+          />
 
-          <div className="flex gap-4">
-            <Button type="submit">Add Menu Item</Button>
+          <div className="flex gap-2">
+            <Button type="submit" variant="default">
+              {mode === "edit" ? "Update" : "Add"}
+            </Button>
             <Button
               type="button"
               variant="outline"
@@ -206,6 +246,14 @@ export function AddOrEditMenuItem({
             >
               Cancel
             </Button>
+          </div>
+
+          <div className="flex gap-2">
+            {form.formState.errors.root?.serverError && (
+              <p className="text-sm text-red-600">
+                {form.formState.errors.root.serverError.message}
+              </p>
+            )}
           </div>
         </form>
       </Form>

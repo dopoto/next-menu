@@ -18,7 +18,10 @@ import { Input } from "~/components/ui/input";
 
 const FormSchema = z.object({
   name: z.string({
-    required_error: "You need to choose a name for your menu.",
+    error: (issue) =>
+      issue.input === undefined
+        ? "You need to choose a name for your menu."
+        : "You need to choose a valid name for your menu.",
   }),
 });
 

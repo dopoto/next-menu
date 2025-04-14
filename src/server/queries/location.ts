@@ -1,6 +1,8 @@
 import { auth } from "@clerk/nextjs/server";
 import "server-only";
 import { db } from "~/server/db";
+import { exists } from "drizzle-orm";
+import { customers } from "~/server/db/schema";
 import {
   type LocationId,
   type LocationSlug,
@@ -17,17 +19,40 @@ import { MenuItem } from "~/app/_domain/menu-items";
 //   return items;
 // }
 
+/**
+ * Checks if the location exists in the database and if it belongs to
+ * the organization the user is in.
+ * Throws an error if that's not the case.
+ * @param locationId
+ * @param orgId
+ * @param userId
+ * @returns The valid Location Id.
+ */
 export async function getLocation(
   locationId: LocationId,
   orgId: string,
   userId: string,
-): Promise<LocationId> {
+): Promise<LocationId | undefined> {
   const location = await db.query.locations.findFirst({
     where: (locations, { and, eq }) =>
-      and(eq(locations.id, locationId), eq(locations.orgId, orgId)),
+      and(
+        eq(locations.id, locationId),
+        eq(locations.orgId, orgId),
+        exists(
+          db
+            .select()
+            .from(customers)
+            .where((customers) =>
+              and(
+                eq(customers.clerkUserId, userId),
+                eq(customers.orgId, orgId),
+              ),
+            ),
+        ),
+      ),
   });
 
-  return location.id;
+  return location?.id;
 }
 
 export async function getMenusByLocation(

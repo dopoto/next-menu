@@ -2,6 +2,7 @@ import "server-only";
 import { auth } from "@clerk/nextjs/server";
 import { AppError } from "~/lib/error-utils.server";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { getLocation } from "~/server/queries/location";
 
 /**
  * Checks if the user is authenticated and returns the user ID.
@@ -40,10 +41,10 @@ export async function validateLocation(
   organizationId: string,
   userId: string,
 ): Promise<LocationId> {
-  const { sessionClaims } = await auth();
-  const orgId = sessionClaims?.org_id;
-  if (!orgId) {
-    throw new AppError({ internalMessage: "No organization ID found" });
+  const validLocationId = await getLocation(locationId, organizationId, userId);
+  if (!validLocationId) {
+    const internalMessage = `Location not found. Location ID: ${locationId}, Org ID: ${organizationId}, User ID: ${userId}`;
+    throw new AppError({ internalMessage });
   }
-  return orgId;
+  return validLocationId;
 }

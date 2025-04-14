@@ -88,7 +88,7 @@ export const menuItems = createTable(
     name: varchar("name", { length: 256 }),
     description: varchar("description", { length: 256 }),
     price: decimal("price").notNull(),
-    isNew: boolean("is_new").default(false),
+    isNew: boolean("is_new").default(false).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),

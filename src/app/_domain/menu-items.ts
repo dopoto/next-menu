@@ -1,6 +1,5 @@
 import { InferSelectModel, InferInsertModel, eq } from "drizzle-orm";
 import { z } from "zod";
-import { auth } from "@clerk/nextjs/server";
 import { menuItems } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
 
@@ -13,7 +12,7 @@ export type NewMenuItem = InferInsertModel<typeof menuItems>;
 export const menuItemFormSchema = z.object({
   name: z
     .string({
-      required_error: "Name is required",
+      error: "Name is required",
     })
     .min(2, "Name must be at least 2 characters")
     .max(256, "Name must be at most 256 characters"),
@@ -22,15 +21,17 @@ export const menuItemFormSchema = z.object({
     .max(256, "Description must be at most 256 characters")
     .optional(),
   price: z
-    .number({
-      required_error: "Price is required",
-      invalid_type_error: "Price must be a number",
+    .string({
+      error: (issue) =>
+        issue.input === undefined
+          ? "Price is required"
+          : "Price must be a number",
     })
-    .min(0, "Price must be positive"),
+    .min(0, { error: "Price must be positive" }),
   isNew: z.boolean().default(false),
   locationId: z
     .number({
-      required_error: "Location ID is required",
+      error: "Location ID is required",
     })
     .int()
     .positive(),
@@ -43,7 +44,7 @@ export function validateAndFormatMenuItemData(
   if (!validationResult.success) {
     throw new AppError({
       internalMessage: `Invalid menu item data: ${JSON.stringify(
-        validationResult.error.errors,
+        validationResult.error,
       )}`,
     });
   }
