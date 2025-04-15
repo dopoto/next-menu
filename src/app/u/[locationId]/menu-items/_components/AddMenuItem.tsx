@@ -18,10 +18,11 @@ import {
   FormMessage,
 } from "~/components/ui/form";
 import { Input } from "~/components/ui/input";
+import { FormState } from "~/lib/form-state";
 
 export function AddMenuItem({ locationId }: { locationId: LocationId }) {
   const form = useForm<z.infer<typeof menuItemFormSchema>>({
-    //resolver: zodResolver(menuItemFormSchema),
+    // resolver: zodResolver(menuItemFormSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -47,10 +48,19 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
             });
           }
         });
+
+        // Update form fields with the server-returned values if any
+        if (res.fields) {
+          Object.entries(res.fields).forEach(([field, value]) => {
+            form.setValue(
+              field as keyof z.infer<typeof menuItemFormSchema>,
+              value,
+            );
+          });
+        }
       }
 
       if (res.rootError) {
-        // Handle general error if no field-specific errors
         form.setError("root", {
           message: res.rootError,
         });
@@ -61,7 +71,6 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {/* Show root level errors */}
         {form.formState.errors.root && (
           <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
             {form.formState.errors.root.message}
@@ -150,6 +159,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
             </FormItem>
           )}
         />
+
         <Button type="submit">Submit</Button>
       </form>
     </Form>
