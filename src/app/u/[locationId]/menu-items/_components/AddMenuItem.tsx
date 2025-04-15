@@ -1,28 +1,18 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { DeviceMockup } from "~/app/_components/DeviceMockup";
 import { menuItemFormSchema } from "~/app/_domain/menu-items";
 import { addMenuItem } from "~/app/actions/addMenuItem";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
-import { Button } from "~/components/ui/button";
-import { Checkbox } from "~/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "~/components/ui/form";
-import { Input } from "~/components/ui/input";
-import { FormState } from "~/lib/form-state";
+import { AddEditMenuItemForm } from "~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm";
+import { PublicMenuItem } from "~/components/public/PublicMenuItem";
+import { handleFormErrors } from "~/lib/form-state";
 
 export function AddMenuItem({ locationId }: { locationId: LocationId }) {
   const form = useForm<z.infer<typeof menuItemFormSchema>>({
-    // resolver: zodResolver(menuItemFormSchema), //TODO
+    // resolver: zodResolver(menuItemFormSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -34,134 +24,24 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
 
   async function onSubmit(values: z.infer<typeof menuItemFormSchema>) {
     const res = await addMenuItem(values);
-
-    if (res.status === "error") {
-      // Clear any existing errors first
-      form.clearErrors();
-
-      if (res.fieldErrors) {
-        // Set errors for each field
-        Object.entries(res.fieldErrors).forEach(([field, messages]) => {
-          if (messages && messages.length > 0) {
-            form.setError(field as keyof z.infer<typeof menuItemFormSchema>, {
-              message: messages.join(". "), // Join multiple error messages with a period
-            });
-          }
-        });
-
-        // Update form fields with the server-returned values if any
-        if (res.fields) {
-          Object.entries(res.fields).forEach(([field, value]) => {
-            form.setValue(
-              field as keyof z.infer<typeof menuItemFormSchema>,
-              value,
-            );
-          });
-        }
-      }
-
-      if (res.rootError) {
-        form.setError("root", {
-          message: res.rootError,
-        });
-      }
-    }
+    handleFormErrors(form, res);
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        {form.formState.errors.root && (
-          <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
-            {form.formState.errors.root.message}
-          </div>
-        )}
-
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter the item name" {...field} />
-              </FormControl>
-              <FormDescription>
-                The name of your menu item, as it will appear on the menu
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Enter a description (optional)"
-                  {...field}
-                />
-              </FormControl>
-              <FormDescription>
-                A brief description of the menu item
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  step="0.01"
-                  min="0"
-                  placeholder="0.00"
-                  {...field}
-                  value={field.value}
-                  onChange={(e) =>
-                    field.onChange(parseFloat(e.target.value) || 0)
-                  }
-                />
-              </FormControl>
-              <FormDescription>The price of the menu item</FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="isNew"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-              </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Mark as new</FormLabel>
-                <FormDescription>
-                  This will highlight the item as new on the menu
-                </FormDescription>
-              </div>
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+    <div className="flex flex-row gap-6">
+      <AddEditMenuItemForm form={form} onSubmit={onSubmit} />
+      <DeviceMockup>
+        <div className="flex h-full w-full items-center justify-center rounded-[2rem] bg-gray-100 dark:bg-gray-800">
+          <PublicMenuItem
+            item={{
+              name: form.watch("name"),
+              description: form.watch("description"),
+              price: form.watch("price").toString(),
+              isNew: form.watch("isNew"),
+            }}
+          />
+        </div>
+      </DeviceMockup>
+    </div>
   );
 }

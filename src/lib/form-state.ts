@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { Path, UseFormReturn } from "react-hook-form";
 
 /**
  * Generic type for field-level validation errors
@@ -58,4 +59,41 @@ export function processFormErrors<TSchema extends z.ZodType>(
     fields,
     fieldErrors,
   };
+}
+
+/**
+ * Helper function to handle form errors in react-hook-form components
+ */
+export function handleFormErrors<TSchema extends z.ZodType>(
+  form: UseFormReturn<z.infer<TSchema>>,
+  formState: FormState<TSchema>,
+) {
+  if (formState.status === "error") {
+    // Clear any existing errors first
+    form.clearErrors();
+
+    if (formState.fieldErrors) {
+      // Set errors for each field
+      Object.entries(formState.fieldErrors).forEach(([field, messages]) => {
+        if (messages && messages.length > 0) {
+          form.setError(field as Path<z.infer<TSchema>>, {
+            message: messages.join(". "),
+          });
+        }
+      });
+
+      // Update form fields with the server-returned values if any
+      if (formState.fields) {
+        Object.entries(formState.fields).forEach(([field, value]) => {
+          form.setValue(field as Path<z.infer<TSchema>>, value);
+        });
+      }
+    }
+
+    if (formState.rootError) {
+      form.setError("root", {
+        message: formState.rootError,
+      });
+    }
+  }
 }

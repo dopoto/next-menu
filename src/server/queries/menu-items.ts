@@ -91,6 +91,8 @@ export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
   const orgId = await validateOrganization();
   await validateLocation(data.locationId, orgId, userId);
 
+  //TODO check quota
+
   const dbData = validateAndFormatMenuItemData(data);
   await db.insert(menuItems).values(dbData);
 }
