@@ -1,4 +1,4 @@
-import { MenuItem } from "~/lib/menu-items";
+import { type MenuItem } from "~/lib/menu-items";
 import { Badge } from "~/components/ui/badge";
 
 export function PublicMenuItem(props: { item: Partial<MenuItem> }) {

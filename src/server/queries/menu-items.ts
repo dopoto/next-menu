@@ -1,14 +1,14 @@
 import { auth } from "@clerk/nextjs/server";
 import { db } from "~/server/db";
 import {
-  MenuItem,
-  menuItemFormSchema,
-  MenuItemId,
+  type MenuItem,
+  type menuItemFormSchema,
+  type MenuItemId,
   validateAndFormatMenuItemData,
 } from "~/lib/menu-items";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AppError } from "~/lib/error-utils.server";
-import { z } from "zod";
+import { type z } from "zod";
 import { menuItems } from "~/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import {

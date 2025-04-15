@@ -1,4 +1,4 @@
-import { MenuItemId } from "~/lib/menu-items";
+import { type MenuItemId } from "~/lib/menu-items";
 import {
   type LocationId,
   type LocationSlug,

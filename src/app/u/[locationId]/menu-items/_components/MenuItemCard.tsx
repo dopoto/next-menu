@@ -1,6 +1,6 @@
-import { MenuItem } from "~/lib/menu-items";
+import { type MenuItem } from "~/lib/menu-items";
 import { ROUTES } from "~/lib/routes";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { Button } from "~/components/ui/button";
 
 export default function MenuItemCard(props: {

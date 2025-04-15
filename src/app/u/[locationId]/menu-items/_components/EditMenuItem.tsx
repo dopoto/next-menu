@@ -3,12 +3,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { type z } from "zod";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
-import { MenuItem, menuItemFormSchema } from "~/lib/menu-items";
+import { type MenuItem, menuItemFormSchema } from "~/lib/menu-items";
 import { ROUTES } from "~/lib/routes";
 import { editMenuItem } from "~/app/actions/editMenuItem";
-import { LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AddEditMenuItemForm } from "~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 import { toast } from "~/hooks/use-toast";

@@ -1,6 +1,6 @@
-import { InferSelectModel, InferInsertModel, eq } from "drizzle-orm";
+import { type InferSelectModel, type InferInsertModel } from "drizzle-orm";
 import { z } from "zod";
-import { menuItems } from "~/server/db/schema";
+import { type menuItems } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
 
 export const menuItemIdSchema = z.coerce.number().int().positive();

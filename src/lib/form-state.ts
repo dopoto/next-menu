@@ -1,5 +1,5 @@
-import { z } from "zod";
-import { Path, UseFormReturn } from "react-hook-form";
+import { type z } from "zod";
+import { type Path, type UseFormReturn } from "react-hook-form";
 
 /**
  * Generic type for field-level validation errors
@@ -85,7 +85,10 @@ export function handleFormErrors<TSchema extends z.ZodType>(
       // Update form fields with the server-returned values if any
       if (formState.fields) {
         Object.entries(formState.fields).forEach(([field, value]) => {
-          form.setValue(field as Path<z.infer<TSchema>>, value);
+          form.setValue(
+            field as Path<z.infer<TSchema>>,
+            value as z.infer<TSchema>[typeof field],
+          );
         });
       }
     }
