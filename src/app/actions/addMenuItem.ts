@@ -9,9 +9,9 @@ export type FieldErrors = Record<string, string[] | undefined>;
 
 export type FormState = {
   status: "success" | "error";
-  message: string;
   fields?: Record<string, string>;
-  errors?: FieldErrors;
+  fieldErrors?: FieldErrors;
+  rootError?: string;
 };
 
 export async function addMenuItem(
@@ -43,15 +43,21 @@ export async function addMenuItem(
 
     return {
       status: "error",
-      message: "Invalid form data",
       fields,
-      errors,
+      fieldErrors: errors,
     };
   }
 
-  await createMenuItem(parsed.data);
-
-  // TODO: typed path:
-  revalidatePath(`/u/${parsed.data.locationId}/menu-items`);
-  return { status: "success", message: "Created" };
+  try {
+    await createMenuItem(parsed.data);
+    // TODO: typed path:
+    revalidatePath(`/u/${parsed.data.locationId}/menu-items`);
+    return { status: "success" };
+  } catch {
+    // TODO Log error
+    return {
+      status: "error",
+      rootError: "Could not save data.",
+    };
+  }
 }

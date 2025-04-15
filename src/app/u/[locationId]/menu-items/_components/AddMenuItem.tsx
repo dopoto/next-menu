@@ -38,9 +38,9 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
       // Clear any existing errors first
       form.clearErrors();
 
-      if (res.errors) {
+      if (res.fieldErrors) {
         // Set errors for each field
-        Object.entries(res.errors).forEach(([field, messages]) => {
+        Object.entries(res.fieldErrors).forEach(([field, messages]) => {
           if (messages && messages.length > 0) {
             form.setError(field as keyof z.infer<typeof menuItemFormSchema>, {
               message: messages.join(". "), // Join multiple error messages with a period
@@ -49,10 +49,10 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
         });
       }
 
-      if (!res.errors && res.message) {
+      if (res.rootError) {
         // Handle general error if no field-specific errors
         form.setError("root", {
-          message: res.message,
+          message: res.rootError,
         });
       }
     }
