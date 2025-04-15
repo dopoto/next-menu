@@ -1,10 +1,10 @@
 import { Suspense } from "react";
 import LoadingSection from "../../../_components/LoadingSection";
 import { getValidLocationIdOrThrow } from "~/app/_utils/location-utils";
-import { getValidMenuItemIdOrThrow } from "~/app/_utils/menu-item-utils";
 import { notFound } from "next/navigation";
 import { getMenuItemById } from "~/server/queries/menu-items";
 import { EditMenuItem } from "~/app/u/[locationId]/menu-items/_components/EditMenuItem";
+import { getValidMenuItemIdOrThrow } from "~/lib/menu-items";
 
 type Params = Promise<{ locationId: string; menuItemId: string }>;
 
