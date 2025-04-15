@@ -8,16 +8,24 @@ export type FieldErrors<TSchema extends z.ZodType> = {
   [K in keyof z.infer<TSchema>]?: string[];
 };
 
-/**
- * Generic form state type that works with any Zod schema
- * TSchema is a Zod schema that defines the form's shape
- */
-export type FormState<TSchema extends z.ZodType> = {
-  status: "success" | "error";
+type SuccessResult = {
+  status: "success";
+};
+
+type ErrorResult<TSchema extends z.ZodType> = {
+  status: "error";
   fields?: Partial<z.infer<TSchema>>;
   fieldErrors?: FieldErrors<TSchema>;
   rootError?: string;
 };
+
+/**
+ * Generic form state type that works with any Zod schema
+ * TSchema is a Zod schema that defines the form's shape
+ */
+export type FormState<TSchema extends z.ZodType> =
+  | SuccessResult
+  | ErrorResult<TSchema>;
 
 /**
  * Helper function to process Zod validation errors into field errors
@@ -31,12 +39,12 @@ export function processFormErrors<TSchema extends z.ZodType>(
 
   // Group validation errors by field
   error.issues.forEach((issue) => {
-    const field = issue.path[0]?.toString();
+    const field = issue.path[0]?.toString() as keyof z.infer<TSchema>;
     if (field) {
-      if (!fieldErrors[field as keyof z.infer<TSchema>]) {
-        fieldErrors[field as keyof z.infer<TSchema>] = [];
+      if (!fieldErrors[field]) {
+        fieldErrors[field] = [];
       }
-      fieldErrors[field as keyof z.infer<TSchema>]!.push(issue.message);
+      fieldErrors[field]!.push(issue.message);
     }
   });
 

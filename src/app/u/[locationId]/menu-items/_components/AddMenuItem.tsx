@@ -22,7 +22,7 @@ import { FormState } from "~/lib/form-state";
 
 export function AddMenuItem({ locationId }: { locationId: LocationId }) {
   const form = useForm<z.infer<typeof menuItemFormSchema>>({
-    // resolver: zodResolver(menuItemFormSchema),
+    // resolver: zodResolver(menuItemFormSchema), //TODO
     defaultValues: {
       name: "",
       description: "",
