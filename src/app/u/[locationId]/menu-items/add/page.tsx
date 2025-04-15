@@ -24,7 +24,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     <div className="flex h-full flex-col gap-2">
       <Suspense fallback={<LoadingSection />}>
         <AddMenuItem locationId={locationValidationResult.data} />
-        <AddOrEditMenuItem locationId={locationValidationResult.data} />
+        {/* <AddOrEditMenuItem locationId={locationValidationResult.data} /> */}
         {/*<MailForm /> */}
       </Suspense>
     </div>

@@ -6,6 +6,7 @@ import { menuItemFormSchema } from "~/app/_domain/menu-items";
 import { createMenuItem } from "~/server/queries/menu-items";
 
 export type FormState = {
+  status: "success" | "error";
   message: string;
   fields?: Record<string, string>;
   issues?: string[];
@@ -20,10 +21,11 @@ export async function addMenuItem(
 
   if (!parsed.success) {
     const fields: Record<string, string> = {};
-    for (const key of Object.keys(data)) {
-      fields[key] = "f"; //data[key]?.toString() ?? "";
+    for (const key of Object.keys(data ?? {})) {
+      fields[key] = data[key as keyof typeof data]?.toString() ?? "";
     }
     return {
+      status: "error",
       message: "Invalid form data",
       fields,
       issues: parsed.error.issues.map((issue) => issue.message),
@@ -34,5 +36,5 @@ export async function addMenuItem(
 
   // TODO: typed path:
   revalidatePath(`/u/${parsed.data.locationId}/menu-items`);
-  return { message: "Created" };
+  return { status: "success", message: "Created" };
 }
