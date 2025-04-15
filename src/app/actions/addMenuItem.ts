@@ -5,11 +5,13 @@ import { revalidatePath } from "next/cache";
 import { menuItemFormSchema } from "~/app/_domain/menu-items";
 import { createMenuItem } from "~/server/queries/menu-items";
 
+export type FieldErrors = Record<string, string[] | undefined>;
+
 export type FormState = {
   status: "success" | "error";
   message: string;
   fields?: Record<string, string>;
-  issues?: string[];
+  errors?: FieldErrors;
 };
 
 export async function addMenuItem(
@@ -21,14 +23,29 @@ export async function addMenuItem(
 
   if (!parsed.success) {
     const fields: Record<string, string> = {};
+    const errors: FieldErrors = {};
+
+    // Group validation errors by field
+    parsed.error.issues.forEach((issue) => {
+      const field = issue.path[0]?.toString(); // Get the field name from the path
+      if (field) {
+        if (!errors[field]) {
+          errors[field] = [];
+        }
+        errors[field]!.push(issue.message);
+      }
+    });
+
+    // Collect submitted field values
     for (const key of Object.keys(data ?? {})) {
       fields[key] = data[key as keyof typeof data]?.toString() ?? "";
     }
+
     return {
       status: "error",
       message: "Invalid form data",
       fields,
-      issues: parsed.error.issues.map((issue) => issue.message),
+      errors,
     };
   }
 

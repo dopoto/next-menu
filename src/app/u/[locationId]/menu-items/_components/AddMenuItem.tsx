@@ -35,22 +35,22 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
     const res = await addMenuItem(values);
 
     if (res.status === "error") {
-      // Handle field-specific errors from server validation
-      if (res.fields && res.issues) {
-        res.issues.forEach((issue, index) => {
-          // Find the field name from the fields object
-          const fieldName = Object.keys(res.fields!)[index];
-          if (fieldName) {
-            form.setError(
-              fieldName as keyof z.infer<typeof menuItemFormSchema>,
-              {
-                message: issue,
-              },
-            );
+      // Clear any existing errors first
+      form.clearErrors();
+
+      if (res.errors) {
+        // Set errors for each field
+        Object.entries(res.errors).forEach(([field, messages]) => {
+          if (messages && messages.length > 0) {
+            form.setError(field as keyof z.infer<typeof menuItemFormSchema>, {
+              message: messages.join(". "), // Join multiple error messages with a period
+            });
           }
         });
-      } else {
-        // Handle general error
+      }
+
+      if (!res.errors && res.message) {
+        // Handle general error if no field-specific errors
         form.setError("root", {
           message: res.message,
         });
@@ -63,7 +63,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {/* Show root level errors */}
         {form.formState.errors.root && (
-          <div className="text-red-500">
+          <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
             {form.formState.errors.root.message}
           </div>
         )}
