@@ -1,21 +1,24 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
 import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
-import { addMenuItem } from "~/app/actions/addMenuItem";
+import { ROUTES } from "~/app/_domain/routes";
 import { editMenuItem } from "~/app/actions/editMenuItem";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AddEditMenuItemForm } from "~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
+import { toast } from "~/hooks/use-toast";
 import { handleFormErrors } from "~/lib/form-state";
 
 export function EditMenuItem(props: {
   locationId: LocationId;
   menuItem: MenuItem;
 }) {
+  const router = useRouter();
   const form = useForm<z.infer<typeof menuItemFormSchema>>({
     resolver: zodResolver(menuItemFormSchema),
     defaultValues: {
@@ -29,7 +32,12 @@ export function EditMenuItem(props: {
 
   async function onSubmit(values: z.infer<typeof menuItemFormSchema>) {
     const res = await editMenuItem(props.menuItem.id, values);
-    handleFormErrors(form, res);
+    if (res.status === "success") {
+      toast({ title: `Menu item updated` });
+      router.push(ROUTES.menuItems(props.locationId));
+    } else {
+      handleFormErrors(form, res);
+    }
   }
 
   return (
