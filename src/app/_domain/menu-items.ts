@@ -3,7 +3,7 @@ import { z } from "zod";
 import { menuItems } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
 
-export const menuItemIdSchema = z.number().int().positive();
+export const menuItemIdSchema = z.coerce.number().int().positive();
 export type MenuItemId = number;
 
 export type MenuItem = InferSelectModel<typeof menuItems>;

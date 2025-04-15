@@ -6,6 +6,7 @@ import { z } from "zod";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
 import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
 import { addMenuItem } from "~/app/actions/addMenuItem";
+import { editMenuItem } from "~/app/actions/editMenuItem";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AddEditMenuItemForm } from "~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
@@ -18,16 +19,16 @@ export function EditMenuItem(props: {
   const form = useForm<z.infer<typeof menuItemFormSchema>>({
     resolver: zodResolver(menuItemFormSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      isNew: false,
+      name: props.menuItem.name ?? "",
+      description: props.menuItem.description ?? "",
+      price: parseFloat(props.menuItem.price) || 0,
+      isNew: props.menuItem.isNew,
       locationId: props.locationId,
     },
   });
 
   async function onSubmit(values: z.infer<typeof menuItemFormSchema>) {
-    const res = await addMenuItem(values);
+    const res = await editMenuItem(props.menuItem.id, values);
     handleFormErrors(form, res);
   }
 
