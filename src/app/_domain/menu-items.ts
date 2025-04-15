@@ -25,7 +25,7 @@ export const menuItemFormSchema = z.object({
       required_error: "Price is required",
       invalid_type_error: "Price must be a number",
     })
-    .min(0, "Price must be positive"),
+    .min(5, "Price must be 5 or more"),
   isNew: z.boolean(),
   locationId: z
     .number({

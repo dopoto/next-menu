@@ -4,7 +4,6 @@ import LoadingSection from "../../_components/LoadingSection";
 import { locationIdSchema } from "../../_domain/locations";
 import { AppError } from "~/lib/error-utils.server";
 import { AddMenuItem } from "~/app/u/[locationId]/menu-items/_components/AddMenuItem";
-import { AddOrEditMenuItem } from "~/app/u/[locationId]/menu-items/_components/AddOrEditMenuItem";
 
 type Params = Promise<{ locationId: string }>;
 
