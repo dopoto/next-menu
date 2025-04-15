@@ -99,10 +99,11 @@ export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
 
 export async function updateMenuItem(
   menuItemId: MenuItemId,
-  locationId: LocationId,
   data: z.infer<typeof menuItemFormSchema>,
 ) {
-  await validateUser();
+  const userId = await validateUser();
+  const orgId = await validateOrganization();
+  const locationId = await validateLocation(data.locationId, orgId, userId);
 
   const dbData = validateAndFormatMenuItemData(data);
   const result = await db
@@ -113,8 +114,7 @@ export async function updateMenuItem(
     );
 
   if (result.rowCount === 0) {
-    throw new AppError({
-      internalMessage: `Menu item with ID ${menuItemId} not found or not authorized for update`,
-    });
+    const internalMessage = `Menu item with ID ${menuItemId} not found or not authorized for update`;
+    throw new AppError({ internalMessage });
   }
 }

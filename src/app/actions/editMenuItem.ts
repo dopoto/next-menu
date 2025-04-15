@@ -4,14 +4,27 @@ import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { menuItemFormSchema, MenuItemId } from "~/app/_domain/menu-items";
 import { updateMenuItem } from "~/server/queries/menu-items";
+import { FormState, processFormErrors } from "~/lib/form-state";
+import { ROUTES } from "~/app/_domain/routes";
 
 export async function editMenuItem(
   menuItemId: MenuItemId,
   data: z.infer<typeof menuItemFormSchema>,
-) {
-  //TODO
-  await updateMenuItem(menuItemId, 1, data);
+): Promise<FormState<typeof menuItemFormSchema>> {
+  const parsed = menuItemFormSchema.safeParse(data);
+  if (!parsed.success) {
+    return processFormErrors(parsed.error, data);
+  }
 
-  // Revalidate the menu items page
-  revalidatePath(`/u/${data.locationId}/menu-items`);
+  try {
+    await updateMenuItem(menuItemId, parsed.data);
+    revalidatePath(ROUTES.menuItems(parsed.data.locationId));
+    return { status: "success" };
+  } catch (error) {
+    return {
+      status: "error",
+      rootError:
+        error instanceof Error ? error.message : "Could not save data.",
+    };
+  }
 }

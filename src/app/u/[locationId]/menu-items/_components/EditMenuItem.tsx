@@ -4,14 +4,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { DeviceMockup } from "~/app/_components/DeviceMockup";
-import { menuItemFormSchema } from "~/app/_domain/menu-items";
+import { MenuItem, menuItemFormSchema } from "~/app/_domain/menu-items";
 import { addMenuItem } from "~/app/actions/addMenuItem";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AddEditMenuItemForm } from "~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm";
 import { PublicMenuItem } from "~/components/public/PublicMenuItem";
 import { handleFormErrors } from "~/lib/form-state";
 
-export function AddMenuItem({ locationId }: { locationId: LocationId }) {
+export function EditMenuItem(props: {
+  locationId: LocationId;
+  menuItem: MenuItem;
+}) {
   const form = useForm<z.infer<typeof menuItemFormSchema>>({
     resolver: zodResolver(menuItemFormSchema),
     defaultValues: {
@@ -19,7 +22,7 @@ export function AddMenuItem({ locationId }: { locationId: LocationId }) {
       description: "",
       price: 0,
       isNew: false,
-      locationId,
+      locationId: props.locationId,
     },
   });
 

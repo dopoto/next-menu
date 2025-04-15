@@ -1,30 +1,19 @@
-import * as React from "react";
 import { Suspense } from "react";
 import LoadingSection from "../../_components/LoadingSection";
-import { locationIdSchema } from "../../_domain/locations";
-import { AppError } from "~/lib/error-utils.server";
 import { AddMenuItem } from "~/app/u/[locationId]/menu-items/_components/AddMenuItem";
+import { getValidLocationIdOrThrow } from "~/app/_utils/location-utils";
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function AddMenuItemPage(props: { params: Params }) {
   const params = await props.params;
 
-  const locationValidationResult = locationIdSchema.safeParse(
-    params.locationId,
-  );
-  if (!locationValidationResult.success) {
-    throw new AppError({
-      internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
-    });
-  }
+  const parsedLocationId = getValidLocationIdOrThrow(params.locationId);
 
   return (
     <div className="flex h-full flex-col gap-2">
       <Suspense fallback={<LoadingSection />}>
-        <AddMenuItem locationId={locationValidationResult.data} />
-        {/* <AddOrEditMenuItem locationId={locationValidationResult.data} /> */}
-        {/*<MailForm /> */}
+        <AddMenuItem locationId={parsedLocationId} />
       </Suspense>
     </div>
   );

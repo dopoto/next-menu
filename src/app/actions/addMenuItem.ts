@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { menuItemFormSchema } from "~/app/_domain/menu-items";
 import { createMenuItem } from "~/server/queries/menu-items";
 import { FormState, processFormErrors } from "~/lib/form-state";
+import { ROUTES } from "~/app/_domain/routes";
 
 export async function addMenuItem(
   data: z.infer<typeof menuItemFormSchema>,
@@ -16,7 +17,7 @@ export async function addMenuItem(
 
   try {
     await createMenuItem(parsed.data);
-    revalidatePath(`/u/${parsed.data.locationId}/menu-items`);
+    revalidatePath(ROUTES.menuItems(parsed.data.locationId));
     return { status: "success" };
   } catch (error) {
     return {
