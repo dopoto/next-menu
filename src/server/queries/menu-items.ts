@@ -5,7 +5,7 @@ import {
   menuItemFormSchema,
   MenuItemId,
   validateAndFormatMenuItemData,
-} from "~/app/_domain/menu-items";
+} from "~/lib/menu-items";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { AppError } from "~/lib/error-utils.server";
 import { z } from "zod";

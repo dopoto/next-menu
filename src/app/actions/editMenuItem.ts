@@ -2,10 +2,10 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { menuItemFormSchema, MenuItemId } from "~/app/_domain/menu-items";
+import { menuItemFormSchema, MenuItemId } from "~/lib/menu-items";
 import { updateMenuItem } from "~/server/queries/menu-items";
 import { FormState, processFormErrors } from "~/lib/form-state";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 export async function editMenuItem(
   menuItemId: MenuItemId,

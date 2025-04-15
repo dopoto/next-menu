@@ -15,7 +15,7 @@ import {
 import { obj2str } from "~/app/_utils/string-utils";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import { AppError } from "~/lib/error-utils.server";
 

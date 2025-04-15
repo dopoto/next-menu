@@ -10,7 +10,7 @@ import {
 import { type Menu } from "~/server/db/schema";
 import { type Location } from "~/server/db/schema";
 import { AppError } from "~/lib/error-utils.server";
-import { MenuItem } from "~/app/_domain/menu-items";
+import { MenuItem } from "~/lib/menu-items";
 
 // export async function getLocations() {
 //   const items = await db.query.locations.findMany({

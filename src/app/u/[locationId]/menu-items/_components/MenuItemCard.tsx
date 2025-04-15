@@ -1,5 +1,5 @@
-import { MenuItem } from "~/app/_domain/menu-items";
-import { ROUTES } from "~/app/_domain/routes";
+import { MenuItem } from "~/lib/menu-items";
+import { ROUTES } from "~/lib/routes";
 import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { Button } from "~/components/ui/button";
 

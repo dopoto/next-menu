@@ -14,7 +14,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { FreeToPaidStripeCheckoutForm } from "../_components/FreeToPaidStripeCheckoutForm";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { AppError } from "~/lib/error-utils.server";
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);

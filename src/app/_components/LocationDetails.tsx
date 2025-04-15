@@ -8,7 +8,7 @@ import {
 } from "~/app/u/[locationId]/_domain/locations";
 import { ExternalLinkIcon } from "lucide-react";
 import { env } from "~/env";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import truncateMiddle from "truncate-middle";
 import { CopyButton } from "~/app/_components/CopyButton";

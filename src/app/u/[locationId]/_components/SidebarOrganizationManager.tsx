@@ -19,7 +19,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import Link from "next/link";
 import { priceTiers, type PriceTierId } from "~/app/_domain/price-tiers";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import React from "react";
 
 export function SidebarOrganizationManager() {

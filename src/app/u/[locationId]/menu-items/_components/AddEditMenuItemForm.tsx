@@ -1,6 +1,6 @@
 import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { menuItemFormSchema } from "~/app/_domain/menu-items";
+import { menuItemFormSchema } from "~/lib/menu-items";
 import { Button } from "~/components/ui/button";
 import { Checkbox } from "~/components/ui/checkbox";
 import {

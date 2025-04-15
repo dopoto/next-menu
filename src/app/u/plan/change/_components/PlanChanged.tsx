@@ -6,7 +6,7 @@ import {
   PriceTierCard,
 } from "~/app/_components/PriceTierCard";
 import SvgIcon from "~/app/_components/SvgIcons";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 export function PlanChanged(props: { fromTier: PriceTier; toTier: PriceTier }) {
   const toTierCardCustomizations = getCurrentPlanCardCustomizations();

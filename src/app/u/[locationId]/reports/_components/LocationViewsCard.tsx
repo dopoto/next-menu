@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import * as React from "react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { GenericReportsCard } from "~/app/u/[locationId]/reports/_components/GenericReportsCard";
 import { getViews } from "~/app/u/[locationId]/reports/_utils/posthog-utils";

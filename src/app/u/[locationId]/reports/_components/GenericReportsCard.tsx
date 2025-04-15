@@ -1,6 +1,6 @@
 import { CloudAlertIcon, CrownIcon } from "lucide-react";
 import * as React from "react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import {
   Card,
   CardHeader,

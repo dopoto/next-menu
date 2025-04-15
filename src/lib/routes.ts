@@ -1,9 +1,9 @@
-import { MenuItemId } from "~/app/_domain/menu-items";
+import { MenuItemId } from "~/lib/menu-items";
 import {
   type LocationId,
   type LocationSlug,
-} from "../u/[locationId]/_domain/locations";
-import type { PriceTierId } from "./price-tiers";
+} from "../app/u/[locationId]/_domain/locations";
+import type { PriceTierId } from "../app/_domain/price-tiers";
 
 type PlanChangeType =
   | "free-to-paid"

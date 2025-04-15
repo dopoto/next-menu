@@ -2,7 +2,7 @@ import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { type NextRequest, NextResponse } from "next/server";
 import { getValidPriceTier } from "./app/_utils/price-tier-utils";
 import { CookieKey } from "./app/_domain/cookies";
-import { ROUTES } from "./app/_domain/routes";
+import { ROUTES } from "./lib/routes";
 
 const redirectTo = (req: NextRequest, route: string) =>
   NextResponse.redirect(new URL(route, req.url));

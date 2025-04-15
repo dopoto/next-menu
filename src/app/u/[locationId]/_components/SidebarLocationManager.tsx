@@ -6,7 +6,7 @@ import { DropdownMenuLabel } from "@radix-ui/react-dropdown-menu";
 import { SidebarMenuButton } from "~/components/ui/sidebar";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 export function SidebarLocationManager() {
   const { user } = useUser();

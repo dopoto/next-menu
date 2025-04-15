@@ -25,7 +25,7 @@ export const menuItemFormSchema = z.object({
       required_error: "Price is required",
       invalid_type_error: "Price must be a number",
     })
-    .min(5, "Price must be 5 or more"),
+    .min(0, "Price must be positive"),
   isNew: z.boolean(),
   locationId: z
     .number({
@@ -34,6 +34,19 @@ export const menuItemFormSchema = z.object({
     .min(0, "Location Id must be positive"),
 });
 
+export function getValidMenuItemIdOrThrow(candidate?: string): MenuItemId {
+  const validationResult = menuItemIdSchema.safeParse(candidate);
+  if (!validationResult.success) {
+    throw new AppError({
+      internalMessage: `Menu Item Id validation failed for ${JSON.stringify(candidate)}`,
+    });
+  }
+  return validationResult.data;
+}
+
+/**
+  Formats the data for database insertion.
+ */
 export function validateAndFormatMenuItemData(
   data: z.infer<typeof menuItemFormSchema>,
 ) {
@@ -46,9 +59,8 @@ export function validateAndFormatMenuItemData(
     });
   }
 
-  // Format the data for database insertion
   return {
     ...validationResult.data,
-    price: validationResult.data.price.toString(), // Convert price to string for database
+    price: validationResult.data.price.toString(),
   };
 }

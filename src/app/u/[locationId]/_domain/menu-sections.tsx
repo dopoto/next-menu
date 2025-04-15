@@ -5,7 +5,7 @@ import {
   UtensilsCrossedIcon,
 } from "lucide-react";
 import { type ReactNode } from "react";
-import { type AppRouteKey, ROUTES } from "~/app/_domain/routes";
+import { type AppRouteKey, ROUTES } from "~/lib/routes";
 
 type RouteId =
   | "ROOT"

@@ -11,7 +11,7 @@ import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 import { type PriceTierId } from "~/app/_domain/price-tiers";
 import { OverviewCard } from "~/app/_components/OverviewCard";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 export const AddLocation = ({
   priceTierId,

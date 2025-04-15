@@ -2,10 +2,10 @@
 
 import { z } from "zod";
 import { revalidatePath } from "next/cache";
-import { menuItemFormSchema } from "~/app/_domain/menu-items";
+import { menuItemFormSchema } from "~/lib/menu-items";
 import { createMenuItem } from "~/server/queries/menu-items";
 import { FormState, processFormErrors } from "~/lib/form-state";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { getAvailableFeatureQuota } from "~/app/_utils/quota-utils.server-only";
 
 export async function addMenuItem(

@@ -12,7 +12,7 @@ import {
   BreadcrumbPage,
 } from "~/components/ui/breadcrumb";
 import React from "react";
-import { ROUTES, type UserRouteFn } from "~/app/_domain/routes";
+import { ROUTES, type UserRouteFn } from "~/lib/routes";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import { findMenuItemByPath, getBreadcrumbPath } from "~/app/_utils/menu-utils";
 

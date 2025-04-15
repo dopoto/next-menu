@@ -5,7 +5,7 @@ import { ThemeSwitch } from "../../_components/ThemeSwitch";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import React from "react";
 import { AppVersion } from "~/app/_components/AppVersion";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 const currentYear = new Date().getFullYear();
 

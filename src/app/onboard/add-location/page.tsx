@@ -14,7 +14,7 @@ import type { PriceTierId } from "~/app/_domain/price-tiers";
 import { AddLocation } from "../_components/AddLocation";
 import { LocationCreated } from "../_components/LocationCreated";
 import * as React from "react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import { AppError } from "~/lib/error-utils.server";
 

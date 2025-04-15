@@ -9,7 +9,7 @@ import {
 } from "~/app/_components/PriceTierCard";
 import { SeparatorWithText } from "~/app/_components/SeparatorWithText";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 export async function PlanSelector() {
   const currentUserTier = (await auth()).sessionClaims?.metadata

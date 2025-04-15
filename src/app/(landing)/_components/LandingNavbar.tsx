@@ -13,7 +13,7 @@ import { Menu, X } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import { type NavItem } from "../../_domain/nav-items";
 import { useState } from "react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 export function LandingNavbar(props: { navItems: NavItem[] }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

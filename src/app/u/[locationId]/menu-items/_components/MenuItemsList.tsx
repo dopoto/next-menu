@@ -1,5 +1,5 @@
 import { CirclePlusIcon, UtensilsCrossedIcon } from "lucide-react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
 import MenuItemCard from "./MenuItemCard";

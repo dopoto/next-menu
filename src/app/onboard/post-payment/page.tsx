@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { CookieKey } from "~/app/_domain/cookies";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 
 type SearchParams = Promise<
   Record<"session_id", string | string[] | undefined>

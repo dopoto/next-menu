@@ -3,7 +3,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { OnboardingStepper } from "../../onboard/_components/OnboardingStepper";
 import { redirect } from "next/navigation";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {
