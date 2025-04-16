@@ -120,7 +120,9 @@ export function AddEditMenuItemForm({
         <div className="flex flex-row gap-2">
           <Button type="submit">Save</Button>
           <a href={ROUTES.menuItems(locationId)}>
-            <Button variant="secondary">Cancel</Button>
+            <Button variant="secondary" type="button">
+              Cancel
+            </Button>
           </a>
         </div>
       </form>
