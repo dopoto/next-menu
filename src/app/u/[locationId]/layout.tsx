@@ -20,9 +20,11 @@ type Params = Promise<{ locationId: string }>;
 
 export default async function Layout({
   params,
+  breadcrumb,
   children,
 }: {
   params: Params;
+  breadcrumb: React.ReactNode;
   children: React.ReactNode;
 }) {
   // TODO all basic checks
@@ -43,7 +45,8 @@ export default async function Layout({
           <div className="flex items-center gap-2 px-4">
             <SidebarTrigger className="-ml-1" />
             <Separator orientation="vertical" className="mr-2 h-4!" />
-            <PageBreadcrumb locationId={locationValidationResult.data} />
+            {breadcrumb}
+            {/* <PageBreadcrumb locationId={locationValidationResult.data} /> */}
           </div>
           <div className="ml-auto px-4">
             <ThemeSwitch />
