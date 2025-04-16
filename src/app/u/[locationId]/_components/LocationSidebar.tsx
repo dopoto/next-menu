@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
 import {
     Sidebar,
     SidebarContent,
@@ -17,6 +16,7 @@ import {
     SidebarMenuItem,
     SidebarRail,
 } from '~/components/ui/sidebar';
+import { type LocationId } from '~/lib/location';
 import { type UserRouteFn } from '~/lib/routes';
 import { MENU_TREE } from '../../../../lib/nav';
 import { SidebarLocationManager } from './SidebarLocationManager';

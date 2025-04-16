@@ -1,5 +1,5 @@
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
 import { Button } from '~/components/ui/button';
+import { type LocationId } from '~/lib/location';
 import { type MenuItem } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 

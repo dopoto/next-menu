@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import { getValidLocationIdOrThrow } from '~/app/_utils/location-utils';
+import { getValidLocationIdOrThrow } from '~/lib/location';
 import LoadingSection from '../_components/LoadingSection';
 import { MenusItemsList } from './_components/MenuItemsList';
 

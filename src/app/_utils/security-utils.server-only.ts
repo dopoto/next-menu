@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
 import { AppError } from '~/lib/error-utils.server';
+import { type LocationId } from '~/lib/location';
 import { getLocation } from '~/server/queries/location';
 
 /**

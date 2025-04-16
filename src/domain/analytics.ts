@@ -1,4 +1,4 @@
-import { type LocationSlug } from '~/app/u/[locationId]/_domain/locations';
+import { type LocationSlug } from '~/lib/location';
 
 /**
  * NOTE: Each field (E.G. "orgId", "locationSlug") needs to be configured

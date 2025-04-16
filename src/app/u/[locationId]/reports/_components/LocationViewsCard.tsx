@@ -1,9 +1,9 @@
 import { auth } from '@clerk/nextjs/server';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
 import { GenericReportsCard } from '~/app/u/[locationId]/reports/_components/GenericReportsCard';
 import { getViews } from '~/app/u/[locationId]/reports/_utils/posthog-utils';
 import { Skeleton } from '~/components/ui/skeleton';
 import { AppError } from '~/lib/error-utils.server';
+import { type LocationId } from '~/lib/location';
 import { ROUTES } from '~/lib/routes';
 
 export async function LocationViewsCard(props: { mode: 'regular' | 'placeholder' | 'locked'; locationId: LocationId }) {

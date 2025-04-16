@@ -1,8 +1,8 @@
 import { auth } from '@clerk/nextjs/server';
 import { exists } from 'drizzle-orm';
 import 'server-only';
-import { type LocationId, type LocationSlug } from '~/app/u/[locationId]/_domain/locations';
 import { AppError } from '~/lib/error-utils.server';
+import { type LocationId, type LocationSlug } from '~/lib/location';
 import { db } from '~/server/db';
 import { customers, type Location, type Menu } from '~/server/db/schema';
 

@@ -1,7 +1,7 @@
 import { CirclePlusIcon, UtensilsCrossedIcon } from 'lucide-react';
 import Link from 'next/link';
 import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
+import { type LocationId } from '~/lib/location';
 import { ROUTES } from '~/lib/routes';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import MenuItemCard from './MenuItemCard';
