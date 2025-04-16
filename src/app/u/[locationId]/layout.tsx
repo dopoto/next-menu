@@ -11,7 +11,7 @@ import { PageBreadcrumb } from "./_components/PageBreadcrumb";
 import Link from "next/link";
 import { House, MessageCircleQuestion } from "lucide-react";
 import { AppVersion } from "~/app/_components/AppVersion";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import { locationIdSchema } from "~/app/u/[locationId]/_domain/locations";
 import { AppError } from "~/lib/error-utils.server";

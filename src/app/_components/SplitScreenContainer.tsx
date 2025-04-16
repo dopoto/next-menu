@@ -7,7 +7,7 @@ import SvgIcon from "./SvgIcons";
 import { SignedIn, UserButton } from "@clerk/nextjs";
 import React from "react";
 import { AppVersion } from "./AppVersion";
-import { ROUTES } from "../_domain/routes";
+import { ROUTES } from "../../lib/routes";
 
 //TODO Fix <p> widths
 

@@ -1,10 +1,10 @@
 import { CirclePlusIcon, UtensilsCrossedIcon } from "lucide-react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
-import { getMenuItemsByLocation } from "~/server/queries/location";
 import MenuItemCard from "./MenuItemCard";
 import Link from "next/link";
+import { getMenuItemsByLocation } from "~/server/queries/menu-items";
 
 export async function MenusItemsList(props: { locationId: LocationId }) {
   const items = await getMenuItemsByLocation(props.locationId);
@@ -25,7 +25,11 @@ export async function MenusItemsList(props: { locationId: LocationId }) {
         />
       )}
       {items.map((menuItem) => (
-        <MenuItemCard key={menuItem.id} item={menuItem} />
+        <MenuItemCard
+          key={menuItem.id}
+          locationId={props.locationId}
+          item={menuItem}
+        />
       ))}
     </div>
   );

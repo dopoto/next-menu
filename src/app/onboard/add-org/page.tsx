@@ -11,7 +11,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { OrgCreated } from "../_components/OrgCreated";
 import * as React from "react";
-import { ROUTES, type AppRouteKey } from "~/app/_domain/routes";
+import { ROUTES, type AppRouteKey } from "~/lib/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 
 export const metadata = {

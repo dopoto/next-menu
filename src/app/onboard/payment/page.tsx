@@ -6,7 +6,7 @@ import { CookieKey } from "~/app/_domain/cookies";
 import { getValidPaidPriceTier } from "~/app/_utils/price-tier-utils";
 import { CheckoutForm } from "../_components/CheckoutForm";
 import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { APP_CONFIG } from "~/app/_config/app-config";
 import * as React from "react";
 import { AppError } from "~/lib/error-utils.server";

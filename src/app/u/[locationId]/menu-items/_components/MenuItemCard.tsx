@@ -1,7 +1,18 @@
-import { type MenuItem } from "~/server/db/schema";
+import { type MenuItem } from "~/lib/menu-items";
+import { ROUTES } from "~/lib/routes";
+import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
+import { Button } from "~/components/ui/button";
 
-export default function MenuItemCard(props: { item: MenuItem }) {
+export default function MenuItemCard(props: {
+  locationId: LocationId;
+  item: MenuItem;
+}) {
   return (
-    <div className="w-full rounded-sm border-1 p-2">{props.item.name}</div>
+    <div className="flex w-full flex-col rounded-sm border-1 p-2">
+      <div>{props.item.name}</div>
+      <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)}>
+        <Button>Edit</Button>
+      </a>
+    </div>
   );
 }

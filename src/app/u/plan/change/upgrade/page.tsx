@@ -13,7 +13,7 @@ import {
 } from "~/app/_utils/price-tier-utils";
 import { changePlanUpgradeCreateCheckoutSession } from "~/app/_utils/stripe-utils";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { AppError } from "~/lib/error-utils.server";
 
 type SearchParams = Promise<Record<"toTierId", string | undefined>>;

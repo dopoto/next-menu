@@ -1,6 +1,6 @@
 import React from "react";
 import { getAppVersion } from "../_utils/app-version-utils";
-import { ROUTES } from "../_domain/routes";
+import { ROUTES } from "../../lib/routes";
 import Link from "next/link";
 
 export function AppVersion() {

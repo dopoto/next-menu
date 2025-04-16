@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { Labeled } from "~/app/_components/Labeled";
 import { OverviewCard } from "~/app/_components/OverviewCard";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { Button } from "~/components/ui/button";
 

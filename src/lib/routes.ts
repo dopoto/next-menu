@@ -1,8 +1,9 @@
+import { type MenuItemId } from "~/lib/menu-items";
 import {
   type LocationId,
   type LocationSlug,
-} from "../u/[locationId]/_domain/locations";
-import type { PriceTierId } from "./price-tiers";
+} from "../app/u/[locationId]/_domain/locations";
+import type { PriceTierId } from "../app/_domain/price-tiers";
 
 type PlanChangeType =
   | "free-to-paid"
@@ -38,6 +39,8 @@ export const ROUTES = {
   menusAdd: (locationId: LocationId) => `/u/${locationId}/menus/add`,
   menuItems: (locationId: LocationId) => `/u/${locationId}/menu-items`,
   menuItemsAdd: (locationId: LocationId) => `/u/${locationId}/menu-items/add`,
+  menuItemsEdit: (locationId: LocationId, menuItemId: MenuItemId) =>
+    `/u/${locationId}/menu-items/edit/${menuItemId}`,
 
   // PLAN
   changePlan: "/u/plan/change",

@@ -2,7 +2,8 @@
 
 A sample Next.js application that allows restaurant and bar owners to generate QR-powered digital menus.
 
-## Stack 
+## Stack
+
 - [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 - Next.js 15 App router
 - shadcn
@@ -13,13 +14,13 @@ A sample Next.js application that allows restaurant and bar owners to generate Q
 ## Features
 
 ### Onboarding process
+
 Users sign up with Clerk, create an organization and go through the initial setup of their account (they must add a location to complete the onboarding).
 
-If a non-free plan is selected, users need to go throutgh an additional Pay with Stripe step during onboarding. 
-
-Once the onboarding is completed, custom public metadata is saved to their Clerk JWT token.
+If a non-free plan is selected, users need to go through an additional 'Pay with Stripe' step during onboarding.
 
 ### Dashboard
+
 Signed in users have access to a dashboard where they can manage their location and menus.
 
 ## Demo

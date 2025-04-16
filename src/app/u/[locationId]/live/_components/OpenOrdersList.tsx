@@ -1,5 +1,5 @@
 import { LayoutDashboard } from "lucide-react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { getUsedFeatureQuota } from "~/app/_utils/quota-utils.server-only";
 import { EmptyState } from "~/app/u/[locationId]/_components/EmptyState";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";

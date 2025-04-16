@@ -88,7 +88,7 @@ export const menuItems = createTable(
     name: varchar("name", { length: 256 }),
     description: varchar("description", { length: 256 }),
     price: decimal("price").notNull(),
-    isNew: boolean("is_new").default(false),
+    isNew: boolean("is_new").default(false).notNull(),
     createdAt: timestamp("created_at", { withTimezone: true })
       .default(sql`CURRENT_TIMESTAMP`)
       .notNull(),
@@ -108,6 +108,3 @@ export type NewLocation = InferInsertModel<typeof locations>;
 
 export type Menu = InferSelectModel<typeof menus>;
 export type NewMenu = InferInsertModel<typeof menus>;
-
-export type MenuItem = InferSelectModel<typeof menuItems>;
-export type NewMenuItem = InferInsertModel<typeof menuItems>;

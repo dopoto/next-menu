@@ -1,7 +1,7 @@
 import { CloudAlert } from "lucide-react";
 import Link from "next/link";
 import React from "react";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { Button } from "~/components/ui/button";
 
 export function NoQuotaLeft(props: { title: string }) {

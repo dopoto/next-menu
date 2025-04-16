@@ -23,7 +23,7 @@ import {
   type StripeSubscriptionId,
 } from "~/app/_domain/stripe";
 import { getExceededFeatures } from "~/app/_utils/price-tier-utils.server-only";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { AppError } from "~/lib/error-utils.server";
 
 const apiKey = env.STRIPE_SECRET_KEY;

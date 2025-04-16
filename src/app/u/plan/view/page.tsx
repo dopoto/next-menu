@@ -6,7 +6,7 @@ import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
 import { SubscriptionDetails } from "~/app/_components/SubscriptionDetails";
 import { type PriceTierFeatureUsage } from "~/app/_domain/price-tier-usage";
 import { type PriceTier } from "~/app/_domain/price-tiers";
-import { ROUTES } from "~/app/_domain/routes";
+import { ROUTES } from "~/lib/routes";
 import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
 import { getAvailableFeatureQuota } from "~/app/_utils/quota-utils.server-only";
 import { obj2str } from "~/app/_utils/string-utils";
