@@ -17,7 +17,9 @@ export default async function AddMenuItemPage(props: { params: Params }) {
 
   if (availableQuota <= 0) {
     return (
-      <NoQuotaLeft title={"No more menu items in your current quota..."} />
+      <NoQuotaLeft
+        title={"You have used all menu items available in your current plan"}
+      />
     );
   }
 
