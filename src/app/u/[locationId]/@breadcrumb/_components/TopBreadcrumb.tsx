@@ -1,7 +1,6 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { menuTree } from "../_domain/menu-sections";
+import { usePathname, useParams } from "next/navigation";
 import { HomeIcon } from "lucide-react";
 import {
   Breadcrumb,
@@ -9,32 +8,22 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbSeparator,
-  BreadcrumbPage,
+  BreadcrumbPage as BreadcrumbPageComponent,
 } from "~/components/ui/breadcrumb";
 import React from "react";
 import { ROUTES, type UserRouteFn } from "~/lib/routes";
-import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
-import { findMenuItemByPath, getBreadcrumbPath } from "~/app/_utils/menu-utils";
+import { NavItem } from "~/lib/nav";
+import { LocationId } from "~/app/u/[locationId]/_domain/locations";
 
-export function PageBreadcrumb(props: { locationId: LocationId }) {
-  const pathname = usePathname();
-
-  const currentMenuItem = findMenuItemByPath(
-    menuTree,
-    pathname,
-    props.locationId,
-  );
-
-  const breadcrumbPath = currentMenuItem
-    ? getBreadcrumbPath(menuTree, currentMenuItem.id).filter(
-        (item) => item.id !== "ROOT",
-      )
-    : [];
-
+export function TopBreadcrumb(props: {
+  items: NavItem[];
+  currentItem?: NavItem;
+  locationId: LocationId;
+}) {
   return (
     <Breadcrumb>
       <BreadcrumbList>
-        {currentMenuItem?.route && (
+        {props.currentItem?.route && (
           <>
             <BreadcrumbItem className="hidden md:block">
               <BreadcrumbLink href={ROUTES.my}>
@@ -44,15 +33,17 @@ export function PageBreadcrumb(props: { locationId: LocationId }) {
             <BreadcrumbSeparator className="hidden md:block" />
           </>
         )}
-        {breadcrumbPath.map((item, index) => {
-          const isLast = index === breadcrumbPath.length - 1;
+        {props.items.map((item, index) => {
+          const isLast = index === props.items.length - 1;
           if (!item.title) return null;
 
           return (
             <React.Fragment key={item.id}>
               <BreadcrumbItem>
                 {isLast ? (
-                  <BreadcrumbPage>{item.title}</BreadcrumbPage>
+                  <BreadcrumbPageComponent className="capitalize">
+                    {item.title}
+                  </BreadcrumbPageComponent>
                 ) : (
                   item.route && (
                     <BreadcrumbLink

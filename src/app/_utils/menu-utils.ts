@@ -1,12 +1,12 @@
 import { type UserRouteFn } from "~/lib/routes";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
-import { type menuTree } from "~/app/u/[locationId]/_domain/menu-sections";
+import { type MENU_TREE } from "~/lib/nav";
 
 export function findMenuItemByPath(
-  node: typeof menuTree,
+  node: typeof MENU_TREE,
   pathname: string,
   locationId: LocationId,
-): typeof menuTree | undefined {
+): typeof MENU_TREE | undefined {
   if (node.route) {
     const itemFn = node.route as UserRouteFn;
     if (itemFn(locationId) === pathname) {
@@ -25,10 +25,10 @@ export function findMenuItemByPath(
 }
 
 export function getBreadcrumbPath(
-  tree: typeof menuTree,
+  tree: typeof MENU_TREE,
   targetId: string,
-  path: (typeof menuTree)[] = [],
-): (typeof menuTree)[] {
+  path: (typeof MENU_TREE)[] = [],
+): (typeof MENU_TREE)[] {
   if (tree.id === targetId) {
     return [...path, tree];
   }

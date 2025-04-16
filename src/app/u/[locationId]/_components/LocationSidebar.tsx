@@ -18,7 +18,7 @@ import { SidebarLocationManager } from "./SidebarLocationManager";
 import { SidebarUserManager } from "./SidebarUserManager";
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
-import { menuTree } from "../_domain/menu-sections";
+import { MENU_TREE } from "../../../../lib/nav";
 import { SidebarOrganizationManager } from "./SidebarOrganizationManager";
 import { type UserRouteFn } from "~/lib/routes";
 import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
@@ -32,7 +32,7 @@ export function LocationSidebar({
 
   const isActive = (
     route: string,
-    children?: typeof menuTree.children,
+    children?: typeof MENU_TREE.children,
   ): boolean => {
     if (pathname === route || `${pathname}/` === route) return true;
     if (!children) return false;
@@ -49,9 +49,9 @@ export function LocationSidebar({
   };
 
   const dashboardMenuSection =
-    menuTree.children?.find((i) => i.id === "dashboard")?.children ?? [];
+    MENU_TREE.children?.find((i) => i.id === "dashboard")?.children ?? [];
   const locationManagerMenuSection =
-    menuTree.children?.find((i) => i.id === "locationManager")?.children ?? [];
+    MENU_TREE.children?.find((i) => i.id === "locationManager")?.children ?? [];
 
   return (
     <Sidebar collapsible="icon" {...props}>
