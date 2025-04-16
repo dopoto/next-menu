@@ -1,46 +1,44 @@
-import { SplitScreenContainer } from "~/app/_components/SplitScreenContainer";
-import { OnboardingStepper } from "../_components/OnboardingStepper";
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { getValidPriceTier } from "~/app/_utils/price-tier-utils";
-import { Overview } from "../_components/Overview";
-import { ROUTES } from "~/lib/routes";
-import { SuccessAnimation } from "~/app/_components/SuccessAnimation";
-import { APP_CONFIG } from "~/app/_config/app-config";
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
+import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { SuccessAnimation } from '~/app/_components/SuccessAnimation';
+import { APP_CONFIG } from '~/app/_config/app-config';
+import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
+import { ROUTES } from '~/lib/routes';
+import { OnboardingStepper } from '../_components/OnboardingStepper';
+import { Overview } from '../_components/Overview';
 
 export const metadata = {
-  title: `${APP_CONFIG.appName} - Onboard > Overview`,
+    title: `${APP_CONFIG.appName} - Onboard > Overview`,
 };
 
 export default async function OverviewPage() {
-  const { userId, sessionClaims } = await auth();
-  if (!userId) {
-    redirect(ROUTES.signUp);
-  }
+    const { userId, sessionClaims } = await auth();
+    if (!userId) {
+        redirect(ROUTES.signUp);
+    }
 
-  const priceTierId = sessionClaims?.metadata?.tier;
-  const parsedTier = getValidPriceTier(priceTierId);
+    const priceTierId = sessionClaims?.metadata?.tier;
+    const parsedTier = getValidPriceTier(priceTierId);
 
-  if (!parsedTier) {
-    redirect(ROUTES.onboardSelectPlan);
-  }
-  const parsedTierId = parsedTier.id;
+    if (!parsedTier) {
+        redirect(ROUTES.onboardSelectPlan);
+    }
+    const parsedTierId = parsedTier.id;
 
-  return (
-    <>
-      <SplitScreenContainer
-        mainComponent={
-          <>
-            <Overview claims={sessionClaims} />
-          </>
-        }
-        secondaryComponent={
-          <OnboardingStepper currentStep={"overview"} tierId={parsedTierId} />
-        }
-        title={"Welcome!"}
-        subtitle={"Your onboarding is now completed"}
-      ></SplitScreenContainer>
-      <SuccessAnimation />
-    </>
-  );
+    return (
+        <>
+            <SplitScreenContainer
+                mainComponent={
+                    <>
+                        <Overview claims={sessionClaims} />
+                    </>
+                }
+                secondaryComponent={<OnboardingStepper currentStep={'overview'} tierId={parsedTierId} />}
+                title={'Welcome!'}
+                subtitle={'Your onboarding is now completed'}
+            ></SplitScreenContainer>
+            <SuccessAnimation />
+        </>
+    );
 }

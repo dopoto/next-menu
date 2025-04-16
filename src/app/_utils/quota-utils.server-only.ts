@@ -1,75 +1,64 @@
-import "server-only";
-import { priceTierUsageFunctions } from "../_domain/price-tier-usage";
-import { auth } from "@clerk/nextjs/server";
-import { getValidPriceTier } from "./price-tier-utils";
-import { type PriceTierFlagId } from "~/app/_domain/price-tier-flags";
-import { AppError } from "~/lib/error-utils.server";
-import { type PriceTierFeatureId } from "~/app/_domain/price-tier-features";
+import { auth } from '@clerk/nextjs/server';
+import 'server-only';
+import { type PriceTierFeatureId } from '~/app/_domain/price-tier-features';
+import { type PriceTierFlagId } from '~/app/_domain/price-tier-flags';
+import { AppError } from '~/lib/error-utils.server';
+import { priceTierUsageFunctions } from '../_domain/price-tier-usage';
+import { getValidPriceTier } from './price-tier-utils';
 
 /**
  * Returns the number of items included in a feature (E.G. "menus")
  * for the price tier used by the current organization.
  */
-export async function getIncludedQuota(
-  featureId: PriceTierFeatureId,
-): Promise<number> {
-  const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
+export async function getIncludedQuota(featureId: PriceTierFeatureId): Promise<number> {
+    const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
 
-  const parsedTier = getValidPriceTier(priceTierId);
-  if (!parsedTier) {
-    throw new AppError({
-      internalMessage: `Missing or invalid From tier in session claims.`,
-    });
-  }
+    const parsedTier = getValidPriceTier(priceTierId);
+    if (!parsedTier) {
+        throw new AppError({
+            internalMessage: `Missing or invalid From tier in session claims.`,
+        });
+    }
 
-  const included =
-    parsedTier.features.find((f) => f.id === featureId)?.quota ?? 0;
+    const included = parsedTier.features.find((f) => f.id === featureId)?.quota ?? 0;
 
-  return included;
+    return included;
 }
 
 /**
  * Returns the number of items used by the current organization in a feature - E.G. "menus".
  */
-export async function getUsedFeatureQuota(
-  featureId: PriceTierFeatureId,
-): Promise<number> {
-  const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
+export async function getUsedFeatureQuota(featureId: PriceTierFeatureId): Promise<number> {
+    const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
 
-  const parsedTier = getValidPriceTier(priceTierId);
-  if (!parsedTier) {
-    throw new AppError({
-      internalMessage: `Missing or invalid tier in session claims.`,
-    });
-  }
+    const parsedTier = getValidPriceTier(priceTierId);
+    if (!parsedTier) {
+        throw new AppError({
+            internalMessage: `Missing or invalid tier in session claims.`,
+        });
+    }
 
-  const usedQuotaFn = priceTierUsageFunctions[featureId];
-  const used = usedQuotaFn ? await usedQuotaFn() : 0;
+    const usedQuotaFn = priceTierUsageFunctions[featureId];
+    const used = usedQuotaFn ? await usedQuotaFn() : 0;
 
-  return used;
+    return used;
 }
 
-export async function getAvailableFeatureQuota(
-  featureId: PriceTierFeatureId,
-): Promise<number> {
-  const included = await getIncludedQuota(featureId);
-  const used = await getUsedFeatureQuota(featureId);
-  const available = included - used;
-  return available;
+export async function getAvailableFeatureQuota(featureId: PriceTierFeatureId): Promise<number> {
+    const included = await getIncludedQuota(featureId);
+    const used = await getUsedFeatureQuota(featureId);
+    const available = included - used;
+    return available;
 }
 
-export async function isFlagAvailableInCurrentTier(
-  flagId: PriceTierFlagId,
-): Promise<boolean> {
-  const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
-  const parsedTier = getValidPriceTier(priceTierId);
-  if (!parsedTier) {
-    throw new AppError({
-      internalMessage: `Missing or invalid From tier in session claims.`,
-    });
-  }
+export async function isFlagAvailableInCurrentTier(flagId: PriceTierFlagId): Promise<boolean> {
+    const priceTierId = (await auth()).sessionClaims?.metadata?.tier;
+    const parsedTier = getValidPriceTier(priceTierId);
+    if (!parsedTier) {
+        throw new AppError({
+            internalMessage: `Missing or invalid From tier in session claims.`,
+        });
+    }
 
-  return parsedTier.flags.find((flag) => flag.id === flagId)?.isEnabled === true
-    ? true
-    : false;
+    return parsedTier.flags.find((flag) => flag.id === flagId)?.isEnabled === true ? true : false;
 }

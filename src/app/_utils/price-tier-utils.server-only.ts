@@ -1,28 +1,24 @@
-import { type ExceededFeature } from "../_domain/price-tier-usage";
-import { priceTiers, type PriceTierId } from "../_domain/price-tiers";
-import { getAvailableFeatureQuota } from "./quota-utils.server-only";
+import { type ExceededFeature } from '../_domain/price-tier-usage';
+import { priceTiers, type PriceTierId } from '../_domain/price-tiers';
+import { getAvailableFeatureQuota } from './quota-utils.server-only';
 
 export async function getExceededFeatures(
-  currentTierId: PriceTierId,
-  candidateTierId: PriceTierId,
+    currentTierId: PriceTierId,
+    candidateTierId: PriceTierId,
 ): Promise<Array<ExceededFeature>> {
-  const featuresInCurrentTierWithUsage = await Promise.all(
-    priceTiers[currentTierId].features.map(async (feature) => {
-      const available = await getAvailableFeatureQuota(feature.id);
-      const candidateQuota =
-        priceTiers[candidateTierId].features.find((cf) => cf.id === feature.id)
-          ?.quota ?? 0;
-      return {
-        id: feature.id,
-        planQuota: feature.quota,
-        available,
-        used: feature.quota - available,
-        candidateQuota,
-      };
-    }),
-  );
+    const featuresInCurrentTierWithUsage = await Promise.all(
+        priceTiers[currentTierId].features.map(async (feature) => {
+            const available = await getAvailableFeatureQuota(feature.id);
+            const candidateQuota = priceTiers[candidateTierId].features.find((cf) => cf.id === feature.id)?.quota ?? 0;
+            return {
+                id: feature.id,
+                planQuota: feature.quota,
+                available,
+                used: feature.quota - available,
+                candidateQuota,
+            };
+        }),
+    );
 
-  return featuresInCurrentTierWithUsage.filter(
-    (f) => f.candidateQuota < f.used,
-  );
+    return featuresInCurrentTierWithUsage.filter((f) => f.candidateQuota < f.used);
 }

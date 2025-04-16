@@ -1,77 +1,67 @@
-import * as Sentry from "@sentry/nextjs";
-import {
-  PUBLIC_ERROR_DELIMITER,
-  type PublicErrorId,
-  type PublicErrorMessage,
-} from "~/domain/error-handling";
-import { env } from "~/env";
+import * as Sentry from '@sentry/nextjs';
+import { PUBLIC_ERROR_DELIMITER, type PublicErrorId, type PublicErrorMessage } from '~/domain/error-handling';
+import { env } from '~/env';
 
 export class AppError extends Error {
-  public readonly publicErrorId: PublicErrorId;
-  public readonly publicMessage: string;
-  public digest: string;
-  constructor({
-    error,
-    internalMessage,
-    publicMessage,
-  }: {
-    error?: unknown;
-    internalMessage?: string;
-    publicMessage?: string;
-  }) {
-    const publicErrorId = generateErrorId();
-    const publicMessageOrDefault = publicMessage ?? "Something went wrong";
+    public readonly publicErrorId: PublicErrorId;
+    public readonly publicMessage: string;
+    public digest: string;
+    constructor({
+        error,
+        internalMessage,
+        publicMessage,
+    }: {
+        error?: unknown;
+        internalMessage?: string;
+        publicMessage?: string;
+    }) {
+        const publicErrorId = generateErrorId();
+        const publicMessageOrDefault = publicMessage ?? 'Something went wrong';
 
-    // The only error fields that we can send to the client-side are a string message and a string digest, so
-    // ensure that we form a predefined-format string that can be later parsed by our client-side error.tsx:
-    const pb: PublicErrorMessage = `${publicErrorId}${PUBLIC_ERROR_DELIMITER}${publicMessageOrDefault}`;
+        // The only error fields that we can send to the client-side are a string message and a string digest, so
+        // ensure that we form a predefined-format string that can be later parsed by our client-side error.tsx:
+        const pb: PublicErrorMessage = `${publicErrorId}${PUBLIC_ERROR_DELIMITER}${publicMessageOrDefault}`;
 
-    super(pb);
+        super(pb);
 
-    this.digest = pb;
-    this.publicErrorId = publicErrorId;
-    this.publicMessage = publicMessageOrDefault;
+        this.digest = pb;
+        this.publicErrorId = publicErrorId;
+        this.publicMessage = publicMessageOrDefault;
 
-    logException(error, publicErrorId, internalMessage);
-  }
+        logException(error, publicErrorId, internalMessage);
+    }
 }
 
 export function generateErrorId(): PublicErrorId {
-  const publicErrorId: PublicErrorId = `${Date.now()}-${Math.random()
-    .toString(36)
-    .substring(2, 6)}`;
-  return publicErrorId;
+    const publicErrorId: PublicErrorId = `${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
+    return publicErrorId;
 }
 
-export function logException(
-  error: unknown,
-  errorClientSideId: string,
-  internalMessage?: string,
-) {
-  console.log(env.NEXT_PUBLIC_LOG_TO_CONSOLE);
-  console.log(env.NEXT_PUBLIC_LOG_TO_SENTRY);
+export function logException(error: unknown, errorClientSideId: string, internalMessage?: string) {
+    console.log(env.NEXT_PUBLIC_LOG_TO_CONSOLE);
+    console.log(env.NEXT_PUBLIC_LOG_TO_SENTRY);
 
-  if (env.NEXT_PUBLIC_LOG_TO_CONSOLE === "yes") {
-    const errorString = `[APP_ERROR] 
+    if (env.NEXT_PUBLIC_LOG_TO_CONSOLE === 'yes') {
+        const errorString = `[APP_ERROR] 
       ${errorClientSideId}
       ${internalMessage}
       ${error?.toString()}`;
-    console.error(errorString);
-  }
+        console.error(errorString);
+    }
 
-  if (env.NEXT_PUBLIC_LOG_TO_SENTRY === "yes") {
-    Sentry.withScope((scope) => {
-      scope.setTag("errorClientSideId", errorClientSideId);
-      if (internalMessage) {
-        scope.setTag("internalMessage", toSentryTagValue(internalMessage));
-      }
-      Sentry.captureException(error);
-    });
-  }
+    if (env.NEXT_PUBLIC_LOG_TO_SENTRY === 'yes') {
+        Sentry.withScope((scope) => {
+            scope.setTag('errorClientSideId', errorClientSideId);
+            if (internalMessage) {
+                scope.setTag('internalMessage', toSentryTagValue(internalMessage));
+            }
+            Sentry.captureException(error);
+        });
+    }
 }
 
 const toSentryTagValue = (input: string) => {
-  return input.replace(/\n/g, "");
+    return input.replace(/\n/g, '');
 };
 
 // Helper function to wrap server functions

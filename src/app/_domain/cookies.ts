@@ -1,4 +1,4 @@
 export enum CookieKey {
-  OnboardPlan = "onboard-plan",
-  MachineId = "mach",
+    OnboardPlan = 'onboard-plan',
+    MachineId = 'mach',
 }
