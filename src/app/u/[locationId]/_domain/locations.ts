@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const locationIdSchema = z.coerce.number().positive().int();
 export type LocationId = z.infer<typeof locationIdSchema>;

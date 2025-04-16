@@ -1,8 +1,8 @@
-import "server-only";
-import { auth } from "@clerk/nextjs/server";
-import { AppError } from "~/lib/error-utils.server";
-import { type LocationId } from "~/app/u/[locationId]/_domain/locations";
-import { getLocation } from "~/server/queries/location";
+import { auth } from '@clerk/nextjs/server';
+import 'server-only';
+import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
+import { AppError } from '~/lib/error-utils.server';
+import { getLocation } from '~/server/queries/location';
 
 /**
  * Checks if the user is authenticated and returns the user ID.
@@ -10,11 +10,11 @@ import { getLocation } from "~/server/queries/location";
  * @returns The user ID of the authenticated user.
  */
 export async function validateUserOrThrow(): Promise<string> {
-  const { userId } = await auth();
-  if (!userId) {
-    throw new AppError({ internalMessage: "Unauthorized" });
-  }
-  return userId;
+    const { userId } = await auth();
+    if (!userId) {
+        throw new AppError({ internalMessage: 'Unauthorized' });
+    }
+    return userId;
 }
 
 /**
@@ -23,12 +23,12 @@ export async function validateUserOrThrow(): Promise<string> {
  * @returns The Org Id.
  */
 export async function validateOrganizationOrThrow(): Promise<string> {
-  const { sessionClaims } = await auth();
-  const orgId = sessionClaims?.org_id;
-  if (!orgId) {
-    throw new AppError({ internalMessage: "No organization ID found" });
-  }
-  return orgId;
+    const { sessionClaims } = await auth();
+    const orgId = sessionClaims?.org_id;
+    if (!orgId) {
+        throw new AppError({ internalMessage: 'No organization ID found' });
+    }
+    return orgId;
 }
 
 /**
@@ -37,14 +37,14 @@ export async function validateOrganizationOrThrow(): Promise<string> {
  * @returns The valid Location Id.
  */
 export async function validateLocationOrThrow(
-  locationId: LocationId,
-  organizationId: string,
-  userId: string,
+    locationId: LocationId,
+    organizationId: string,
+    userId: string,
 ): Promise<LocationId> {
-  const validLocationId = await getLocation(locationId, organizationId, userId);
-  if (!validLocationId) {
-    const internalMessage = `Location not found. Location ID: ${locationId}, Org ID: ${organizationId}, User ID: ${userId}`;
-    throw new AppError({ internalMessage });
-  }
-  return validLocationId;
+    const validLocationId = await getLocation(locationId, organizationId, userId);
+    if (!validLocationId) {
+        const internalMessage = `Location not found. Location ID: ${locationId}, Org ID: ${organizationId}, User ID: ${userId}`;
+        throw new AppError({ internalMessage });
+    }
+    return validLocationId;
 }

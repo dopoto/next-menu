@@ -1,7 +1,6 @@
-export const PUBLIC_ERROR_DELIMITER = "|";
+export const PUBLIC_ERROR_DELIMITER = '|';
 export type PublicErrorId = `${number}-${string}`;
-export type PublicErrorMessage =
-  `${PublicErrorId}${typeof PUBLIC_ERROR_DELIMITER}${string}`;
+export type PublicErrorMessage = `${PublicErrorId}${typeof PUBLIC_ERROR_DELIMITER}${string}`;
 
 /**
  * In production builds, Next.js strips server-side errors before sending them to the client. All
@@ -16,5 +15,5 @@ export type PublicErrorMessage =
  * where we then parse it.
  */
 export type PublicError = Error & {
-  digest?: PublicErrorMessage;
+    digest?: PublicErrorMessage;
 };

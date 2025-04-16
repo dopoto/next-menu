@@ -1,4 +1,4 @@
-import { type LocationSlug } from "~/app/u/[locationId]/_domain/locations";
+import { type LocationSlug } from '~/app/u/[locationId]/_domain/locations';
 
 /**
  * NOTE: Each field (E.G. "orgId", "locationSlug") needs to be configured
@@ -7,18 +7,18 @@ import { type LocationSlug } from "~/app/u/[locationId]/_domain/locations";
  * - added as an Event Parameter in the GA4 event
  */
 export interface AnalyticsEventMap {
-  /**
-   * Fired when the /p/[locationSlug] is accessed.
-   */
-  publicLocationVisit: {
-    orgId: string;
-    locationSlug: LocationSlug;
-  };
+    /**
+     * Fired when the /p/[locationSlug] is accessed.
+     */
+    publicLocationVisit: {
+        orgId: string;
+        locationSlug: LocationSlug;
+    };
 }
 
 export type AnalyticsEventId = keyof AnalyticsEventMap;
 
 export interface AnalyticsEventSenderProps<T extends AnalyticsEventId> {
-  eventId: T;
-  payload: AnalyticsEventMap[T];
+    eventId: T;
+    payload: AnalyticsEventMap[T];
 }
