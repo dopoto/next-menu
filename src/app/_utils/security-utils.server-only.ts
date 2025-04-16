@@ -9,7 +9,7 @@ import { getLocation } from "~/server/queries/location";
  * Throws an error if the user is not authenticated.
  * @returns The user ID of the authenticated user.
  */
-export async function validateUser(): Promise<string> {
+export async function validateUserOrThrow(): Promise<string> {
   const { userId } = await auth();
   if (!userId) {
     throw new AppError({ internalMessage: "Unauthorized" });
@@ -22,7 +22,7 @@ export async function validateUser(): Promise<string> {
  * Throws an error if the  Org Id is missing.
  * @returns The Org Id.
  */
-export async function validateOrganization(): Promise<string> {
+export async function validateOrganizationOrThrow(): Promise<string> {
   const { sessionClaims } = await auth();
   const orgId = sessionClaims?.org_id;
   if (!orgId) {
@@ -36,7 +36,7 @@ export async function validateOrganization(): Promise<string> {
  * Throws an error if that's not the case.
  * @returns The valid Location Id.
  */
-export async function validateLocation(
+export async function validateLocationOrThrow(
   locationId: LocationId,
   organizationId: string,
   userId: string,
