@@ -11,7 +11,7 @@ import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
 import { LocationSidebar } from './_components/LocationSidebar';
 
-type Params = Promise<{ locationId: string }>;
+export type Params = Promise<{ locationId: string }>;
 
 export default async function Layout({
     params,

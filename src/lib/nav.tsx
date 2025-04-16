@@ -74,22 +74,22 @@ export const NAV_ITEMS: Record<RouteId, NavItem> = {
 };
 
 export const MENU_TREE: NavItem = {
-    ...NAV_ITEMS['ROOT'],
+    ...NAV_ITEMS.ROOT,
     children: [
         {
-            ...NAV_ITEMS['dashboard'],
-            children: [NAV_ITEMS['live'], NAV_ITEMS['reports']],
+            ...NAV_ITEMS.dashboard,
+            children: [NAV_ITEMS.live, NAV_ITEMS.reports],
         },
         {
-            ...NAV_ITEMS['locationManager'],
+            ...NAV_ITEMS.locationManager,
             children: [
                 {
-                    ...NAV_ITEMS['menus'],
-                    children: [NAV_ITEMS['menusAdd']],
+                    ...NAV_ITEMS.menus,
+                    children: [NAV_ITEMS.menusAdd],
                 },
                 {
-                    ...NAV_ITEMS['menuItems'],
-                    children: [NAV_ITEMS['menuItemsAdd']],
+                    ...NAV_ITEMS.menuItems,
+                    children: [NAV_ITEMS.menuItemsAdd],
                 },
             ],
         },
