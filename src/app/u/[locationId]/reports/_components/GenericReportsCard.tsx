@@ -37,8 +37,8 @@ export function GenericReportsCard(props: {
 
             <div className="bg-background/50 absolute inset-1 flex items-center justify-center backdrop-blur-[1px]">
               <div className="p-3 text-center">
-                <CrownIcon className="mx-auto mb-2 h-8 w-8 text-amber-500" />
-                <h3 className="mb-1 text-lg font-medium">
+                <CrownIcon className="mx-auto mb-2 h-8 w-8 text-amber-700" />
+                <h3 className="mb-1 text-lg font-medium text-amber-700">
                   Not available in your plan
                 </h3>
                 <p className="text-muted-foreground mb-4 text-sm">
