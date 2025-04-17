@@ -8,7 +8,7 @@ import { editMenuItem } from '~/app/actions/editMenuItem';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { toast } from '~/hooks/use-toast';
-import { handleFormErrors } from '~/lib/form-state';
+import { handleReactHookFormErrors } from '~/lib/form-state';
 import { type LocationId } from '~/lib/location';
 import { type MenuItem, menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
@@ -32,7 +32,7 @@ export function EditMenuItem(props: { locationId: LocationId; menuItem: MenuItem
             toast({ title: `Menu item updated` });
             router.push(ROUTES.menuItems(props.locationId));
         } else {
-            handleFormErrors(form, res);
+            handleReactHookFormErrors(form, res);
         }
     }
 

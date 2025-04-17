@@ -15,7 +15,7 @@ export const menuItemFormSchema = z.object({
             required_error: 'Name is required',
         })
         .min(2, 'Name must be at least 2 characters')
-        .max(256, 'Name must be at most 256 characters'),
+        .max(10, 'Name must be at most 10 characters'),
     description: z.string().max(256, 'Description must be at most 256 characters').optional(),
     price: z
         .number({

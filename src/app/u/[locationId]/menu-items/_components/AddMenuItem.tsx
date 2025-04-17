@@ -8,7 +8,7 @@ import { addMenuItem } from '~/app/actions/addMenuItem';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { toast } from '~/hooks/use-toast';
-import { handleFormErrors } from '~/lib/form-state';
+import { handleReactHookFormErrors } from '~/lib/form-state';
 import { type LocationId } from '~/lib/location';
 import { menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
@@ -32,7 +32,7 @@ export function AddMenuItem(props: { locationId: LocationId }) {
             toast({ title: `Menu item added` });
             router.push(ROUTES.menuItems(props.locationId));
         } else {
-            handleFormErrors(form, res);
+            handleReactHookFormErrors(form, res);
         }
     }
 

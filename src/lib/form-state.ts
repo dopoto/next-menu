@@ -62,7 +62,7 @@ export function processFormErrors<TSchema extends z.ZodType>(
 /**
  * Helper function to handle form errors in react-hook-form components
  */
-export function handleFormErrors<TSchema extends z.ZodType>(
+export function handleReactHookFormErrors<TSchema extends z.ZodType>(
     form: UseFormReturn<z.infer<TSchema>>,
     formState: FormState<TSchema>,
 ) {
