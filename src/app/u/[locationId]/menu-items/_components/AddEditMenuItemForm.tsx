@@ -4,9 +4,9 @@ import { DeviceMockup } from '~/app/_components/DeviceMockup';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
-import { Checkbox } from '~/components/ui/checkbox';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
+import { Switch } from '~/components/ui/switch';
 import { type LocationId } from '~/lib/location';
 import { menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
@@ -37,6 +37,19 @@ export function AddEditMenuItemForm({
 
                     <FormField
                         control={form.control}
+                        name="isNew"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>NEW badge</FormLabel>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                <FormDescription>Highlight the item as new on the menu</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
                         name="price"
                         render={({ field }) => (
                             <FormItem>
@@ -54,22 +67,6 @@ export function AddEditMenuItemForm({
                                 </FormControl>
                                 <FormDescription>The price of the menu item</FormDescription>
                                 <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="isNew"
-                        render={({ field }) => (
-                            <FormItem className="flex flex-row items-start space-y-0 space-x-3">
-                                <FormControl>
-                                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                                </FormControl>
-                                <div className="space-y-1 leading-none">
-                                    <FormLabel>Mark as new</FormLabel>
-                                    <FormDescription>This will highlight the item as new on the menu</FormDescription>
-                                </div>
                             </FormItem>
                         )}
                     />
