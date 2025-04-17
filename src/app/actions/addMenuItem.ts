@@ -27,6 +27,7 @@ export async function addMenuItem(
     try {
         await createMenuItem(parsed.data);
         revalidatePath(ROUTES.menuItems(parsed.data.locationId));
+        // TODO revalidate public path
         return { status: 'success' };
     } catch (error) {
         return {

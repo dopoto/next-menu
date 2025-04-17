@@ -1,7 +1,7 @@
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
 import { DeviceMockup } from '~/app/_components/DeviceMockup';
-import { ReactHookFormLabelWithCharCounter } from '~/components/forms/ReactHookFormLabelWithCharCounter';
+import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
 import { Checkbox } from '~/components/ui/checkbox';
@@ -32,47 +32,8 @@ export function AddEditMenuItemForm({
                         </div>
                     )}
 
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <ReactHookFormLabelWithCharCounter
-                                    form={form}
-                                    label={'Name'}
-                                    fieldName={'name'}
-                                    schema={menuItemFormSchema}
-                                />
-                                <FormControl>
-                                    <Input placeholder="Enter the item name" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    The name of your menu item, as it will appear to customers
-                                </FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
-                    <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                            <FormItem>
-                                <ReactHookFormLabelWithCharCounter
-                                    form={form}
-                                    label={'Description'}
-                                    fieldName={'description'}
-                                    schema={menuItemFormSchema}
-                                />
-                                <FormControl>
-                                    <Input placeholder="Enter a description (optional)" {...field} />
-                                </FormControl>
-                                <FormDescription>A brief description of the menu item</FormDescription>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
+                    <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'name'} />
+                    <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'description'} />
 
                     <FormField
                         control={form.control}
