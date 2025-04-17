@@ -4,7 +4,7 @@ import { type MenuItem } from '~/lib/menu-items';
 export function PublicMenuItem(props: { item: Partial<MenuItem> }) {
     const { name, description, price, isNew } = props.item;
     return (
-        <div className="flex w-full flex-row border-t-2 border-b-2 border-dotted border-gray-300 p-2 text-sm">
+        <div className="flex w-full flex-row   p-2 text-sm">
             <div className="flex flex-col">
                 <div className="font-semibold">
                     {name}{' '}

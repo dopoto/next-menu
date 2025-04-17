@@ -1,40 +1,52 @@
-import { EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
-import { Labeled } from '~/app/_components/Labeled';
+import { EllipsisVerticalIcon, EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '~/components/ui/dropdown-menu';
 import { type LocationId } from '~/lib/location';
 import { type MenuItem } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 
 export default function MenuItemCard(props: { locationId: LocationId; item: MenuItem }) {
     return (
-        <div className="g-2 flex w-full flex-col gap-2 rounded-sm border-1 p-2">
-            <div>
-                <PublicMenuItem
-                    item={{
-                        name: props.item.name,
-                        description: props.item.description,
-                        price: props.item.price.toString(),
-                        isNew: props.item.isNew,
-                    }}
-                />
-            </div>
-            <div className="flex w-full">
-                <div>
-                    <Labeled label="Last updated" text={props.item.updatedAt?.toDateString()} />
-                </div>
-                <div className="ml-auto flex gap-2">
-                    <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Preview">
-                        <EyeIcon size="20" />
-                    </a>
-
-                    <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Edit">
-                        <PencilIcon size="20" />
-                    </a>
-
-                    <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Delete">
-                        <Trash2Icon size="20" className="stroke-red-500" />
-                    </a>
-                </div>
+        <div className="g-2 flex w-full flex-row gap-2   p-2">
+            <PublicMenuItem
+                item={{
+                    name: props.item.name,
+                    description: props.item.description,
+                    price: props.item.price.toString(),
+                    isNew: props.item.isNew,
+                }}
+            />
+            <div className="mx-auto flex items-center">
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                        <EllipsisVerticalIcon />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent className="w-56">
+                        <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Edit">
+                            <DropdownMenuItem>
+                                <PencilIcon />
+                                <span>Edit</span>
+                            </DropdownMenuItem>
+                        </a>
+                        <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Preview">
+                            <DropdownMenuItem>
+                                <EyeIcon />
+                                <span>Preview</span>
+                            </DropdownMenuItem>
+                        </a>
+                        <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Delete">
+                            <DropdownMenuItem>
+                                <Trash2Icon className="text-red-500" />
+                                <span className="text-red-500">Delete</span>
+                            </DropdownMenuItem>
+                        </a>
+                    </DropdownMenuContent>
+                </DropdownMenu>
             </div>
         </div>
     );
