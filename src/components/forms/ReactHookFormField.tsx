@@ -1,7 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 
-import { type UseFormReturn } from 'react-hook-form';
 import { type ZodObject, ZodOptional, type ZodRawShape, type ZodString } from 'zod';
 import { ReactHookFormLabelWithCharCounter } from '~/components/forms/ReactHookFormLabelWithCharCounter';
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '~/components/ui/form';
@@ -12,7 +12,7 @@ function getMaxLength(schema?: ZodString | ZodOptional<ZodString>): number {
     return stringSchema?._def?.checks?.find((check) => check.kind === 'max')?.value ?? 0;
 }
 
-export function ReactHookFormField(props: { schema: ZodObject<ZodRawShape>; form: UseFormReturn; fieldName: string }) {
+export function ReactHookFormField(props: { schema: ZodObject<ZodRawShape>; form: any; fieldName: string }) {
     const { schema, form, fieldName } = props;
 
     const shape = props.schema.shape[props.fieldName];
