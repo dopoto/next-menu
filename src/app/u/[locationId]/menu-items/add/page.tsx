@@ -1,8 +1,8 @@
 import { Suspense } from 'react';
-import { getValidLocationIdOrThrow } from '~/app/_utils/location-utils';
 import { getAvailableFeatureQuota } from '~/app/_utils/quota-utils.server-only';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenuItem } from '~/app/u/[locationId]/menu-items/_components/AddMenuItem';
+import { getValidLocationIdOrThrow } from '~/lib/location';
 import LoadingSection from '../../_components/LoadingSection';
 
 type Params = Promise<{ locationId: string }>;

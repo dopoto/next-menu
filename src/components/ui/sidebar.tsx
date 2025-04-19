@@ -2,7 +2,7 @@
 
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
-import { PanelLeftIcon } from 'lucide-react';
+import { PanelLeftCloseIcon, PanelLeftOpenIcon } from 'lucide-react';
 import * as React from 'react';
 
 import { Button } from '~/components/ui/button';
@@ -226,7 +226,7 @@ function Sidebar({
 }
 
 function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<typeof Button>) {
-    const { toggleSidebar } = useSidebar();
+    const { toggleSidebar, open } = useSidebar();
 
     return (
         <Button
@@ -234,6 +234,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
             data-slot="sidebar-trigger"
             variant="ghost"
             size="icon"
+            title={open ? 'Collapse sidebar' : 'Expand sidebar'}
             className={cn('h-7 w-7', className)}
             onClick={(event) => {
                 onClick?.(event);
@@ -241,7 +242,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
             }}
             {...props}
         >
-            <PanelLeftIcon />
+            {open ? <PanelLeftCloseIcon /> : <PanelLeftOpenIcon />}
             <span className="sr-only">Toggle Sidebar</span>
         </Button>
     );
@@ -425,7 +426,7 @@ function SidebarMenuItem({ className, ...props }: React.ComponentProps<'li'>) {
         <li
             data-slot="sidebar-menu-item"
             data-sidebar="menu-item"
-            className={cn('group/menu-item relative', className)}
+            className={cn('group/menu-item flex justify-center items-center relative ', className)}
             {...props}
         />
     );

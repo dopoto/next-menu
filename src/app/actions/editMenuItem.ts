@@ -19,6 +19,7 @@ export async function editMenuItem(
     try {
         await updateMenuItem(menuItemId, parsed.data);
         revalidatePath(ROUTES.menuItems(parsed.data.locationId));
+        // TODO revalidate public path
         return { status: 'success' };
     } catch (error) {
         return {

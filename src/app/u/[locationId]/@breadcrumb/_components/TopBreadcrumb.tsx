@@ -1,6 +1,5 @@
 import { HomeIcon } from 'lucide-react';
-import React from 'react';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
+import { Fragment } from 'react';
 import {
     Breadcrumb,
     BreadcrumbItem,
@@ -9,6 +8,7 @@ import {
     BreadcrumbPage as BreadcrumbPageComponent,
     BreadcrumbSeparator,
 } from '~/components/ui/breadcrumb';
+import { type LocationId } from '~/lib/location';
 import { type NavItem } from '~/lib/nav';
 import { ROUTES, type UserRouteFn } from '~/lib/routes';
 
@@ -31,7 +31,7 @@ export function TopBreadcrumb(props: { items: NavItem[]; currentItem?: NavItem; 
                     if (!item.title) return null;
 
                     return (
-                        <React.Fragment key={item.id}>
+                        <Fragment key={item.id}>
                             <BreadcrumbItem>
                                 {isLast ? (
                                     <BreadcrumbPageComponent className="capitalize">
@@ -46,7 +46,7 @@ export function TopBreadcrumb(props: { items: NavItem[]; currentItem?: NavItem; 
                                 )}
                             </BreadcrumbItem>
                             {!isLast && <BreadcrumbSeparator />}
-                        </React.Fragment>
+                        </Fragment>
                     );
                 })}
             </BreadcrumbList>

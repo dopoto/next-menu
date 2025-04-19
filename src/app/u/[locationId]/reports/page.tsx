@@ -3,19 +3,13 @@ import { Suspense } from 'react';
 import { isFlagAvailableInCurrentTier } from '~/app/_utils/quota-utils.server-only';
 import { LocationViewsCard } from '~/app/u/[locationId]/reports/_components/LocationViewsCard';
 import { AppError } from '~/lib/error-utils.server';
-import { locationIdSchema } from '../_domain/locations';
+import { getValidLocationIdOrThrow } from '~/lib/location';
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function ReportsPage(props: { params: Params }) {
     const params = await props.params;
-    const validationResult = locationIdSchema.safeParse(params.locationId);
-    if (!validationResult.success) {
-        throw new AppError({
-            internalMessage: `Location validation failed. params: ${JSON.stringify(params)}`,
-        });
-    }
-    const parsedLocationId = validationResult.data;
+    const locationId = getValidLocationIdOrThrow(params.locationId);
 
     const { userId, orgId } = await auth();
     if (!userId || !orgId) {
@@ -29,8 +23,8 @@ export default async function ReportsPage(props: { params: Params }) {
 
     return (
         <div>
-            <Suspense fallback={<LocationViewsCard mode="placeholder" locationId={parsedLocationId} />}>
-                <LocationViewsCard mode={mode} locationId={parsedLocationId} />
+            <Suspense fallback={<LocationViewsCard mode="placeholder" locationId={locationId} />}>
+                <LocationViewsCard mode={mode} locationId={locationId} />
             </Suspense>
         </div>
     );

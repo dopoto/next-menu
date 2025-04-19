@@ -1,11 +1,13 @@
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
-import type { LocationId } from '~/app/u/[locationId]/_domain/locations';
+import { PreviewMenuItem } from '~/app/u/[locationId]/menu-items/_components/PreviewMenuItem';
+import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
-import { Checkbox } from '~/components/ui/checkbox';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
-import { type menuItemFormSchema } from '~/lib/menu-items';
+import { Switch } from '~/components/ui/switch';
+import { type LocationId } from '~/lib/location';
+import { menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 
 export function AddEditMenuItemForm({
@@ -18,92 +20,72 @@ export function AddEditMenuItemForm({
     locationId: LocationId;
 }) {
     return (
-        <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                {form.formState.errors.root && (
-                    <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
-                        {form.formState.errors.root.message}
+        <div className="flex flex-col gap-6 lg:flex-row">
+            <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    {form.formState.errors.root && (
+                        <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
+                            {form.formState.errors.root.message}
+                        </div>
+                    )}
+
+                    <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'name'} />
+                    <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'description'} />
+
+                    <FormField
+                        control={form.control}
+                        name="isNew"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>NEW badge</FormLabel>
+                                <Switch checked={field.value} onCheckedChange={field.onChange} />
+                                <FormDescription>Highlight the item as new on the menu</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <FormField
+                        control={form.control}
+                        name="price"
+                        render={({ field }) => (
+                            <FormItem>
+                                <FormLabel>Price</FormLabel>
+                                <FormControl>
+                                    <Input
+                                        type="number"
+                                        step="0.01"
+                                        min="0"
+                                        placeholder="0.00"
+                                        {...field}
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                                    />
+                                </FormControl>
+                                <FormDescription>The price of the menu item</FormDescription>
+                                <FormMessage />
+                            </FormItem>
+                        )}
+                    />
+
+                    <div className="flex flex-row gap-2">
+                        <Button type="submit">Save</Button>
+                        <a href={ROUTES.menuItems(locationId)}>
+                            <Button variant="secondary" type="button">
+                                Cancel
+                            </Button>
+                        </a>
                     </div>
-                )}
-
-                <FormField
-                    control={form.control}
-                    name="name"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Name</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Enter the item name" {...field} />
-                            </FormControl>
-                            <FormDescription>The name of your menu item, as it will appear on the menu</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="description"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Description</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Enter a description (optional)" {...field} />
-                            </FormControl>
-                            <FormDescription>A brief description of the menu item</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="price"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Price</FormLabel>
-                            <FormControl>
-                                <Input
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    placeholder="0.00"
-                                    {...field}
-                                    value={field.value}
-                                    onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
-                                />
-                            </FormControl>
-                            <FormDescription>The price of the menu item</FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="isNew"
-                    render={({ field }) => (
-                        <FormItem className="flex flex-row items-start space-y-0 space-x-3">
-                            <FormControl>
-                                <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                            </FormControl>
-                            <div className="space-y-1 leading-none">
-                                <FormLabel>Mark as new</FormLabel>
-                                <FormDescription>This will highlight the item as new on the menu</FormDescription>
-                            </div>
-                        </FormItem>
-                    )}
-                />
-
-                <div className="flex flex-row gap-2">
-                    <Button type="submit">Save</Button>
-                    <a href={ROUTES.menuItems(locationId)}>
-                        <Button variant="secondary" type="button">
-                            Cancel
-                        </Button>
-                    </a>
-                </div>
-            </form>
-        </Form>
+                </form>
+            </Form>
+            <PreviewMenuItem
+                menuItem={{
+                    name: form.watch('name'),
+                    description: form.watch('description'),
+                    price: form.watch('price').toString(),
+                    isNew: form.watch('isNew'),
+                }}
+            />
+        </div>
     );
 }

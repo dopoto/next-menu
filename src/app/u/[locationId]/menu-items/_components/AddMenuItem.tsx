@@ -4,13 +4,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
-import { DeviceMockup } from '~/app/_components/DeviceMockup';
 import { addMenuItem } from '~/app/actions/addMenuItem';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
+import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
-import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { toast } from '~/hooks/use-toast';
-import { handleFormErrors } from '~/lib/form-state';
+import { handleReactHookFormErrors } from '~/lib/form-state';
+import { type LocationId } from '~/lib/location';
 import { menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 
@@ -33,25 +32,17 @@ export function AddMenuItem(props: { locationId: LocationId }) {
             toast({ title: `Menu item added` });
             router.push(ROUTES.menuItems(props.locationId));
         } else {
-            handleFormErrors(form, res);
+            handleReactHookFormErrors(form, res);
         }
     }
 
     return (
-        <div className="flex flex-row gap-6">
+        <>
+            <FormTitle
+                title="Add menu item"
+                subtitle="Add a dish or a beverage to your menu items catalog. Each menu item can be used in one or more menus."
+            />
             <AddEditMenuItemForm form={form} onSubmit={onSubmit} locationId={props.locationId} />
-            <DeviceMockup>
-                <div className="flex h-full w-full items-center justify-center rounded-[2rem] bg-gray-100 dark:bg-gray-800">
-                    <PublicMenuItem
-                        item={{
-                            name: form.watch('name'),
-                            description: form.watch('description'),
-                            price: form.watch('price').toString(),
-                            isNew: form.watch('isNew'),
-                        }}
-                    />
-                </div>
-            </DeviceMockup>
-        </div>
+        </>
     );
 }

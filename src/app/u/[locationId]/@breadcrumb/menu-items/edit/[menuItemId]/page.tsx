@@ -1,5 +1,5 @@
-import { getValidLocationIdOrThrow } from '~/app/_utils/location-utils';
 import { TopBreadcrumb } from '~/app/u/[locationId]/@breadcrumb/_components/TopBreadcrumb';
+import { getValidLocationIdOrThrow } from '~/lib/location';
 import { NAV_ITEMS, type NavItem } from '~/lib/nav';
 
 type Params = Promise<{ locationId: string }>;

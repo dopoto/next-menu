@@ -5,8 +5,8 @@ import {
     validateOrganizationOrThrow,
     validateUserOrThrow,
 } from '~/app/_utils/security-utils.server-only';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
 import { AppError } from '~/lib/error-utils.server';
+import { type LocationId } from '~/lib/location';
 import {
     type MenuItem,
     type menuItemFormSchema,
@@ -64,6 +64,21 @@ export async function updateMenuItem(menuItemId: MenuItemId, data: z.infer<typeo
 
     if (result.rowCount === 0) {
         const internalMessage = `Menu item with ID ${menuItemId} not found or not authorized for update`;
+        throw new AppError({ internalMessage });
+    }
+}
+
+export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuItemId) {
+    const userId = await validateUserOrThrow();
+    const orgId = await validateOrganizationOrThrow();
+    await validateLocationOrThrow(locationId, orgId, userId);
+
+    const result = await db
+        .delete(menuItems)
+        .where(and(eq(menuItems.locationId, locationId), eq(menuItems.id, menuItemId)));
+
+    if (result.rowCount === 0) {
+        const internalMessage = `Menu item with ID ${menuItemId} not found or not authorized for deletion`;
         throw new AppError({ internalMessage });
     }
 }

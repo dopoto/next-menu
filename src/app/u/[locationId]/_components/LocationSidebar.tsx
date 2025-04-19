@@ -3,20 +3,17 @@
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import React from 'react';
-import { type LocationId } from '~/app/u/[locationId]/_domain/locations';
 import {
     Sidebar,
     SidebarContent,
     SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarGroupLabel,
     SidebarHeader,
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarRail,
 } from '~/components/ui/sidebar';
+import { type LocationId } from '~/lib/location';
 import { type UserRouteFn } from '~/lib/routes';
 import { MENU_TREE } from '../../../../lib/nav';
 import { SidebarLocationManager } from './SidebarLocationManager';
@@ -50,55 +47,44 @@ export function LocationSidebar({ ...props }: React.ComponentProps<typeof Sideba
                 <SidebarLocationManager />
             </SidebarHeader>
             <SidebarContent>
-                <SidebarGroup key={'das'}>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {dashboardMenuSection.map((item) => {
-                                const href = buildUrl(item.route as (locationId: LocationId) => string);
-                                return (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton
-                                            asChild
-                                            isActive={isActive(href, item.children)}
-                                            tooltip={item.title}
-                                        >
-                                            <Link href={href} className="flex items-center gap-2">
-                                                <span className="flex-shrink-0">{item.icon}</span>
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                );
-                            })}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-                <SidebarGroup key={'locationManager'}>
-                    <SidebarGroupLabel>Location Manager</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {locationManagerMenuSection.map((item) => {
-                                const href = buildUrl(item.route as (locationId: LocationId) => string);
-                                return (
-                                    <SidebarMenuItem key={item.title}>
-                                        <SidebarMenuButton
-                                            asChild
-                                            isActive={isActive(href, item.children)}
-                                            tooltip={item.title}
-                                        >
-                                            <Link href={href} className="flex items-center gap-2">
-                                                <span title={item.title} className="flex-shrink-0">
-                                                    {item.icon}
-                                                </span>
-                                                <span>{item.title}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
-                                    </SidebarMenuItem>
-                                );
-                            })}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
+                <SidebarMenu>
+                    {dashboardMenuSection.map((item) => {
+                        const href = buildUrl(item.route as (locationId: LocationId) => string);
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isActive(href, item.children)}
+                                    tooltip={item.title}
+                                >
+                                    <Link href={href} className="flex items-center gap-2">
+                                        <span className="flex-shrink-0">{item.icon}</span>
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        );
+                    })}
+                    {locationManagerMenuSection.map((item) => {
+                        const href = buildUrl(item.route as (locationId: LocationId) => string);
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isActive(href, item.children)}
+                                    tooltip={item.title}
+                                >
+                                    <Link href={href} className="flex items-center gap-2">
+                                        <span title={item.title} className="flex-shrink-0">
+                                            {item.icon}
+                                        </span>
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        );
+                    })}
+                </SidebarMenu>
             </SidebarContent>
             <SidebarFooter>
                 <SidebarOrganizationManager />

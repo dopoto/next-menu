@@ -4,9 +4,9 @@ import QRCode from 'react-qr-code';
 import truncateMiddle from 'truncate-middle';
 import { CopyButton } from '~/app/_components/CopyButton';
 import { SeparatorWithText } from '~/app/_components/SeparatorWithText';
-import { type LocationId, locationIdSchema } from '~/app/u/[locationId]/_domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
+import { type LocationId } from '~/lib/location';
 import { ROUTES } from '~/lib/routes';
 import { getLocation } from '~/server/queries';
 
@@ -18,20 +18,11 @@ export async function LocationDetails(props: { id: LocationId }) {
         });
     }
 
-    const validationResult = locationIdSchema.safeParse(props.id);
-    if (!validationResult.success) {
-        // TODO Test
-        throw new AppError({
-            internalMessage: `Location validation failed. params: ${JSON.stringify(props)}`,
-        });
-    }
-    const parsedLocationId = validationResult.data;
-
-    const locationData = await getLocation(parsedLocationId);
+    const locationData = await getLocation(props.id);
 
     if (!locationData.slug) {
         throw new AppError({
-            internalMessage: `Missing slug for location ${parsedLocationId}`,
+            internalMessage: `Missing slug for location ${props.id}`,
         });
     }
 

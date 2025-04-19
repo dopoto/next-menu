@@ -4,33 +4,21 @@ import React from 'react';
 import { AppVersion } from '~/app/_components/AppVersion';
 import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 import { APP_CONFIG } from '~/app/_config/app-config';
-import { locationIdSchema } from '~/app/u/[locationId]/_domain/locations';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
-import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
 import { LocationSidebar } from './_components/LocationSidebar';
 
-export type Params = Promise<{ locationId: string }>;
-
 export default async function Layout({
-    params,
     breadcrumb,
     children,
 }: {
-    params: Params;
     breadcrumb: React.ReactNode;
     children: React.ReactNode;
 }) {
     // TODO all basic checks
     // valid stripe and clerk?
     // valid location id, matches claims?
-
-    const locationId = (await params).locationId;
-    const locationValidationResult = locationIdSchema.safeParse(locationId);
-    if (!locationValidationResult.success) {
-        throw new AppError({ internalMessage: `Invalid location: ${locationId}` });
-    }
 
     return (
         <SidebarProvider>

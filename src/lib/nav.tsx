@@ -58,7 +58,7 @@ export const NAV_ITEMS: Record<RouteId, NavItem> = {
     menuItems: {
         id: 'menuItems',
         icon: <UtensilsCrossedIcon size={16} />,
-        title: 'Dishes & Drinks',
+        title: 'Menu items',
         route: ROUTES.menuItems,
     },
     menuItemsAdd: {
