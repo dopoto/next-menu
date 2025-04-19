@@ -1,5 +1,5 @@
 export default async function AddMenuPage() {
-  // TODO const availableQuota = await getAvailableFeatureQuota("menus");
+    // TODO const availableQuota = await getAvailableFeatureQuota("menus");
 
-  return <>hi</>;
+    return <>hi</>;
 }

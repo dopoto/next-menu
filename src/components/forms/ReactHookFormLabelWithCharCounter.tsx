@@ -1,4 +1,4 @@
-import { ZodOptional, ZodString } from 'zod';
+import { ZodOptional, type ZodString } from 'zod';
 import { Badge } from '~/components/ui/badge';
 import { FormLabel } from '~/components/ui/form';
 

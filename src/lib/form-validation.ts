@@ -1,4 +1,4 @@
-import { ZodTypeAny } from 'zod';
+import { type ZodTypeAny } from 'zod';
 
 /**
  * Custom helper to safely attach meta with TS support to Zod schemas.

@@ -1,4 +1,4 @@
-import { ZodOptional, ZodString } from 'zod';
+import { ZodOptional, type ZodString } from 'zod';
 import { ReactHookFormLabelWithCharCounter } from '~/components/forms/ReactHookFormLabelWithCharCounter';
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
@@ -13,7 +13,7 @@ export function ReactHookFormField(props: { schema: any; form: any; fieldName: s
 
     const shape = props.schema.shape[props.fieldName];
     const maxLength = getMaxLength(shape);
-    const meta = (shape as any)._def.meta;
+    const meta = (shape)._def.meta;
 
     return (
         <FormField
