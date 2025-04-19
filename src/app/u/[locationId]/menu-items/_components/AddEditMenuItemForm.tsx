@@ -1,8 +1,7 @@
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
-import { DeviceMockup } from '~/app/_components/DeviceMockup';
+import { PreviewMenuItem } from '~/app/u/[locationId]/menu-items/_components/PreviewMenuItem';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
-import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
@@ -81,18 +80,14 @@ export function AddEditMenuItemForm({
                     </div>
                 </form>
             </Form>
-            <DeviceMockup>
-                <div className="flex h-full w-full items-center justify-center rounded-[2rem] bg-gray-100 dark:bg-gray-800">
-                    <PublicMenuItem
-                        item={{
-                            name: form.watch('name'),
-                            description: form.watch('description'),
-                            price: form.watch('price').toString(),
-                            isNew: form.watch('isNew'),
-                        }}
-                    />
-                </div>
-            </DeviceMockup>
+            <PreviewMenuItem
+                menuItem={{
+                    name: form.watch('name'),
+                    description: form.watch('description'),
+                    price: form.watch('price').toString(),
+                    isNew: form.watch('isNew'),
+                }}
+            />
         </div>
     );
 }

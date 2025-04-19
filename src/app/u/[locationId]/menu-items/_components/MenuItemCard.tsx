@@ -1,10 +1,19 @@
 'use client';
 
 import { EllipsisVerticalIcon, EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { deleteMenuItem } from '~/app/actions/deleteMenuItem';
+import { PreviewMenuItem } from '~/app/u/[locationId]/menu-items/_components/PreviewMenuItem';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '~/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,25 +24,27 @@ import { toast } from '~/hooks/use-toast';
 import { type LocationId } from '~/lib/location';
 import { type MenuItem } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
-import { deleteMenuItem } from '~/app/actions/deleteMenuItem';
-import { useState } from 'react';
 
 export default function MenuItemCard(props: { locationId: LocationId; item: MenuItem }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const router = useRouter();
+    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+
+    const [isDeleting, setIsDeleting] = useState(false);
 
     async function handleDelete() {
+        setIsDeleting(true);
         const result = await deleteMenuItem(props.locationId, props.item.id);
         if (result.status === 'success') {
             toast({ title: 'Menu item deleted' });
             setShowDeleteDialog(false);
         } else {
-            toast({ 
+            toast({
                 title: 'Could not delete menu item',
                 description: result.rootError,
-                variant: 'destructive'
+                variant: 'destructive',
             });
         }
+        setIsDeleting(false);
     }
 
     return (
@@ -59,12 +70,10 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
                                     <span>Edit</span>
                                 </DropdownMenuItem>
                             </a>
-                            <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Preview">
-                                <DropdownMenuItem>
-                                    <EyeIcon />
-                                    <span>Preview</span>
-                                </DropdownMenuItem>
-                            </a>
+                            <DropdownMenuItem onClick={() => setShowPreviewDialog(true)}>
+                                <EyeIcon />
+                                <span>Preview</span>
+                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
                                 <Trash2Icon className="text-red-500" />
                                 <span className="text-red-500">Delete</span>
@@ -73,6 +82,19 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
                     </DropdownMenu>
                 </div>
             </div>
+
+            <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
+                <DialogContent>
+                    <PreviewMenuItem
+                        menuItem={{
+                            name: props.item.name,
+                            description: props.item.description,
+                            price: props.item.price.toString(),
+                            isNew: props.item.isNew,
+                        }}
+                    />
+                </DialogContent>
+            </Dialog>
 
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <DialogContent>
@@ -83,11 +105,11 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
-                        <Button variant="outline" onClick={() => setShowDeleteDialog(false)}>
+                        <Button variant="outline" onClick={() => setShowDeleteDialog(false)} disabled={isDeleting}>
                             Cancel
                         </Button>
-                        <Button variant="destructive" onClick={handleDelete}>
-                            Delete
+                        <Button variant="destructive" onClick={handleDelete} disabled={isDeleting}>
+                            {isDeleting ? 'Deleting...' : 'Delete'}
                         </Button>
                     </DialogFooter>
                 </DialogContent>
