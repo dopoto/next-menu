@@ -84,7 +84,11 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
             </div>
 
             <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
-                <DialogContent>
+                <DialogContent className="bg-blend-color">
+                    <DialogHeader>
+                        <DialogTitle>Preview Menu Item</DialogTitle>
+                        <DialogDescription></DialogDescription>
+                    </DialogHeader>
                     <PreviewMenuItem
                         menuItem={{
                             name: props.item.name,

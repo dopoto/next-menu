@@ -5,7 +5,7 @@ export function FormTitle(props: { title: string; subtitle: string }) {
     return (
         <div className="flex flex-col flex-nowrap pb-6">
             <PageTitle>{props.title}</PageTitle>
-            <PageSubtitle>{props.subtitle}</PageSubtitle>
+            <PageSubtitle textSize="sm">{props.subtitle}</PageSubtitle>
         </div>
     );
 }
