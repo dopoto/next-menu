@@ -1,19 +1,23 @@
-import { ZodOptional, type ZodString } from 'zod';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+
+import { type UseFormReturn } from 'react-hook-form';
+import { type ZodObject, ZodOptional, type ZodRawShape, type ZodString } from 'zod';
 import { ReactHookFormLabelWithCharCounter } from '~/components/forms/ReactHookFormLabelWithCharCounter';
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 
-function getMaxLength(schema: ZodString | ZodOptional<ZodString>): number {
+function getMaxLength(schema?: ZodString | ZodOptional<ZodString>): number {
     const stringSchema = schema instanceof ZodOptional ? schema.unwrap() : schema;
-    return stringSchema._def?.checks?.find((check) => check.kind === 'max')?.value ?? 0;
+    return stringSchema?._def?.checks?.find((check) => check.kind === 'max')?.value ?? 0;
 }
 
-export function ReactHookFormField(props: { schema: any; form: any; fieldName: string }) {
+export function ReactHookFormField(props: { schema: ZodObject<ZodRawShape>; form: UseFormReturn; fieldName: string }) {
     const { schema, form, fieldName } = props;
 
     const shape = props.schema.shape[props.fieldName];
-    const maxLength = getMaxLength(shape);
-    const meta = (shape)._def.meta;
+    const maxLength = shape ? getMaxLength(shape as ZodString | ZodOptional<ZodString>) : 0;
+    const { label, placeholder, description } = shape?._def?.meta ?? { label: '', placeholder: '', description: '' };
 
     return (
         <FormField
@@ -23,14 +27,15 @@ export function ReactHookFormField(props: { schema: any; form: any; fieldName: s
                 <FormItem>
                     <ReactHookFormLabelWithCharCounter
                         form={form}
-                        label={meta.label}
+                        label={label}
                         fieldName={fieldName}
                         schema={schema}
+                        maxLength={maxLength}
                     />
                     <FormControl>
-                        <Input placeholder={meta.placeholder} {...field} maxLength={maxLength} />
+                        <Input placeholder={placeholder} {...field} maxLength={maxLength} />
                     </FormControl>
-                    <FormDescription>{meta.description}</FormDescription>
+                    <FormDescription>{description}</FormDescription>
                     <FormMessage />
                 </FormItem>
             )}

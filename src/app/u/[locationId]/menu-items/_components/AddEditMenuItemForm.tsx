@@ -19,8 +19,6 @@ export function AddEditMenuItemForm({
     onSubmit: (values: z.infer<typeof menuItemFormSchema>) => Promise<void>;
     locationId: LocationId;
 }) {
-    const maxLength = menuItemFormSchema.shape.name._def.checks.find((check) => check.kind === 'max')?.value ?? 0;
-
     return (
         <div className="flex flex-col gap-6 lg:flex-row">
             <Form {...form}>

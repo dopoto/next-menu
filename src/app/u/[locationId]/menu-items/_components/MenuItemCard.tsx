@@ -103,9 +103,10 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete Menu Item</DialogTitle>
+                        <DialogTitle className=" text-red-500">Delete Menu Item?</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete "{props.item.name}"? This action cannot be undone.
+                            <div className="font-semibold">{props.item.name}</div>
+                            <div> Are you sure you want to delete this menu item? This action cannot be undone.</div>
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>

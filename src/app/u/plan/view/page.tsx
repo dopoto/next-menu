@@ -111,8 +111,6 @@ async function PlanUsage(props: { tier: PriceTier }) {
         }),
     );
 
-    await Promise.resolve(() => setTimeout(() => {}, 2000)); // Simulate a delay for the skeleton
-
     return (
         <>
             {featuresInCurrentTierWithUsage.map((featureUsage) => {
