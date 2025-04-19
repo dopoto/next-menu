@@ -67,3 +67,18 @@ export async function updateMenuItem(menuItemId: MenuItemId, data: z.infer<typeo
         throw new AppError({ internalMessage });
     }
 }
+
+export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuItemId) {
+    const userId = await validateUserOrThrow();
+    const orgId = await validateOrganizationOrThrow();
+    await validateLocationOrThrow(locationId, orgId, userId);
+
+    const result = await db
+        .delete(menuItems)
+        .where(and(eq(menuItems.locationId, locationId), eq(menuItems.id, menuItemId)));
+
+    if (result.rowCount === 0) {
+        const internalMessage = `Menu item with ID ${menuItemId} not found or not authorized for deletion`;
+        throw new AppError({ internalMessage });
+    }
+}
