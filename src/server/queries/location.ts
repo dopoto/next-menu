@@ -5,7 +5,7 @@ import { AppError } from '~/lib/error-utils.server';
 import { type LocationId, type LocationSlug } from '~/lib/location';
 import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
-import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
+import { locations, users, type Location, type Menu } from '~/server/db/schema';
 
 // export async function getLocations() {
 //   const items = await db.query.locations.findMany({
@@ -36,11 +36,7 @@ export async function addLocation(orgId: string, name: string, slug: string) {
  * @param userId
  * @returns The valid Location Id.
  */
-export async function getLocation(
-    locationId: LocationId,
-    orgId: string,
-    userId: string,
-): Promise<LocationId | undefined> {
+export async function getLocation(locationId: LocationId, orgId: string, userId: string): Promise<LocationId> {
     const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
 
     const location = await db.query.locations.findFirst({
@@ -51,13 +47,19 @@ export async function getLocation(
                 exists(
                     db
                         .select()
-                        .from(organizations)
-                        .where((customers) => and(eq(customers.clerkUserId, userId), eq(customers.clerkOrgId, orgId))),
+                        .from(users)
+                        .where((user) => and(eq(user.clerkUserId, userId), eq(user.orgId, validatedOrgId))),
                 ),
             ),
     });
 
-    return location?.id;
+    if (!location) {
+        throw new AppError({
+            internalMessage: `Location not found or access denied. Location ID: ${locationId}, Org ID: ${orgId}, User ID: ${userId}`,
+        });
+    }
+
+    return location.id;
 }
 
 export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]> {
