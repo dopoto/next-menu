@@ -10,8 +10,7 @@ import { z } from 'zod';
 import { isPaidPriceTier } from '~/app/_utils/price-tier-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { addLocation } from '~/server/queries/location';
-import { addOrganizationAndUser } from '~/server/queries/organization';
+import { createOrganization } from '~/server/queries/organization';
 import { CookieKey } from '../_domain/cookies';
 import { PriceTierIdSchema } from '../_domain/price-tiers';
 import { stripeCustomerIdSchema } from '../_domain/stripe';
@@ -32,13 +31,24 @@ const formDataSchema = z.object({
             message: 'Location Name must be 256 or fewer characters long',
         }),
     priceTierId: PriceTierIdSchema,
+    slug: z
+        .string({
+            required_error: 'Slug is required',
+            invalid_type_error: 'Slug must be a string',
+        })
+        .min(2, {
+            message: 'Slug must be 2 or more characters long',
+        })
+        .max(50, {
+            message: 'Slug must be 50 or fewer characters long',
+        }),
     stripeSessionId: z.string(),
 });
 
-export const onboardCreateCustomer = async (formData: FormData) => {
+export const onboardCreateOrganization = async (formData: FormData) => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
-        'onboardCreateCustomer',
+        'onboardCreateOrganization',
         {
             formData,
             headers: headers(),
@@ -54,6 +64,7 @@ export const onboardCreateCustomer = async (formData: FormData) => {
                 const validatedFormFields = formDataSchema.safeParse({
                     locationName: formData.get('locationName'),
                     priceTierId: formData.get('priceTierId'),
+                    slug: formData.get('slug'),
                     stripeSessionId: formData.get('stripeSessionId'),
                 });
 
@@ -129,9 +140,13 @@ export const onboardCreateCustomer = async (formData: FormData) => {
                 //   };
                 // }
 
-                await addOrganizationAndUser(userId, orgId, validatedStripeCustomerIdOrNull);
-                //TODO slug
-                const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName, 'some-slug');
+                const currentLocation = await createOrganization({
+                    clerkUserId: userId,
+                    orgId,
+                    stripeCustomerId: validatedStripeCustomerIdOrNull,
+                    locationName: validatedFormFields.data.locationName,
+                    locationSlug: validatedFormFields.data.slug,
+                });
 
                 // TODO send analytics
                 // analyticsServerClient.capture({
@@ -146,8 +161,6 @@ export const onboardCreateCustomer = async (formData: FormData) => {
                     metadata: {
                         tier: validatedFormFields.data.priceTierId,
                         orgName,
-                        currentLocationId: insertedLocation?.id.toString() ?? '',
-                        currentLocationName: validatedFormFields.data.locationName,
                     },
                 };
                 const res = await client.users.updateUser(userId, {
@@ -156,6 +169,8 @@ export const onboardCreateCustomer = async (formData: FormData) => {
 
                 const cookieStore = await cookies();
                 cookieStore.delete(CookieKey.OnboardPlan);
+                cookieStore.set(CookieKey.CurrentLocationId, currentLocation.id.toString());
+                cookieStore.set(CookieKey.CurrentLocationName, currentLocation.name.toString());
 
                 return { message: res.publicMetadata };
             } catch (error) {

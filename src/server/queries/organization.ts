@@ -2,29 +2,69 @@ import { eq } from 'drizzle-orm';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
-import { organizations, users } from '~/server/db/schema';
+import { locations, organizations, users } from '~/server/db/schema';
 
-export async function addOrganizationAndUser(clerkUserId: string, orgId: string, stripeCustomerId?: string) {
-    // TODO Checks ? auth etc
-    const insertedOrg = await db.transaction(async (trx) => {
-        const [org] = await trx
+export async function createOrganization({
+    clerkUserId,
+    orgId,
+    stripeCustomerId,
+    locationName,
+    locationSlug,
+}: {
+    clerkUserId: string;
+    orgId: string;
+    stripeCustomerId?: string;
+    locationName: string;
+    locationSlug: string;
+}) {
+    const insertedLocation = await db.transaction(async (trx) => {
+        const [organization] = await trx
             .insert(organizations)
             .values({
                 clerkOrgId: orgId,
                 stripeCustomerId: stripeCustomerId,
             })
-            .returning({ id: organizations.id });
+            .returning({
+                id: organizations.id,
+            });
 
-        await trx.insert(users).values({
-            clerkUserId: clerkUserId,
-            role: 'orgowner',
-            orgId: org?.id ?? 0, // TODO handle instead
-        });
+        if (!organization) {
+            throw new AppError({ internalMessage: 'Failed to insert organization' });
+        }
 
-        return org;
+        const [user] = await trx
+            .insert(users)
+            .values({
+                clerkUserId: clerkUserId,
+                role: 'orgowner',
+                orgId: organization.id,
+            })
+            .returning({
+                id: users.id,
+                role: users.role,
+            });
+
+        if (!user) {
+            throw new AppError({ internalMessage: 'Failed to insert user' });
+        }
+
+        const [location] = await db
+            .insert(locations)
+            .values({
+                name: locationName,
+                slug: locationSlug,
+                orgId: organization.id,
+            })
+            .returning();
+
+        if (!location) {
+            throw new AppError({ internalMessage: 'Failed to insert location' });
+        }
+
+        return location;
     });
 
-    return insertedOrg;
+    return insertedLocation;
 }
 
 export async function updateOrganizationStripeCustomerId({

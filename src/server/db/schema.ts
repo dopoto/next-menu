@@ -28,7 +28,7 @@ export const users = createTable(
         id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
         role: varchar('role', { length: 10 }).notNull(),
         clerkUserId: varchar('clerk_user_id', { length: 256 }).notNull(),
-        orgId: integer('id')
+        orgId: integer('org_id')
             .notNull()
             .references(() => organizations.id),
         createdAt: timestamp('created_at', { withTimezone: true })

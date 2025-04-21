@@ -7,12 +7,40 @@ import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
 import { locations, users, type Location, type Menu } from '~/server/db/schema';
 
-// export async function getLocations() {
-//   const items = await db.query.locations.findMany({
-//     orderBy: (model, { desc }) => desc(model.name),
-//   });
-//   return items;
-// }
+/**
+ * Generates a random string of specified length using letters and numbers
+ */
+function generateRandomSlug(length: number): string {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+/**
+ * Generates a unique random slug for a location.
+ * Retries with a new slug if the generated one already exists.
+ * @returns A unique location slug
+ */
+export async function generateUniqueLocationSlug(): Promise<string> {
+    while (true) {
+        // Generate an 8-character random string
+        const slug = generateRandomSlug(8);
+
+        // Check if this slug already exists
+        const existingLocation = await db.query.locations.findFirst({
+            where: (locations, { eq }) => eq(locations.slug, slug),
+        });
+
+        // If no location with this slug exists, return it
+        if (!existingLocation) {
+            return slug;
+        }
+        // If slug exists, the while loop will continue and try another one
+    }
+}
 
 export async function addLocation(orgId: string, name: string, slug: string) {
     const validatedOrgId = getValidOrganizationIdOrThrow(orgId);

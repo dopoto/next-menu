@@ -16,7 +16,7 @@ export function OrgCreated(props: { nextStepRoute: AppRouteKey }) {
                         content: <OrgDropdownMenu />,
                     },
                 ]}
-                variant="neutral"
+                variant="confirmation"
             />
             <div className="flex w-full flex-col gap-2">
                 <Link href={props.nextStepRoute.toString()} className="w-full">

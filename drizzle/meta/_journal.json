@@ -15,6 +15,13 @@
       "when": 1745236138220,
       "tag": "0001_rare_roughhouse",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745243992576,
+      "tag": "0002_secret_vance_astro",
+      "breakpoints": true
     }
   ]
 }
