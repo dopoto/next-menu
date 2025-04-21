@@ -5,7 +5,7 @@ import { getValidFreePriceTier, getValidPaidPriceTier } from '~/app/_utils/price
 import { obj2str } from '~/app/_utils/string-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { updateCustomerByClerkUserId } from '~/server/queries';
+import { updateOrganizationStripeCustomerId } from '~/server/queries/organization';
 import { PlanChanged } from '../../../_components/PlanChanged';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
@@ -62,9 +62,9 @@ export default async function FreeToPaidPostPaymentPage(props: { params: Params;
         });
     }
 
-    const { userId } = await auth();
-    if (!userId) {
-        throw new AppError({ internalMessage: `No Clerk user id found` });
+    const { userId, orgId } = await auth();
+    if (!orgId) {
+        throw new AppError({ internalMessage: `No Clerk orgId found` });
     }
 
     //TODO validate that current tier read from session claims matches parsedPaidFromTier
@@ -81,10 +81,12 @@ export default async function FreeToPaidPostPaymentPage(props: { params: Params;
             internalMessage: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
         });
     }
-    await updateCustomerByClerkUserId(userId, stripeCustomerId);
+    await updateOrganizationStripeCustomerId({ clerkOrgId: orgId, stripeCustomerId });
 
     // Update Clerk with new tier
     const clerk = await clerkClient();
+
+    // TODO Update ALL users in the org!!!
     await clerk.users.updateUserMetadata(userId, {
         publicMetadata: { tier: parsedPaidToTier.id },
     });

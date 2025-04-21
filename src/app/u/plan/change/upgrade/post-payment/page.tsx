@@ -11,7 +11,7 @@ import { obj2str } from '~/app/_utils/string-utils';
 import { getActiveStripeSubscriptionItem } from '~/app/_utils/stripe-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { getCustomerByOrgId } from '~/server/queries';
+import { getOrganizationById } from '~/server/queries/organization';
 import { PlanChanged } from '../../_components/PlanChanged';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
@@ -93,7 +93,7 @@ export default async function UpgradePostPaymentPage(props: { searchParams: Sear
     const parsedStripeCustomerId = stripeCustomerIdValidationResult.data;
 
     // Expecting the customer Id returned by Stripe for this sub to match our records
-    const dbCustomer = await getCustomerByOrgId(orgId ?? '');
+    const dbCustomer = await getOrganizationById(orgId ?? '');
     if (parsedStripeCustomerId.toString() !== dbCustomer.stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected db match for Stripe customer id ${parsedStripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,

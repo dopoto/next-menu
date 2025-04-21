@@ -1,48 +1,11 @@
 import { auth } from '@clerk/nextjs/server';
-import { and, eq } from 'drizzle-orm';
+import { and } from 'drizzle-orm';
 import 'server-only';
 import { AppError } from '~/lib/error-utils.server';
 import { type LocationId } from '~/lib/location';
+import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
-import { customers, locations } from './db/schema';
-
-export async function addCustomer(clerkUserId: string, orgId: string, stripeCustomerId?: string) {
-    // TODO Checks ? auth etc
-    const [insertedCustomer] = await db
-        .insert(customers)
-        .values({
-            clerkUserId: clerkUserId,
-            orgId: orgId,
-            stripeCustomerId: stripeCustomerId,
-        })
-        .returning({ id: customers.id });
-    return insertedCustomer;
-}
-
-export async function updateCustomerByClerkUserId(clerkUserId: string, stripeCustomerId: string | null) {
-    // TODO Checks
-
-    const [updatedCustomer] = await db
-        .update(customers)
-        .set({
-            stripeCustomerId,
-        })
-        .where(eq(customers.clerkUserId, clerkUserId))
-        .returning({ id: customers.id });
-    return updatedCustomer;
-}
-
-export async function getCustomerByOrgId(orgId: string) {
-    // TODO Checks
-    const item = await db.query.customers.findFirst({
-        where: (model, { eq }) => eq(model.orgId, orgId),
-    });
-    if (!item) {
-        throw new AppError({ internalMessage: `Not found: ${orgId}` });
-    }
-
-    return item;
-}
+import { locations } from './db/schema';
 
 export async function getMenusPlanUsage() {
     const { userId, sessionClaims } = await auth();
@@ -50,10 +13,7 @@ export async function getMenusPlanUsage() {
         throw new AppError({ internalMessage: 'Unauthorized' });
     }
 
-    const orgId = sessionClaims?.org_id;
-    if (!orgId) {
-        throw new AppError({ internalMessage: 'No organization ID found' });
-    }
+    const validatedOrgId = getValidOrganizationIdOrThrow(sessionClaims?.org_id);
 
     const result = await db.query.menus.findMany({
         where: (menus, { eq, and, exists }) =>
@@ -61,7 +21,7 @@ export async function getMenusPlanUsage() {
                 db
                     .select()
                     .from(locations)
-                    .where(and(eq(locations.id, menus.locationId), eq(locations.orgId, orgId))),
+                    .where(and(eq(locations.id, menus.locationId), eq(locations.orgId, validatedOrgId))),
             ),
     });
 
@@ -85,7 +45,7 @@ export async function getMenuItemsPlanUsage() {
                 db
                     .select()
                     .from(locations)
-                    .where(and(eq(locations.id, menuItems.locationId), eq(locations.orgId, orgId))),
+                    .where(and(eq(locations.id, menuItems.locationId), eq(locations.orgId, Number(orgId)))),
             ),
     });
 
@@ -95,17 +55,6 @@ export async function getMenuItemsPlanUsage() {
 export async function getLocationsPlanUsage() {
     //TODO
     return Promise.resolve(1);
-}
-
-export async function addLocation(orgId: string, name: string) {
-    const [insertedLocation] = await db
-        .insert(locations)
-        .values({
-            name: name,
-            orgId: orgId,
-        })
-        .returning({ id: locations.id });
-    return insertedLocation;
 }
 
 export async function getLocation(id: LocationId) {
@@ -120,7 +69,7 @@ export async function getLocation(id: LocationId) {
     }
 
     const item = await db.query.locations.findFirst({
-        where: (model, { eq }) => and(eq(model.id, id), eq(model.orgId, orgId)),
+        where: (model, { eq }) => and(eq(model.id, Number(id)), eq(model.orgId, Number(orgId))),
     });
 
     if (!item) {

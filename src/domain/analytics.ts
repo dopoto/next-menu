@@ -1,4 +1,5 @@
 import { type LocationSlug } from '~/lib/location';
+import { OrganizationId } from '~/lib/organization';
 
 /**
  * NOTE: Each field (E.G. "orgId", "locationSlug") needs to be configured
@@ -11,7 +12,7 @@ export interface AnalyticsEventMap {
      * Fired when the /p/[locationSlug] is accessed.
      */
     publicLocationVisit: {
-        orgId: string;
+        orgId: OrganizationId;
         locationSlug: LocationSlug;
     };
 }

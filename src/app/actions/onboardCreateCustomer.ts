@@ -10,7 +10,8 @@ import { z } from 'zod';
 import { isPaidPriceTier } from '~/app/_utils/price-tier-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { addCustomer, addLocation } from '~/server/queries';
+import { addLocation } from '~/server/queries/location';
+import { addOrganizationAndUser } from '~/server/queries/organization';
 import { CookieKey } from '../_domain/cookies';
 import { PriceTierIdSchema } from '../_domain/price-tiers';
 import { stripeCustomerIdSchema } from '../_domain/stripe';
@@ -128,9 +129,9 @@ export const onboardCreateCustomer = async (formData: FormData) => {
                 //   };
                 // }
 
-                await addCustomer(userId, orgId, validatedStripeCustomerIdOrNull);
-
-                const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName);
+                await addOrganizationAndUser(userId, orgId, validatedStripeCustomerIdOrNull);
+                //TODO slug
+                const insertedLocation = await addLocation(orgId, validatedFormFields.data.locationName, 'some-slug');
 
                 // TODO send analytics
                 // analyticsServerClient.capture({

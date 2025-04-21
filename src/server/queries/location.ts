@@ -3,8 +3,9 @@ import { exists } from 'drizzle-orm';
 import 'server-only';
 import { AppError } from '~/lib/error-utils.server';
 import { type LocationId, type LocationSlug } from '~/lib/location';
+import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
-import { customers, type Location, type Menu } from '~/server/db/schema';
+import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
 
 // export async function getLocations() {
 //   const items = await db.query.locations.findMany({
@@ -12,6 +13,19 @@ import { customers, type Location, type Menu } from '~/server/db/schema';
 //   });
 //   return items;
 // }
+
+export async function addLocation(orgId: string, name: string, slug: string) {
+    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
+    const [insertedLocation] = await db
+        .insert(locations)
+        .values({
+            name: name,
+            slug: slug,
+            orgId: validatedOrgId,
+        })
+        .returning({ id: locations.id });
+    return insertedLocation;
+}
 
 /**
  * Checks if the location exists in the database and if it belongs to
@@ -27,16 +41,18 @@ export async function getLocation(
     orgId: string,
     userId: string,
 ): Promise<LocationId | undefined> {
+    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
+
     const location = await db.query.locations.findFirst({
         where: (locations, { and, eq }) =>
             and(
                 eq(locations.id, locationId),
-                eq(locations.orgId, orgId),
+                eq(locations.orgId, validatedOrgId),
                 exists(
                     db
                         .select()
-                        .from(customers)
-                        .where((customers) => and(eq(customers.clerkUserId, userId), eq(customers.orgId, orgId))),
+                        .from(organizations)
+                        .where((customers) => and(eq(customers.clerkUserId, userId), eq(customers.clerkOrgId, orgId))),
                 ),
             ),
     });
@@ -51,13 +67,14 @@ export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]
     }
 
     const orgId = sessionClaims?.org_id;
-    if (!orgId) {
-        throw new AppError({ internalMessage: 'No organization ID found' });
+    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
+    if (!validatedOrgId) {
+        throw new AppError({ internalMessage: `No valid organization ID found for claim ${orgId}` });
     }
 
     // First verify the location belongs to the organization
     const location = await db.query.locations.findFirst({
-        where: (locations, { and, eq }) => and(eq(locations.id, locationId), eq(locations.orgId, orgId)),
+        where: (locations, { and, eq }) => and(eq(locations.id, locationId), eq(locations.orgId, validatedOrgId)),
     });
 
     if (!location) {

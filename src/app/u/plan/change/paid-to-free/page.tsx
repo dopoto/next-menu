@@ -10,7 +10,7 @@ import { obj2str } from '~/app/_utils/string-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
-import { getCustomerByOrgId, updateCustomerByClerkUserId } from '~/server/queries';
+import { getOrganizationById, updateOrganizationStripeCustomerId } from '~/server/queries/organization';
 import { PlanChanged } from '../_components/PlanChanged';
 import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
@@ -63,7 +63,7 @@ async function Step1(props: { toTierId?: string }) {
 }
 
 async function Step2(props: { fromTier: PriceTier; toTier: PriceTier; orgId: string }) {
-    const stripeCustomerId = (await getCustomerByOrgId(props.orgId)).stripeCustomerId;
+    const stripeCustomerId = (await getOrganizationById(props.orgId)).stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Cannot find Stripe customer for organization ${props.orgId}`,
@@ -104,9 +104,12 @@ async function Step2(props: { fromTier: PriceTier; toTier: PriceTier; orgId: str
 }
 
 async function FinalStep(props: { stripeSubscription: Stripe.Subscription; fromTier: PriceTier; toTier: PriceTier }) {
-    const { userId } = await auth();
+    const { userId, orgId } = await auth();
     if (!userId) {
         throw new AppError({ internalMessage: `No Clerk user id found` });
+    }
+    if (!orgId) {
+        throw new AppError({ internalMessage: `No Clerk orgId found` });
     }
 
     // Cancel their Stripe subscription
@@ -118,7 +121,10 @@ async function FinalStep(props: { stripeSubscription: Stripe.Subscription; fromT
     });
 
     // Delete their Stripe customer id from our records.
-    await updateCustomerByClerkUserId(userId, null);
+    await updateOrganizationStripeCustomerId({
+        clerkOrgId: orgId,
+        stripeCustomerId: null,
+    });
 
     // Update Clerk with new tier
     const clerk = await clerkClient();

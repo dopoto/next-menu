@@ -2,7 +2,7 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
-import { boolean, decimal, index, integer, pgTableCreator, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -12,13 +12,9 @@ import { boolean, decimal, index, integer, pgTableCreator, timestamp, varchar } 
  */
 export const createTable = pgTableCreator((name) => `next-menu_${name}`);
 
-export const customers = createTable('customer', {
+export const organizations = createTable('organization', {
     id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
-    /**
-     * @example 'user_...'
-     */
-    clerkUserId: varchar('clerk_user_id', { length: 256 }).notNull(),
-    orgId: varchar('org_id', { length: 256 }).notNull(),
+    clerkOrgId: varchar('clerk_org_id', { length: 256 }).notNull().unique(),
     stripeCustomerId: varchar('stripe_customer_id', { length: 256 }),
     createdAt: timestamp('created_at', { withTimezone: true })
         .default(sql`CURRENT_TIMESTAMP`)
@@ -26,15 +22,34 @@ export const customers = createTable('customer', {
     updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
 });
 
+export const users = createTable(
+    'user',
+    {
+        id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
+        role: varchar('role', { length: 10 }).notNull(),
+        clerkUserId: varchar('clerk_user_id', { length: 256 }).notNull(),
+        orgId: integer('id')
+            .notNull()
+            .references(() => organizations.id),
+        createdAt: timestamp('created_at', { withTimezone: true })
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
+    },
+    () => ({
+        roleCheck: sql`CHECK (role IN ('orgowner', 'admin', 'user'))`,
+    }),
+);
+
 export const locations = createTable(
     'location',
     {
         id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
-        name: varchar('name', { length: 50 }),
-        slug: varchar('slug', { length: 50 }),
-        orgId: varchar('org_id', { length: 256 })
+        name: varchar('name', { length: 50 }).notNull().unique(),
+        slug: varchar('slug', { length: 50 }).notNull().unique(),
+        orgId: integer('id')
             .notNull()
-            .references(() => customers.orgId),
+            .references(() => organizations.id),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
@@ -81,6 +96,27 @@ export const menuItems = createTable(
     },
     (example) => ({
         nameIndex: index('menu_item_name_idx').on(example.name),
+    }),
+);
+
+export const menuItemsToMenus = createTable(
+    'menu_items_to_menus',
+    {
+        menuId: integer('menu_id')
+            .notNull()
+            .references(() => menus.id),
+        menuItemId: integer('menu_item_id')
+            .notNull()
+            .references(() => menuItems.id),
+        createdAt: timestamp('created_at', { withTimezone: true })
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
+    },
+    (table) => ({
+        menuItemIdx: index('menu_items_to_menus_menu_item_idx').on(table.menuItemId),
+        menuIdx: index('menu_items_to_menus_menu_idx').on(table.menuId),
+        pk: primaryKey({ columns: [table.menuId, table.menuItemId] }),
     }),
 );
 

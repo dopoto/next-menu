@@ -10,7 +10,7 @@ import { obj2str } from '~/app/_utils/string-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
-import { getCustomerByOrgId } from '~/server/queries';
+import { getOrganizationById } from '~/server/queries/organization';
 import { FreeToPaidStripeCheckoutForm } from '../_components/FreeToPaidStripeCheckoutForm';
 import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
@@ -77,7 +77,7 @@ async function Step2CreateStripeCustomerAndSubscription(props: {
             internalMessage: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
         });
     }
-    const stripeCustomerId = (await getCustomerByOrgId(props.orgId)).stripeCustomerId;
+    const stripeCustomerId = (await getOrganizationById(props.orgId)).stripeCustomerId;
     if (stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,
