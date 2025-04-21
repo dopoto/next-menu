@@ -17,6 +17,7 @@ export async function addOrganizationAndUser(clerkUserId: string, orgId: string,
 
         await trx.insert(users).values({
             clerkUserId: clerkUserId,
+            role: 'orgowner',
             orgId: org?.id ?? 0, // TODO handle instead
         });
 
