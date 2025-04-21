@@ -47,7 +47,7 @@ export const locations = createTable(
         id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
         name: varchar('name', { length: 50 }).notNull().unique(),
         slug: varchar('slug', { length: 50 }).notNull().unique(),
-        orgId: integer('id')
+        orgId: integer('org_id')
             .notNull()
             .references(() => organizations.id),
         createdAt: timestamp('created_at', { withTimezone: true })
