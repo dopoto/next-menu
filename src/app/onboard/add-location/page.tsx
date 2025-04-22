@@ -10,8 +10,8 @@ import { getValidPriceTier, isFreePriceTier } from '~/app/_utils/price-tier-util
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
+import { generateUniqueLocationSlug } from '~/server/queries/location';
 import { AddLocation } from '../_components/AddLocation';
-import { LocationCreated } from '../_components/LocationCreated';
 import { OnboardingStepper } from '../_components/OnboardingStepper';
 
 export const metadata = {
@@ -26,15 +26,13 @@ const stripe = new Stripe(stripeApiKey);
 export type SearchParams = Promise<Record<'session_id', string | string[] | undefined>>;
 
 export default async function OnboardAddLocationPage(props: { searchParams: SearchParams }) {
-    const { userId, sessionClaims } = await auth();
+    const { userId } = await auth();
     if (!userId) {
         redirect(ROUTES.signIn);
     }
 
-    const cookieStore = cookies();
-    const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
+    const tier = (await cookies()).get(CookieKey.OnboardPlan)?.value;
     const parsedTier = getValidPriceTier(tier);
-
     if (!parsedTier) {
         redirect(ROUTES.onboardSelectPlan);
     }
@@ -43,13 +41,13 @@ export default async function OnboardAddLocationPage(props: { searchParams: Sear
     const searchParams = await props.searchParams;
     const stripeSessionId = searchParams.session_id?.toString() ?? '';
 
+    const slug = await generateUniqueLocationSlug();
+
     let mainComponent;
-    if (sessionClaims.metadata.currentLocationId) {
-        mainComponent = <LocationCreated />;
-    } else if (isFreePriceTier(parsedTierId)) {
-        mainComponent = <AddLocation priceTierId="start" />;
+    if (isFreePriceTier(parsedTierId)) {
+        mainComponent = <AddLocation priceTierId="start" slug={slug} />;
     } else {
-        mainComponent = await getMainComponent(stripeSessionId, parsedTierId);
+        mainComponent = await getMainComponent(stripeSessionId, parsedTierId, slug);
     }
 
     return (
@@ -62,7 +60,7 @@ export default async function OnboardAddLocationPage(props: { searchParams: Sear
     );
 }
 
-export const getMainComponent = async (stripeSessionId: string, tierId: PriceTierId) => {
+export const getMainComponent = async (stripeSessionId: string, tierId: PriceTierId, slug: string) => {
     let mainComponent;
     if (stripeSessionId?.length === 0) {
         throw new AppError({ internalMessage: 'Stripe - missing stripeSessionId' });
@@ -76,7 +74,7 @@ export const getMainComponent = async (stripeSessionId: string, tierId: PriceTie
         sessionStatus = session.status;
         switch (sessionStatus) {
             case 'complete':
-                mainComponent = <AddLocation priceTierId={tierId} stripeSessionId={stripeSessionId} />;
+                mainComponent = <AddLocation priceTierId={tierId} stripeSessionId={stripeSessionId} slug={slug} />;
                 break;
             case 'expired':
                 throw new AppError({

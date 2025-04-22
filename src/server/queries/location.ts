@@ -1,47 +1,87 @@
 import { auth } from '@clerk/nextjs/server';
-import { exists } from 'drizzle-orm';
 import 'server-only';
+import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
 import { type LocationId, type LocationSlug } from '~/lib/location';
 import { db } from '~/server/db';
-import { customers, type Location, type Menu } from '~/server/db/schema';
-
-// export async function getLocations() {
-//   const items = await db.query.locations.findMany({
-//     orderBy: (model, { desc }) => desc(model.name),
-//   });
-//   return items;
-// }
+import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
 
 /**
- * Checks if the location exists in the database and if it belongs to
- * the organization the user is in.
- * Throws an error if that's not the case.
- * @param locationId
- * @param orgId
- * @param userId
- * @returns The valid Location Id.
+ * Generates a random string of specified length using letters and numbers
  */
-export async function getLocation(
-    locationId: LocationId,
-    orgId: string,
-    userId: string,
-): Promise<LocationId | undefined> {
+function generateRandomSlug(length: number): string {
+    const chars = 'abcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return result;
+}
+
+/**
+ * Generates a unique random slug for a location.
+ * Retries with a new slug if the generated one already exists.
+ * @returns A unique location slug
+ */
+export async function generateUniqueLocationSlug(): Promise<string> {
+    while (true) {
+        // Generate an 8-character random string
+        const slug = generateRandomSlug(8);
+
+        // Check if this slug already exists
+        const existingLocation = await db.query.locations.findFirst({
+            where: (locations, { eq }) => eq(locations.slug, slug),
+        });
+
+        // If no location with this slug exists, return it
+        if (!existingLocation) {
+            return slug;
+        }
+        // If slug exists, the while loop will continue and try another one
+    }
+}
+
+/**
+ * Returns the location, if it's found in the db and if it belongs to
+ * the org of the current user. Throws an error if that's not the case.
+ * @param locationId
+ * @returns A valid Location.
+ */
+export async function getLocation(locationId: LocationId): Promise<Location> {
+    const { userId, sessionClaims } = await auth();
+    if (!userId) {
+        throw new AppError({ internalMessage: 'Unauthorized' });
+    }
+
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
+    if (!validClerkOrgId) {
+        throw new AppError({
+            internalMessage: `No valid clerk org id found in session claims - ${JSON.stringify(sessionClaims)}.`,
+        });
+    }
+
     const location = await db.query.locations.findFirst({
         where: (locations, { and, eq }) =>
             and(
                 eq(locations.id, locationId),
-                eq(locations.orgId, orgId),
-                exists(
+                eq(
+                    locations.orgId,
                     db
-                        .select()
-                        .from(customers)
-                        .where((customers) => and(eq(customers.clerkUserId, userId), eq(customers.orgId, orgId))),
+                        .select({ id: organizations.id })
+                        .from(organizations)
+                        .where(eq(organizations.clerkOrgId, validClerkOrgId))
+                        .limit(1),
                 ),
             ),
     });
 
-    return location?.id;
+    if (!location) {
+        throw new AppError({
+            internalMessage: `Location not found or access denied. Location ID: ${locationId}, Clerk Org ID: ${validClerkOrgId}, User ID: ${userId}`,
+        });
+    }
+
+    return location;
 }
 
 export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]> {
@@ -50,29 +90,37 @@ export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]
         throw new AppError({ internalMessage: 'Unauthorized' });
     }
 
-    const orgId = sessionClaims?.org_id;
-    if (!orgId) {
-        throw new AppError({ internalMessage: 'No organization ID found' });
-    }
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
 
-    // First verify the location belongs to the organization
-    const location = await db.query.locations.findFirst({
-        where: (locations, { and, eq }) => and(eq(locations.id, locationId), eq(locations.orgId, orgId)),
-    });
-
-    if (!location) {
-        throw new AppError({
-            internalMessage: 'Location not found or access denied',
-        });
-    }
-
-    // Now fetch menus for this location
-    const items = await db.query.menus.findMany({
-        where: (menus, { eq }) => eq(menus.locationId, locationId),
+    const menus = await db.query.menus.findMany({
+        where: (menus, { eq, and }) =>
+            and(
+                eq(menus.locationId, locationId),
+                eq(
+                    db
+                        .select({ orgId: locations.orgId })
+                        .from(locations)
+                        .where(
+                            and(
+                                eq(locations.id, locationId),
+                                eq(
+                                    locations.orgId,
+                                    db
+                                        .select({ id: organizations.id })
+                                        .from(organizations)
+                                        .where(eq(organizations.clerkOrgId, validClerkOrgId))
+                                        .limit(1),
+                                ),
+                            ),
+                        )
+                        .limit(1),
+                    menus.locationId,
+                ),
+            ),
         orderBy: (menus, { desc }) => desc(menus.name),
     });
 
-    return items;
+    return menus;
 }
 
 export async function getLocationPublicData(locationSlug: LocationSlug): Promise<Location> {

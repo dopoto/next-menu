@@ -1,0 +1,27 @@
+{
+  "version": "5",
+  "dialect": "pg",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1745124234187,
+      "tag": "0000_amusing_black_panther",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1745236138220,
+      "tag": "0001_rare_roughhouse",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1745243992576,
+      "tag": "0002_secret_vance_astro",
+      "breakpoints": true
+    }
+  ]
+}

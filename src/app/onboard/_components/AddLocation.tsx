@@ -10,15 +10,17 @@ import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { ROUTES } from '~/lib/routes';
 import { cn } from '~/lib/utils';
-import { onboardCreateCustomer } from '../../actions/onboardCreateCustomer';
+import { onboardCreateOrganization } from '../../actions/onboardCreateOrganization';
 
 export const AddLocation = ({
     priceTierId,
     stripeSessionId,
+    slug,
     className,
 }: {
     priceTierId: PriceTierId;
     stripeSessionId?: string;
+    slug: string;
     className?: string;
 }) => {
     const [errors, setErrors] = useState<string[]>();
@@ -26,7 +28,7 @@ export const AddLocation = ({
     const router = useRouter();
 
     const handleSubmit = async (formData: FormData) => {
-        const res = await onboardCreateCustomer(formData);
+        const res = await onboardCreateOrganization(formData);
         if (res?.message) {
             // Reloads the user's data from the Clerk API
             await user?.reload();
@@ -50,6 +52,7 @@ export const AddLocation = ({
                             <form action={handleSubmit}>
                                 <input type="hidden" name="priceTierId" value={priceTierId} />
                                 <input type="hidden" name="stripeSessionId" value={stripeSessionId} />
+                                <input type="hidden" name="slug" value={slug} />
                                 <div className="mt-6 flex w-full flex-col gap-6">
                                     <div className="grid gap-2">
                                         <Label htmlFor="locationName">The name of your restaurant, pub or bar</Label>

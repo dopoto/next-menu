@@ -16,13 +16,13 @@ import {
 import { type LocationId } from '~/lib/location';
 import { type UserRouteFn } from '~/lib/routes';
 import { MENU_TREE } from '../../../../lib/nav';
-import { SidebarLocationManager } from './SidebarLocationManager';
 import { SidebarOrganizationManager } from './SidebarOrganizationManager';
 import { SidebarUserManager } from './SidebarUserManager';
 
 export function LocationSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-    const params = useParams();
     const pathname = usePathname();
+
+    const params = useParams();
     const { locationId } = params as { locationId: string };
 
     const isActive = (route: string, children?: typeof MENU_TREE.children): boolean => {
@@ -43,9 +43,7 @@ export function LocationSidebar({ ...props }: React.ComponentProps<typeof Sideba
 
     return (
         <Sidebar collapsible="icon" {...props}>
-            <SidebarHeader>
-                <SidebarLocationManager />
-            </SidebarHeader>
+            <SidebarHeader>{props.children}</SidebarHeader>
             <SidebarContent>
                 <SidebarMenu>
                     {dashboardMenuSection.map((item) => {

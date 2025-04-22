@@ -5,8 +5,6 @@ declare global {
         metadata: {
             tier: string;
             orgName: string;
-            currentLocationId: string;
-            currentLocationName: string;
         };
     }
 }

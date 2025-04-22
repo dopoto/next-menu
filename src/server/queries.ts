@@ -1,48 +1,9 @@
 import { auth } from '@clerk/nextjs/server';
-import { and, eq } from 'drizzle-orm';
 import 'server-only';
+import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
-import { type LocationId } from '~/lib/location';
 import { db } from '~/server/db';
-import { customers, locations } from './db/schema';
-
-export async function addCustomer(clerkUserId: string, orgId: string, stripeCustomerId?: string) {
-    // TODO Checks ? auth etc
-    const [insertedCustomer] = await db
-        .insert(customers)
-        .values({
-            clerkUserId: clerkUserId,
-            orgId: orgId,
-            stripeCustomerId: stripeCustomerId,
-        })
-        .returning({ id: customers.id });
-    return insertedCustomer;
-}
-
-export async function updateCustomerByClerkUserId(clerkUserId: string, stripeCustomerId: string | null) {
-    // TODO Checks
-
-    const [updatedCustomer] = await db
-        .update(customers)
-        .set({
-            stripeCustomerId,
-        })
-        .where(eq(customers.clerkUserId, clerkUserId))
-        .returning({ id: customers.id });
-    return updatedCustomer;
-}
-
-export async function getCustomerByOrgId(orgId: string) {
-    // TODO Checks
-    const item = await db.query.customers.findFirst({
-        where: (model, { eq }) => eq(model.orgId, orgId),
-    });
-    if (!item) {
-        throw new AppError({ internalMessage: `Not found: ${orgId}` });
-    }
-
-    return item;
-}
+import { locations, organizations } from './db/schema';
 
 export async function getMenusPlanUsage() {
     const { userId, sessionClaims } = await auth();
@@ -50,9 +11,11 @@ export async function getMenusPlanUsage() {
         throw new AppError({ internalMessage: 'Unauthorized' });
     }
 
-    const orgId = sessionClaims?.org_id;
-    if (!orgId) {
-        throw new AppError({ internalMessage: 'No organization ID found' });
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
+    if (!validClerkOrgId) {
+        throw new AppError({
+            internalMessage: `No valid clerk org id found in session claims - ${JSON.stringify(sessionClaims)}.`,
+        });
     }
 
     const result = await db.query.menus.findMany({
@@ -61,7 +24,8 @@ export async function getMenusPlanUsage() {
                 db
                     .select()
                     .from(locations)
-                    .where(and(eq(locations.id, menus.locationId), eq(locations.orgId, orgId))),
+                    .innerJoin(organizations, eq(locations.orgId, organizations.id))
+                    .where(and(eq(locations.id, menus.locationId), eq(organizations.clerkOrgId, validClerkOrgId))),
             ),
     });
 
@@ -74,10 +38,7 @@ export async function getMenuItemsPlanUsage() {
         throw new AppError({ internalMessage: 'Unauthorized' });
     }
 
-    const orgId = sessionClaims?.org_id;
-    if (!orgId) {
-        throw new AppError({ internalMessage: 'No organization ID found' });
-    }
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
 
     const result = await db.query.menuItems.findMany({
         where: (menuItems, { eq, and, exists }) =>
@@ -85,7 +46,8 @@ export async function getMenuItemsPlanUsage() {
                 db
                     .select()
                     .from(locations)
-                    .where(and(eq(locations.id, menuItems.locationId), eq(locations.orgId, orgId))),
+                    .innerJoin(organizations, eq(locations.orgId, organizations.id))
+                    .where(and(eq(locations.id, menuItems.locationId), eq(organizations.clerkOrgId, validClerkOrgId))),
             ),
     });
 
@@ -95,37 +57,4 @@ export async function getMenuItemsPlanUsage() {
 export async function getLocationsPlanUsage() {
     //TODO
     return Promise.resolve(1);
-}
-
-export async function addLocation(orgId: string, name: string) {
-    const [insertedLocation] = await db
-        .insert(locations)
-        .values({
-            name: name,
-            orgId: orgId,
-        })
-        .returning({ id: locations.id });
-    return insertedLocation;
-}
-
-export async function getLocation(id: LocationId) {
-    const { userId, sessionClaims } = await auth();
-    if (!userId) {
-        throw new AppError({ internalMessage: 'Unauthorized' });
-    }
-
-    const orgId = sessionClaims?.org_id;
-    if (!orgId) {
-        throw new AppError({ internalMessage: 'No organization ID found' });
-    }
-
-    const item = await db.query.locations.findFirst({
-        where: (model, { eq }) => and(eq(model.id, id), eq(model.orgId, orgId)),
-    });
-
-    if (!item) {
-        throw new AppError({ internalMessage: `Not found: ${id}` });
-    }
-
-    return item;
 }

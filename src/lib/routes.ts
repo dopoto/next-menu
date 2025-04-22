@@ -15,7 +15,7 @@ export const ROUTES = {
 
     // ONBOARD
     onboardSelectPlan: '/onboard/select-plan',
-    onboardCreateOrg: '/onboard/create-org',
+    onboardAddOrg: '/onboard/add-org',
     onboardAddLocation: '/onboard/add-location',
     onboardPayment: '/onboard/payment',
     onboardOverview: '/onboard/overview',
@@ -23,6 +23,7 @@ export const ROUTES = {
     // AUTH_PROTECTED
     my: '/my',
     userRoot: '/u',
+    resetState: '/u/reset-state',
     location: (locationId: LocationId) => `/u/${locationId}/location`,
     live: (locationId: LocationId) => `/u/${locationId}/live`,
     reports: (locationId: LocationId) => `/u/${locationId}/reports`,
