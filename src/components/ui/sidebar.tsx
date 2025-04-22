@@ -2,9 +2,10 @@
 
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
+import { getCookie, setCookie } from 'cookies-next';
 import { PanelLeftCloseIcon, PanelLeftOpenIcon } from 'lucide-react';
-import * as React from 'react';
-
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { CookieKey } from '~/app/_domain/cookies';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Separator } from '~/components/ui/separator';
@@ -26,7 +27,7 @@ type SidebarContext = {
     toggleSidebar: () => void;
 };
 
-const SidebarContext = React.createContext<SidebarContext | null>(null);
+const SidebarContext = createContext<SidebarContext | null>(null);
 
 function getInitialSidebarState(isMobile: boolean): boolean {
     try {
@@ -44,7 +45,7 @@ function getInitialSidebarState(isMobile: boolean): boolean {
 }
 
 function useSidebar() {
-    const context = React.useContext(SidebarContext);
+    const context = useContext(SidebarContext);
     if (!context) {
         throw new Error('useSidebar must be used within a SidebarProvider.');
     }
@@ -53,7 +54,6 @@ function useSidebar() {
 }
 
 function SidebarProvider({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     defaultOpen = true,
     open: openProp,
     onOpenChange: setOpenProp,
@@ -69,40 +69,52 @@ function SidebarProvider({
     const isMobile = useIsMobile();
 
     // Use useState with undefined initial state to prevent hydration mismatch
-    const [_open, _setOpen] = React.useState<boolean | undefined>(undefined);
-    const open = openProp ?? _open ?? !isMobile; // Fallback to default during SSR
+    const [_open, _setOpen] = useState<boolean | undefined>(undefined);
 
-    // Initialize state from localStorage after mount
-    React.useEffect(() => {
-        _setOpen(getInitialSidebarState(isMobile));
-    }, [isMobile]);
-
-    const setOpen = React.useCallback(
+    // Handle state updates
+    const setOpen = useCallback(
         (value: boolean | ((value: boolean) => boolean)) => {
             const openState = typeof value === 'function' ? value(open) : value;
+            console.log('DBG-setOpen called with:', openState);
+
             if (setOpenProp) {
                 setOpenProp(openState);
-            } else {
-                _setOpen(openState);
             }
 
-            // Save to localStorage
-            try {
-                localStorage.setItem(SIDEBAR_STORAGE_KEY, JSON.stringify(openState));
-            } catch (e) {
-                console.warn('Failed to save sidebar state to localStorage:', e);
-            }
+            _setOpen(openState);
+            setCookie(CookieKey.SidebarOpen, openState.toString());
         },
-        [setOpenProp, open],
+        [setOpenProp, open, _setOpen],
     );
 
-    // Helper to toggle the sidebar.
-    const toggleSidebar = React.useCallback(() => {
-        setOpen((open) => !open);
-    }, [setOpen]);
+    // Initialize state from cookie only once on mount
+    useEffect(() => {
+        const savedState = getCookie(CookieKey.SidebarOpen);
+        console.log('DBG-init-from-cookie:', savedState);
+
+        const open = openProp ?? _open ?? !isMobile; // Fallback to default during SSR
+        console.log('DBG-initial-state', openProp, _open, isMobile, open);
+
+        if (savedState !== undefined) {
+            _setOpen(savedState === 'true');
+        } else {
+            const initialState = getInitialSidebarState(isMobile);
+            _setOpen(initialState);
+            setCookie(CookieKey.SidebarOpen, initialState.toString());
+        }
+    }, []); // Empty deps array since we only want this to run once on mount
+
+    const toggleSidebar = useCallback(() => {
+        console.log('DBG-toggleSidebar called, current open:', open);
+        setOpen((prevOpen) => {
+            const newState = !prevOpen;
+            console.log('DBG-toggleSidebar new state:', newState);
+            return newState;
+        });
+    }, [setOpen, open]);
 
     // Adds a keyboard shortcut to toggle the sidebar.
-    React.useEffect(() => {
+    useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === SIDEBAR_KEYBOARD_SHORTCUT && (event.metaKey || event.ctrlKey)) {
                 event.preventDefault();
@@ -118,7 +130,7 @@ function SidebarProvider({
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? 'expanded' : 'collapsed';
 
-    const contextValue = React.useMemo<SidebarContext>(
+    const contextValue = useMemo<SidebarContext>(
         () => ({
             state,
             open,
@@ -237,7 +249,8 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<t
             title={open ? 'Collapse sidebar' : 'Expand sidebar'}
             className={cn('h-7 w-7', className)}
             onClick={(event) => {
-                onClick?.(event);
+                event.preventDefault();
+                console.log('DBG-Trigger onClick, current open state:', open);
                 toggleSidebar();
             }}
             {...props}
@@ -558,7 +571,7 @@ function SidebarMenuSkeleton({
     showIcon?: boolean;
 }) {
     // Random width between 50 to 90%.
-    const width = React.useMemo(() => {
+    const width = useMemo(() => {
         return `${Math.floor(Math.random() * 40) + 50}%`;
     }, []);
 

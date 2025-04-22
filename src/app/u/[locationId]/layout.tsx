@@ -1,9 +1,11 @@
 import { House, MessageCircleQuestion } from 'lucide-react';
+import { cookies } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 import { AppVersion } from '~/app/_components/AppVersion';
 import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { CookieKey } from '~/app/_domain/cookies';
 import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
@@ -29,8 +31,14 @@ export default async function Layout({
     const locationId = (await params).locationId;
     const validLocationId = getValidLocationIdOrThrow(locationId);
 
+    const cookieStore = await cookies();
+    const sidebarOpenCookie = cookieStore.get(CookieKey.SidebarOpen);
+    const isSidebarOpen = sidebarOpenCookie ? sidebarOpenCookie.value === 'true' : true;
+
+    console.log('DBG-Cookie sidebarOpen:', isSidebarOpen, sidebarOpenCookie?.value);
+
     return (
-        <SidebarProvider>
+        <SidebarProvider open={isSidebarOpen}>
             <LocationSidebar>
                 <SidebarLocationManager locationId={validLocationId} />
             </LocationSidebar>
