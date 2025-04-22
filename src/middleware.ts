@@ -40,19 +40,20 @@ export default clerkMiddleware(
         // If the user is signed in and accessing the /my route, redirect them
         // to their actual dashboard URL if possible.
         if (userId && isMyRoute(req)) {
+            if (!orgId) {
+                console.log(`DBG-MDLW [/my] Redirecting to ${ROUTES.onboardAddOrg} - no orgId`);
+                return redirectTo(req, ROUTES.onboardAddOrg);
+            }
+
             const currentLocationId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
-            if (!locationIdSchema.safeParse(currentLocationId).success) {
+            const currentLocationValidationResult = locationIdSchema.safeParse(currentLocationId);
+            if (!currentLocationValidationResult.success) {
                 console.log(
                     `DBG-MDLW [/my] Redirecting to ${ROUTES.resetState} - invalid currentLocationId: ${currentLocationId}. orgId: ${orgId}`,
                 );
                 return redirectTo(req, ROUTES.resetState);
             }
-            if (!orgId) {
-                console.log(`DBG-MDLW [/my] Redirecting to ${ROUTES.onboardAddOrg} - no orgId`);
-                return redirectTo(req, ROUTES.onboardAddOrg);
-            }
-            //TODO validate currentLocationId
-            const myDashboardRoute = ROUTES.live(Number(currentLocationId));
+            const myDashboardRoute = ROUTES.live(currentLocationValidationResult.data);
             console.log(`DBG-MDLW [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
             return redirectTo(req, myDashboardRoute);
         }

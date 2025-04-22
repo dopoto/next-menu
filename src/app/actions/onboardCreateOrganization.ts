@@ -164,6 +164,7 @@ export const onboardCreateOrganization = async (formData: FormData) => {
                     metadata: {
                         tier: validatedFormFields.data.priceTierId,
                         orgName,
+                        initialLocationId: currentLocation.id.toString(),
                     },
                 };
                 const res = await client.users.updateUser(userId, {
