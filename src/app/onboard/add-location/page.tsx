@@ -12,7 +12,6 @@ import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
 import { generateUniqueLocationSlug } from '~/server/queries/location';
 import { AddLocation } from '../_components/AddLocation';
-import { LocationCreated } from '../_components/LocationCreated';
 import { OnboardingStepper } from '../_components/OnboardingStepper';
 
 export const metadata = {
@@ -27,20 +26,19 @@ const stripe = new Stripe(stripeApiKey);
 export type SearchParams = Promise<Record<'session_id', string | string[] | undefined>>;
 
 export default async function OnboardAddLocationPage(props: { searchParams: SearchParams }) {
-    const { userId, sessionClaims } = await auth();
+    const { userId } = await auth();
     if (!userId) {
         redirect(ROUTES.signIn);
     }
 
-    const cookieStore = cookies();
-    const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
+    // Handle cookies
+    const cookieStore = await cookies();
+    const tier = cookieStore.get(CookieKey.OnboardPlan)?.value;
     const parsedTier = getValidPriceTier(tier);
     if (!parsedTier) {
         redirect(ROUTES.onboardSelectPlan);
     }
     const parsedTierId = parsedTier.id;
-
-    const locationName = (await cookieStore).get(CookieKey.CurrentLocationName)?.value;
 
     const searchParams = await props.searchParams;
     const stripeSessionId = searchParams.session_id?.toString() ?? '';
@@ -48,9 +46,7 @@ export default async function OnboardAddLocationPage(props: { searchParams: Sear
     const slug = await generateUniqueLocationSlug();
 
     let mainComponent;
-    if (locationName) {
-        mainComponent = <LocationCreated locationName={locationName} />;
-    } else if (isFreePriceTier(parsedTierId)) {
+    if (isFreePriceTier(parsedTierId)) {
         mainComponent = <AddLocation priceTierId="start" slug={slug} />;
     } else {
         mainComponent = await getMainComponent(stripeSessionId, parsedTierId, slug);

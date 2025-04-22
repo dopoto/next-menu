@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { AppError } from '~/lib/error-utils.server';
-import { getOrganizationById } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
 import type { StripeCustomerId } from '../_domain/stripe';
 import { getValidPriceTier, isFreePriceTier, isPaidPriceTier } from '../_utils/price-tier-utils';
 import { getActiveStripeSubscriptionItem } from '../_utils/stripe-utils';
@@ -30,7 +30,7 @@ export async function SubscriptionDetails() {
      */
 
     if (parsedTier && isPaidPriceTier(parsedTier.id)) {
-        const stripeCustomerId = (await getOrganizationById(orgId)).stripeCustomerId as StripeCustomerId;
+        const stripeCustomerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId as StripeCustomerId;
         const stripeSub = await getActiveStripeSubscriptionItem(stripeCustomerId);
         const subPrice = `USD ${parsedTier.monthlyUsdPrice.toFixed(2)}/month`;
         const currentPeriodEnd = stripeSub?.current_period_end

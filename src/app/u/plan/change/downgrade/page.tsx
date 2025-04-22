@@ -12,7 +12,7 @@ import { getActiveStripeSubscriptionItem, getActiveSubscriptionItemId } from '~/
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
-import { getOrganizationById } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
 import { PlanChanged } from '../_components/PlanChanged';
 import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
@@ -82,7 +82,7 @@ async function Step2StripeProcessing(props: { fromTier: PriceTier; toTier: Price
         });
     }
 
-    const stripeCustomerId = (await getOrganizationById(orgId)).stripeCustomerId as StripeCustomerId;
+    const stripeCustomerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId as StripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,

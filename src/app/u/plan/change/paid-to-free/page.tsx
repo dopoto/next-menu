@@ -10,7 +10,7 @@ import { obj2str } from '~/app/_utils/string-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
-import { getOrganizationById, updateOrganizationStripeCustomerId } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId, updateOrganizationStripeCustomerId } from '~/server/queries/organization';
 import { PlanChanged } from '../_components/PlanChanged';
 import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
@@ -63,7 +63,7 @@ async function Step1(props: { toTierId?: string }) {
 }
 
 async function Step2(props: { fromTier: PriceTier; toTier: PriceTier; orgId: string }) {
-    const stripeCustomerId = (await getOrganizationById(props.orgId)).stripeCustomerId;
+    const stripeCustomerId = (await getOrganizationByClerkOrgId(props.orgId)).stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Cannot find Stripe customer for organization ${props.orgId}`,

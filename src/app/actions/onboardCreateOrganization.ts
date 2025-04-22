@@ -56,6 +56,9 @@ export const onboardCreateOrganization = async (formData: FormData) => {
         },
         async () => {
             try {
+                const cookieStore = await cookies();
+                cookieStore.delete(CookieKey.CurrentLocationName);
+
                 const { userId, orgId } = await auth();
                 if (!userId) {
                     return { errors: ['You must be authenticated.'] };
@@ -167,7 +170,6 @@ export const onboardCreateOrganization = async (formData: FormData) => {
                     publicMetadata: customJwtSessionClaims.metadata,
                 });
 
-                const cookieStore = await cookies();
                 cookieStore.delete(CookieKey.OnboardPlan);
                 cookieStore.set(CookieKey.CurrentLocationId, currentLocation.id.toString());
                 cookieStore.set(CookieKey.CurrentLocationName, currentLocation.name.toString());

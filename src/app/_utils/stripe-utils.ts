@@ -3,7 +3,7 @@ import 'server-only';
 import Stripe from 'stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { getOrganizationById } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
 import { type PriceTierId } from '../_domain/price-tiers';
 import {
     type StripeCustomerId,
@@ -30,7 +30,7 @@ export async function getActiveStripeSubscriptionItem(
         if (!orgId) {
             throw new AppError({ internalMessage: `No orgId found in auth.` });
         }
-        customerId = (await getOrganizationById(orgId)).stripeCustomerId;
+        customerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId;
     }
 
     if (!customerId) {
@@ -106,7 +106,7 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
         throw new AppError({ internalMessage: `No orgId found in auth.` });
     }
 
-    const stripeCustomerId = (await getOrganizationById(orgId)).stripeCustomerId;
+    const stripeCustomerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,

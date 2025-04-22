@@ -39,7 +39,7 @@ export default clerkMiddleware(
         // If the user is signed in and accessing the /my route, redirect them
         // to their actual dashboard URL if possible.
         if (userId && isMyRoute(req)) {
-            const currentLocationId = req.cookies.get(CookieKey.CurrentLocationName);
+            const currentLocationId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
             if (!currentLocationId || !orgId) {
                 console.log(
                     `DBG-MIDDLEWARE [/my] Not onboarded yet, redirecting to /onboard/add-org. currentLocationId: ${currentLocationId}, orgId: ${orgId}`,

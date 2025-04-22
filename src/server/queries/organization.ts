@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
+import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
-import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
 import { locations, organizations, users } from '~/server/db/schema';
 
@@ -86,15 +86,13 @@ export async function updateOrganizationStripeCustomerId({
     return updatedOrganization;
 }
 
-export async function getOrganizationById(orgId: string) {
-    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
-
-    // TODO Checks
+export async function getOrganizationByClerkOrgId(clerkOrgId: string) {
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(clerkOrgId);
     const item = await db.query.organizations.findFirst({
-        where: (model, { eq }) => eq(model.id, validatedOrgId),
+        where: (model, { eq }) => eq(model.clerkOrgId, validClerkOrgId),
     });
     if (!item) {
-        throw new AppError({ internalMessage: `Not found: ${orgId}` });
+        throw new AppError({ internalMessage: `Org not found for clerkOrgId ${clerkOrgId}.` });
     }
 
     return item;
