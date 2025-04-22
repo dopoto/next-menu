@@ -1,8 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
 import { AppError } from '~/lib/error-utils.server';
-import { type LocationId } from '~/lib/location';
-import { getLocation } from '~/server/queries/location';
 
 /**
  * Checks if the user is authenticated and returns the user ID.
@@ -36,15 +34,15 @@ export async function validateOrganizationOrThrow(): Promise<string> {
  * Throws an error if that's not the case.
  * @returns The valid Location Id.
  */
-export async function validateLocationOrThrow(
-    locationId: LocationId,
-    organizationId: string,
-    userId: string,
-): Promise<LocationId> {
-    const validLocationId = await getLocation(locationId, organizationId, userId);
-    if (!validLocationId) {
-        const internalMessage = `Location not found. Location ID: ${locationId}, Org ID: ${organizationId}, User ID: ${userId}`;
-        throw new AppError({ internalMessage });
-    }
-    return validLocationId;
-}
+// export async function validateLocationOrThrow(
+//     locationId: LocationId,
+//     organizationId: string,
+//     userId: string,
+// ): Promise<LocationId> {
+//     const validLocationId = await getLocation(locationId, organizationId, userId);
+//     if (!validLocationId) {
+//         const internalMessage = `Location not found. Location ID: ${locationId}, Org ID: ${organizationId}, User ID: ${userId}`;
+//         throw new AppError({ internalMessage });
+//     }
+//     return validLocationId;
+// }

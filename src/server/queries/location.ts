@@ -1,11 +1,11 @@
 import { auth } from '@clerk/nextjs/server';
-import { exists } from 'drizzle-orm';
 import 'server-only';
+import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
 import { type LocationId, type LocationSlug } from '~/lib/location';
 import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
-import { locations, users, type Location, type Menu } from '~/server/db/schema';
+import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
 
 /**
  * Generates a random string of specified length using letters and numbers
@@ -60,34 +60,43 @@ export async function addLocation(orgId: string, name: string, slug: string) {
  * the organization the user is in.
  * Throws an error if that's not the case.
  * @param locationId
- * @param orgId
- * @param userId
  * @returns The valid Location Id.
  */
-export async function getLocation(locationId: LocationId, orgId: string, userId: string): Promise<LocationId> {
-    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
+export async function getLocation(locationId: LocationId): Promise<Location> {
+    const { userId, sessionClaims } = await auth();
+    if (!userId) {
+        throw new AppError({ internalMessage: 'Unauthorized' });
+    }
+
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
+    if (!validClerkOrgId) {
+        throw new AppError({
+            internalMessage: `No valid clerk org id found in session claims - ${JSON.stringify(sessionClaims)}.`,
+        });
+    }
 
     const location = await db.query.locations.findFirst({
         where: (locations, { and, eq }) =>
             and(
                 eq(locations.id, locationId),
-                eq(locations.orgId, validatedOrgId),
-                exists(
+                eq(
+                    locations.orgId,
                     db
-                        .select()
-                        .from(users)
-                        .where((user) => and(eq(user.clerkUserId, userId), eq(user.orgId, validatedOrgId))),
+                        .select({ id: organizations.id })
+                        .from(organizations)
+                        .where(eq(organizations.clerkOrgId, validClerkOrgId))
+                        .limit(1),
                 ),
             ),
     });
 
     if (!location) {
         throw new AppError({
-            internalMessage: `Location not found or access denied. Location ID: ${locationId}, Org ID: ${orgId}, User ID: ${userId}`,
+            internalMessage: `Location not found or access denied. Location ID: ${locationId}, Clerk Org ID: ${validClerkOrgId}, User ID: ${userId}`,
         });
     }
 
-    return location.id;
+    return location;
 }
 
 export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]> {

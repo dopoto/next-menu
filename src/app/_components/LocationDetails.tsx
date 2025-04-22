@@ -8,7 +8,7 @@ import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { type LocationId } from '~/lib/location';
 import { ROUTES } from '~/lib/routes';
-import { getLocation } from '~/server/queries';
+import { getLocation } from '~/server/queries/location';
 
 export async function LocationDetails(props: { id: LocationId }) {
     const { userId, orgId } = await auth();
