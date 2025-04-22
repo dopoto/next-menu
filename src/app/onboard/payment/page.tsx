@@ -20,7 +20,7 @@ export default async function OnboardPaymentPage() {
         redirect(ROUTES.signUp);
     }
     if (!orgId) {
-        redirect(ROUTES.onboardCreateOrg);
+        redirect(ROUTES.onboardAddOrg);
     }
 
     const cookieStore = cookies();

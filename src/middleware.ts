@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
+import { locationIdSchema } from '~/lib/location';
 import { CookieKey } from './app/_domain/cookies';
 import { getValidPriceTier } from './app/_utils/price-tier-utils';
 import { ROUTES } from './lib/routes';
@@ -15,11 +16,11 @@ export default clerkMiddleware(
         const orgId = sessionClaims?.org_id;
 
         if (isSignUpRoute(req)) {
-            console.log(`DBG-MIDDLEWARE [${req.url}] Is sign-up route`);
+            console.log(`DBG-MDLW [${req.url}] Is sign-up route`);
             const url = new URL(req.url);
             const tierParam = url.searchParams.get('tier') ?? '';
             if (getValidPriceTier(tierParam)) {
-                console.log(`DBG-MIDDLEWARE [${req.url}] Setting onboard-plan cookie to ${tierParam}`);
+                console.log(`DBG-MDLW [${req.url}] Setting onboard-plan cookie to ${tierParam}`);
                 const signUpResponse = NextResponse.next();
                 signUpResponse.cookies.set(CookieKey.OnboardPlan, tierParam, {
                     path: '/',
@@ -32,7 +33,7 @@ export default clerkMiddleware(
 
         // If the user isn't signed in and the route is private, redirect to sign-in
         if (!userId && isAuthProtectedRoute(req)) {
-            console.log(`DBG-MIDDLEWARE [${req.url}] Not public and no user id found => Redirecting to sign in`);
+            console.log(`DBG-MDLW [${req.url}] Not public and no user id found => Redirecting to sign in`);
             return redirectToSignIn({ returnBackUrl: req.url });
         }
 
@@ -40,16 +41,34 @@ export default clerkMiddleware(
         // to their actual dashboard URL if possible.
         if (userId && isMyRoute(req)) {
             const currentLocationId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
-            if (!currentLocationId || !orgId) {
+            if (!locationIdSchema.safeParse(currentLocationId).success) {
                 console.log(
-                    `DBG-MIDDLEWARE [/my] Not onboarded yet, redirecting to /onboard/add-org. currentLocationId: ${currentLocationId}, orgId: ${orgId}`,
+                    `DBG-MDLW [/my] Redirecting to ${ROUTES.resetState} - invalid currentLocationId: ${currentLocationId}. orgId: ${orgId}`,
                 );
-                return redirectTo(req, `/onboard/add-org`);
+                return redirectTo(req, ROUTES.resetState);
+            }
+            if (!orgId) {
+                console.log(`DBG-MDLW [/my] Redirecting to ${ROUTES.onboardAddOrg} - no orgId`);
+                return redirectTo(req, ROUTES.onboardAddOrg);
             }
             //TODO validate currentLocationId
             const myDashboardRoute = ROUTES.live(Number(currentLocationId));
-            console.log(`DBG-MIDDLEWARE [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
+            console.log(`DBG-MDLW [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
             return redirectTo(req, myDashboardRoute);
+        }
+
+        // For auth-protected routes, ensure we have a last location cookie
+        if (isAuthProtectedRoute(req)) {
+            const machineId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
+            if (!machineId) {
+                const anonResponse = NextResponse.next();
+                anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), {
+                    path: '/',
+                    httpOnly: false,
+                    secure: process.env.NODE_ENV === 'production',
+                });
+                return anonResponse;
+            }
         }
 
         // For public routes, ensure we have a machineId cookie
