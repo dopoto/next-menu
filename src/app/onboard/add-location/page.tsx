@@ -35,11 +35,12 @@ export default async function OnboardAddLocationPage(props: { searchParams: Sear
     const cookieStore = cookies();
     const tier = (await cookieStore).get(CookieKey.OnboardPlan)?.value;
     const parsedTier = getValidPriceTier(tier);
-
     if (!parsedTier) {
         redirect(ROUTES.onboardSelectPlan);
     }
     const parsedTierId = parsedTier.id;
+
+    const locationName = (await cookieStore).get(CookieKey.CurrentLocationName)?.value;
 
     const searchParams = await props.searchParams;
     const stripeSessionId = searchParams.session_id?.toString() ?? '';
@@ -47,8 +48,8 @@ export default async function OnboardAddLocationPage(props: { searchParams: Sear
     const slug = await generateUniqueLocationSlug();
 
     let mainComponent;
-    if (sessionClaims.metadata.currentLocationId) {
-        mainComponent = <LocationCreated />;
+    if (locationName) {
+        mainComponent = <LocationCreated locationName={locationName} />;
     } else if (isFreePriceTier(parsedTierId)) {
         mainComponent = <AddLocation priceTierId="start" slug={slug} />;
     } else {

@@ -12,7 +12,6 @@ const isAuthProtectedRoute = createRouteMatcher([`${ROUTES.userRoot}(.*)`]);
 export default clerkMiddleware(
     async (auth, req: NextRequest) => {
         const { userId, sessionClaims, redirectToSignIn } = await auth();
-        const { currentLocationId } = sessionClaims?.metadata ?? {};
         const orgId = sessionClaims?.org_id;
 
         if (isSignUpRoute(req)) {
@@ -40,6 +39,7 @@ export default clerkMiddleware(
         // If the user is signed in and accessing the /my route, redirect them
         // to their actual dashboard URL if possible.
         if (userId && isMyRoute(req)) {
+            const currentLocationId = req.cookies.get(CookieKey.CurrentLocationName);
             if (!currentLocationId || !orgId) {
                 console.log(
                     `DBG-MIDDLEWARE [/my] Not onboarded yet, redirecting to /onboard/add-org. currentLocationId: ${currentLocationId}, orgId: ${orgId}`,
