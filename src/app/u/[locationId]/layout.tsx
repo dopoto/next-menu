@@ -32,10 +32,8 @@ export default async function Layout({
     const validLocationId = getValidLocationIdOrThrow(locationId);
 
     const cookieStore = await cookies();
-    const sidebarOpenCookie = cookieStore.get(CookieKey.SidebarOpen);
+    const sidebarOpenCookie = cookieStore.get(CookieKey.SidebarState);
     const isSidebarOpen = sidebarOpenCookie ? sidebarOpenCookie.value === 'true' : true;
-
-    console.log('DBG-Cookie sidebarOpen:', isSidebarOpen, sidebarOpenCookie?.value);
 
     return (
         <SidebarProvider defaultOpen={isSidebarOpen}>

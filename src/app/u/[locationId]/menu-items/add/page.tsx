@@ -13,7 +13,6 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     const parsedLocationId = getValidLocationIdOrThrow(params.locationId);
 
     const availableQuota = await getAvailableFeatureQuota('menuItems');
-    console.log(availableQuota);
 
     if (availableQuota <= 0) {
         return <NoQuotaLeft title={'You have used all menu items available in your current plan'} />;

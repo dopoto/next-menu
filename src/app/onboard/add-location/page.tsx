@@ -31,9 +31,7 @@ export default async function OnboardAddLocationPage(props: { searchParams: Sear
         redirect(ROUTES.signIn);
     }
 
-    // Handle cookies
-    const cookieStore = await cookies();
-    const tier = cookieStore.get(CookieKey.OnboardPlan)?.value;
+    const tier = (await cookies()).get(CookieKey.OnboardPlan)?.value;
     const parsedTier = getValidPriceTier(tier);
     if (!parsedTier) {
         redirect(ROUTES.onboardSelectPlan);

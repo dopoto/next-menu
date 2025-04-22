@@ -5,20 +5,7 @@ import { ROUTES } from '~/lib/routes';
 import { getLocation } from '~/server/queries/location';
 
 export async function SidebarLocationManager(props: { locationId: number }) {
-    // const { user } = useUser();
-    // const router = useRouter();
-    // const claims: CustomJwtSessionClaims = user?.publicMetadata;
-    // const locationId = claims.currentLocationId?.toString() ?? '';
-    // const locationName = claims?.currentLocationName?.toString() ?? 'Loading...';
-
-    // const openLocation = () => {
-    //     // TODO Validate location id
-    //     const route = ROUTES.location(Number(locationId));
-    //     router.push(route);
-    // };
-
     const location = await getLocation(props.locationId);
-
     return (
         <a href={ROUTES.location(location.id)}>
             <SidebarMenuButton

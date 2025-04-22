@@ -2,7 +2,7 @@ import { z } from 'zod';
 import { type PriceTierId } from './price-tiers';
 
 export type StripeCustomerId = `cus_${string}`;
-export const customerIdPrefix = (() => {
+const customerIdPrefix = (() => {
     const testValue: StripeCustomerId = 'cus_';
     return testValue.split('_', 1)[0] + '_';
 })();

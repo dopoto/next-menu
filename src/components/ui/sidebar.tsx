@@ -1,9 +1,10 @@
 'use client';
 
 import { Slot } from '@radix-ui/react-slot';
-import { VariantProps, cva } from 'class-variance-authority';
+import { type VariantProps, cva } from 'class-variance-authority';
 import { PanelLeft } from 'lucide-react';
 import * as React from 'react';
+import { CookieKey } from '~/app/_domain/cookies';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Separator } from '~/components/ui/separator';
@@ -13,7 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '~/comp
 import { useIsMobile } from '~/hooks/use-mobile';
 import { cn } from '~/lib/utils';
 
-const SIDEBAR_COOKIE_NAME = 'sidebar_state';
+const SIDEBAR_COOKIE_NAME = CookieKey.SidebarState;
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = '16rem';
 const SIDEBAR_WIDTH_MOBILE = '18rem';
@@ -56,7 +57,7 @@ const SidebarProvider = React.forwardRef<
     // We use openProp and setOpenProp for control from outside the component.
     const [_open, _setOpen] = React.useState(defaultOpen);
     const open = openProp ?? _open;
-    console.log('DBG-open:', defaultOpen, open);
+
     const setOpen = React.useCallback(
         (value: boolean | ((value: boolean) => boolean)) => {
             const openState = typeof value === 'function' ? value(open) : value;
@@ -65,8 +66,6 @@ const SidebarProvider = React.forwardRef<
             } else {
                 _setOpen(openState);
             }
-
-            console.log('DBG-setOpen:', openState);
 
             // This sets the cookie to keep the sidebar state.
             document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
@@ -77,7 +76,6 @@ const SidebarProvider = React.forwardRef<
     // Helper to toggle the sidebar.
     const toggleSidebar = React.useCallback(() => {
         const newVal = isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-        console.log('DBG-toggleSidebar:', newVal);
         return newVal;
     }, [isMobile, setOpen, setOpenMobile]);
 
@@ -97,7 +95,6 @@ const SidebarProvider = React.forwardRef<
     // We add a state so that we can do data-state="expanded" or "collapsed".
     // This makes it easier to style the sidebar with Tailwind classes.
     const state = open ? 'expanded' : 'collapsed';
-    console.log('DBG-state:', state);
 
     const contextValue = React.useMemo<SidebarContextProps>(
         () => ({

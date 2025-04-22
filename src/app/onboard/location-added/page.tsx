@@ -15,9 +15,7 @@ export const metadata = {
 
 export const dynamic = 'force-dynamic';
 
-export type SearchParams = Promise<Record<'session_id', string | undefined>>;
-
-export default async function OnboardLocationAddedPage(props: { searchParams: SearchParams }) {
+export default async function OnboardLocationAddedPage() {
     const { userId } = await auth();
     if (!userId) {
         redirect(ROUTES.signIn);

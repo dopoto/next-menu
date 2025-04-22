@@ -42,11 +42,10 @@ export async function generateUniqueLocationSlug(): Promise<string> {
 }
 
 /**
- * Checks if the location exists in the database and if it belongs to
- * the organization the user is in.
- * Throws an error if that's not the case.
+ * Returns the location, if it's found in the db and if it belongs to
+ * the org of the current user. Throws an error if that's not the case.
  * @param locationId
- * @returns The valid Location Id.
+ * @returns A valid Location.
  */
 export async function getLocation(locationId: LocationId): Promise<Location> {
     const { userId, sessionClaims } = await auth();

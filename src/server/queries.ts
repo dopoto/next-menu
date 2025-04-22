@@ -58,25 +58,3 @@ export async function getLocationsPlanUsage() {
     //TODO
     return Promise.resolve(1);
 }
-
-// export async function getLocation(id: LocationId) {
-//     const { userId, sessionClaims } = await auth();
-//     if (!userId) {
-//         throw new AppError({ internalMessage: 'Unauthorized' });
-//     }
-
-//     const orgId = sessionClaims?.org_id;
-//     if (!orgId) {
-//         throw new AppError({ internalMessage: 'No organization ID found' });
-//     }
-
-//     const item = await db.query.locations.findFirst({
-//         where: (model, { eq }) => and(eq(model.id, Number(id)), eq(model.orgId, Number(orgId))),
-//     });
-
-//     if (!item) {
-//         throw new AppError({ internalMessage: `Not found: ${id}` });
-//     }
-
-//     return item;
-// }
