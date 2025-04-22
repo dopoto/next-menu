@@ -34,7 +34,7 @@ export async function SidebarLocationManager(props: { locationId: number }) {
                 </div>
                 <ChevronsUpDown className="ml-auto" />
             </SidebarMenuButton>
-            <div className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg">
+            <div className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-56 rounded-lg">
                 <DropdownMenuLabel className="text-muted-foreground text-xs"></DropdownMenuLabel>
             </div>
         </a>
