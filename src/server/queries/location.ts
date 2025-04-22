@@ -3,7 +3,6 @@ import 'server-only';
 import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
 import { type LocationId, type LocationSlug } from '~/lib/location';
-import { getValidOrganizationIdOrThrow } from '~/lib/organization';
 import { db } from '~/server/db';
 import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
 
@@ -40,19 +39,6 @@ export async function generateUniqueLocationSlug(): Promise<string> {
         }
         // If slug exists, the while loop will continue and try another one
     }
-}
-
-export async function addLocation(orgId: string, name: string, slug: string) {
-    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
-    const [insertedLocation] = await db
-        .insert(locations)
-        .values({
-            name: name,
-            slug: slug,
-            orgId: validatedOrgId,
-        })
-        .returning({ id: locations.id });
-    return insertedLocation;
 }
 
 /**
@@ -105,30 +91,37 @@ export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]
         throw new AppError({ internalMessage: 'Unauthorized' });
     }
 
-    const orgId = sessionClaims?.org_id;
-    const validatedOrgId = getValidOrganizationIdOrThrow(orgId);
-    if (!validatedOrgId) {
-        throw new AppError({ internalMessage: `No valid organization ID found for claim ${orgId}` });
-    }
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
 
-    // First verify the location belongs to the organization
-    const location = await db.query.locations.findFirst({
-        where: (locations, { and, eq }) => and(eq(locations.id, locationId), eq(locations.orgId, validatedOrgId)),
-    });
-
-    if (!location) {
-        throw new AppError({
-            internalMessage: 'Location not found or access denied',
-        });
-    }
-
-    // Now fetch menus for this location
-    const items = await db.query.menus.findMany({
-        where: (menus, { eq }) => eq(menus.locationId, locationId),
+    const menus = await db.query.menus.findMany({
+        where: (menus, { eq, and }) =>
+            and(
+                eq(menus.locationId, locationId),
+                eq(
+                    db
+                        .select({ orgId: locations.orgId })
+                        .from(locations)
+                        .where(
+                            and(
+                                eq(locations.id, locationId),
+                                eq(
+                                    locations.orgId,
+                                    db
+                                        .select({ id: organizations.id })
+                                        .from(organizations)
+                                        .where(eq(organizations.clerkOrgId, validClerkOrgId))
+                                        .limit(1),
+                                ),
+                            ),
+                        )
+                        .limit(1),
+                    menus.locationId,
+                ),
+            ),
         orderBy: (menus, { desc }) => desc(menus.name),
     });
 
-    return items;
+    return menus;
 }
 
 export async function getLocationPublicData(locationSlug: LocationSlug): Promise<Location> {

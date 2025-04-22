@@ -39,11 +39,6 @@ export async function getMenuItemsPlanUsage() {
     }
 
     const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
-    if (!validClerkOrgId) {
-        throw new AppError({
-            internalMessage: `No valid clerk org id found in session claims - ${JSON.stringify(sessionClaims)}.`,
-        });
-    }
 
     const result = await db.query.menuItems.findMany({
         where: (menuItems, { eq, and, exists }) =>

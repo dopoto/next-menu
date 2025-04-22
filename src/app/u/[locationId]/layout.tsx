@@ -4,15 +4,21 @@ import React from 'react';
 import { AppVersion } from '~/app/_components/AppVersion';
 import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '~/components/ui/sidebar';
+import { getValidLocationIdOrThrow } from '~/lib/location';
 import { ROUTES } from '~/lib/routes';
 import { LocationSidebar } from './_components/LocationSidebar';
 
+type Params = Promise<{ locationId: string }>;
+
 export default async function Layout({
+    params,
     breadcrumb,
     children,
 }: {
+    params: Params;
     breadcrumb: React.ReactNode;
     children: React.ReactNode;
 }) {
@@ -20,9 +26,14 @@ export default async function Layout({
     // valid stripe and clerk?
     // valid location id, matches claims?
 
+    const locationId = (await params).locationId;
+    const validLocationId = getValidLocationIdOrThrow(locationId);
+
     return (
         <SidebarProvider>
-            <LocationSidebar />
+            <LocationSidebar>
+                <SidebarLocationManager locationId={validLocationId} />
+            </LocationSidebar>
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
