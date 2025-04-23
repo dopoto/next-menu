@@ -10,6 +10,7 @@ import { CustomSidebar } from '~/app/u/[locationId]/_components/CustomSidebar';
 import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 //import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
+import { SidebarInset } from '~/components/ui/sidebar';
 
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { ROUTES } from '~/lib/routes';
@@ -41,32 +42,34 @@ export default async function Layout({
             defaultExpanded={isSidebarOpen}
             locationManager={<SidebarLocationManager locationId={validLocationId} />}
         >
-            <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                <div className="flex items-center gap-2 px-4">
-                    <Separator orientation="vertical" className="mr-2 h-4!" />
-                    {breadcrumb}
-                </div>
-                <div className="ml-auto px-4">
-                    <ThemeSwitch />
-                </div>
-            </header>
-            <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
-            <footer className="flex gap-4 p-4 pt-0 text-xs">
-                <AppVersion />
-                <div className="ml-auto flex gap-2 align-middle">
-                    <Link className="flex gap-0.5 align-middle" href={ROUTES.home}>
-                        <House size={14} /> Home
-                    </Link>
-                    <Separator orientation="vertical" />
-                    <Link
-                        prefetch={false}
-                        className="flex gap-0.5 align-middle"
-                        href={`mailto: ${APP_CONFIG.supportEmail}?subject=Support Request`}
-                    >
-                        <MessageCircleQuestion size={14} /> Support
-                    </Link>
-                </div>
-            </footer>
+            <SidebarInset>
+                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                    <div className="flex items-center gap-2 px-4">
+                        <Separator orientation="vertical" className="mr-2 h-4!" />
+                        {breadcrumb}
+                    </div>
+                    <div className="ml-auto px-4">
+                        <ThemeSwitch />
+                    </div>
+                </header>
+                <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
+                <footer className="flex gap-4 p-4 pt-0 text-xs">
+                    <AppVersion />
+                    <div className="ml-auto flex gap-2 align-middle">
+                        <Link className="flex gap-0.5 align-middle" href={ROUTES.home}>
+                            <House size={14} /> Home
+                        </Link>
+                        <Separator orientation="vertical" />
+                        <Link
+                            prefetch={false}
+                            className="flex gap-0.5 align-middle"
+                            href={`mailto: ${APP_CONFIG.supportEmail}?subject=Support Request`}
+                        >
+                            <MessageCircleQuestion size={14} /> Support
+                        </Link>
+                    </div>
+                </footer>
+            </SidebarInset>
         </CustomSidebar>
     );
 }

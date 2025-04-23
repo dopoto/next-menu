@@ -284,20 +284,20 @@ SidebarProvider.displayName = 'SidebarProvider';
 // );
 // SidebarRail.displayName = 'SidebarRail';
 
-// const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main'>>(({ className, ...props }, ref) => {
-//     return (
-//         <main
-//             ref={ref}
-//             className={cn(
-//                 'relative flex w-full flex-1 flex-col bg-background',
-//                 'md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow',
-//                 className,
-//             )}
-//             {...props}
-//         />
-//     );
-// });
-// SidebarInset.displayName = 'SidebarInset';
+const SidebarInset = React.forwardRef<HTMLDivElement, React.ComponentProps<'main'>>(({ className, ...props }, ref) => {
+    return (
+        <main
+            ref={ref}
+            className={cn(
+                'relative flex w-full flex-1 flex-col bg-background',
+                'md:peer-data-[variant=inset]:m-2 md:peer-data-[state=collapsed]:peer-data-[variant=inset]:ml-2 md:peer-data-[variant=inset]:ml-0 md:peer-data-[variant=inset]:rounded-xl md:peer-data-[variant=inset]:shadow',
+                className,
+            )}
+            {...props}
+        />
+    );
+});
+SidebarInset.displayName = 'SidebarInset';
 
 // const SidebarInput = React.forwardRef<React.ElementRef<typeof Input>, React.ComponentProps<typeof Input>>(
 //     ({ className, ...props }, ref) => {
@@ -630,11 +630,6 @@ SidebarMenuButton.displayName = 'SidebarMenuButton';
 // SidebarMenuSubButton.displayName = 'SidebarMenuSubButton';
 
 export {
-    SidebarMenu,
-    SidebarMenuButton,
-    // SidebarMenuAction,
-    // SidebarMenuBadge,
-    SidebarMenuItem,
     // Sidebar,
     // SidebarContent,
     // SidebarFooter,
@@ -644,6 +639,11 @@ export {
     // SidebarGroupLabel,
     // SidebarHeader,
     // SidebarInput,
-    // SidebarInset,
+    SidebarInset,
+    SidebarMenu,
+    SidebarMenuButton,
+    // SidebarMenuAction,
+    // SidebarMenuBadge,
+    SidebarMenuItem,
     SidebarProvider,
 };
