@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { SidebarOrganizationManager } from '~/app/u/[locationId]/_components/SidebarOrganizationManager';
+import { SidebarUserManager } from '~/app/u/[locationId]/_components/SidebarUserManager';
 import { Button } from '~/components/ui/button';
 import { SidebarMenuButton, SidebarMenuItem } from '~/components/ui/sidebar';
 import { MENU_TREE } from '~/lib/nav';
@@ -67,7 +69,7 @@ export function CustomSidebar({ defaultExpanded = false, locationManager, childr
             <div
                 className={cn(
                     'flex h-full flex-col bg-sidebar text-sidebar-foreground border-r transition-all duration-300',
-                    expanded ? 'w-64' : 'w-12',
+                    expanded ? 'w-64' : 'w-16',
                 )}
             >
                 {/* Header */}
@@ -114,7 +116,10 @@ export function CustomSidebar({ defaultExpanded = false, locationManager, childr
                 </div>
 
                 {/* Footer */}
-                <div className="flex flex-col gap-2 p-2">user</div>
+                <div className="flex flex-col gap-2 p-2">
+                    <SidebarOrganizationManager />
+                    <SidebarUserManager />
+                </div>
             </div>
 
             {/* Main content */}

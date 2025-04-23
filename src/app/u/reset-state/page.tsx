@@ -26,7 +26,7 @@ export default async function ResetStatePage() {
         const validLocationId = getValidLocationIdOrThrow(initialLocationId);
         const locationData = await getLocation(validLocationId);
         if (locationData) {
-            await setLocationIdCookie(locationData.id);
+            setLocationIdCookie(locationData.id);
             redirect(ROUTES.my);
         }
     }

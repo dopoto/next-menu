@@ -415,10 +415,10 @@ import { cn } from '~/lib/utils';
 // );
 // SidebarGroupContent.displayName = 'SidebarGroupContent';
 
-// const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(({ className, ...props }, ref) => (
-//     <ul ref={ref} data-sidebar="menu" className={cn('flex w-full min-w-0 flex-col gap-1', className)} {...props} />
-// ));
-// SidebarMenu.displayName = 'SidebarMenu';
+const SidebarMenu = React.forwardRef<HTMLUListElement, React.ComponentProps<'ul'>>(({ className, ...props }, ref) => (
+    <ul ref={ref} data-sidebar="menu" className={cn('flex w-full min-w-0 flex-col gap-1', className)} {...props} />
+));
+SidebarMenu.displayName = 'SidebarMenu';
 
 const SidebarMenuItem = React.forwardRef<HTMLLIElement, React.ComponentProps<'li'>>(({ className, ...props }, ref) => (
     <li
@@ -633,7 +633,6 @@ SidebarMenuButton.displayName = 'SidebarMenuButton';
 // SidebarMenuSubButton.displayName = 'SidebarMenuSubButton';
 
 export {
-    SidebarMenuButton,
     // Sidebar,
     // SidebarContent,
     // SidebarFooter,
@@ -644,7 +643,8 @@ export {
     // SidebarHeader,
     // SidebarInput,
     // SidebarInset,
-    // SidebarMenu,
+    SidebarMenu,
+    SidebarMenuButton,
     // SidebarMenuAction,
     // SidebarMenuBadge,
     SidebarMenuItem,

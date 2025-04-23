@@ -5,6 +5,11 @@ import { CookieKey } from './app/_domain/cookies';
 import { getValidPriceTier } from './app/_utils/price-tier-utils';
 import { ROUTES } from './lib/routes';
 
+const cookieOptions = {
+    path: '/',
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+};
 const redirectTo = (req: NextRequest, route: string) => NextResponse.redirect(new URL(route, req.url));
 const isSignUpRoute = createRouteMatcher([ROUTES.signUp]);
 const isMyRoute = createRouteMatcher([`${ROUTES.my}(.*)`]);
@@ -22,11 +27,7 @@ export default clerkMiddleware(
             if (getValidPriceTier(tierParam)) {
                 console.log(`DBG-MDLW [${req.url}] Setting onboard-plan cookie to ${tierParam}`);
                 const signUpResponse = NextResponse.next();
-                signUpResponse.cookies.set(CookieKey.OnboardPlan, tierParam, {
-                    path: '/',
-                    httpOnly: false,
-                    secure: process.env.NODE_ENV === 'production',
-                });
+                signUpResponse.cookies.set(CookieKey.OnboardPlan, tierParam, cookieOptions);
                 return signUpResponse;
             }
         }
@@ -47,15 +48,28 @@ export default clerkMiddleware(
 
             const currentLocationId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
             const currentLocationValidationResult = locationIdSchema.safeParse(currentLocationId);
-            if (!currentLocationValidationResult.success) {
-                console.log(
-                    `DBG-MDLW [/my] Redirecting to ${ROUTES.resetState} - invalid currentLocationId: ${currentLocationId}. orgId: ${orgId}`,
-                );
-                return redirectTo(req, ROUTES.resetState);
+            if (currentLocationValidationResult.success) {
+                const myDashboardRoute = ROUTES.live(currentLocationValidationResult.data);
+                console.log(`DBG-MDLW [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
+                return redirectTo(req, myDashboardRoute);
+            } else {
+                // Fall back to the initial location id in the session claims
+                const initialLocationId = sessionClaims?.metadata?.initialLocationId;
+                if (initialLocationId) {
+                    const fallbackMyDashboardRoute = ROUTES.live(Number(initialLocationId));
+                    const fallbackResponse = redirectTo(req, fallbackMyDashboardRoute);
+                    fallbackResponse.cookies.set(CookieKey.CurrentLocationId, initialLocationId, cookieOptions);
+                    console.log(
+                        `DBG-MDLW [/my] Fall back to initial location id. Redirecting from ${req.url} to ${fallbackMyDashboardRoute}`,
+                    );
+                    return fallbackResponse;
+                } else {
+                    console.log(
+                        `DBG-MDLW [/my] Redirecting to ${ROUTES.resetState} - No CurrentLocationId cookie and no initialLocationId in claims metadata.`,
+                    );
+                    return redirectTo(req, ROUTES.resetState);
+                }
             }
-            const myDashboardRoute = ROUTES.live(currentLocationValidationResult.data);
-            console.log(`DBG-MDLW [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
-            return redirectTo(req, myDashboardRoute);
         }
 
         // For auth-protected routes, ensure we have a last location cookie
@@ -63,11 +77,7 @@ export default clerkMiddleware(
             const machineId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
             if (!machineId) {
                 const anonResponse = NextResponse.next();
-                anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), {
-                    path: '/',
-                    httpOnly: false,
-                    secure: process.env.NODE_ENV === 'production',
-                });
+                anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), cookieOptions);
                 return anonResponse;
             }
         }
@@ -77,11 +87,7 @@ export default clerkMiddleware(
             const machineId = req.cookies.get(CookieKey.MachineId);
             if (!machineId) {
                 const anonResponse = NextResponse.next();
-                anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), {
-                    path: '/',
-                    httpOnly: false,
-                    secure: process.env.NODE_ENV === 'production',
-                });
+                anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), cookieOptions);
                 return anonResponse;
             }
         }
