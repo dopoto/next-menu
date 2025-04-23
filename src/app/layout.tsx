@@ -18,7 +18,6 @@ export const metadata: Metadata = {
 export default function RootLayout(props: { children: ReactNode; modal: ReactNode }) {
     return (
         <html lang="en" className={buildHtmlClass()}>
-            {/* <meta name="viewport" content="width=device-width, initial-scale=1.0" /> */}
             <body>
                 <PostHogProvider>
                     <Providers>
