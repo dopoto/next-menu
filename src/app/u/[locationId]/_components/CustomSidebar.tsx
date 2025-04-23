@@ -5,10 +5,12 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 
 import { SidebarOrganizationManager } from '~/app/u/[locationId]/_components/SidebarOrganizationManager';
 import { SidebarUserManager } from '~/app/u/[locationId]/_components/SidebarUserManager';
 import { Button } from '~/components/ui/button';
+import { Separator } from '~/components/ui/separator';
 import { SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '~/components/ui/sidebar';
 import { MENU_TREE, NavItem } from '~/lib/nav';
 import { UserRouteFn } from '~/lib/routes';
@@ -19,9 +21,10 @@ interface CustomSidebarProps {
     defaultExpanded?: boolean;
     children: React.ReactNode;
     locationManager: React.ReactNode;
+    breadcrumb: React.ReactNode;
 }
 
-export function CustomSidebar({ defaultExpanded = false, locationManager, children }: CustomSidebarProps) {
+export function CustomSidebar({ defaultExpanded = false, locationManager, breadcrumb, children }: CustomSidebarProps) {
     const params = useParams();
     const { locationId } = params as { locationId: string };
 
@@ -84,13 +87,18 @@ export function CustomSidebar({ defaultExpanded = false, locationManager, childr
                     </div>
 
                     {/* Main content */}
-                    <div className="flex flex-1 flex-col overflow-auto">
-                        <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+                    <div className="flex flex-1 flex-col overflow-auto bg-background">
+                        <header className="flex h-16 shrink-0 items-center gap-2  ">
                             <div className="flex items-center gap-2 px-4">
                                 <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8">
                                     <PanelLeft className="h-4 w-4" />
                                     <span className="sr-only">Toggle Sidebar</span>
                                 </Button>
+                                <Separator orientation="vertical" className="mr-2 h-4!" />
+                                {breadcrumb}
+                            </div>
+                            <div className="ml-auto px-4">
+                                <ThemeSwitch />
                             </div>
                         </header>
                         {children}

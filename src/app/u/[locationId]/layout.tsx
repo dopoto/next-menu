@@ -3,14 +3,13 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 import { AppVersion } from '~/app/_components/AppVersion';
-import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 import { APP_CONFIG } from '~/app/_config/app-config';
 import { CookieKey } from '~/app/_domain/cookies';
 import { CustomSidebar } from '~/app/u/[locationId]/_components/CustomSidebar';
 import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 //import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
-import { SidebarInset, SidebarTrigger } from '~/components/ui/sidebar';
+import { SidebarInset } from '~/components/ui/sidebar';
 
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { ROUTES } from '~/lib/routes';
@@ -41,9 +40,10 @@ export default async function Layout({
         <CustomSidebar
             defaultExpanded={isSidebarOpen}
             locationManager={<SidebarLocationManager locationId={validLocationId} />}
+            breadcrumb={breadcrumb}
         >
             <SidebarInset>
-                <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+                {/* <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                     <div className="flex items-center gap-2 px-4">
                         <SidebarTrigger />
                         <Separator orientation="vertical" className="mr-2 h-4!" />
@@ -52,7 +52,7 @@ export default async function Layout({
                     <div className="ml-auto px-4">
                         <ThemeSwitch />
                     </div>
-                </header>
+                </header> */}
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
                 <footer className="flex gap-4 p-4 pt-0 text-xs">
                     <AppVersion />
