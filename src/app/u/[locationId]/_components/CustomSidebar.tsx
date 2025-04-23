@@ -1,159 +1,45 @@
 'use client';
 
-import {
-    AudioWaveform,
-    BookOpen,
-    Bot,
-    Command,
-    Frame,
-    GalleryVerticalEnd,
-    Map,
-    PanelLeft,
-    PieChart,
-    Settings2,
-    SquareTerminal,
-} from 'lucide-react';
+import { PanelLeft } from 'lucide-react';
+import Link from 'next/link';
+import { useParams, usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
-import { cn } from '~/lib/utils';
+import { SidebarMenuButton, SidebarMenuItem } from '~/components/ui/sidebar';
+import { MENU_TREE } from '~/lib/nav';
+import { UserRouteFn } from '~/lib/routes';
 
-// This is sample data.
-const data = {
-    user: {
-        name: 'shadcn',
-        email: 'm@example.com',
-        avatar: '/avatars/shadcn.jpg',
-    },
-    teams: [
-        {
-            name: 'Acme Inc',
-            logo: GalleryVerticalEnd,
-            plan: 'Enterprise',
-        },
-        {
-            name: 'Acme Corp.',
-            logo: AudioWaveform,
-            plan: 'Startup',
-        },
-        {
-            name: 'Evil Corp.',
-            logo: Command,
-            plan: 'Free',
-        },
-    ],
-    navMain: [
-        {
-            title: 'Playground',
-            url: '#',
-            icon: SquareTerminal,
-            isActive: true,
-            items: [
-                {
-                    title: 'History',
-                    url: '#',
-                },
-                {
-                    title: 'Starred',
-                    url: '#',
-                },
-                {
-                    title: 'Settings',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Models',
-            url: '#',
-            icon: Bot,
-            items: [
-                {
-                    title: 'Genesis',
-                    url: '#',
-                },
-                {
-                    title: 'Explorer',
-                    url: '#',
-                },
-                {
-                    title: 'Quantum',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Documentation',
-            url: '#',
-            icon: BookOpen,
-            items: [
-                {
-                    title: 'Introduction',
-                    url: '#',
-                },
-                {
-                    title: 'Get Started',
-                    url: '#',
-                },
-                {
-                    title: 'Tutorials',
-                    url: '#',
-                },
-                {
-                    title: 'Changelog',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Settings',
-            url: '#',
-            icon: Settings2,
-            items: [
-                {
-                    title: 'General',
-                    url: '#',
-                },
-                {
-                    title: 'Team',
-                    url: '#',
-                },
-                {
-                    title: 'Billing',
-                    url: '#',
-                },
-                {
-                    title: 'Limits',
-                    url: '#',
-                },
-            ],
-        },
-    ],
-    projects: [
-        {
-            name: 'Design Engineering',
-            url: '#',
-            icon: Frame,
-        },
-        {
-            name: 'Sales & Marketing',
-            url: '#',
-            icon: PieChart,
-        },
-        {
-            name: 'Travel',
-            url: '#',
-            icon: Map,
-        },
-    ],
-};
+import { cn } from '~/lib/utils';
 
 interface CustomSidebarProps {
     defaultExpanded?: boolean;
     children: React.ReactNode;
+    locationManager: React.ReactNode;
 }
 
-export function CustomSidebar({ defaultExpanded = false, children }: CustomSidebarProps) {
+export function CustomSidebar({ defaultExpanded = false, locationManager, children }: CustomSidebarProps) {
+    const pathname = usePathname();
+
+    const params = useParams();
+    const { locationId } = params as { locationId: string };
+
+    const isActive = (route: string, children?: typeof MENU_TREE.children): boolean => {
+        if (pathname === route || `${pathname}/` === route) return true;
+        if (!children) return false;
+        return children.some((child) => {
+            const childRoute = buildUrl(child.route as (locationId: number) => string);
+            return isActive(childRoute, child.children);
+        });
+    };
+
+    const buildUrl = (routeFn: UserRouteFn) => {
+        return routeFn(Number(locationId));
+    };
+
+    const dashboardMenuSection = MENU_TREE.children?.find((i) => i.id === 'dashboard')?.children ?? [];
+    const locationManagerMenuSection = MENU_TREE.children?.find((i) => i.id === 'locationManager')?.children ?? [];
+
     const [expanded, setExpanded] = useState(defaultExpanded);
 
     // Update cookie when sidebar state changes
@@ -181,25 +67,51 @@ export function CustomSidebar({ defaultExpanded = false, children }: CustomSideb
             <div
                 className={cn(
                     'flex h-full flex-col bg-sidebar text-sidebar-foreground border-r transition-all duration-300',
-                    expanded ? 'w-64' : 'w-16',
+                    expanded ? 'w-64' : 'w-12',
                 )}
             >
                 {/* Header */}
-                <div className="flex flex-col gap-2 p-2">
-                    {expanded ? (
-                        <>team swit</>
-                    ) : (
-                        <div className="flex justify-center p-2">
-                            <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                                {data.teams[0]?.logo &&
-                                    React.createElement(data.teams[0].logo, { className: 'size-4' })}
-                            </div>
-                        </div>
-                    )}
-                </div>
+                <div className="flex flex-col gap-2 p-2">{locationManager}</div>
 
                 {/* Content */}
-                <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2">main</div>
+                <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2">
+                    {dashboardMenuSection.map((item) => {
+                        const href = buildUrl(item.route as (locationId: number) => string);
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isActive(href, item.children)}
+                                    tooltip={item.title}
+                                >
+                                    <Link href={href} className="flex items-center gap-2">
+                                        <span className="flex-shrink-0">{item.icon}</span>
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        );
+                    })}
+                    {locationManagerMenuSection.map((item) => {
+                        const href = buildUrl(item.route as (locationId: number) => string);
+                        return (
+                            <SidebarMenuItem key={item.title}>
+                                <SidebarMenuButton
+                                    asChild
+                                    isActive={isActive(href, item.children)}
+                                    tooltip={item.title}
+                                >
+                                    <Link href={href} className="flex items-center gap-2">
+                                        <span title={item.title} className="flex-shrink-0">
+                                            {item.icon}
+                                        </span>
+                                        <span>{item.title}</span>
+                                    </Link>
+                                </SidebarMenuButton>
+                            </SidebarMenuItem>
+                        );
+                    })}
+                </div>
 
                 {/* Footer */}
                 <div className="flex flex-col gap-2 p-2">user</div>

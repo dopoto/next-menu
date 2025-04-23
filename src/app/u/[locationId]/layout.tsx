@@ -7,10 +7,11 @@ import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 import { APP_CONFIG } from '~/app/_config/app-config';
 import { CookieKey } from '~/app/_domain/cookies';
 import { CustomSidebar } from '~/app/u/[locationId]/_components/CustomSidebar';
+import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 //import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
 
-import { getValidLocationIdOrThrow } from '~/lib/location';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { ROUTES } from '~/lib/routes';
 
 type Params = Promise<{ locationId: string }>;
@@ -36,9 +37,10 @@ export default async function Layout({
     const isSidebarOpen = sidebarOpenCookie ? sidebarOpenCookie.value === 'true' : true;
 
     return (
-        <CustomSidebar defaultExpanded={true}>
-            {/* <SidebarLocationManager locationId={validLocationId} /> */}
-
+        <CustomSidebar
+            defaultExpanded={isSidebarOpen}
+            locationManager={<SidebarLocationManager locationId={validLocationId} />}
+        >
             <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
                 <div className="flex items-center gap-2 px-4">
                     <Separator orientation="vertical" className="mr-2 h-4!" />

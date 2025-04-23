@@ -2,7 +2,7 @@ import { auth } from '@clerk/nextjs/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { CookieKey } from '~/app/_domain/cookies';
-import { getValidLocationIdOrThrow } from '~/lib/location';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { ROUTES } from '~/lib/routes';
 import { getLocation } from '~/server/queries/location';
 import { setLocationIdCookie } from '../../actions/setLocationIdCookie';

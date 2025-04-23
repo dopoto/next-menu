@@ -1,6 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
-import { locationIdSchema } from '~/lib/location';
+import { locationIdSchema } from '~/domain/location';
 import { CookieKey } from './app/_domain/cookies';
 import { getValidPriceTier } from './app/_utils/price-tier-utils';
 import { ROUTES } from './lib/routes';

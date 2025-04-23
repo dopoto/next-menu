@@ -1,7 +1,7 @@
 import { and, eq } from 'drizzle-orm';
 import { type z } from 'zod';
+import { LocationId } from '~/domain/location';
 import { AppError } from '~/lib/error-utils.server';
-import { type LocationId } from '~/lib/location';
 import {
     type MenuItem,
     type menuItemFormSchema,

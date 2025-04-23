@@ -6,7 +6,7 @@ import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { Switch } from '~/components/ui/switch';
-import { type LocationId } from '~/lib/location';
+import { type LocationId } from '~/domain/location';
 import { menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 

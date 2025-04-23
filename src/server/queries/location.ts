@@ -1,8 +1,8 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
 import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
+import { LocationId, LocationSlug } from '~/domain/location';
 import { AppError } from '~/lib/error-utils.server';
-import { type LocationId, type LocationSlug } from '~/lib/location';
 import { db } from '~/server/db';
 import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
 
