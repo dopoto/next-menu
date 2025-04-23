@@ -51,46 +51,50 @@ export function CustomSidebar({ defaultExpanded = false, locationManager, childr
 
     return (
         <SidebarProvider defaultOpen={expanded}>
-            <div className="flex h-screen w-full overflow-hidden">
-                {/* Custom sidebar that's always visible */}
-                <div
-                    className={cn(
-                        'flex h-full flex-col bg-sidebar text-sidebar-foreground border-r transition-all duration-300',
-                        expanded ? 'w-64' : 'w-16',
-                    )}
-                >
-                    {/* Header */}
-                    <div className="flex flex-col gap-2 p-2">{locationManager}</div>
+            <div
+                data-sidebar="sidebar"
+                className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
+            >
+                <div className="flex h-screen w-full overflow-hidden">
+                    {/* Custom sidebar that's always visible */}
+                    <div
+                        className={cn(
+                            'flex h-full flex-col bg-sidebar text-sidebar-foreground border-r transition-all duration-300',
+                            expanded ? 'w-64' : 'w-16',
+                        )}
+                    >
+                        {/* Header */}
+                        <div className="flex flex-col gap-2 p-2">{locationManager}</div>
 
-                    {/* Content */}
-                    <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2">
-                        {dashboardMenuSection.map((item) => (
-                            <MenuItem item={item} locationId={locationId} expanded={expanded} />
-                        ))}
-                        {locationManagerMenuSection.map((item) => (
-                            <MenuItem item={item} locationId={locationId} expanded={expanded} />
-                        ))}
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex flex-col gap-2 p-2">
-                        <SidebarOrganizationManager />
-                        <SidebarUserManager />
-                    </div>
-                </div>
-
-                {/* Main content */}
-                <div className="flex flex-1 flex-col overflow-auto">
-                    <header className="flex h-16 shrink-0 items-center gap-2 border-b">
-                        <div className="flex items-center gap-2 px-4">
-                            <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8">
-                                <PanelLeft className="h-4 w-4" />
-                                <span className="sr-only">Toggle Sidebar</span>
-                            </Button>
-                            {children}
+                        {/* Content */}
+                        <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2">
+                            {dashboardMenuSection.map((item) => (
+                                <MenuItem item={item} locationId={locationId} expanded={expanded} />
+                            ))}
+                            {locationManagerMenuSection.map((item) => (
+                                <MenuItem item={item} locationId={locationId} expanded={expanded} />
+                            ))}
                         </div>
-                    </header>
-                    <div className="flex-1 p-4">{/* Page content goes here */}</div>
+
+                        {/* Footer */}
+                        <div className="flex flex-col gap-2 p-2">
+                            <SidebarOrganizationManager />
+                            <SidebarUserManager />
+                        </div>
+                    </div>
+
+                    {/* Main content */}
+                    <div className="flex flex-1 flex-col overflow-auto">
+                        <header className="flex h-16 shrink-0 items-center gap-2 border-b">
+                            <div className="flex items-center gap-2 px-4">
+                                <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8">
+                                    <PanelLeft className="h-4 w-4" />
+                                    <span className="sr-only">Toggle Sidebar</span>
+                                </Button>
+                            </div>
+                        </header>
+                        {children}
+                    </div>
                 </div>
             </div>
         </SidebarProvider>

@@ -2,8 +2,11 @@
 
 import { Slot } from '@radix-ui/react-slot';
 import { type VariantProps, cva } from 'class-variance-authority';
+import { PanelLeft } from 'lucide-react';
 // import { PanelLeft } from 'lucide-react';
 import * as React from 'react';
+import { CookieKey } from '~/app/_domain/cookies';
+import { Button } from '~/components/ui/button';
 // import { CookieKey } from '~/app/_domain/cookies';
 // import { Button } from '~/components/ui/button';
 // import { Input } from '~/components/ui/input';
@@ -15,8 +18,8 @@ import { useIsMobile } from '~/hooks/use-mobile';
 // import { useIsMobile } from '~/hooks/use-mobile';
 import { cn } from '~/lib/utils';
 
-// const SIDEBAR_COOKIE_NAME = CookieKey.SidebarState;
-// const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+const SIDEBAR_COOKIE_NAME = CookieKey.SidebarState;
+const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
 const SIDEBAR_WIDTH = '16rem';
 // const SIDEBAR_WIDTH_MOBILE = '18rem';
 const SIDEBAR_WIDTH_ICON = '3rem';
@@ -69,7 +72,7 @@ const SidebarProvider = React.forwardRef<
             }
 
             // This sets the cookie to keep the sidebar state.
-            //document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+            document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
         },
         [setOpenProp, open],
     );
@@ -231,30 +234,30 @@ SidebarProvider.displayName = 'SidebarProvider';
 // });
 // Sidebar.displayName = 'Sidebar';
 
-// const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.ComponentProps<typeof Button>>(
-//     ({ className, onClick, ...props }, ref) => {
-//         const { toggleSidebar } = useSidebar();
+const SidebarTrigger = React.forwardRef<React.ElementRef<typeof Button>, React.ComponentProps<typeof Button>>(
+    ({ className, onClick, ...props }, ref) => {
+        const { toggleSidebar } = useSidebar();
 
-//         return (
-//             <Button
-//                 ref={ref}
-//                 data-sidebar="trigger"
-//                 variant="ghost"
-//                 size="icon"
-//                 className={cn('h-7 w-7', className)}
-//                 onClick={(event) => {
-//                     onClick?.(event);
-//                     toggleSidebar();
-//                 }}
-//                 {...props}
-//             >
-//                 <PanelLeft />
-//                 <span className="sr-only">Toggle Sidebar</span>
-//             </Button>
-//         );
-//     },
-// );
-// SidebarTrigger.displayName = 'SidebarTrigger';
+        return (
+            <Button
+                ref={ref}
+                data-sidebar="trigger"
+                variant="ghost"
+                size="icon"
+                className={cn('h-7 w-7', className)}
+                onClick={(event) => {
+                    onClick?.(event);
+                    toggleSidebar();
+                }}
+                {...props}
+            >
+                <PanelLeft />
+                <span className="sr-only">Toggle Sidebar</span>
+            </Button>
+        );
+    },
+);
+SidebarTrigger.displayName = 'SidebarTrigger';
 
 // const SidebarRail = React.forwardRef<HTMLButtonElement, React.ComponentProps<'button'>>(
 //     ({ className, ...props }, ref) => {
@@ -646,4 +649,5 @@ export {
     // SidebarMenuBadge,
     SidebarMenuItem,
     SidebarProvider,
+    SidebarTrigger,
 };
