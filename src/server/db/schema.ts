@@ -36,9 +36,7 @@ export const users = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    () => ({
-        roleCheck: sql`CHECK (role IN ('orgowner', 'admin', 'user'))`,
-    }),
+    () => [{ roleCheck: sql`CHECK (role IN ('orgowner', 'admin', 'user'))` }],
 );
 
 export const locations = createTable(
@@ -55,9 +53,11 @@ export const locations = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (example) => ({
-        nameIndex: index('location_name_idx').on(example.name),
-    }),
+    (example) => [
+        {
+            nameIndex: index('location_name_idx').on(example.name),
+        },
+    ],
 );
 
 export const menus = createTable(
@@ -73,9 +73,11 @@ export const menus = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (example) => ({
-        nameIndex: index('menu_name_idx').on(example.name),
-    }),
+    (example) => [
+        {
+            nameIndex: index('menu_name_idx').on(example.name),
+        },
+    ],
 );
 
 export const menuItems = createTable(
@@ -94,9 +96,11 @@ export const menuItems = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (example) => ({
-        nameIndex: index('menu_item_name_idx').on(example.name),
-    }),
+    (example) => [
+        {
+            nameIndex: index('menu_item_name_idx').on(example.name),
+        },
+    ],
 );
 
 export const menuItemsToMenus = createTable(
@@ -113,17 +117,9 @@ export const menuItemsToMenus = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (table) => ({
-        menuItemIdx: index('menu_items_to_menus_menu_item_idx').on(table.menuItemId),
-        menuIdx: index('menu_items_to_menus_menu_idx').on(table.menuId),
-        pk: primaryKey({ columns: [table.menuId, table.menuItemId] }),
-    }),
+    (table) => [
+        index('menu_items_to_menus_menu_item_idx').on(table.menuItemId),
+        index('menu_items_to_menus_menu_idx').on(table.menuId),
+        primaryKey({ columns: [table.menuId, table.menuItemId] }),
+    ],
 );
-
-// Type definitions TODO move from here
-
-export type Location = InferSelectModel<typeof locations>;
-export type NewLocation = InferInsertModel<typeof locations>;
-
-export type Menu = InferSelectModel<typeof menus>;
-export type NewMenu = InferInsertModel<typeof menus>;

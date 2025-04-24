@@ -1,10 +1,11 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { type LocationId, type LocationSlug } from '~/domain/locations';
+import { Location, type LocationId, type LocationSlug } from '~/domain/locations';
+import { Menu } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
+import { locations, organizations } from '~/server/db/schema';
 
 /**
  * Generates a random string of specified length using letters and numbers

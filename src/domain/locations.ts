@@ -1,6 +1,11 @@
 import { formOptions } from '@tanstack/react-form/nextjs';
+import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { PriceTierIdSchema } from '~/domain/price-tiers';
+import { locations } from '~/server/db/schema';
+
+export type Location = InferSelectModel<typeof locations>;
+export type NewLocation = InferInsertModel<typeof locations>;
 
 export const locationIdSchema = z.coerce.number().positive().int();
 export type LocationId = z.infer<typeof locationIdSchema>;
