@@ -1,13 +1,13 @@
-import { faqItems } from '../../domain/faq';
-import { landingPageNavItems } from '../../domain/nav-items';
-import { LandingCta } from './_components/LandingCta';
-import { LandingFAQ } from './_components/LandingFAQ';
-import { LandingFeatures } from './_components/LandingFeatures';
-import { LandingFooter } from './_components/LandingFooter';
-import { LandingHero } from './_components/LandingHero';
-import { LandingNavbar } from './_components/LandingNavbar';
-import { LandingPricing } from './_components/LandingPricing';
-import { LandingTestimonials } from './_components/LandingTestimonials';
+import { LandingCta } from '~/app/(landing)/_components/LandingCta';
+import { LandingFAQ } from '~/app/(landing)/_components/LandingFAQ';
+import { LandingFeatures } from '~/app/(landing)/_components/LandingFeatures';
+import { LandingFooter } from '~/app/(landing)/_components/LandingFooter';
+import { LandingHero } from '~/app/(landing)/_components/LandingHero';
+import { LandingNavbar } from '~/app/(landing)/_components/LandingNavbar';
+import { LandingPricing } from '~/app/(landing)/_components/LandingPricing';
+import { LandingTestimonials } from '~/app/(landing)/_components/LandingTestimonials';
+import { faqItems } from '~/domain/faq';
+import { landingPageNavItems } from '~/domain/nav-items';
 
 export default async function HomePage() {
     return (

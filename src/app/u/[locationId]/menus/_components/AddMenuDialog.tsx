@@ -1,9 +1,9 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
+import { AddMenu } from '~/app/u/[locationId]/menus/_components/AddMenu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '~/components/ui/dialog';
-import { NoQuotaLeft } from '../../_components/NoQuotaLeft';
-import { AddMenu } from './AddMenu';
 
 export default function AddMenuDialog(props: { availableQuota: number }) {
     const router = useRouter();

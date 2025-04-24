@@ -1,7 +1,7 @@
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { type ReactNode } from 'react';
-import { ROUTES } from '../../lib/routes';
+import { ROUTES } from '~/lib/routes';
 import { AppVersion } from './AppVersion';
 import { PageSubtitle } from './PageSubtitle';
 import { PageTitle } from './PageTitle';

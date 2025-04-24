@@ -1,11 +1,5 @@
+import { PriceTier, PriceTierChangeScenario, PriceTierId, PriceTierIdSchema, priceTiers } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
-import {
-    PriceTierIdSchema,
-    priceTiers,
-    type PriceTier,
-    type PriceTierChangeScenario,
-    type PriceTierId,
-} from '../../domain/price-tiers';
 
 export const getValidPriceTier = (priceTierId?: string): PriceTier | undefined => {
     if (!priceTierId) {

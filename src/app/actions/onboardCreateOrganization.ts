@@ -8,12 +8,12 @@ import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { isPaidPriceTier } from '~/app/_utils/price-tier-utils';
+import { CookieKey } from '~/domain/cookies';
+import { PriceTierIdSchema } from '~/domain/price-tiers';
+import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { createOrganization } from '~/server/queries/organization';
-import { CookieKey } from '../../domain/cookies';
-import { PriceTierIdSchema } from '../../domain/price-tiers';
-import { stripeCustomerIdSchema } from '../../domain/stripe';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
