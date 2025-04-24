@@ -11,9 +11,9 @@ import { isPaidPriceTier } from '~/app/_utils/price-tier-utils';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { createOrganization } from '~/server/queries/organization';
-import { CookieKey } from '../_domain/cookies';
-import { PriceTierIdSchema } from '../_domain/price-tiers';
-import { stripeCustomerIdSchema } from '../_domain/stripe';
+import { CookieKey } from '../../domain/cookies';
+import { PriceTierIdSchema } from '../../domain/price-tiers';
+import { stripeCustomerIdSchema } from '../../domain/stripe';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);

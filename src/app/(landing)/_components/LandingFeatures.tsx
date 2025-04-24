@@ -1,6 +1,6 @@
 import { Airplay, Clock, Globe, ScanQrCode, Users, Utensils } from 'lucide-react';
 import React from 'react';
-import { sections } from '../../_domain/landing-content';
+import { sections } from '../../../domain/landing-content';
 import { LandingSectionTitle } from './LandingSectionTitle';
 
 export interface Feature {

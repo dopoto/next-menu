@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/app/_components/PriceTierCard';
 import SvgIcon from '~/app/_components/SvgIcons';
-import { type PriceTier } from '~/app/_domain/price-tiers';
 import { Button } from '~/components/ui/button';
+import { type PriceTier } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 
 export function PlanChanged(props: { fromTier: PriceTier; toTier: PriceTier }) {

@@ -1,7 +1,7 @@
 import { ChevronsUpDown } from 'lucide-react';
+import { isPriceTierId } from '~/app/_utils/price-tier-utils';
 import { Badge } from '~/components/ui/badge';
-import { priceTiers, type PriceTierId } from '../_domain/price-tiers';
-import { isPriceTierId } from '../_utils/price-tier-utils';
+import { PriceTierId, priceTiers } from '~/domain/price-tiers';
 
 export function TierPill(props: { priceTierId: PriceTierId; showTierName: boolean; isExpandable: boolean }) {
     if (!isPriceTierId(props.priceTierId)) {

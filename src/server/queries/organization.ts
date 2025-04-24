@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { getValidClerkOrgIdOrThrow } from '~/app/_domain/clerk';
+import { getValidClerkOrgIdOrThrow } from '~/domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { locations, organizations, users } from '~/server/db/schema';

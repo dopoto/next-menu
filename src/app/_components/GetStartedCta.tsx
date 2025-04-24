@@ -3,8 +3,8 @@
 import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { Button } from '~/components/ui/button';
-import { ROUTES } from '../../lib/routes';
-import { type PriceTierId } from '../_domain/price-tiers';
+import { PriceTierId } from '~/domain/price-tiers';
+import { ROUTES } from '~/lib/routes';
 
 export function GetStartedCta(props: { tier?: PriceTierId; secondaryText?: string; variant: 'default' | 'outline' }) {
     return (

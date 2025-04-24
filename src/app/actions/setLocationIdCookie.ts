@@ -1,7 +1,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-import { CookieKey } from '~/app/_domain/cookies';
+import { CookieKey } from '~/domain/cookies';
 
 export async function setLocationIdCookie(locationId: number) {
     const cookieStore = await cookies();

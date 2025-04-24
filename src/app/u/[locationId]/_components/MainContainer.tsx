@@ -6,7 +6,7 @@ import { useParams, usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
-import { CookieKey } from '~/app/_domain/cookies';
+import { CookieKey } from '~/domain/cookies';
 
 import { SidebarOrganizationManager } from '~/app/u/[locationId]/_components/SidebarOrganizationManager';
 import { SidebarUserManager } from '~/app/u/[locationId]/_components/SidebarUserManager';

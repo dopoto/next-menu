@@ -1,12 +1,11 @@
 import { type ReactNode } from 'react';
-import { priceTierFlags } from '~/app/_domain/price-tier-flags';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
-import { type ExceededFeature } from '../_domain/price-tier-usage';
-import { type PriceTier } from '../_domain/price-tiers';
-import { PageSubtitle } from './PageSubtitle';
-
-import { priceTierFeatures } from '~/app/_domain/price-tier-features';
+import { PageSubtitle } from '~/app/_components/PageSubtitle';
 import { Badge } from '~/components/ui/badge';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
+import { priceTierFeatures } from '~/domain/price-tier-features';
+import { priceTierFlags } from '~/domain/price-tier-flags';
+import { ExceededFeature } from '~/domain/price-tier-usage';
+import { PriceTier } from '~/domain/price-tiers';
 
 export type CardCustomizations = {
     containerStyle?: string;

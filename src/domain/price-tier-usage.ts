@@ -1,4 +1,4 @@
-import { type PriceTierFeatureId } from '~/app/_domain/price-tier-features';
+import { type PriceTierFeatureId } from '~/domain/price-tier-features';
 import { getLocationsPlanUsage, getMenuItemsPlanUsage, getMenusPlanUsage } from '~/server/queries';
 
 export type PriceTierFeatureUsage = {

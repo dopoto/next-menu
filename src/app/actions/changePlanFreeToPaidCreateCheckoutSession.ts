@@ -3,7 +3,7 @@
 import { Stripe } from 'stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { type PriceTierId } from '../_domain/price-tiers';
+import { type PriceTierId } from '../../domain/price-tiers';
 import { getValidFreePriceTier, getValidPaidPriceTier } from '../_utils/price-tier-utils';
 
 const apiKey = env.STRIPE_SECRET_KEY;

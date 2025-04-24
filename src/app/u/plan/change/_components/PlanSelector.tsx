@@ -6,9 +6,9 @@ import {
     PriceTierCard,
 } from '~/app/_components/PriceTierCard';
 import { SeparatorWithText } from '~/app/_components/SeparatorWithText';
-import { type PriceTierId, priceTiers } from '~/app/_domain/price-tiers';
 import { getExceededFeatures } from '~/app/_utils/price-tier-utils.server-only';
 import { Button } from '~/components/ui/button';
+import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 
 export async function PlanSelector() {

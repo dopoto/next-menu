@@ -1,9 +1,9 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { type PriceTierFeatureId } from '~/app/_domain/price-tier-features';
-import { type PriceTierFlagId } from '~/app/_domain/price-tier-flags';
+import { type PriceTierFeatureId } from '~/domain/price-tier-features';
+import { type PriceTierFlagId } from '~/domain/price-tier-flags';
 import { AppError } from '~/lib/error-utils.server';
-import { priceTierUsageFunctions } from '../_domain/price-tier-usage';
+import { priceTierUsageFunctions } from '../../domain/price-tier-usage';
 import { getValidPriceTier } from './price-tier-utils';
 
 /**

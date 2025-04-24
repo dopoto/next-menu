@@ -2,8 +2,8 @@
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCallback } from 'react';
-import { type PriceTierId } from '~/app/_domain/price-tiers';
 import { onboardCreateCheckoutSession } from '~/app/actions/onboardCreateCheckoutSession';
+import { type PriceTierId } from '~/domain/price-tiers';
 import { env } from '~/env';
 
 const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);

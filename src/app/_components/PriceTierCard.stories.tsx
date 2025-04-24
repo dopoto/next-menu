@@ -1,7 +1,7 @@
 import { type Meta, type StoryObj } from '@storybook/react';
 import { PriceTierCard } from '~/app/_components/PriceTierCard';
-import { priceTiers } from '~/app/_domain/price-tiers';
 import { Button } from '~/components/ui/button';
+import { priceTiers } from '~/domain/price-tiers';
 
 const meta: Meta<typeof PriceTierCard> = {
     title: 'Components/PriceTierCard',

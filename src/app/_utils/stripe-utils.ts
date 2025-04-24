@@ -4,13 +4,13 @@ import Stripe from 'stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
-import { type PriceTierId } from '../_domain/price-tiers';
+import { type PriceTierId } from '../../domain/price-tiers';
 import {
     type StripeCustomerId,
     type StripeSubscriptionId,
     type StripeSubscriptionItemId,
     type UpgradeTiersStripeMetadata,
-} from '../_domain/stripe';
+} from '../../domain/stripe';
 import { getValidPaidPriceTier } from './price-tier-utils';
 import { obj2str } from './string-utils';
 

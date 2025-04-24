@@ -1,8 +1,8 @@
 import { z } from 'zod';
 import { env } from '~/env';
 
-import { type PriceTierFeatureId } from '~/app/_domain/price-tier-features';
-import { type PriceTierFlagId } from '~/app/_domain/price-tier-flags';
+import { type PriceTierFeatureId } from '~/domain/price-tier-features';
+import { type PriceTierFlagId } from '~/domain/price-tier-flags';
 
 export const PriceTierIdSchema = z.union([
     z.literal('start'),
