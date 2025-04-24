@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { getValidClerkOrgIdOrThrow } from '~/domain/clerk';
+import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { locations, organizations } from '~/server/db/schema';

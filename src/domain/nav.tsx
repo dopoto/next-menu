@@ -73,7 +73,7 @@ export const NAV_ITEMS: Record<RouteId, NavItem> = {
     },
 };
 
-export const MENU_TREE: NavItem = {
+export const NAV_TREE: NavItem = {
     ...NAV_ITEMS.ROOT,
     children: [
         {

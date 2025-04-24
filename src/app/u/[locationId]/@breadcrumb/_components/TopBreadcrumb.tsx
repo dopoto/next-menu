@@ -9,7 +9,7 @@ import {
     BreadcrumbSeparator,
 } from '~/components/ui/breadcrumb';
 import { type LocationId } from '~/domain/locations';
-import { type NavItem } from '~/lib/nav';
+import { type NavItem } from '~/domain/nav';
 import { ROUTES, type UserRouteFn } from '~/lib/routes';
 
 export function TopBreadcrumb(props: { items: NavItem[]; currentItem?: NavItem; locationId: LocationId }) {
