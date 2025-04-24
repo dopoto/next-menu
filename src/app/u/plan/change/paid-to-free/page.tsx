@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { Stripe } from 'stripe';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
 import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
 import { type PriceTier } from '~/domain/price-tiers';
 import { env } from '~/env';
