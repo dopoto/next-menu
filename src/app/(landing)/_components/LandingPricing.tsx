@@ -1,6 +1,6 @@
 import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
 import { GetStartedCta } from '~/components/GetStartedCta';
-import { CardCustomizations, PriceTierCard } from '~/components/PriceTierCard';
+import { type CardCustomizations, PriceTierCard } from '~/components/PriceTierCard';
 import { sections } from '~/domain/landing-content';
 import { priceTiers } from '~/domain/price-tiers';
 

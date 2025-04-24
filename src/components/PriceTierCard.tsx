@@ -4,8 +4,8 @@ import { Badge } from '~/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { priceTierFeatures } from '~/domain/price-tier-features';
 import { priceTierFlags } from '~/domain/price-tier-flags';
-import { ExceededFeature } from '~/domain/price-tier-usage';
-import { PriceTier } from '~/domain/price-tiers';
+import { type ExceededFeature } from '~/domain/price-tier-usage';
+import { type PriceTier } from '~/domain/price-tiers';
 
 export type CardCustomizations = {
     containerStyle?: string;

@@ -3,7 +3,7 @@
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
 import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
-import { FAQItem } from '~/domain/faq';
+import { type FAQItem } from '~/domain/faq';
 import { sections } from '~/domain/landing-content';
 
 export function LandingFAQ(props: { items: FAQItem[] }) {

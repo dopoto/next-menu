@@ -1,12 +1,12 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
 import Stripe from 'stripe';
-import { PriceTierId } from '~/domain/price-tiers';
+import { type PriceTierId } from '~/domain/price-tiers';
 import {
-    StripeCustomerId,
-    StripeSubscriptionId,
-    StripeSubscriptionItemId,
-    UpgradeTiersStripeMetadata,
+    type StripeCustomerId,
+    type StripeSubscriptionId,
+    type StripeSubscriptionItemId,
+    type UpgradeTiersStripeMetadata,
 } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';

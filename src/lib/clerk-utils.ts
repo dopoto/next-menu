@@ -1,4 +1,4 @@
-import { ClerkOrganizationId, clerkOrgIdSchema } from '~/domain/clerk';
+import { type ClerkOrganizationId, clerkOrgIdSchema } from '~/domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
 
 export function getValidClerkOrgIdOrThrow(candidate?: string): ClerkOrganizationId {

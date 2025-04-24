@@ -21,7 +21,7 @@ import {
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { type LocationId } from '~/domain/locations';
-import { MenuItem } from '~/domain/menu-items';
+import { type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { ROUTES } from '~/lib/routes';
 

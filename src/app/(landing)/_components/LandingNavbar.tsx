@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import SvgIcon from '~/components/SvgIcons';
 import { Button } from '~/components/ui/button';
-import { LandingPageNavItem } from '~/domain/nav-items';
+import { type LandingPageNavItem } from '~/domain/nav-items';
 import { ROUTES } from '~/lib/routes';
 
 export function LandingNavbar(props: { navItems: LandingPageNavItem[] }) {

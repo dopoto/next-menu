@@ -1,4 +1,10 @@
-import { PriceTier, PriceTierChangeScenario, PriceTierId, PriceTierIdSchema, priceTiers } from '~/domain/price-tiers';
+import {
+    type PriceTier,
+    type PriceTierChangeScenario,
+    type PriceTierId,
+    PriceTierIdSchema,
+    priceTiers,
+} from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
 
 export const getValidPriceTier = (priceTierId?: string): PriceTier | undefined => {

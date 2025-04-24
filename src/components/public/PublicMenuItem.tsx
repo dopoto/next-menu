@@ -1,5 +1,5 @@
 import { Badge } from '~/components/ui/badge';
-import { MenuItem } from '~/domain/menu-items';
+import { type MenuItem } from '~/domain/menu-items';
 
 export function PublicMenuItem(props: { item: Partial<MenuItem> }) {
     const { name, description, price, isNew } = props.item;

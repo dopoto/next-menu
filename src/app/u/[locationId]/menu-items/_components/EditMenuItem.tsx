@@ -8,7 +8,7 @@ import { editMenuItem } from '~/app/actions/editMenuItem';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { type LocationId } from '~/domain/locations';
-import { MenuItem, menuItemFormSchema } from '~/domain/menu-items';
+import { type MenuItem, menuItemFormSchema } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';

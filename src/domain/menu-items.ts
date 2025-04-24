@@ -1,7 +1,7 @@
-import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { withMeta } from '~/lib/form-validation';
-import { menuItems } from '~/server/db/schema';
+import { type menuItems } from '~/server/db/schema';
 
 export const menuItemIdSchema = z.coerce.number().int().positive();
 export type MenuItemId = number;

@@ -2,7 +2,7 @@
 
 import { DeviceMockup } from '~/components/DeviceMockup';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
-import { MenuItem } from '~/domain/menu-items';
+import { type MenuItem } from '~/domain/menu-items';
 
 export function PreviewMenuItem(props: { menuItem: Partial<MenuItem> }) {
     const { name, description, price, isNew } = props.menuItem;

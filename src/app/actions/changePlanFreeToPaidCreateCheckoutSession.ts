@@ -1,7 +1,7 @@
 'use server';
 
 import { Stripe } from 'stripe';
-import { PriceTierId } from '~/domain/price-tiers';
+import { type PriceTierId } from '~/domain/price-tiers';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-utils';

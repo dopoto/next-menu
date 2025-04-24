@@ -1,6 +1,6 @@
 import { ChevronsUpDown } from 'lucide-react';
 import { Badge } from '~/components/ui/badge';
-import { PriceTierId, priceTiers } from '~/domain/price-tiers';
+import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
 import { isPriceTierId } from '~/lib/price-tier-utils';
 
 export function TierPill(props: { priceTierId: PriceTierId; showTierName: boolean; isExpandable: boolean }) {
