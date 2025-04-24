@@ -2,7 +2,7 @@ import { Suspense } from 'react';
 import { getAvailableFeatureQuota } from '~/app/_utils/quota-utils.server-only';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenuItem } from '~/app/u/[locationId]/menu-items/_components/AddMenuItem';
-import { getValidLocationIdOrThrow } from '~/lib/location';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import LoadingSection from '../../_components/LoadingSection';
 
 type Params = Promise<{ locationId: string }>;

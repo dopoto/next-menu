@@ -4,9 +4,9 @@ import React from 'react';
 import { AnalyticsEventSender } from '~/app/_components/AnalyticsEventSender';
 import { CookieKey } from '~/app/_domain/cookies';
 import type { AnalyticsEventId } from '~/domain/analytics';
+import { locationSlugSchema } from '~/domain/location';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { locationSlugSchema } from '~/lib/location';
 import { getLocationPublicData } from '~/server/queries/location';
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {

@@ -7,9 +7,9 @@ import { type z } from 'zod';
 import { editMenuItem } from '~/app/actions/editMenuItem';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
+import { type LocationId } from '~/domain/location';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
-import { type LocationId } from '~/lib/location';
 import { type MenuItem, menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 

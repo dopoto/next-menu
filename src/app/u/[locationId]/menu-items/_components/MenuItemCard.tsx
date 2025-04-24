@@ -20,8 +20,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { type LocationId } from '~/domain/location';
 import { toast } from '~/hooks/use-toast';
-import { type LocationId } from '~/lib/location';
 import { type MenuItem } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 

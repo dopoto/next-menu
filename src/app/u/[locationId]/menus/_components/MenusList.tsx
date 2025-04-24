@@ -1,6 +1,6 @@
 import { ScanQrCode } from 'lucide-react';
 import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
-import { type LocationId } from '~/lib/location';
+import { type LocationId } from '~/domain/location';
 import { ROUTES } from '~/lib/routes';
 import { getMenusByLocation } from '~/server/queries/location';
 import MenuCard from './MenuCard';

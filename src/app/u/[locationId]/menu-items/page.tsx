@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
-import { getValidLocationIdOrThrow } from '~/lib/location';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import LoadingSection from '../_components/LoadingSection';
 import { MenusItemsList } from './_components/MenuItemsList';
 

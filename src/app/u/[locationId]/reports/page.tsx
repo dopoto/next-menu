@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import { isFlagAvailableInCurrentTier } from '~/app/_utils/quota-utils.server-only';
 import { LocationViewsCard } from '~/app/u/[locationId]/reports/_components/LocationViewsCard';
 import { AppError } from '~/lib/error-utils.server';
-import { getValidLocationIdOrThrow } from '~/lib/location';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 
 type Params = Promise<{ locationId: string }>;
 
