@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { type PriceTierId } from './price-tiers';
+import { PriceTierId } from '~/domain/price-tiers';
 
 export type StripeCustomerId = `cus_${string}`;
 const customerIdPrefix = (() => {

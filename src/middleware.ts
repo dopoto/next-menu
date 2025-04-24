@@ -1,9 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
+import { CookieKey } from '~/domain/cookies';
 import { locationIdSchema } from '~/domain/location';
-import { CookieKey } from './domain/cookies';
-import { getValidPriceTier } from './lib/price-tier-utils';
-import { ROUTES } from './lib/routes';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
+import { ROUTES } from '~/lib/routes';
 
 const cookieOptions = {
     path: '/',

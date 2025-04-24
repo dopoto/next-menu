@@ -2,6 +2,8 @@ import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
+import { UpgradeStripeCheckoutForm } from '~/app/u/plan/change/_components/UpgradeStripeCheckoutForm';
 import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
 import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/lib/price-tier-utils';
@@ -10,8 +12,6 @@ import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
 import { changePlanUpgradeCreateCheckoutSession } from '~/lib/stripe-utils';
 import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
-import ProcessingPlanChange from '../_components/ProcessingPlanChange';
-import { UpgradeStripeCheckoutForm } from '../_components/UpgradeStripeCheckoutForm';
 
 type SearchParams = Promise<Record<'toTierId', string | undefined>>;
 

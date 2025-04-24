@@ -1,8 +1,8 @@
 'use client'; // Error boundaries must be Client Components
 
+import { ErrorCard } from '~/app/_components/ErrorCard';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { type PublicError } from '~/domain/error-handling';
-import { ErrorCard } from '../_components/ErrorCard';
 
 export default function OnboardError({ error, reset }: { error: PublicError; reset: () => void }) {
     return (

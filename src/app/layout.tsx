@@ -4,11 +4,11 @@ import { type Metadata } from 'next';
 import { type ReactNode } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { PostHogProvider } from '~/app/_components/PostHogProvider';
+import Providers from '~/app/_components/Providers';
 import { Toaster } from '~/components/ui/toaster';
 import { env } from '~/env';
+import { buildHtmlClass } from '~/lib/theme-utils';
 import '~/styles/globals.css';
-import { buildHtmlClass } from '../lib/theme-utils';
-import Providers from './_components/Providers';
 
 export const metadata: Metadata = {
     title: 'The Menu',

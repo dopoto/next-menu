@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
 import { Labeled } from '~/app/_components/Labeled';
+import { APP_CONFIG } from '~/app/_config/app-config';
 import { PUBLIC_ERROR_DELIMITER, type PublicErrorMessage } from '~/domain/error-handling';
-import { APP_CONFIG } from '../_config/app-config';
 
 export function ErrorCard(props: {
     publicErrorMessage?: PublicErrorMessage;

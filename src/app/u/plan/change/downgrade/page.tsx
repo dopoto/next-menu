@@ -3,6 +3,8 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import Stripe from 'stripe';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
+import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
 import { type PriceTier } from '~/domain/price-tiers';
 import { type StripeCustomerId, type StripeRefundId, type StripeSubscriptionId } from '~/domain/stripe';
 import { env } from '~/env';
@@ -13,8 +15,6 @@ import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
 import { getActiveStripeSubscriptionItem, getActiveSubscriptionItemId } from '~/lib/stripe-utils';
 import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
-import { PlanChanged } from '../_components/PlanChanged';
-import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);

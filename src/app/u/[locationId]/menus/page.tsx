@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
+import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
+import { MenusList } from '~/app/u/[locationId]/menus/_components/MenusList';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
-import LoadingSection from '../_components/LoadingSection';
-import { MenusList } from './_components/MenusList';
 
 type Params = Promise<{ locationId: string }>;
 

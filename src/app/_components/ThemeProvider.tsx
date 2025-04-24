@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { AppError } from '~/lib/error-utils.server';
-import { buildHtmlClass } from '../../lib/theme-utils';
+import { buildHtmlClass } from '~/lib/theme-utils';
 
 const getInitialTheme = () => {
     // Handle server-side rendering scenario

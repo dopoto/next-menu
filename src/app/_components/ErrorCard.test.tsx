@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { fireEvent, render, screen } from '@testing-library/react';
-import { ErrorCard } from './ErrorCard';
+import { ErrorCard } from '~/app/_components/ErrorCard';
 
 const mockRouterRefresh = jest.fn(() => null);
 

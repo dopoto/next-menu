@@ -3,11 +3,11 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { LocationCreated } from '~/app/onboard/_components/LocationCreated';
+import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
 import { CookieKey } from '~/domain/cookies';
 import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
-import { LocationCreated } from '../_components/LocationCreated';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Add location`,

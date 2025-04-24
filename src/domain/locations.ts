@@ -1,6 +1,6 @@
 import { formOptions } from '@tanstack/react-form/nextjs';
 import { z } from 'zod';
-import { PriceTierIdSchema } from './price-tiers';
+import { PriceTierIdSchema } from '~/domain/price-tiers';
 
 export type AddLocationFormData = {
     locationName: string;

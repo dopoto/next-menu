@@ -3,7 +3,7 @@ import 'server-only';
 import { getValidClerkOrgIdOrThrow } from '~/domain/clerk';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { locations, organizations } from './db/schema';
+import { locations, organizations } from '~/server/db/schema';
 
 export async function getMenusPlanUsage() {
     const { userId, sessionClaims } = await auth();

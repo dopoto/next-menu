@@ -1,15 +1,14 @@
 'use client';
 
-import { Moon, Sun } from 'lucide-react';
-
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
+import { Moon, Sun } from 'lucide-react';
+import { useTheme } from '~/app/_components/ThemeProvider';
 import { Button } from '~/components/ui/button';
-import { useTheme } from './ThemeProvider';
 
 export function ThemeSwitch() {
     const { setTheme } = useTheme();

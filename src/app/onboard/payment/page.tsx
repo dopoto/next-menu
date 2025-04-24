@@ -3,12 +3,12 @@ import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { CheckoutForm } from '~/app/onboard/_components/CheckoutForm';
+import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
 import { CookieKey } from '~/domain/cookies';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
-import { CheckoutForm } from '../_components/CheckoutForm';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Payment`,

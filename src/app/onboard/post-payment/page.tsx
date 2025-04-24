@@ -1,11 +1,10 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { Redirecting } from '~/app/onboard/_components/Redirecting';
 import { CookieKey } from '~/domain/cookies';
 import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
-import { Redirecting } from '../_components/Redirecting';
 
 type SearchParams = Promise<Record<'session_id', string | string[] | undefined>>;
 

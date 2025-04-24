@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { Stripe } from 'stripe';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
 import { type PriceTier } from '~/domain/price-tiers';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
@@ -11,8 +12,6 @@ import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
 import { getOrganizationByClerkOrgId, updateOrganizationStripeCustomerId } from '~/server/queries/organization';
-import { PlanChanged } from '../_components/PlanChanged';
-import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
