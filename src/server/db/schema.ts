@@ -90,6 +90,7 @@ export const menuItems = createTable(
         name: varchar('name', { length: 256 }),
         description: varchar('description', { length: 256 }),
         price: decimal('price').notNull(),
+        type: varchar('type', { length: 10 }).notNull().default('dish'),
         isNew: boolean('is_new').default(false).notNull(),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
@@ -99,6 +100,7 @@ export const menuItems = createTable(
     (example) => [
         {
             nameIndex: index('menu_item_name_idx').on(example.name),
+            typeCheck: sql`CHECK (type IN ('dish', 'beverage'))`,
         },
     ],
 );

@@ -49,11 +49,12 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
 
     return (
         <>
-            <div className="g-2 flex w-full flex-row gap-2 p-2">
+            <div className="  flex w-full flex-row    ">
                 <PublicMenuItem
                     item={{
                         name: props.item.name,
                         description: props.item.description,
+                        type: props.item.type,
                         price: props.item.price.toString(),
                         isNew: props.item.isNew,
                     }}
