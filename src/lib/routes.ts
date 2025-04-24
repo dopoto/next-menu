@@ -1,6 +1,6 @@
 import { type LocationId, type LocationSlug } from '~/domain/location';
+import { MenuItemId } from '~/domain/menu-items';
 import { PriceTierId } from '~/domain/price-tiers';
-import { type MenuItemId } from '~/lib/menu-items';
 
 type PlanChangeType = 'free-to-paid' | 'free-to-free' | 'paid-to-free' | 'paid-to-paid' | 'upgrade' | 'downgrade';
 

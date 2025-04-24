@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { type LocationId } from '~/domain/location';
+import { MenuItemId, menuItemFormSchema } from '~/domain/menu-items';
 import { type FormState } from '~/lib/form-state';
-import { type menuItemFormSchema, type MenuItemId } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 import { deleteMenuItem as deleteMenuItemQuery } from '~/server/queries/menu-items';
 

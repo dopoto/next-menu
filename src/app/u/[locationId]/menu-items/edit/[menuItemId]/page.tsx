@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { EditMenuItem } from '~/app/u/[locationId]/menu-items/_components/EditMenuItem';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
-import { getValidMenuItemIdOrThrow } from '~/lib/menu-items';
+import { getValidMenuItemIdOrThrow } from '~/lib/menu-item-utils';
 import { getMenuItemById } from '~/server/queries/menu-items';
 
 type Params = Promise<{ locationId: string; menuItemId: string }>;

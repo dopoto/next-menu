@@ -7,7 +7,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '~/components/ui/input';
 import { Switch } from '~/components/ui/switch';
 import { type LocationId } from '~/domain/location';
-import { menuItemFormSchema } from '~/lib/menu-items';
+import { menuItemFormSchema } from '~/domain/menu-items';
 import { ROUTES } from '~/lib/routes';
 
 export function AddEditMenuItemForm({

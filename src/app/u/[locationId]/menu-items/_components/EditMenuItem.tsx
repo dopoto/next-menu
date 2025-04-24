@@ -8,9 +8,9 @@ import { editMenuItem } from '~/app/actions/editMenuItem';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { type LocationId } from '~/domain/location';
+import { MenuItem, menuItemFormSchema } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
-import { type MenuItem, menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 
 export function EditMenuItem(props: { locationId: LocationId; menuItem: MenuItem }) {

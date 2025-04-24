@@ -1,7 +1,6 @@
 import '@testing-library/jest-dom';
-
 import { AppError } from '~/lib/error-utils.server';
-import { getValidMenuItemIdOrThrow } from '~/lib/menu-items';
+import { getValidMenuItemIdOrThrow } from '~/lib/menu-item-utils';
 
 describe('getValidMenuItemIdOrThrow', () => {
     it('should return the parsed menu item ID when given a valid string number', () => {
