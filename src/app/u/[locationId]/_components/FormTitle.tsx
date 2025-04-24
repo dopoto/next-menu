@@ -1,5 +1,5 @@
-import { PageSubtitle } from '~/app/_components/PageSubtitle';
-import { PageTitle } from '~/app/_components/PageTitle';
+import { PageSubtitle } from '~/components/PageSubtitle';
+import { PageTitle } from '~/components/PageTitle';
 
 export function FormTitle(props: { title: string; subtitle: string }) {
     return (

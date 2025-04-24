@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { OverviewCard } from '~/app/_components/OverviewCard';
+import { OverviewCard } from '~/components/OverviewCard';
 
 export const Redirecting = (props: { stripeSessionId: string }) => {
     const router = useRouter();

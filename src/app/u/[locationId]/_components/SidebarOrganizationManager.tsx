@@ -4,7 +4,6 @@ import { useClerk, useOrganization, useUser } from '@clerk/nextjs';
 import { ChevronsUpDown } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { priceTiers, type PriceTierId } from '~/app/_domain/price-tiers';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,6 +14,7 @@ import {
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '~/components/ui/sidebar';
+import { priceTiers, type PriceTierId } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 
 export function SidebarOrganizationManager() {

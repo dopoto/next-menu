@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { PriceTierCard } from '~/app/_components/PriceTierCard';
-import { priceTiers } from '~/app/_domain/price-tiers';
+import { PriceTierCard } from '~/components/PriceTierCard';
 import { Button } from '~/components/ui/button';
+import { priceTiers } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 
 export async function SignUpPlanSelector() {

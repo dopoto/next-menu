@@ -1,17 +1,17 @@
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { OverviewCard } from '~/app/_components/OverviewCard';
-import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/app/_components/PriceTierCard';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import SvgIcon from '~/app/_components/SvgIcons';
-import { APP_CONFIG } from '~/app/_config/app-config';
-import { getPriceTierChangeScenario, getValidPriceTier } from '~/app/_utils/price-tier-utils';
-import { getExceededFeatures } from '~/app/_utils/price-tier-utils.server-only';
-import { obj2str } from '~/app/_utils/string-utils';
+import { OverviewCard } from '~/components/OverviewCard';
+import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/components/PriceTierCard';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import SvgIcon from '~/components/SvgIcons';
 import { Button } from '~/components/ui/button';
+import { APP_CONFIG } from '~/config/app-config';
 import { AppError } from '~/lib/error-utils.server';
+import { getPriceTierChangeScenario, getValidPriceTier } from '~/lib/price-tier-utils';
+import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
+import { obj2str } from '~/lib/string-utils';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Change Plan > Review`,

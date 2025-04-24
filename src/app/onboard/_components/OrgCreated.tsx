@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { OrgDropdownMenu } from '~/app/_components/OrgDropdownMenu';
-import { OverviewCard } from '~/app/_components/OverviewCard';
+import { OrgDropdownMenu } from '~/components/OrgDropdownMenu';
+import { OverviewCard } from '~/components/OverviewCard';
 import { Button } from '~/components/ui/button';
 import { type AppRouteKey } from '~/lib/routes';
 

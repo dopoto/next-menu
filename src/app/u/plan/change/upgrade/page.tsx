@@ -1,17 +1,17 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { type PriceTier } from '~/app/_domain/price-tiers';
-import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/app/_utils/price-tier-utils';
-import { getExceededFeatures } from '~/app/_utils/price-tier-utils.server-only';
-import { obj2str } from '~/app/_utils/string-utils';
-import { changePlanUpgradeCreateCheckoutSession } from '~/app/_utils/stripe-utils';
+import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
+import { UpgradeStripeCheckoutForm } from '~/app/u/plan/change/_components/UpgradeStripeCheckoutForm';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
+import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/lib/price-tier-utils';
+import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
+import { obj2str } from '~/lib/string-utils';
+import { changePlanUpgradeCreateCheckoutSession } from '~/lib/stripe-utils';
 import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
-import ProcessingPlanChange from '../_components/ProcessingPlanChange';
-import { UpgradeStripeCheckoutForm } from '../_components/UpgradeStripeCheckoutForm';
 
 type SearchParams = Promise<Record<'toTierId', string | undefined>>;
 

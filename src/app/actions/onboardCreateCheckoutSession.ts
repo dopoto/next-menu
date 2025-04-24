@@ -1,9 +1,9 @@
 'use server';
 
 import { Stripe } from 'stripe';
+import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { type PriceTierId, priceTiers } from '../_domain/price-tiers';
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);

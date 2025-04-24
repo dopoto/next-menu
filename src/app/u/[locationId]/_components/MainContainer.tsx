@@ -5,15 +5,15 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
-import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
-import { CookieKey } from '~/app/_domain/cookies';
+import { ThemeSwitch } from '~/components/ThemeSwitch';
+import { CookieKey } from '~/domain/cookies';
 
 import { SidebarOrganizationManager } from '~/app/u/[locationId]/_components/SidebarOrganizationManager';
 import { SidebarUserManager } from '~/app/u/[locationId]/_components/SidebarUserManager';
 import { Button } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
 import { SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '~/components/ui/sidebar';
-import { MENU_TREE, type NavItem } from '~/lib/nav';
+import { NAV_TREE, type NavItem } from '~/domain/nav';
 import { type UserRouteFn } from '~/lib/routes';
 
 import { cn } from '~/lib/utils';
@@ -34,8 +34,8 @@ export function MainContainer({
     const params = useParams();
     const { locationId } = params as { locationId: string };
 
-    const dashboardMenuSection = MENU_TREE.children?.find((i) => i.id === 'dashboard')?.children ?? [];
-    const locationManagerMenuSection = MENU_TREE.children?.find((i) => i.id === 'locationManager')?.children ?? [];
+    const dashboardMenuSection = NAV_TREE.children?.find((i) => i.id === 'dashboard')?.children ?? [];
+    const locationManagerMenuSection = NAV_TREE.children?.find((i) => i.id === 'locationManager')?.children ?? [];
 
     const [isSidebarExpanded, setIsSidebarExpanded] = useState(isSidebarExpandedInitially);
 
@@ -137,7 +137,7 @@ function MenuItem(props: { item: NavItem; locationId: string; expanded: boolean 
         return routeFn(Number(props.locationId));
     };
 
-    const isActive = (route: string, children?: typeof MENU_TREE.children): boolean => {
+    const isActive = (route: string, children?: typeof NAV_TREE.children): boolean => {
         if (pathname === route || `${pathname}/` === route) return true;
         if (!children) return false;
         return children.some((child) => {

@@ -1,9 +1,8 @@
-import React from 'react';
-import { GetStartedCta } from '../../_components/GetStartedCta';
-import { PriceTierCard, type CardCustomizations } from '../../_components/PriceTierCard';
-import { sections } from '../../_domain/landing-content';
-import { priceTiers } from '../../_domain/price-tiers';
-import { LandingSectionTitle } from './LandingSectionTitle';
+import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
+import { GetStartedCta } from '~/components/GetStartedCta';
+import { type CardCustomizations, PriceTierCard } from '~/components/PriceTierCard';
+import { sections } from '~/domain/landing-content';
+import { priceTiers } from '~/domain/price-tiers';
 
 export const LandingPricing: React.FC = () => {
     const { label, title, secondary } = sections.pricing!.header;

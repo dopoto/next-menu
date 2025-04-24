@@ -1,14 +1,14 @@
 import { auth } from '@clerk/nextjs/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { APP_CONFIG } from '~/app/_config/app-config';
-import { CookieKey } from '~/app/_domain/cookies';
-import { getValidPaidPriceTier } from '~/app/_utils/price-tier-utils';
+import { CheckoutForm } from '~/app/onboard/_components/CheckoutForm';
+import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { APP_CONFIG } from '~/config/app-config';
+import { CookieKey } from '~/domain/cookies';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
-import { CheckoutForm } from '../_components/CheckoutForm';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Payment`,

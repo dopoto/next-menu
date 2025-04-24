@@ -1,11 +1,11 @@
 import { currentUser } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Labeled } from '~/app/_components/Labeled';
-import { OverviewCard } from '~/app/_components/OverviewCard';
-import { SubscriptionDetails } from '~/app/_components/SubscriptionDetails';
-import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
+import { Labeled } from '~/components/Labeled';
+import { OverviewCard } from '~/components/OverviewCard';
+import { SubscriptionDetails } from '~/components/SubscriptionDetails';
 import { Button } from '~/components/ui/button';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
 
 // TODO Location in overview?

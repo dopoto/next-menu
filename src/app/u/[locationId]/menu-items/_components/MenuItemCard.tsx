@@ -20,9 +20,9 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
+import { type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
-import { type MenuItem } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 
 export default function MenuItemCard(props: { locationId: LocationId; item: MenuItem }) {

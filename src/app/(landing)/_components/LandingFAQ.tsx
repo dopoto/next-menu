@@ -2,9 +2,9 @@
 
 import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
-import { type FAQItem } from '../../_domain/faq';
-import { sections } from '../../_domain/landing-content';
-import { LandingSectionTitle } from './LandingSectionTitle';
+import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
+import { type FAQItem } from '~/domain/faq';
+import { sections } from '~/domain/landing-content';
 
 export function LandingFAQ(props: { items: FAQItem[] }) {
     const [openIndex, setOpenIndex] = useState<number | null>(0);

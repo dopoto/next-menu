@@ -2,8 +2,8 @@
 
 import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
+import { type MenuItemId, menuItemFormSchema } from '~/domain/menu-items';
 import { type FormState, processFormErrors } from '~/lib/form-state';
-import { menuItemFormSchema, type MenuItemId } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 import { updateMenuItem } from '~/server/queries/menu-items';
 

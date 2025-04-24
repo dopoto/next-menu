@@ -4,12 +4,12 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@cl
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
+import SvgIcon from '~/components/SvgIcons';
 import { Button } from '~/components/ui/button';
+import { type LandingPageNavItem } from '~/domain/nav-items';
 import { ROUTES } from '~/lib/routes';
-import SvgIcon from '../../_components/SvgIcons';
-import { type NavItem } from '../../_domain/nav-items';
 
-export function LandingNavbar(props: { navItems: NavItem[] }) {
+export function LandingNavbar(props: { navItems: LandingPageNavItem[] }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     return (
         <nav className="bg-background fixed z-10 w-full">

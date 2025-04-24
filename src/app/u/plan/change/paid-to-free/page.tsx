@@ -2,17 +2,17 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { Stripe } from 'stripe';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { type PriceTier } from '~/app/_domain/price-tiers';
-import { getValidFreePriceTier, getValidPaidPriceTier } from '~/app/_utils/price-tier-utils';
-import { getExceededFeatures } from '~/app/_utils/price-tier-utils.server-only';
-import { obj2str } from '~/app/_utils/string-utils';
+import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
+import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { type PriceTier } from '~/domain/price-tiers';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-utils';
+import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
+import { obj2str } from '~/lib/string-utils';
 import { getOrganizationByClerkOrgId, updateOrganizationStripeCustomerId } from '~/server/queries/organization';
-import { PlanChanged } from '../_components/PlanChanged';
-import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 

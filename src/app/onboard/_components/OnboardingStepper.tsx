@@ -5,9 +5,9 @@ import {
     MultiStepper,
     type Step,
     UncompletedStepIcon,
-} from '~/app/_components/MultiStepper';
-import { type PriceTierId, priceTiers } from '~/app/_domain/price-tiers';
-import { isPaidPriceTier } from '~/app/_utils/price-tier-utils';
+} from '~/components/MultiStepper';
+import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
+import { isPaidPriceTier } from '~/lib/price-tier-utils';
 
 export type OnboardingStepId = 'selectPlan' | 'createAccount' | 'addOrg' | 'pay' | 'addLocation' | 'overview';
 

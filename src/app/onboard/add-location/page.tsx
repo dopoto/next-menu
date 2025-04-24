@@ -2,17 +2,17 @@ import { auth } from '@clerk/nextjs/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { APP_CONFIG } from '~/app/_config/app-config';
-import { CookieKey } from '~/app/_domain/cookies';
-import type { PriceTierId } from '~/app/_domain/price-tiers';
-import { getValidPriceTier, isFreePriceTier } from '~/app/_utils/price-tier-utils';
+import { AddLocation } from '~/app/onboard/_components/AddLocation';
+import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { APP_CONFIG } from '~/config/app-config';
+import { CookieKey } from '~/domain/cookies';
+import type { PriceTierId } from '~/domain/price-tiers';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidPriceTier, isFreePriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
 import { generateUniqueLocationSlug } from '~/server/queries/location';
-import { AddLocation } from '../_components/AddLocation';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Add location`,

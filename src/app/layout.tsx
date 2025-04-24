@@ -3,12 +3,12 @@ import { Analytics } from '@vercel/analytics/react';
 import { type Metadata } from 'next';
 import { type ReactNode } from 'react';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { PostHogProvider } from '~/app/_components/PostHogProvider';
+import { PostHogProvider } from '~/components/PostHogProvider';
+import Providers from '~/components/Providers';
 import { Toaster } from '~/components/ui/toaster';
 import { env } from '~/env';
+import { buildHtmlClass } from '~/lib/theme-utils';
 import '~/styles/globals.css';
-import Providers from './_components/Providers';
-import { buildHtmlClass } from './_utils/theme-utils';
 
 export const metadata: Metadata = {
     title: 'The Menu',

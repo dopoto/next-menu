@@ -1,5 +1,5 @@
-import { LocationDetails } from '~/app/_components/LocationDetails';
 import { LocationDialog } from '~/app/u/[locationId]/location/_components/LocationDialog';
+import { LocationDetails } from '~/components/LocationDetails';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 
 type Params = Promise<{ locationId: string }>;

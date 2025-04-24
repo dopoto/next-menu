@@ -1,13 +1,9 @@
 import { and, eq } from 'drizzle-orm';
 import { type z } from 'zod';
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
+import { type MenuItem, type MenuItemId, type menuItemFormSchema } from '~/domain/menu-items';
 import { AppError } from '~/lib/error-utils.server';
-import {
-    type MenuItem,
-    type menuItemFormSchema,
-    type MenuItemId,
-    validateAndFormatMenuItemData,
-} from '~/lib/menu-items';
+import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { db } from '~/server/db';
 import { menuItems } from '~/server/db/schema';
 import { getLocation } from '~/server/queries/location';

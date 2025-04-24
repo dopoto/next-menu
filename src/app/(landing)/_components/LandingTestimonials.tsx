@@ -1,7 +1,7 @@
 import React from 'react';
+import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
 import { Card } from '~/components/ui/card';
-import { sections } from '../../_domain/landing-content';
-import { LandingSectionTitle } from './LandingSectionTitle';
+import { sections } from '~/domain/landing-content';
 
 interface Testimonial {
     content: string;

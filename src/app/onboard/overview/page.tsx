@@ -1,12 +1,12 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { SuccessAnimation } from '~/app/_components/SuccessAnimation';
-import { APP_CONFIG } from '~/app/_config/app-config';
-import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
+import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
+import { Overview } from '~/app/onboard/_components/Overview';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { SuccessAnimation } from '~/components/SuccessAnimation';
+import { APP_CONFIG } from '~/config/app-config';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
-import { Overview } from '../_components/Overview';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Overview`,
@@ -29,11 +29,7 @@ export default async function OverviewPage() {
     return (
         <>
             <SplitScreenContainer
-                mainComponent={
-                    <>
-                        <Overview claims={sessionClaims} />
-                    </>
-                }
+                mainComponent={<Overview claims={sessionClaims} />}
                 secondaryComponent={<OnboardingStepper currentStep={'overview'} tierId={parsedTierId} />}
                 title={'Welcome!'}
                 subtitle={'Your onboarding is now completed'}

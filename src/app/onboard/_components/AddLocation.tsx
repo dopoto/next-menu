@@ -3,14 +3,14 @@
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { OverviewCard } from '~/app/_components/OverviewCard';
-import { type PriceTierId } from '~/app/_domain/price-tiers';
+import { onboardCreateOrganization } from '~/app/actions/onboardCreateOrganization';
+import { OverviewCard } from '~/components/OverviewCard';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
+import { type PriceTierId } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 import { cn } from '~/lib/utils';
-import { onboardCreateOrganization } from '../../actions/onboardCreateOrganization';
 
 export const AddLocation = ({
     priceTierId,

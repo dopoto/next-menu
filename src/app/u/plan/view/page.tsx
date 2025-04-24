@@ -1,22 +1,22 @@
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Labeled } from '~/app/_components/Labeled';
-import { OverviewCard } from '~/app/_components/OverviewCard';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { SubscriptionDetails } from '~/app/_components/SubscriptionDetails';
-import { priceTierFeatures } from '~/app/_domain/price-tier-features';
-import { type PriceTierFeatureUsage } from '~/app/_domain/price-tier-usage';
-import { type PriceTier } from '~/app/_domain/price-tiers';
-import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
-import { getAvailableFeatureQuota } from '~/app/_utils/quota-utils.server-only';
-import { obj2str } from '~/app/_utils/string-utils';
+import { Labeled } from '~/components/Labeled';
+import { OverviewCard } from '~/components/OverviewCard';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { SubscriptionDetails } from '~/components/SubscriptionDetails';
 import { Button } from '~/components/ui/button';
 import { Progress } from '~/components/ui/progress';
 import { Skeleton } from '~/components/ui/skeleton';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
+import { priceTierFeatures } from '~/domain/price-tier-features';
+import { type PriceTierFeatureUsage } from '~/domain/price-tier-usage';
+import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
+import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
+import { obj2str } from '~/lib/string-utils';
 
 export default async function ViewPlanPage() {
     const { userId, sessionClaims } = await auth();

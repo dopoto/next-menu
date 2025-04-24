@@ -1,7 +1,7 @@
 import { SignOutButton } from '@clerk/nextjs';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { Button } from '~/components/ui/button';
-import { APP_CONFIG } from '../_config/app-config';
+import { APP_CONFIG } from '~/config/app-config';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Sign out`,

@@ -2,13 +2,13 @@ import { CreateOrganization } from '@clerk/nextjs';
 import { auth } from '@clerk/nextjs/server';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { APP_CONFIG } from '~/app/_config/app-config';
-import { CookieKey } from '~/app/_domain/cookies';
-import { getValidPriceTier, isPaidPriceTier } from '~/app/_utils/price-tier-utils';
+import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
+import { OrgCreated } from '~/app/onboard/_components/OrgCreated';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { APP_CONFIG } from '~/config/app-config';
+import { CookieKey } from '~/domain/cookies';
+import { getValidPriceTier, isPaidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES, type AppRouteKey } from '~/lib/routes';
-import { OnboardingStepper } from '../_components/OnboardingStepper';
-import { OrgCreated } from '../_components/OrgCreated';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Add organization`,

@@ -7,10 +7,10 @@ import { type z } from 'zod';
 import { addMenuItem } from '~/app/actions/addMenuItem';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
+import { menuItemFormSchema } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
-import { menuItemFormSchema } from '~/lib/menu-items';
 import { ROUTES } from '~/lib/routes';
 
 export function AddMenuItem(props: { locationId: LocationId }) {

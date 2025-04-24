@@ -1,10 +1,10 @@
 import { cookies } from 'next/headers';
 import { PostHog } from 'posthog-node';
 import React from 'react';
-import { AnalyticsEventSender } from '~/app/_components/AnalyticsEventSender';
-import { CookieKey } from '~/app/_domain/cookies';
+import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import type { AnalyticsEventId } from '~/domain/analytics';
-import { locationSlugSchema } from '~/domain/location';
+import { CookieKey } from '~/domain/cookies';
+import { locationSlugSchema } from '~/domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicData } from '~/server/queries/location';

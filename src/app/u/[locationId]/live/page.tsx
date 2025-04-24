@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
+import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
+import { OpenOrdersList } from '~/app/u/[locationId]/live/_components/OpenOrdersList';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
-import LoadingSection from '../_components/LoadingSection';
-import { OpenOrdersList } from './_components/OpenOrdersList';
 
 type Params = Promise<{ locationId: string }>;
 

@@ -1,18 +1,14 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import Stripe from 'stripe';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import {
-    stripeCustomerIdSchema,
-    type StripeSubscriptionId,
-    type UpgradeTiersStripeMetadata,
-} from '~/app/_domain/stripe';
-import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/app/_utils/price-tier-utils';
-import { obj2str } from '~/app/_utils/string-utils';
-import { getActiveStripeSubscriptionItem } from '~/app/_utils/stripe-utils';
+import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { stripeCustomerIdSchema, type StripeSubscriptionId, type UpgradeTiersStripeMetadata } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
+import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/lib/price-tier-utils';
+import { obj2str } from '~/lib/string-utils';
+import { getActiveStripeSubscriptionItem } from '~/lib/stripe-utils';
 import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
-import { PlanChanged } from '../../_components/PlanChanged';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 

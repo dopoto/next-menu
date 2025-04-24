@@ -1,7 +1,7 @@
 'use client'; // Error boundaries must be Client Components
 
-import { ErrorCard } from '~/app/_components/ErrorCard';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { ErrorCard } from '~/components/ErrorCard';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { type PublicError } from '~/domain/error-handling';
 
 export default function ChangePlanError({ error, reset }: { error: PublicError; reset: () => void }) {
