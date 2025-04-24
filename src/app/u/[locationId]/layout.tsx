@@ -5,7 +5,7 @@ import React from 'react';
 import { AppVersion } from '~/app/_components/AppVersion';
 import { APP_CONFIG } from '~/app/_config/app-config';
 import { CookieKey } from '~/app/_domain/cookies';
-import { CustomSidebar } from '~/app/u/[locationId]/_components/CustomSidebar';
+import { MainContainer } from '~/app/u/[locationId]/_components/MainContainer';
 import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset } from '~/components/ui/sidebar';
@@ -31,27 +31,16 @@ export default async function Layout({
     const locationId = (await params).locationId;
     const validLocationId = getValidLocationIdOrThrow(locationId);
 
-    const cookieStore = await cookies();
-    const sidebarOpenCookie = cookieStore.get(CookieKey.SidebarState);
-    const isSidebarOpen = sidebarOpenCookie ? sidebarOpenCookie.value === 'true' : true;
+    const sidebarStateCookie = (await cookies()).get(CookieKey.SidebarState);
+    const isSidebarExpanded = sidebarStateCookie ? sidebarStateCookie.value === 'true' : true;
 
     return (
-        <CustomSidebar
-            defaultExpanded={isSidebarOpen}
+        <MainContainer
+            isSidebarExpanded={isSidebarExpanded}
             locationManager={<SidebarLocationManager locationId={validLocationId} />}
             breadcrumb={breadcrumb}
         >
             <SidebarInset>
-                {/* <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-                    <div className="flex items-center gap-2 px-4">
-                        <SidebarTrigger />
-                        <Separator orientation="vertical" className="mr-2 h-4!" />
-                        {breadcrumb}
-                    </div>
-                    <div className="ml-auto px-4">
-                        <ThemeSwitch />
-                    </div>
-                </header> */}
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
                 <footer className="flex gap-4 p-4 pt-0 text-xs">
                     <AppVersion />
@@ -70,6 +59,6 @@ export default async function Layout({
                     </div>
                 </footer>
             </SidebarInset>
-        </CustomSidebar>
+        </MainContainer>
     );
 }

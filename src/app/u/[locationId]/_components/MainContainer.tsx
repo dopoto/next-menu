@@ -1,11 +1,12 @@
 'use client';
 
-import { PanelLeft } from 'lucide-react';
+import { PanelLeftCloseIcon, PanelRightCloseIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
+import { CookieKey } from '~/app/_domain/cookies';
 
 import { SidebarOrganizationManager } from '~/app/u/[locationId]/_components/SidebarOrganizationManager';
 import { SidebarUserManager } from '~/app/u/[locationId]/_components/SidebarUserManager';
@@ -18,29 +19,32 @@ import { type UserRouteFn } from '~/lib/routes';
 import { cn } from '~/lib/utils';
 
 interface CustomSidebarProps {
-    defaultExpanded?: boolean;
+    isSidebarExpanded?: boolean;
     children: React.ReactNode;
     locationManager: React.ReactNode;
     breadcrumb: React.ReactNode;
 }
 
-export function CustomSidebar({ defaultExpanded = false, locationManager, breadcrumb, children }: CustomSidebarProps) {
+export function MainContainer({
+    isSidebarExpanded: isSidebarExpandedInitially = false,
+    locationManager,
+    breadcrumb,
+    children,
+}: CustomSidebarProps) {
     const params = useParams();
     const { locationId } = params as { locationId: string };
 
     const dashboardMenuSection = MENU_TREE.children?.find((i) => i.id === 'dashboard')?.children ?? [];
     const locationManagerMenuSection = MENU_TREE.children?.find((i) => i.id === 'locationManager')?.children ?? [];
 
-    const [expanded, setExpanded] = useState(defaultExpanded);
+    const [isSidebarExpanded, setIsSidebarExpanded] = useState(isSidebarExpandedInitially);
 
-    // Update cookie when sidebar state changes
     const toggleSidebar = () => {
-        const newState = !expanded;
-        document.cookie = `sidebar_state=${newState}; path=/; max-age=31536000`; // 1 year
-        setExpanded(newState);
+        const newState = !isSidebarExpanded;
+        document.cookie = `${CookieKey.SidebarState}=${newState}; path=/; max-age=31536000`; // 1 year
+        setIsSidebarExpanded(newState);
     };
 
-    // Set initial state from cookie on client side
     useEffect(() => {
         const cookieValue = document.cookie
             .split('; ')
@@ -48,51 +52,68 @@ export function CustomSidebar({ defaultExpanded = false, locationManager, breadc
             ?.split('=')[1];
 
         if (cookieValue !== undefined) {
-            setExpanded(cookieValue === 'true');
+            setIsSidebarExpanded(cookieValue === 'true');
         }
     }, []);
 
     return (
-        <SidebarProvider defaultOpen={expanded}>
+        <SidebarProvider defaultOpen={isSidebarExpanded}>
             <div
                 data-sidebar="sidebar"
                 className="flex h-full w-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:border group-data-[variant=floating]:border-sidebar-border group-data-[variant=floating]:shadow"
             >
                 <div className="flex h-screen w-full overflow-hidden">
-                    {/* Custom sidebar that's always visible */}
                     <div
                         className={cn(
                             'flex h-full flex-col bg-sidebar text-sidebar-foreground border-r transition-all duration-300',
-                            expanded ? 'w-64' : 'w-16',
+                            isSidebarExpanded ? 'w-64' : 'w-16',
                         )}
                     >
-                        {/* Header */}
                         <div className="flex flex-col gap-2 p-2">{locationManager}</div>
-
-                        {/* Content */}
                         <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2">
                             {dashboardMenuSection.map((item) => (
-                                <MenuItem key={item.id} item={item} locationId={locationId} expanded={expanded} />
+                                <MenuItem
+                                    key={item.id}
+                                    item={item}
+                                    locationId={locationId}
+                                    expanded={isSidebarExpanded}
+                                />
                             ))}
                             {locationManagerMenuSection.map((item) => (
-                                <MenuItem key={item.id} item={item} locationId={locationId} expanded={expanded} />
+                                <MenuItem
+                                    key={item.id}
+                                    item={item}
+                                    locationId={locationId}
+                                    expanded={isSidebarExpanded}
+                                />
                             ))}
                         </div>
-
-                        {/* Footer */}
                         <div className="flex flex-col gap-2 p-2">
                             <SidebarOrganizationManager />
                             <SidebarUserManager />
                         </div>
                     </div>
-
-                    {/* Main content */}
                     <div className="flex flex-1 flex-col overflow-auto bg-background">
                         <header className="flex h-16 shrink-0 items-center gap-2  ">
                             <div className="flex items-center gap-2 px-4">
-                                <Button variant="ghost" size="icon" onClick={toggleSidebar} className="h-8 w-8">
-                                    <PanelLeft className="h-4 w-4" />
-                                    <span className="sr-only">Toggle Sidebar</span>
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    title={isSidebarExpanded ? 'Collapse Sidebar' : 'Expand Sidebar'}
+                                    onClick={toggleSidebar}
+                                    className="h-8 w-8"
+                                >
+                                    {isSidebarExpanded ? (
+                                        <>
+                                            <PanelLeftCloseIcon className="h-4 w-4" />
+                                            <span className="sr-only">Collapse Sidebar</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <PanelRightCloseIcon className="h-4 w-4" />
+                                            <span className="sr-only">Expand Sidebar</span>
+                                        </>
+                                    )}
                                 </Button>
                                 <Separator orientation="vertical" className="mr-2 h-4!" />
                                 {breadcrumb}
