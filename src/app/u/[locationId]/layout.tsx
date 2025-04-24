@@ -7,7 +7,6 @@ import { APP_CONFIG } from '~/app/_config/app-config';
 import { CookieKey } from '~/app/_domain/cookies';
 import { CustomSidebar } from '~/app/u/[locationId]/_components/CustomSidebar';
 import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
-//import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset } from '~/components/ui/sidebar';
 
