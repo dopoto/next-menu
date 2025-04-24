@@ -7,7 +7,7 @@ import {
     DropdownMenuTrigger,
 } from '@radix-ui/react-dropdown-menu';
 import { Moon, Sun } from 'lucide-react';
-import { useTheme } from '~/app/_components/ThemeProvider';
+import { useTheme } from '~/components/ThemeProvider';
 import { Button } from '~/components/ui/button';
 
 export function ThemeSwitch() {

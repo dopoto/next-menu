@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import { PageSubtitle } from '~/app/_components/PageSubtitle';
+import { PageSubtitle } from '~/components/PageSubtitle';
 import { Badge } from '~/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { priceTierFeatures } from '~/domain/price-tier-features';

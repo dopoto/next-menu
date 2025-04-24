@@ -1,9 +1,9 @@
 import { Mail, MapPin, Phone } from 'lucide-react';
 import Link from 'next/link';
-import { AppVersion } from '~/app/_components/AppVersion';
-import SvgIcon from '~/app/_components/SvgIcons';
-import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { AppVersion } from '~/components/AppVersion';
+import SvgIcon from '~/components/SvgIcons';
+import { ThemeSwitch } from '~/components/ThemeSwitch';
 import { ROUTES } from '~/lib/routes';
 
 const currentYear = new Date().getFullYear();

@@ -1,8 +1,8 @@
 import { SignUp } from '@clerk/nextjs';
 import { redirect } from 'next/navigation';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { APP_CONFIG } from '~/app/_config/app-config';
 import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
 

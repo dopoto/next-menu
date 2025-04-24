@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
-import { Labeled } from '~/app/_components/Labeled';
-import { OverviewCard } from '~/app/_components/OverviewCard';
+import { Labeled } from '~/components/Labeled';
+import { OverviewCard } from '~/components/OverviewCard';
 import { StripeCustomerId } from '~/domain/stripe';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPriceTier, isFreePriceTier, isPaidPriceTier } from '~/lib/price-tier-utils';

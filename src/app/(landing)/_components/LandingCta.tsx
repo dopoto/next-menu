@@ -1,7 +1,7 @@
 import React from 'react';
-import { GetStartedCta } from '~/app/_components/GetStartedCta';
-import { PageSubtitle } from '~/app/_components/PageSubtitle';
-import { PageTitle } from '~/app/_components/PageTitle';
+import { GetStartedCta } from '~/components/GetStartedCta';
+import { PageSubtitle } from '~/components/PageSubtitle';
+import { PageTitle } from '~/components/PageTitle';
 
 export const LandingCta: React.FC = () => {
     return (

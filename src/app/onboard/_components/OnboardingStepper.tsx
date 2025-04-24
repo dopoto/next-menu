@@ -5,7 +5,7 @@ import {
     MultiStepper,
     type Step,
     UncompletedStepIcon,
-} from '~/app/_components/MultiStepper';
+} from '~/components/MultiStepper';
 import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
 import { isPaidPriceTier } from '~/lib/price-tier-utils';
 

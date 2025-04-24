@@ -1,11 +1,11 @@
 import { SignedIn, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { type ReactNode } from 'react';
-import { AppVersion } from '~/app/_components/AppVersion';
-import { PageSubtitle } from '~/app/_components/PageSubtitle';
-import { PageTitle } from '~/app/_components/PageTitle';
-import SvgIcon from '~/app/_components/SvgIcons';
-import { ThemeSwitch } from '~/app/_components/ThemeSwitch';
+import { AppVersion } from '~/components/AppVersion';
+import { PageSubtitle } from '~/components/PageSubtitle';
+import { PageTitle } from '~/components/PageTitle';
+import SvgIcon from '~/components/SvgIcons';
+import { ThemeSwitch } from '~/components/ThemeSwitch';
 import { ROUTES } from '~/lib/routes';
 
 //TODO Fix <p> widths

@@ -3,7 +3,7 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { dark } from '@clerk/themes';
 import React, { useEffect, useState } from 'react';
-import { ThemeProvider, useTheme } from '~/app/_components/ThemeProvider';
+import { ThemeProvider, useTheme } from '~/components/ThemeProvider';
 
 interface ProviderConfig<P> {
     Component: React.ComponentType<P>;

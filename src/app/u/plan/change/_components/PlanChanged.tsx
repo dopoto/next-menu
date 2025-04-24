@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/app/_components/PriceTierCard';
-import SvgIcon from '~/app/_components/SvgIcons';
+import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/components/PriceTierCard';
+import SvgIcon from '~/components/SvgIcons';
 import { Button } from '~/components/ui/button';
 import { type PriceTier } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';

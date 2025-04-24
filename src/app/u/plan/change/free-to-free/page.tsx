@@ -1,9 +1,9 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
 import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidFreePriceTier } from '~/lib/price-tier-utils';

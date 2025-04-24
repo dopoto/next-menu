@@ -1,6 +1,6 @@
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { APP_CONFIG } from '~/app/_config/app-config';
 import { PlanSelector } from '~/app/u/plan/change/_components/PlanSelector';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Change plan > Select your next plan`,

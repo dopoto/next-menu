@@ -3,8 +3,8 @@
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { OverviewCard } from '~/app/_components/OverviewCard';
 import { onboardCreateOrganization } from '~/app/actions/onboardCreateOrganization';
+import { OverviewCard } from '~/components/OverviewCard';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';

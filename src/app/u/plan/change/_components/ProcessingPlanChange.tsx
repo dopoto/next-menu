@@ -1,6 +1,6 @@
 'use client';
 
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 
 interface LoadingProps {
     progress: number;

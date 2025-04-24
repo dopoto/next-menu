@@ -1,6 +1,6 @@
 'use client';
 
-import { DeviceMockup } from '~/app/_components/DeviceMockup';
+import { DeviceMockup } from '~/components/DeviceMockup';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { MenuItem } from '~/domain/menu-items';
 

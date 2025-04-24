@@ -4,7 +4,7 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@cl
 import { Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-import SvgIcon from '~/app/_components/SvgIcons';
+import SvgIcon from '~/components/SvgIcons';
 import { Button } from '~/components/ui/button';
 import { LandingPageNavItem } from '~/domain/nav-items';
 import { ROUTES } from '~/lib/routes';

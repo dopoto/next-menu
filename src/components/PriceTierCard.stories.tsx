@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react';
-import { PriceTierCard } from '~/app/_components/PriceTierCard';
+import { PriceTierCard } from '~/components/PriceTierCard';
 import { Button } from '~/components/ui/button';
 import { priceTiers } from '~/domain/price-tiers';
 

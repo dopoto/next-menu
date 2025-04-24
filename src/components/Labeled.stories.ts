@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react';
-import { Labeled } from '~/app/_components/Labeled';
+import { Labeled } from '~/components/Labeled';
 
 const meta: Meta<typeof Labeled> = {
     title: 'Components/Labeled',

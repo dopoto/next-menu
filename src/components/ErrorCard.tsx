@@ -2,8 +2,8 @@ import { ChevronsRight, CloudAlert } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { startTransition } from 'react';
-import { Labeled } from '~/app/_components/Labeled';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { Labeled } from '~/components/Labeled';
 import { PUBLIC_ERROR_DELIMITER, type PublicErrorMessage } from '~/domain/error-handling';
 
 export function ErrorCard(props: {

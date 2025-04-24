@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import { Labeled } from '~/app/_components/Labeled';
-import { OverviewCard } from '~/app/_components/OverviewCard';
+import { Labeled } from '~/components/Labeled';
+import { OverviewCard } from '~/components/OverviewCard';
 import { Button } from '~/components/ui/button';
 import { ROUTES } from '~/lib/routes';
 

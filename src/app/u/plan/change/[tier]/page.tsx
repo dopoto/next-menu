@@ -1,11 +1,11 @@
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { OverviewCard } from '~/app/_components/OverviewCard';
-import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/app/_components/PriceTierCard';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import SvgIcon from '~/app/_components/SvgIcons';
 import { APP_CONFIG } from '~/app/_config/app-config';
+import { OverviewCard } from '~/components/OverviewCard';
+import { getCurrentPlanCardCustomizations, PriceTierCard } from '~/components/PriceTierCard';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import SvgIcon from '~/components/SvgIcons';
 import { Button } from '~/components/ui/button';
 import { AppError } from '~/lib/error-utils.server';
 import { getPriceTierChangeScenario, getValidPriceTier } from '~/lib/price-tier-utils';

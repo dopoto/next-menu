@@ -1,5 +1,5 @@
 import { type Meta, type StoryObj } from '@storybook/react';
-import { ErrorCard } from '~/app/_components/ErrorCard';
+import { ErrorCard } from '~/components/ErrorCard';
 import { PUBLIC_ERROR_DELIMITER } from '~/domain/error-handling';
 
 const meta: Meta<typeof ErrorCard> = {

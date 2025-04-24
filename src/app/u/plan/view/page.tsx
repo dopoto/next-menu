@@ -1,10 +1,10 @@
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
 import { Suspense } from 'react';
-import { Labeled } from '~/app/_components/Labeled';
-import { OverviewCard } from '~/app/_components/OverviewCard';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { SubscriptionDetails } from '~/app/_components/SubscriptionDetails';
+import { Labeled } from '~/components/Labeled';
+import { OverviewCard } from '~/components/OverviewCard';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { SubscriptionDetails } from '~/components/SubscriptionDetails';
 import { Button } from '~/components/ui/button';
 import { Progress } from '~/components/ui/progress';
 import { Skeleton } from '~/components/ui/skeleton';

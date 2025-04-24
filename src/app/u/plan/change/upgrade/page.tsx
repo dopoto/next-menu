@@ -1,9 +1,9 @@
 import { auth } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
 import { UpgradeStripeCheckoutForm } from '~/app/u/plan/change/_components/UpgradeStripeCheckoutForm';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
 import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/lib/price-tier-utils';

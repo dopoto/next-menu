@@ -1,7 +1,7 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import Stripe from 'stripe';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-utils';

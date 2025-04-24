@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
 import { Redirecting } from '~/app/onboard/_components/Redirecting';
+import { SplitScreenContainer } from '~/components/SplitScreenContainer';
 import { CookieKey } from '~/domain/cookies';
 import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';

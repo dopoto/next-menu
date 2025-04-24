@@ -4,8 +4,8 @@ import {
     getCurrentPlanCardCustomizations,
     getExceededPlanCardCustomizations,
     PriceTierCard,
-} from '~/app/_components/PriceTierCard';
-import { SeparatorWithText } from '~/app/_components/SeparatorWithText';
+} from '~/components/PriceTierCard';
+import { SeparatorWithText } from '~/components/SeparatorWithText';
 import { Button } from '~/components/ui/button';
 import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
 import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
