@@ -1,8 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
 import Stripe from 'stripe';
-import { getValidPaidPriceTier } from '~/app/_utils/price-tier-utils';
-import { obj2str } from '~/app/_utils/string-utils';
 import { PriceTierId } from '~/domain/price-tiers';
 import {
     StripeCustomerId,
@@ -12,6 +10,8 @@ import {
 } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
+import { obj2str } from '~/lib/string-utils';
 import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
 
 const apiKey = env.STRIPE_SECRET_KEY;

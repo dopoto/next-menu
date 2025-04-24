@@ -1,7 +1,7 @@
 import { LayoutDashboard } from 'lucide-react';
-import { getUsedFeatureQuota } from '~/app/_utils/quota-utils.server-only';
 import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
 import { type LocationId } from '~/domain/location';
+import { getUsedFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 
 export async function OpenOrdersList(props: { locationId: LocationId }) {

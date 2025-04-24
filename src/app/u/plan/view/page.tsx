@@ -5,9 +5,6 @@ import { Labeled } from '~/app/_components/Labeled';
 import { OverviewCard } from '~/app/_components/OverviewCard';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { SubscriptionDetails } from '~/app/_components/SubscriptionDetails';
-import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
-import { getAvailableFeatureQuota } from '~/app/_utils/quota-utils.server-only';
-import { obj2str } from '~/app/_utils/string-utils';
 import { Button } from '~/components/ui/button';
 import { Progress } from '~/components/ui/progress';
 import { Skeleton } from '~/components/ui/skeleton';
@@ -16,7 +13,10 @@ import { priceTierFeatures } from '~/domain/price-tier-features';
 import { type PriceTierFeatureUsage } from '~/domain/price-tier-usage';
 import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
+import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
+import { obj2str } from '~/lib/string-utils';
 
 export default async function ViewPlanPage() {
     const { userId, sessionClaims } = await auth();

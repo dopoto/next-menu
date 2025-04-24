@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getAppVersion } from '~/app/_utils/app-version-utils';
+import { getAppVersion } from '~/lib/app-version-utils';
 import { ROUTES } from '~/lib/routes';
 
 export function AppVersion() {

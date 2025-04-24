@@ -2,12 +2,12 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
-import { getValidFreePriceTier } from '~/app/_utils/price-tier-utils';
-import { getExceededFeatures } from '~/app/_utils/price-tier-utils.server-only';
-import { obj2str } from '~/app/_utils/string-utils';
 import { type PriceTier } from '~/domain/price-tiers';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidFreePriceTier } from '~/lib/price-tier-utils';
+import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
+import { obj2str } from '~/lib/string-utils';
 import { PlanChanged } from '../_components/PlanChanged';
 import ProcessingPlanChange from '../_components/ProcessingPlanChange';
 

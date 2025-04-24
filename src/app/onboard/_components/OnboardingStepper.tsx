@@ -6,8 +6,8 @@ import {
     type Step,
     UncompletedStepIcon,
 } from '~/app/_components/MultiStepper';
-import { isPaidPriceTier } from '~/app/_utils/price-tier-utils';
 import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
+import { isPaidPriceTier } from '~/lib/price-tier-utils';
 
 export type OnboardingStepId = 'selectPlan' | 'createAccount' | 'addOrg' | 'pay' | 'addLocation' | 'overview';
 

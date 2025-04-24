@@ -1,10 +1,10 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
 import { type PriceTierFeatureId } from '~/domain/price-tier-features';
 import { type PriceTierFlagId } from '~/domain/price-tier-flags';
 import { priceTierUsageFunctions } from '~/domain/price-tier-usage';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
 
 /**
  * Returns the number of items included in a feature (E.G. "menus")

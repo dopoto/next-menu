@@ -2,9 +2,9 @@
 
 import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
-import { getAvailableFeatureQuota } from '~/app/_utils/quota-utils.server-only';
 import { type FormState, processFormErrors } from '~/lib/form-state';
 import { menuItemFormSchema } from '~/lib/menu-items';
+import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { createMenuItem } from '~/server/queries/menu-items';
 

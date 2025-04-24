@@ -7,8 +7,8 @@ import { PostHogProvider } from '~/app/_components/PostHogProvider';
 import { Toaster } from '~/components/ui/toaster';
 import { env } from '~/env';
 import '~/styles/globals.css';
+import { buildHtmlClass } from '../lib/theme-utils';
 import Providers from './_components/Providers';
-import { buildHtmlClass } from './_utils/theme-utils';
 
 export const metadata: Metadata = {
     title: 'The Menu',

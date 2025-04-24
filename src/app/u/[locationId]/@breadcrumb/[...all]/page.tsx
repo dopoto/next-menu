@@ -1,8 +1,8 @@
 'use client';
 
 import { useParams, usePathname } from 'next/navigation';
-import { findMenuItemByPath, getBreadcrumbPath } from '~/app/_utils/menu-utils';
 import { TopBreadcrumb } from '~/app/u/[locationId]/@breadcrumb/_components/TopBreadcrumb';
+import { findMenuItemByPath, getBreadcrumbPath } from '~/lib/menu-utils';
 import { MENU_TREE } from '~/lib/nav';
 
 export default function BreadcrumbCatchAllSlot() {

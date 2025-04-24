@@ -3,7 +3,7 @@ import { redirect } from 'next/navigation';
 import { SplitScreenContainer } from '~/app/_components/SplitScreenContainer';
 import { SuccessAnimation } from '~/app/_components/SuccessAnimation';
 import { APP_CONFIG } from '~/app/_config/app-config';
-import { getValidPriceTier } from '~/app/_utils/price-tier-utils';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
 import { OnboardingStepper } from '../_components/OnboardingStepper';
 import { Overview } from '../_components/Overview';
