@@ -1,4 +1,4 @@
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
 import { type MENU_TREE } from '~/lib/nav';
 import { type UserRouteFn } from '~/lib/routes';
 

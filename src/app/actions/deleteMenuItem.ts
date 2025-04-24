@@ -1,7 +1,7 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
 import { MenuItemId, menuItemFormSchema } from '~/domain/menu-items';
 import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';

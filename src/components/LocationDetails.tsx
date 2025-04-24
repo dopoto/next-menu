@@ -4,7 +4,7 @@ import QRCode from 'react-qr-code';
 import truncateMiddle from 'truncate-middle';
 import { CopyButton } from '~/components/CopyButton';
 import { SeparatorWithText } from '~/components/SeparatorWithText';
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';

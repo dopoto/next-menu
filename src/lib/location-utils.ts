@@ -1,4 +1,4 @@
-import { type LocationId, locationIdSchema } from '~/domain/location';
+import { type LocationId, locationIdSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 
 export function getValidLocationIdOrThrow(candidate?: string): LocationId {

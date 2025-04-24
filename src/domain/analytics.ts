@@ -1,4 +1,4 @@
-import { type LocationSlug } from '~/domain/location';
+import { type LocationSlug } from '~/domain/locations';
 import { type OrganizationId } from '~/lib/organization';
 
 /**

@@ -1,4 +1,4 @@
-import { type LocationId, type LocationSlug } from '~/domain/location';
+import { type LocationId, type LocationSlug } from '~/domain/locations';
 import { MenuItemId } from '~/domain/menu-items';
 import { PriceTierId } from '~/domain/price-tiers';
 

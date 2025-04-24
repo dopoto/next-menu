@@ -2,6 +2,12 @@ import { formOptions } from '@tanstack/react-form/nextjs';
 import { z } from 'zod';
 import { PriceTierIdSchema } from '~/domain/price-tiers';
 
+export const locationIdSchema = z.coerce.number().positive().int();
+export type LocationId = z.infer<typeof locationIdSchema>;
+
+export const locationSlugSchema = z.coerce.string();
+export type LocationSlug = z.infer<typeof locationSlugSchema>;
+
 export type AddLocationFormData = {
     locationName: string;
     priceTierId: string;

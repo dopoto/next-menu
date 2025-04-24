@@ -8,7 +8,7 @@ import {
     BreadcrumbPage as BreadcrumbPageComponent,
     BreadcrumbSeparator,
 } from '~/components/ui/breadcrumb';
-import { type LocationId } from '~/domain/location';
+import { type LocationId } from '~/domain/locations';
 import { type NavItem } from '~/lib/nav';
 import { ROUTES, type UserRouteFn } from '~/lib/routes';
 

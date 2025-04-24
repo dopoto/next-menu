@@ -4,7 +4,7 @@ import React from 'react';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import type { AnalyticsEventId } from '~/domain/analytics';
 import { CookieKey } from '~/domain/cookies';
-import { locationSlugSchema } from '~/domain/location';
+import { locationSlugSchema } from '~/domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicData } from '~/server/queries/location';
