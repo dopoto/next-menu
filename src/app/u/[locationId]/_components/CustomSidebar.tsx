@@ -12,8 +12,8 @@ import { SidebarUserManager } from '~/app/u/[locationId]/_components/SidebarUser
 import { Button } from '~/components/ui/button';
 import { Separator } from '~/components/ui/separator';
 import { SidebarMenuButton, SidebarMenuItem, SidebarProvider } from '~/components/ui/sidebar';
-import { MENU_TREE, NavItem } from '~/lib/nav';
-import { UserRouteFn } from '~/lib/routes';
+import { MENU_TREE, type NavItem } from '~/lib/nav';
+import { type UserRouteFn } from '~/lib/routes';
 
 import { cn } from '~/lib/utils';
 
@@ -72,10 +72,10 @@ export function CustomSidebar({ defaultExpanded = false, locationManager, breadc
                         {/* Content */}
                         <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-auto p-2">
                             {dashboardMenuSection.map((item) => (
-                                <MenuItem item={item} locationId={locationId} expanded={expanded} />
+                                <MenuItem key={item.id} item={item} locationId={locationId} expanded={expanded} />
                             ))}
                             {locationManagerMenuSection.map((item) => (
-                                <MenuItem item={item} locationId={locationId} expanded={expanded} />
+                                <MenuItem key={item.id} item={item} locationId={locationId} expanded={expanded} />
                             ))}
                         </div>
 
