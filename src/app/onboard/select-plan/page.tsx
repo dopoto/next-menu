@@ -1,7 +1,7 @@
-import { APP_CONFIG } from '~/app/_config/app-config';
 import { OnboardingStepper } from '~/app/onboard/_components/OnboardingStepper';
 import { SignUpPlanSelector } from '~/app/onboard/_components/SignUpPlanSelector';
 import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { APP_CONFIG } from '~/config/app-config';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Select plan`,

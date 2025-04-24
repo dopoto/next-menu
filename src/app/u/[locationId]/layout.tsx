@@ -2,12 +2,12 @@ import { House, MessageCircleQuestion } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
-import { APP_CONFIG } from '~/app/_config/app-config';
 import { MainContainer } from '~/app/u/[locationId]/_components/MainContainer';
 import { SidebarLocationManager } from '~/app/u/[locationId]/_components/SidebarLocationManager';
 import { AppVersion } from '~/components/AppVersion';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset } from '~/components/ui/sidebar';
+import { APP_CONFIG } from '~/config/app-config';
 import { CookieKey } from '~/domain/cookies';
 
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';

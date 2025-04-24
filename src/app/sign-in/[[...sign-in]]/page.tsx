@@ -1,6 +1,6 @@
 import { SignIn } from '@clerk/nextjs';
-import { APP_CONFIG } from '~/app/_config/app-config';
 import { SplitScreenContainer } from '~/components/SplitScreenContainer';
+import { APP_CONFIG } from '~/config/app-config';
 
 // TODO Test - sign in, but with new account (user + pass)
 
