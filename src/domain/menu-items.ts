@@ -3,11 +3,11 @@ import { z } from 'zod';
 import { withMeta } from '~/lib/form-validation';
 import { type menuItems } from '~/server/db/schema';
 
-export const menuItemIdSchema = z.coerce.number().int().positive();
-export type MenuItemId = number;
-
 export type MenuItem = InferSelectModel<typeof menuItems>;
 export type NewMenuItem = InferInsertModel<typeof menuItems>;
+
+export const menuItemIdSchema = z.coerce.number().int().positive();
+export type MenuItemId = z.infer<typeof menuItemIdSchema>;;
 
 export const menuItemFormSchema = z.object({
     name: withMeta(

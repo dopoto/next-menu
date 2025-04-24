@@ -1,58 +1,46 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { Button } from '~/components/ui/button';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
-import { Input } from '~/components/ui/input';
+import { type z } from 'zod';
+import { addMenu } from '~/app/actions/addMenu';
+import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
+import { AddEditMenuForm } from '~/app/u/[locationId]/menus/_components/AddEditMenuForm';
+import { type LocationId } from '~/domain/locations';
+import { menuFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
+import { handleReactHookFormErrors } from '~/lib/form-state';
+import { ROUTES } from '~/lib/routes';
 
-const FormSchema = z.object({
-    name: z.string({
-        required_error: 'You need to choose a name for your menu.',
-    }),
-});
-
-export function AddMenu() {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+export function AddMenu(props: { locationId: LocationId }) {
+    const router = useRouter();
+    const form = useForm<z.infer<typeof menuFormSchema>>({
+        resolver: zodResolver(menuFormSchema),
+        defaultValues: {
+            name: '',
+             
+            locationId: props.locationId,
+        },
     });
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-            title: 'You submitted the following values:',
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
-        });
+    async function onSubmit(values: z.infer<typeof menuFormSchema>) {
+        const res = await addMenu(values);
+        if (res.status === 'success') {
+            toast({ title: `Menu  added` });
+            router.push(ROUTES.menus(props.locationId));
+        } else {
+            handleReactHookFormErrors(form, res);
+        }
     }
 
     return (
-        <div className="flex flex-col gap-6">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                            <FormItem>
-                                <FormLabel>Name</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="The name of your menu" {...field} />
-                                </FormControl>
-                                <FormDescription>
-                                    {"This is just for your reference. We won't display it to your customers."}
-                                </FormDescription>
-                                <FormMessage className="font-bold text-red-700" />
-                            </FormItem>
-                        )}
-                    />
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
-        </div>
+        <>
+            <FormTitle
+                title="Add menu  "
+                subtitle="Add a menu."
+            />
+            <AddEditMenuForm form={form} onSubmit={onSubmit} locationId={props.locationId} />
+        </>
     );
 }
