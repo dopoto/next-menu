@@ -1,6 +1,6 @@
 import { DeviceMockup } from '~/components/DeviceMockup';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
-import { Menu } from '~/domain/menus';
+import { type Menu } from '~/domain/menus';
 
 export function PreviewMenu(props: { menuItem: Partial<Menu> }) {
     const { name } = props.menuItem;

@@ -28,7 +28,7 @@ export function MenuItemSelector({ locationId, onSelect }: MenuItemSelectorProps
                 setIsLoading(false);
             }
         }
-        loadItems();
+        void loadItems();
     }, [locationId]);
 
     const filteredItems = items.filter((item) =>

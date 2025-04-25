@@ -1,6 +1,5 @@
 import { type z } from 'zod';
-import { menuItemFormSchema, type MenuItemId, menuItemIdSchema } from '~/domain/menu-items';
-import { menuFormSchema, MenuId, menuIdSchema } from '~/domain/menus';
+import { menuFormSchema, type MenuId, menuIdSchema } from '~/domain/menus';
 import { AppError } from '~/lib/error-utils.server';
 
 export function getValidMenuIdOrThrow(candidate?: string): MenuId {

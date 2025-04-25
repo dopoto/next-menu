@@ -1,7 +1,7 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { Location, locationIdSchema, type LocationId, type LocationSlug } from '~/domain/locations';
-import { Menu } from '~/domain/menus';
+import { type Location, locationIdSchema, type LocationId, type LocationSlug } from '~/domain/locations';
+import { type Menu } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';

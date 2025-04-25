@@ -1,8 +1,8 @@
 import { and, desc, eq } from 'drizzle-orm';
 import { type z } from 'zod';
-import { LocationId } from '~/domain/locations';
+import { type LocationId } from '~/domain/locations';
 import { type MenuItemId } from '~/domain/menu-items';
-import { Menu, menuFormSchema, type MenuId } from '~/domain/menus';
+import { type Menu, type menuFormSchema, type MenuId } from '~/domain/menus';
 import { AppError } from '~/lib/errors';
 import { db } from '~/server/db';
 import { menuItemsToMenus, menus } from '~/server/db/schema';

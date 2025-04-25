@@ -1,8 +1,8 @@
 import { formOptions } from '@tanstack/react-form/nextjs';
-import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { PriceTierIdSchema } from '~/domain/price-tiers';
-import { locations } from '~/server/db/schema';
+import { type locations } from '~/server/db/schema';
 
 export type Location = InferSelectModel<typeof locations>;
 export type NewLocation = InferInsertModel<typeof locations>;

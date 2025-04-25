@@ -41,7 +41,7 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
         }),
     );
 
-    const handleDragEnd = async (event: any) => {
+    const handleDragEnd = async (event: { active: { id: number }; over: { id: number } }) => {
         const { active, over } = event;
 
         if (active.id !== over.id) {
