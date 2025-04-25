@@ -18,12 +18,14 @@ export function AddEditMenuForm({
     onSubmit,
     locationId,
     menuId,
+    allMenuItems,
     initialItems = [],
 }: {
     form: UseFormReturn<z.infer<typeof menuFormSchema>>;
     onSubmit: (values: z.infer<typeof menuFormSchema>) => Promise<void>;
     locationId: LocationId;
     menuId?: number;
+    allMenuItems: MenuItem[];
     initialItems?: MenuItem[];
 }) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
@@ -48,6 +50,7 @@ export function AddEditMenuForm({
                     <MenuItemsManager
                         locationId={locationId}
                         menuId={menuId}
+                        allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}
                     />

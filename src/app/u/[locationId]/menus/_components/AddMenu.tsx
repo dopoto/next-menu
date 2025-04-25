@@ -8,12 +8,13 @@ import { addMenuAction } from '~/app/actions/addMenuAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuForm } from '~/app/u/[locationId]/menus/_components/AddEditMenuForm';
 import { type LocationId } from '~/domain/locations';
+import { MenuItem } from '~/domain/menu-items';
 import { menuFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 
-export function AddMenu(props: { locationId: LocationId; addMenuAction: any }) {
+export function AddMenu(props: { locationId: LocationId; addMenuAction: any; allMenuItems: MenuItem[] }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuFormSchema>>({
         resolver: zodResolver(menuFormSchema),
@@ -37,7 +38,12 @@ export function AddMenu(props: { locationId: LocationId; addMenuAction: any }) {
     return (
         <>
             <FormTitle title="Add menu  " subtitle="Add a menu." />
-            <AddEditMenuForm form={form} onSubmit={onSubmit} locationId={props.locationId} />
+            <AddEditMenuForm
+                form={form}
+                onSubmit={onSubmit}
+                locationId={props.locationId}
+                allMenuItems={props.allMenuItems}
+            />
         </>
     );
 }

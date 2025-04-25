@@ -1,6 +1,14 @@
 'use client';
 
-import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {
+    closestCenter,
+    DndContext,
+    DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
@@ -21,16 +29,22 @@ import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { SortableMenuItem } from '../_components/SortableMenuItem';
 import { MenuItemSelector } from './MenuItemSelector';
-import { MenuItemsData } from './MenuItemsData';
 
 interface MenuItemsManagerProps {
     locationId: LocationId;
     menuId?: number;
+    allMenuItems?: MenuItem[];
     initialItems?: MenuItem[];
     onItemsChange?: (items: MenuItem[]) => void;
 }
 
-export function MenuItemsManager({ locationId, menuId, initialItems = [], onItemsChange }: MenuItemsManagerProps) {
+export function MenuItemsManager({
+    locationId,
+    menuId,
+    allMenuItems = [],
+    initialItems = [],
+    onItemsChange,
+}: MenuItemsManagerProps) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showSelectDialog, setShowSelectDialog] = useState(false);
@@ -129,64 +143,46 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
     };
 
     return (
-        <MenuItemsData locationId={locationId} menuId={menuId} menuItemId={newMenuItemId ?? undefined}>
-            {({ items: fetchedItems, item: newItem }) => {
-                // Update local state when new data is fetched
-                if (menuId && fetchedItems.length > 0) {
-                    setItems(fetchedItems);
-                    onItemsChange?.(fetchedItems);
-                }
-                if (newItem && !menuId) {
-                    const updatedItems = [...items, newItem];
-                    setItems(updatedItems);
-                    onItemsChange?.(updatedItems);
-                    setNewMenuItemId(null);
-                }
+        <div className="space-y-4">
+            <div className="flex gap-2">
+                <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                    <DialogTrigger asChild>
+                        <Button>Create new menu item</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Create new menu item</DialogTitle>
+                        </DialogHeader>
+                        <AddEditMenuItemForm
+                            form={newMenuItemForm}
+                            onSubmit={handleAddNewItem}
+                            locationId={locationId}
+                        />
+                    </DialogContent>
+                </Dialog>
 
-                return (
-                    <div className="space-y-4">
-                        <div className="flex gap-2">
-                            <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-                                <DialogTrigger asChild>
-                                    <Button>Create new menu item</Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Create new menu item</DialogTitle>
-                                    </DialogHeader>
-                                    <AddEditMenuItemForm
-                                        form={newMenuItemForm}
-                                        onSubmit={handleAddNewItem}
-                                        locationId={locationId}
-                                    />
-                                </DialogContent>
-                            </Dialog>
+                <Dialog open={showSelectDialog} onOpenChange={setShowSelectDialog}>
+                    <DialogTrigger asChild>
+                        <Button variant="outline">Add existing menu item</Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                        <DialogHeader>
+                            <DialogTitle>Select menu item</DialogTitle>
+                        </DialogHeader>
+                        <MenuItemSelector allMenuItems={allMenuItems} onSelect={handleSelectItem} />
+                    </DialogContent>
+                </Dialog>
+            </div>
 
-                            <Dialog open={showSelectDialog} onOpenChange={setShowSelectDialog}>
-                                <DialogTrigger asChild>
-                                    <Button variant="outline">Add existing menu item</Button>
-                                </DialogTrigger>
-                                <DialogContent>
-                                    <DialogHeader>
-                                        <DialogTitle>Select menu item</DialogTitle>
-                                    </DialogHeader>
-                                    <MenuItemSelector locationId={locationId} onSelect={handleSelectItem} />
-                                </DialogContent>
-                            </Dialog>
-                        </div>
-
-                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                            <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                                <div className="space-y-2">
-                                    {items.map((item) => (
-                                        <SortableMenuItem key={item.id} item={item} />
-                                    ))}
-                                </div>
-                            </SortableContext>
-                        </DndContext>
+            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                    <div className="space-y-2">
+                        {items.map((item) => (
+                            <SortableMenuItem key={item.id} item={item} />
+                        ))}
                     </div>
-                );
-            }}
-        </MenuItemsData>
+                </SortableContext>
+            </DndContext>
+        </div>
     );
 }
