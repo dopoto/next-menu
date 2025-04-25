@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 /**
@@ -114,6 +114,7 @@ export const menuItemsToMenus = createTable(
         menuItemId: integer('menu_item_id')
             .notNull()
             .references(() => menuItems.id),
+        sortOrderIndex: integer('sort_order_index').notNull().default(0),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),

@@ -25,6 +25,8 @@ export function validateAndFormatMenuData(data: z.infer<typeof menuFormSchema>) 
     }
 
     return {
-        ...validationResult.data,
+        name: validationResult.data.name,
+        locationId: validationResult.data.locationId,
+        items: validationResult.data.items,
     };
 }

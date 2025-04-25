@@ -1,0 +1,1 @@
+ALTER TABLE "next-menu_menu_items_to_menus" ADD COLUMN "sort_order_index" integer DEFAULT 0 NOT NULL;

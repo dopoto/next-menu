@@ -30,11 +30,11 @@ export async function getMenuItemById(locationId: LocationId, menuItemId: MenuIt
 }
 
 export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
-    // Needed - performs security checks and throws on failure.
-    await getLocation(data.locationId);
-
+        // Needed - performs security checks and throws on failure.
+        await getLocation(data.locationId);
     const dbData = validateAndFormatMenuItemData(data);
-    await db.insert(menuItems).values(dbData);
+    const result = await db.insert(menuItems).values(dbData).returning();
+    return result[0];
 }
 
 export async function updateMenuItem(menuItemId: MenuItemId, data: z.infer<typeof menuItemFormSchema>) {

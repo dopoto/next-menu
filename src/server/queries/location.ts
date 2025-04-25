@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { Location, type LocationId, type LocationSlug } from '~/domain/locations';
+import { Location, locationIdSchema, type LocationId, type LocationSlug } from '~/domain/locations';
 import { Menu } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
@@ -48,7 +48,14 @@ export async function generateUniqueLocationSlug(): Promise<string> {
  * @param locationId
  * @returns A valid Location.
  */
-export async function getLocation(locationId: LocationId): Promise<Location> {
+export async function getLocation(locationId: string|number): Promise<Location> {
+
+    const locationIdValidationResult = locationIdSchema.safeParse(locationId);
+    if (!locationIdValidationResult.success) {
+        throw new AppError({ internalMessage: `Invalid locationId: ${locationId}` });
+    }
+    const validLocationId = locationIdValidationResult.data;
+
     const { userId, sessionClaims } = await auth();
     if (!userId) {
         throw new AppError({ internalMessage: 'Unauthorized' });
@@ -64,7 +71,7 @@ export async function getLocation(locationId: LocationId): Promise<Location> {
     const location = await db.query.locations.findFirst({
         where: (locations, { and, eq }) =>
             and(
-                eq(locations.id, locationId),
+                eq(locations.id, validLocationId),
                 eq(
                     locations.orgId,
                     db

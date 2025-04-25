@@ -4,8 +4,9 @@ import { useRouter } from 'next/navigation';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenu } from '~/app/u/[locationId]/menus/_components/AddMenu';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '~/components/ui/dialog';
+import { LocationId } from '~/domain/locations';
 
-export default function AddMenuDialog(props: { availableQuota: number }) {
+export default function AddMenuDialog(props: { availableQuota: number, locationId: LocationId }) {
     const router = useRouter();
 
     const handleOpenChange = (open: boolean) => {
@@ -35,7 +36,7 @@ export default function AddMenuDialog(props: { availableQuota: number }) {
                     <DialogTitle>Add a menu</DialogTitle>
                     <DialogDescription>Fill the form below to create a menu.</DialogDescription>
                 </DialogHeader>
-                <AddMenu />
+                <AddMenu locationId={props.locationId} />
             </DialogContent>
         </Dialog>
     );

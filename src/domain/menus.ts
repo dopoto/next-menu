@@ -1,9 +1,13 @@
-import { InferInsertModel, InferSelectModel } from "drizzle-orm";
-import { z } from "zod";
-import { withMeta } from "~/lib/form-validation";
-import { menus } from "~/server/db/schema";
+import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { z } from 'zod';
+import { withMeta } from '~/lib/form-validation';
+import { type menus } from '~/server/db/schema';
+import { type MenuItem } from './menu-items';
 
-export type Menu = InferSelectModel<typeof menus>;
+export type Menu = InferSelectModel<typeof menus> & {
+    items?: MenuItem[];
+};
+
 export type NewMenu = InferInsertModel<typeof menus>;
 
 export const menuIdSchema = z.coerce.number().int().positive();
@@ -28,4 +32,5 @@ export const menuFormSchema = z.object({
             required_error: 'Location ID is required',
         })
         .min(0, 'Location Id must be positive'),
+    items: z.array(z.any()).optional(),
 });
