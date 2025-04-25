@@ -1,11 +1,11 @@
-import { and, desc, eq, sql } from 'drizzle-orm';
+import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
-import { type MenuItemId } from '~/domain/menu-items';
+import { type MenuItem, type MenuItemId } from '~/domain/menu-items';
 import { type Menu, type menuFormSchema, type MenuId } from '~/domain/menus';
 import { AppError } from '~/lib/errors';
 import { db } from '~/server/db';
-import { menuItemsToMenus, menus } from '~/server/db/schema';
+import { menuItems, menuItemsToMenus, menus } from '~/server/db/schema';
 import { getLocation } from '~/server/queries/location';
 
 export async function createMenu(data: z.infer<typeof menuFormSchema>) {
@@ -104,16 +104,41 @@ export async function getMenuById(locationId: LocationId, menuId: MenuId): Promi
         });
     }
 
-    const result = await db.query.menus.findFirst({
+    // Get the menu
+    const menu = await db.query.menus.findFirst({
         where: and(eq(menus.id, menuId), eq(menus.locationId, validLocation.id)),
-        with: {
-            items: true,
-        },
     });
 
-    if (!result) {
+    if (!menu) {
         return null;
     }
 
-    return result;
+    // Get menu items with their sort order
+    const menuItemsResult = await db
+        .select({
+            id: menuItems.id,
+            name: menuItems.name,
+            description: menuItems.description,
+            price: menuItems.price,
+            type: menuItems.type,
+            isNew: menuItems.isNew,
+            locationId: menuItems.locationId,
+            createdAt: menuItems.createdAt,
+            updatedAt: menuItems.updatedAt,
+            sortOrderIndex: menuItemsToMenus.sortOrderIndex,
+        })
+        .from(menuItems)
+        .innerJoin(menuItemsToMenus, eq(menuItems.id, menuItemsToMenus.menuItemId))
+        .where(eq(menuItemsToMenus.menuId, menuId))
+        .orderBy(asc(menuItemsToMenus.sortOrderIndex));
+
+    // Construct a plain object with only the necessary data
+    return {
+        id: menu.id,
+        name: menu.name,
+        locationId: menu.locationId,
+        createdAt: menu.createdAt,
+        updatedAt: menu.updatedAt,
+        items: menuItemsResult,
+    };
 }

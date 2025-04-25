@@ -8,12 +8,13 @@ import { editMenuAction } from '~/app/actions/editMenuAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuForm } from '~/app/u/[locationId]/menus/_components/AddEditMenuForm';
 import { type LocationId } from '~/domain/locations';
+import { MenuItem } from '~/domain/menu-items';
 import { type Menu, menuFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 
-export function EditMenu(props: { locationId: LocationId; menu: Menu }) {
+export function EditMenu(props: { locationId: LocationId; menu: Menu; allMenuItems: MenuItem[] }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuFormSchema>>({
         resolver: zodResolver(menuFormSchema),
@@ -42,6 +43,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu }) {
                 locationId={props.locationId}
                 menuId={props.menu.id}
                 initialItems={props.menu.items ?? []}
+                allMenuItems={props.allMenuItems}
             />
         </>
     );

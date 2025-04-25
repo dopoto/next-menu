@@ -19,7 +19,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
-import { addItemToMenuAction, updateMenuItemsSortOrderAction } from '~/app/actions/menuItemActions';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
@@ -70,19 +69,19 @@ export function MenuItemsManager({
             setItems(newItems);
             onItemsChange?.(newItems);
 
-            if (menuId) {
-                const res = await updateMenuItemsSortOrderAction(
-                    menuId,
-                    newItems.map((item) => item.id),
-                );
-                if (res.status === 'error') {
-                    toast({
-                        title: 'Failed to update sort order',
-                        description: res.error,
-                        variant: 'destructive',
-                    });
-                }
-            }
+            // if (menuId) {
+            //     const res = await updateMenuItemsSortOrderAction(
+            //         menuId,
+            //         newItems.map((item) => item.id),
+            //     );
+            //     if (res.status === 'error') {
+            //         toast({
+            //             title: 'Failed to update sort order',
+            //             description: res.error,
+            //             variant: 'destructive',
+            //         });
+            //     }
+            // }
         }
     };
 
@@ -104,14 +103,14 @@ export function MenuItemsManager({
             setShowAddDialog(false);
 
             if (menuId) {
-                const addRes = await addItemToMenuAction(menuId, res.menuItemId);
-                if (addRes.status === 'error') {
-                    toast({
-                        title: 'Failed to add item to menu',
-                        description: addRes.error,
-                        variant: 'destructive',
-                    });
-                }
+                // const addRes = await addItemToMenuAction(menuId, res.menuItemId);
+                // if (addRes.status === 'error') {
+                //     toast({
+                //         title: 'Failed to add item to menu',
+                //         description: addRes.error,
+                //         variant: 'destructive',
+                //     });
+                // }
             } else {
                 setNewMenuItemId(res.menuItemId);
             }
@@ -123,14 +122,14 @@ export function MenuItemsManager({
     const handleSelectItem = async (item: MenuItem) => {
         if (!items.some((i) => i.id === item.id)) {
             if (menuId) {
-                const res = await addItemToMenuAction(menuId, item.id);
-                if (res.status === 'error') {
-                    toast({
-                        title: 'Failed to add item to menu',
-                        description: res.error,
-                        variant: 'destructive',
-                    });
-                }
+                // const res = await addItemToMenuAction(menuId, item.id);
+                // if (res.status === 'error') {
+                //     toast({
+                //         title: 'Failed to add item to menu',
+                //         description: res.error,
+                //         variant: 'destructive',
+                //     });
+                // }
             } else {
                 const updatedItems = [...items, item];
                 setItems(updatedItems);
