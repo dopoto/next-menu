@@ -21,7 +21,7 @@ export default async function AddMenuPage(props: { params: Params }) {
     return (
         <div className="flex h-full flex-col gap-2">
             <Suspense fallback={<LoadingSection />}>
-                <AddMenu locationId={parsedLocationId}   />
+                <AddMenu locationId={parsedLocationId} />
             </Suspense>
         </div>
     );

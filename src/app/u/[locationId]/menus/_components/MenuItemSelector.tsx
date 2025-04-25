@@ -1,10 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Input } from '~/components/ui/input';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
-import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { getAvailableMenuItems } from '~/server/queries/menu-items';
 interface MenuItemSelectorProps {
     locationId: LocationId;
@@ -31,17 +31,11 @@ export function MenuItemSelector({ locationId, onSelect }: MenuItemSelectorProps
         void loadItems();
     }, [locationId]);
 
-    const filteredItems = items.filter((item) =>
-        item.name?.toLowerCase().includes(search.toLowerCase()) ?? false
-    );
+    const filteredItems = items.filter((item) => item.name?.toLowerCase().includes(search.toLowerCase()) ?? false);
 
     return (
         <div className="space-y-4">
-            <Input
-                placeholder="Search menu items..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-            />
+            <Input placeholder="Search menu items..." value={search} onChange={(e) => setSearch(e.target.value)} />
             <div className="space-y-2">
                 {isLoading ? (
                     <div className="text-center">Loading...</div>
@@ -71,4 +65,4 @@ export function MenuItemSelector({ locationId, onSelect }: MenuItemSelectorProps
             </div>
         </div>
     );
-} 
+}

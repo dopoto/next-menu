@@ -27,8 +27,8 @@ export async function addMenuItemAction(
 
     try {
         const menuItem = await createMenuItem(parsed.data);
-        if(!menuItem){
-            throw new AppError({internalMessage: `Could not save menu item`})
+        if (!menuItem) {
+            throw new AppError({ internalMessage: `Could not save menu item` });
         }
         revalidatePath(ROUTES.menuItems(parsed.data.locationId));
         // TODO revalidate public path

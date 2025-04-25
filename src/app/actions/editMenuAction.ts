@@ -27,4 +27,4 @@ export async function editMenuAction(
             rootError: error instanceof Error ? error.message : 'Could not save data.',
         };
     }
-} 
+}

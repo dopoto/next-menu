@@ -52,8 +52,8 @@ export async function getMenuItemById(locationId: LocationId, menuItemId: MenuIt
 }
 
 export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
-        // Needed - performs security checks and throws on failure.
-        await getLocation(data.locationId);
+    // Needed - performs security checks and throws on failure.
+    await getLocation(data.locationId);
     const dbData = validateAndFormatMenuItemData(data);
     const result = await db.insert(menuItems).values(dbData).returning();
     return result[0];
@@ -85,7 +85,6 @@ export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuIte
     }
 }
 
-
 export async function addItemToMenu(menuId: number, menuItemId: number) {
     await db.insert(menuItemsToMenus).values({
         menuId,
@@ -114,4 +113,4 @@ export async function updateMenuItemsSortOrder(menuId: number, menuItemIds: numb
     });
 
     revalidatePath('/u/[locationId]/menus');
-} 
+}

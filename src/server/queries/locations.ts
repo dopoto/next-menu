@@ -1,8 +1,8 @@
 import { eq } from 'drizzle-orm';
-import { db } from '~/server/db';
-import { locations } from '~/server/db/schema';
 import { type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/errors';
+import { db } from '~/server/db';
+import { locations } from '~/server/db/schema';
 
 export async function getLocation(locationId: LocationId) {
     const location = await db.query.locations.findFirst({
@@ -14,4 +14,4 @@ export async function getLocation(locationId: LocationId) {
     }
 
     return location;
-} 
+}

@@ -18,7 +18,12 @@ import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema, type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
-import { addItemToMenu, getMenuItemById, getMenuItemsByMenu, updateMenuItemsSortOrder } from '~/server/queries/menu-items';
+import {
+    addItemToMenu,
+    getMenuItemById,
+    getMenuItemsByMenu,
+    updateMenuItemsSortOrder,
+} from '~/server/queries/menu-items';
 import { SortableMenuItem } from '../_components/SortableMenuItem';
 import { MenuItemSelector } from './MenuItemSelector';
 

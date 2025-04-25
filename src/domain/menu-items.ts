@@ -7,7 +7,7 @@ export type MenuItem = InferSelectModel<typeof menuItems>;
 export type NewMenuItem = InferInsertModel<typeof menuItems>;
 
 export const menuItemIdSchema = z.coerce.number().int().positive();
-export type MenuItemId = z.infer<typeof menuItemIdSchema>;;
+export type MenuItemId = z.infer<typeof menuItemIdSchema>;
 
 export const menuItemFormSchema = z.object({
     name: withMeta(

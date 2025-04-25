@@ -19,7 +19,7 @@ export function AddMenu(props: { locationId: LocationId }) {
         resolver: zodResolver(menuFormSchema),
         defaultValues: {
             name: '',
-             
+
             locationId: props.locationId,
         },
     });
@@ -36,10 +36,7 @@ export function AddMenu(props: { locationId: LocationId }) {
 
     return (
         <>
-            <FormTitle
-                title="Add menu  "
-                subtitle="Add a menu."
-            />
+            <FormTitle title="Add menu  " subtitle="Add a menu." />
             <AddEditMenuForm form={form} onSubmit={onSubmit} locationId={props.locationId} />
         </>
     );

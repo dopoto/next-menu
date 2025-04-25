@@ -3,4 +3,4 @@ export class AppError extends Error {
         super(data.internalMessage);
         this.name = 'AppError';
     }
-} 
+}

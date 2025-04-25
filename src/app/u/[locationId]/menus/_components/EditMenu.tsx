@@ -35,10 +35,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu }) {
 
     return (
         <>
-            <FormTitle
-                title="Edit menu"
-                subtitle="Update your menu details and manage menu items."
-            />
+            <FormTitle title="Edit menu" subtitle="Update your menu details and manage menu items." />
             <AddEditMenuForm
                 form={form}
                 onSubmit={onSubmit}
@@ -48,4 +45,4 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu }) {
             />
         </>
     );
-} 
+}

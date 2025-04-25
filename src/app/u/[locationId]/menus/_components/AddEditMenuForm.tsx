@@ -3,8 +3,8 @@
 import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
-import { PreviewMenu } from '~/app/u/[locationId]/menus/_components/PreviewMenu';
 import { MenuItemsManager } from '~/app/u/[locationId]/menus/_components/MenuItemsManager';
+import { PreviewMenu } from '~/app/u/[locationId]/menus/_components/PreviewMenu';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
@@ -51,7 +51,7 @@ export function AddEditMenuForm({
                         initialItems={initialItems}
                         onItemsChange={setItems}
                     />
- 
+
                     <div className="flex flex-row gap-2">
                         <Button type="submit">Save</Button>
                         <a href={ROUTES.menus(locationId)}>
@@ -62,7 +62,7 @@ export function AddEditMenuForm({
                     </div>
                 </form>
             </Form>
-            <PreviewMenu 
+            <PreviewMenu
                 menuItem={{
                     name: form.watch('name'),
                 }}

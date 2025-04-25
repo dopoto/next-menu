@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { type Location, locationIdSchema, type LocationId, type LocationSlug } from '~/domain/locations';
+import { locationIdSchema, type Location, type LocationId, type LocationSlug } from '~/domain/locations';
 import { type Menu } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
@@ -48,8 +48,7 @@ export async function generateUniqueLocationSlug(): Promise<string> {
  * @param locationId
  * @returns A valid Location.
  */
-export async function getLocation(locationId: string|number): Promise<Location> {
-
+export async function getLocation(locationId: string | number): Promise<Location> {
     const locationIdValidationResult = locationIdSchema.safeParse(locationId);
     if (!locationIdValidationResult.success) {
         throw new AppError({ internalMessage: `Invalid locationId: ${locationId}` });
