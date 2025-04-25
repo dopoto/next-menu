@@ -13,7 +13,7 @@ import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 
-export function AddMenu(props: { locationId: LocationId }) {
+export function AddMenu(props: { locationId: LocationId; addMenuAction: any }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuFormSchema>>({
         resolver: zodResolver(menuFormSchema),

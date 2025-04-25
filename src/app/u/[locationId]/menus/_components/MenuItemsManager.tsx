@@ -1,6 +1,6 @@
 'use client';
 
-import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import { closestCenter, DndContext, DragEndEvent, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import {
     arrayMove,
     SortableContext,
@@ -11,6 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
+import { addItemToMenuAction, updateMenuItemsSortOrderAction } from '~/app/actions/menuItemActions';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
@@ -18,14 +19,9 @@ import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema, type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
-import {
-    addItemToMenu,
-    getMenuItemById,
-    getMenuItemsByMenu,
-    updateMenuItemsSortOrder,
-} from '~/server/queries/menu-items';
 import { SortableMenuItem } from '../_components/SortableMenuItem';
 import { MenuItemSelector } from './MenuItemSelector';
+import { MenuItemsData } from './MenuItemsData';
 
 interface MenuItemsManagerProps {
     locationId: LocationId;
@@ -38,6 +34,7 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showSelectDialog, setShowSelectDialog] = useState(false);
+    const [newMenuItemId, setNewMenuItemId] = useState<number | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -46,10 +43,10 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
         }),
     );
 
-    const handleDragEnd = async (event: { active: { id: number }; over: { id: number } }) => {
+    const handleDragEnd = async (event: DragEndEvent) => {
         const { active, over } = event;
 
-        if (active.id !== over.id) {
+        if (over && active.id !== over.id) {
             const newItems = arrayMove(
                 items,
                 items.findIndex((item) => item.id === active.id),
@@ -60,15 +57,14 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
             onItemsChange?.(newItems);
 
             if (menuId) {
-                try {
-                    await updateMenuItemsSortOrder(
-                        menuId,
-                        newItems.map((item) => item.id),
-                    );
-                } catch (error) {
+                const res = await updateMenuItemsSortOrderAction(
+                    menuId,
+                    newItems.map((item) => item.id),
+                );
+                if (res.status === 'error') {
                     toast({
                         title: 'Failed to update sort order',
-                        description: error instanceof Error ? error.message : 'Unknown error',
+                        description: res.error,
                         variant: 'destructive',
                     });
                 }
@@ -94,26 +90,16 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
             setShowAddDialog(false);
 
             if (menuId) {
-                try {
-                    await addItemToMenu(menuId, res.menuItemId);
-                    const updatedItems = await getMenuItemsByMenu(menuId);
-                    setItems(updatedItems);
-                    onItemsChange?.(updatedItems);
-                } catch (error) {
+                const addRes = await addItemToMenuAction(menuId, res.menuItemId);
+                if (addRes.status === 'error') {
                     toast({
                         title: 'Failed to add item to menu',
-                        description: error instanceof Error ? error.message : 'Unknown error',
+                        description: addRes.error,
                         variant: 'destructive',
                     });
                 }
             } else {
-                // For new menus, we need to fetch the newly created item to add it to the list
-                const newItem = await getMenuItemById(locationId, res.menuItemId);
-                if (newItem) {
-                    const updatedItems = [...items, newItem];
-                    setItems(updatedItems);
-                    onItemsChange?.(updatedItems);
-                }
+                setNewMenuItemId(res.menuItemId);
             }
         } else {
             handleReactHookFormErrors(newMenuItemForm, res);
@@ -123,15 +109,11 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
     const handleSelectItem = async (item: MenuItem) => {
         if (!items.some((i) => i.id === item.id)) {
             if (menuId) {
-                try {
-                    await addItemToMenu(menuId, item.id);
-                    const updatedItems = await getMenuItemsByMenu(menuId);
-                    setItems(updatedItems);
-                    onItemsChange?.(updatedItems);
-                } catch (error) {
+                const res = await addItemToMenuAction(menuId, item.id);
+                if (res.status === 'error') {
                     toast({
                         title: 'Failed to add item to menu',
-                        description: error instanceof Error ? error.message : 'Unknown error',
+                        description: res.error,
                         variant: 'destructive',
                     });
                 }
@@ -147,46 +129,64 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
     };
 
     return (
-        <div className="space-y-4">
-            <div className="flex gap-2">
-                <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
-                    <DialogTrigger asChild>
-                        <Button>Create new menu item</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Create new menu item</DialogTitle>
-                        </DialogHeader>
-                        <AddEditMenuItemForm
-                            form={newMenuItemForm}
-                            onSubmit={handleAddNewItem}
-                            locationId={locationId}
-                        />
-                    </DialogContent>
-                </Dialog>
+        <MenuItemsData locationId={locationId} menuId={menuId} menuItemId={newMenuItemId ?? undefined}>
+            {({ items: fetchedItems, item: newItem }) => {
+                // Update local state when new data is fetched
+                if (menuId && fetchedItems.length > 0) {
+                    setItems(fetchedItems);
+                    onItemsChange?.(fetchedItems);
+                }
+                if (newItem && !menuId) {
+                    const updatedItems = [...items, newItem];
+                    setItems(updatedItems);
+                    onItemsChange?.(updatedItems);
+                    setNewMenuItemId(null);
+                }
 
-                <Dialog open={showSelectDialog} onOpenChange={setShowSelectDialog}>
-                    <DialogTrigger asChild>
-                        <Button variant="outline">Add existing menu item</Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                        <DialogHeader>
-                            <DialogTitle>Select menu item</DialogTitle>
-                        </DialogHeader>
-                        <MenuItemSelector locationId={locationId} onSelect={handleSelectItem} />
-                    </DialogContent>
-                </Dialog>
-            </div>
+                return (
+                    <div className="space-y-4">
+                        <div className="flex gap-2">
+                            <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+                                <DialogTrigger asChild>
+                                    <Button>Create new menu item</Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Create new menu item</DialogTitle>
+                                    </DialogHeader>
+                                    <AddEditMenuItemForm
+                                        form={newMenuItemForm}
+                                        onSubmit={handleAddNewItem}
+                                        locationId={locationId}
+                                    />
+                                </DialogContent>
+                            </Dialog>
 
-            <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-                <SortableContext items={items} strategy={verticalListSortingStrategy}>
-                    <div className="space-y-2">
-                        {items.map((item) => (
-                            <SortableMenuItem key={item.id} item={item} />
-                        ))}
+                            <Dialog open={showSelectDialog} onOpenChange={setShowSelectDialog}>
+                                <DialogTrigger asChild>
+                                    <Button variant="outline">Add existing menu item</Button>
+                                </DialogTrigger>
+                                <DialogContent>
+                                    <DialogHeader>
+                                        <DialogTitle>Select menu item</DialogTitle>
+                                    </DialogHeader>
+                                    <MenuItemSelector locationId={locationId} onSelect={handleSelectItem} />
+                                </DialogContent>
+                            </Dialog>
+                        </div>
+
+                        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+                            <SortableContext items={items} strategy={verticalListSortingStrategy}>
+                                <div className="space-y-2">
+                                    {items.map((item) => (
+                                        <SortableMenuItem key={item.id} item={item} />
+                                    ))}
+                                </div>
+                            </SortableContext>
+                        </DndContext>
                     </div>
-                </SortableContext>
-            </DndContext>
-        </div>
+                );
+            }}
+        </MenuItemsData>
     );
 }

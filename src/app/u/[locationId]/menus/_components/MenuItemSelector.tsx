@@ -5,7 +5,8 @@ import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Input } from '~/components/ui/input';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
-import { getAvailableMenuItems } from '~/server/queries/menu-items';
+import { toast } from '~/hooks/use-toast';
+
 interface MenuItemSelectorProps {
     locationId: LocationId;
     onSelect: (item: MenuItem) => void;
@@ -20,10 +21,16 @@ export function MenuItemSelector({ locationId, onSelect }: MenuItemSelectorProps
         async function loadItems() {
             setIsLoading(true);
             try {
-                const availableItems = await getAvailableMenuItems(locationId);
-                setItems(availableItems);
+                const response = await fetch(`/api/available-menu-items?locationId=${locationId}`);
+                if (!response.ok) throw new Error('Failed to fetch menu items');
+                const data = await response.json();
+                setItems(data);
             } catch (error) {
-                console.error('Failed to load menu items:', error);
+                toast({
+                    title: 'Failed to load menu items',
+                    description: error instanceof Error ? error.message : 'Unknown error',
+                    variant: 'destructive',
+                });
             } finally {
                 setIsLoading(false);
             }

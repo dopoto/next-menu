@@ -1,5 +1,4 @@
 import { and, eq, sql } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem, type MenuItemId, type menuItemFormSchema } from '~/domain/menu-items';
@@ -111,6 +110,4 @@ export async function updateMenuItemsSortOrder(menuId: number, menuItemIds: numb
 
         await tx.insert(menuItemsToMenus).values(values);
     });
-
-    revalidatePath('/u/[locationId]/menus');
 }
