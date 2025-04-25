@@ -8,11 +8,9 @@ import { AppError } from '~/lib/error-utils.server';
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
 
-export const onboardCreateCheckoutSession = async (props: { priceTierId: PriceTierId }) => {
-    // TODO
-
+export const onboardCreateCheckoutSessionAction = async (props: { priceTierId: PriceTierId }) => {    
     const tier = priceTiers[props.priceTierId];
-    // TODO put in ROUTES:
+    // TODO add to ROUTES:
     const returnUrl = `${env.NEXT_PUBLIC_APP_URL}/onboard/post-payment?session_id={CHECKOUT_SESSION_ID}`;
 
     const session = await stripe.checkout.sessions.create({

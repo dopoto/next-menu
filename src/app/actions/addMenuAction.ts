@@ -8,10 +8,10 @@ import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { createMenu } from '~/server/queries/menus';
 
-export async function addMenu(data: z.infer<typeof menuFormSchema>): Promise<FormState<typeof menuFormSchema>> {
-    const parsed = menuFormSchema.safeParse(data);
-    if (!parsed.success) {
-        return processFormErrors(parsed.error, data);
+export async function addMenuAction(data: z.infer<typeof menuFormSchema>): Promise<FormState<typeof menuFormSchema>> {
+    const parsedForm = menuFormSchema.safeParse(data);
+    if (!parsedForm.success) {
+        return processFormErrors(parsedForm.error, data);
     }
 
     const availableQuota = await getAvailableFeatureQuota('menus');
@@ -23,8 +23,8 @@ export async function addMenu(data: z.infer<typeof menuFormSchema>): Promise<For
     }
 
     try {
-        await createMenu(parsed.data);
-        revalidatePath(ROUTES.menus(parsed.data.locationId));
+        await createMenu(parsedForm.data);
+        revalidatePath(ROUTES.menus(parsedForm.data.locationId));
         // TODO revalidate public path
         return { status: 'success' };
     } catch (error) {

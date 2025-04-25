@@ -4,7 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
-import { editMenu } from '~/app/actions/editMenu';
+import { editMenuAction } from '~/app/actions/editMenuAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuForm } from '~/app/u/[locationId]/menus/_components/AddEditMenuForm';
 import { type LocationId } from '~/domain/locations';
@@ -24,7 +24,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu }) {
     });
 
     async function onSubmit(values: z.infer<typeof menuFormSchema>) {
-        const res = await editMenu(props.menu.id, values);
+        const res = await editMenuAction(props.menu.id, values);
         if (res.status === 'success') {
             toast({ title: 'Menu updated' });
             router.push(ROUTES.menus(props.locationId));

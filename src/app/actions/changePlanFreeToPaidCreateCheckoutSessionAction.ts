@@ -9,7 +9,7 @@ import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-u
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
 
-export const changePlanFreeToPaidCreateCheckoutSession = async (props: {
+export const changePlanFreeToPaidCreateCheckoutSessionAction = async (props: {
     fromTierId: PriceTierId;
     toTierId: PriceTierId;
     newStripeCustomerId: string;

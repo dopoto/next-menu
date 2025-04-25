@@ -13,7 +13,7 @@ import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { menuItemFormSchema } from '~/domain/menu-items';
-import { addMenuItem } from '~/app/actions/addMenuItem';
+import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
 import { addItemToMenu, updateMenuItemsSortOrder, getMenuItems, getMenuItemById } from '~/app/actions/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
@@ -77,7 +77,7 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
     });
 
     const handleAddNewItem = async (values: typeof menuItemFormSchema._type) => {
-        const res = await addMenuItem(values);
+        const res = await addMenuItemAction(values);
         if (res.status === 'success' && res.menuItemId) {
             toast({ title: 'Menu item added' });
             setShowAddDialog(false);

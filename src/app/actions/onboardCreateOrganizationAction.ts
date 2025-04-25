@@ -45,7 +45,7 @@ const formDataSchema = z.object({
     stripeSessionId: z.string(),
 });
 
-export const onboardCreateOrganization = async (formData: FormData) => {
+export const onboardCreateOrganizationAction = async (formData: FormData) => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'onboardCreateOrganization',

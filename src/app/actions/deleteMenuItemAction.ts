@@ -7,7 +7,7 @@ import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { deleteMenuItem as deleteMenuItemQuery } from '~/server/queries/menu-items';
 
-export async function deleteMenuItem(
+export async function deleteMenuItemAction(
     locationId: LocationId,
     menuItemId: MenuItemId,
 ): Promise<FormState<typeof menuItemFormSchema>> {

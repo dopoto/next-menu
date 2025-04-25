@@ -7,7 +7,7 @@ import { type FormState, processFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { updateMenu } from '~/server/queries/menus';
 
-export async function editMenu(
+export async function editMenuAction(
     menuId: number,
     data: z.infer<typeof menuFormSchema>,
 ): Promise<FormState<typeof menuFormSchema>> {
