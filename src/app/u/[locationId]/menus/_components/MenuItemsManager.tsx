@@ -121,20 +121,9 @@ export function MenuItemsManager({
 
     const handleSelectItem = async (item: MenuItem) => {
         if (!items.some((i) => i.id === item.id)) {
-            if (menuId) {
-                // const res = await addItemToMenuAction(menuId, item.id);
-                // if (res.status === 'error') {
-                //     toast({
-                //         title: 'Failed to add item to menu',
-                //         description: res.error,
-                //         variant: 'destructive',
-                //     });
-                // }
-            } else {
-                const updatedItems = [...items, item];
-                setItems(updatedItems);
-                onItemsChange?.(updatedItems);
-            }
+            const updatedItems = [...items, item];
+            setItems(updatedItems);
+            onItemsChange?.(updatedItems);
             setShowSelectDialog(false);
         } else {
             setShowSelectDialog(false);

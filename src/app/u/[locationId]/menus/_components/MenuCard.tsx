@@ -31,9 +31,8 @@ export default function MenuCard(props: { locationId: LocationId; item: Menu }) 
     }
 
     return (
-        <div className="w-full rounded-sm border-1 p-2">
-            <div>{props.item.name}</div>
-
+        <div className="w-full rounded-sm border-1 p-2 flex flex-row">
+            <div className="grow">{props.item.name}</div>
             <div className="mx-auto flex items-center">
                 <DropdownMenu>
                     <DropdownMenuTrigger asChild>

@@ -15,7 +15,6 @@ export default async function EditMenuPage(props: { params: Params }) {
     const validMenuId = getValidMenuIdOrThrow(params.menuId);
 
     const menu = await getMenuById(validLocationId, validMenuId);
-
     if (!menu) {
         return notFound();
     }

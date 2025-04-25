@@ -46,15 +46,43 @@ export async function createMenu(data: z.infer<typeof menuFormSchema>) {
 
 export async function updateMenu(menuId: MenuId, data: z.infer<typeof menuFormSchema>) {
     const validLocation = await getLocation(data.locationId);
-    const result = await db
-        .update(menus)
-        .set(data)
-        .where(and(eq(menus.locationId, validLocation.id), eq(menus.id, menuId)));
+    
+    await db.transaction(async (tx) => {
+        // Update menu details
+        const result = await tx
+            .update(menus)
+            .set({
+                name: data.name,
+                locationId: data.locationId,
+                updatedAt: sql`CURRENT_TIMESTAMP`,
+            })
+            .where(and(eq(menus.locationId, validLocation.id), eq(menus.id, menuId)));
 
-    if (result.rowCount === 0) {
-        const internalMessage = `Menu with ID ${menuId} not found or not authorized for update`;
-        throw new AppError({ internalMessage });
-    }
+        if (result.rowCount === 0) {
+            const internalMessage = `Menu with ID ${menuId} not found or not authorized for update`;
+            throw new AppError({ internalMessage });
+        }
+
+        // Handle menu items if provided
+        if (data.items) {
+            // Delete existing menu item associations
+            await tx
+                .delete(menuItemsToMenus)
+                .where(eq(menuItemsToMenus.menuId, menuId));
+
+            // Add new menu item associations with proper sort order
+            for (let i = 0; i < data.items.length; i++) {
+                const item = data.items[i];
+                await tx.insert(menuItemsToMenus).values({
+                    menuId: menuId,
+                    menuItemId: item.id,
+                    sortOrderIndex: i,
+                    createdAt: sql`CURRENT_TIMESTAMP`,
+                    updatedAt: sql`CURRENT_TIMESTAMP`,
+                });
+            }
+        }
+    });
 }
 
 export async function deleteMenu(locationId: LocationId, menuId: MenuId) {

@@ -1,30 +1,45 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { type z } from 'zod';
+import * as Sentry from '@sentry/nextjs';
+import { headers } from 'next/headers';
 import { menuFormSchema } from '~/domain/menus';
-import { type FormState, processFormErrors } from '~/lib/form-state';
+import { AppError } from '~/lib/error-utils.server';
+import { processFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { updateMenu } from '~/server/queries/menus';
 
-export async function editMenuAction(
-    menuId: number,
-    data: z.infer<typeof menuFormSchema>,
-): Promise<FormState<typeof menuFormSchema>> {
-    const parsed = menuFormSchema.safeParse(data);
-    if (!parsed.success) {
-        return processFormErrors(parsed.error, data);
-    }
-
-    try {
-        await updateMenu(menuId, parsed.data);
-        revalidatePath(ROUTES.menus(parsed.data.locationId));
-        // TODO revalidate public path
-        return { status: 'success' };
-    } catch (error) {
-        return {
-            status: 'error',
-            rootError: error instanceof Error ? error.message : 'Could not save data.',
-        };
-    }
-}
+export const editMenuAction = async (menuId: number, formData: FormData) => {
+    'use server';
+    return await Sentry.withServerActionInstrumentation(
+        'editMenuAction',
+        {
+            headers: headers(),
+            recordResponse: true,
+        },
+        async () => {
+            try {
+                const parsedForm = menuFormSchema.safeParse(formData);
+                if (!parsedForm.success) {
+                    return processFormErrors(parsedForm.error, formData);
+                }
+                await updateMenu(menuId, parsedForm.data);
+                revalidatePath(ROUTES.menus(parsedForm.data.locationId));
+                // TODO revalidate public path
+                return { status: 'success' };
+            } catch (error) {
+                if (error instanceof AppError) {
+                    return {
+                        eventId: error.publicErrorId,
+                        errors: [error.publicMessage],
+                    };
+                } else {
+                    return {
+                        eventId: 'n/a',
+                        errors: ['An error occurred during onboarding.'],
+                    };
+                }
+            }
+        },
+    );
+};
