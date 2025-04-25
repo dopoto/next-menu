@@ -5,8 +5,7 @@ import { Input } from '~/components/ui/input';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
-import { getAvailableMenuItems } from '~/app/actions/menu-items';
-
+import { getAvailableMenuItems } from '~/server/queries/menu-items';
 interface MenuItemSelectorProps {
     locationId: LocationId;
     onSelect: (item: MenuItem) => void;

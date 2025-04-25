@@ -1,23 +1,26 @@
 'use client';
 
+import { closestCenter, DndContext, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
+import {
+    arrayMove,
+    SortableContext,
+    sortableKeyboardCoordinates,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
-import { DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
-import { arrayMove, SortableContext, sortableKeyboardCoordinates, verticalListSortingStrategy } from '@dnd-kit/sortable';
-import { SortableMenuItem } from '../_components/SortableMenuItem';
-import { MenuItemSelector } from './MenuItemSelector';
+import { useForm } from 'react-hook-form';
+import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
+import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
 import { type LocationId } from '~/domain/locations';
-import { type MenuItem } from '~/domain/menu-items';
-import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { menuItemFormSchema } from '~/domain/menu-items';
-import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
-import { addItemToMenu, updateMenuItemsSortOrder, getMenuItems, getMenuItemById } from '~/app/actions/menu-items';
+import { menuItemFormSchema, type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
-import { ROUTES } from '~/lib/routes';
+import { addItemToMenu, getMenuItemById, getMenuItemsByMenu, updateMenuItemsSortOrder } from '~/server/queries/menu-items';
+import { SortableMenuItem } from '../_components/SortableMenuItem';
+import { MenuItemSelector } from './MenuItemSelector';
 
 interface MenuItemsManagerProps {
     locationId: LocationId;
@@ -35,25 +38,28 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
         useSensor(PointerSensor),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
-        })
+        }),
     );
 
     const handleDragEnd = async (event: any) => {
         const { active, over } = event;
-        
+
         if (active.id !== over.id) {
             const newItems = arrayMove(
                 items,
                 items.findIndex((item) => item.id === active.id),
-                items.findIndex((item) => item.id === over.id)
+                items.findIndex((item) => item.id === over.id),
             );
-            
+
             setItems(newItems);
             onItemsChange?.(newItems);
 
             if (menuId) {
                 try {
-                    await updateMenuItemsSortOrder(menuId, newItems.map(item => item.id));
+                    await updateMenuItemsSortOrder(
+                        menuId,
+                        newItems.map((item) => item.id),
+                    );
                 } catch (error) {
                     toast({
                         title: 'Failed to update sort order',
@@ -81,11 +87,11 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
         if (res.status === 'success' && res.menuItemId) {
             toast({ title: 'Menu item added' });
             setShowAddDialog(false);
-            
+
             if (menuId) {
                 try {
                     await addItemToMenu(menuId, res.menuItemId);
-                    const updatedItems = await getMenuItems(menuId);
+                    const updatedItems = await getMenuItemsByMenu(menuId);
                     setItems(updatedItems);
                     onItemsChange?.(updatedItems);
                 } catch (error) {
@@ -97,7 +103,7 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
                 }
             } else {
                 // For new menus, we need to fetch the newly created item to add it to the list
-                const newItem = await getMenuItemById(res.menuItemId);
+                const newItem = await getMenuItemById(locationId, res.menuItemId);
                 if (newItem) {
                     const updatedItems = [...items, newItem];
                     setItems(updatedItems);
@@ -114,7 +120,7 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
             if (menuId) {
                 try {
                     await addItemToMenu(menuId, item.id);
-                    const updatedItems = await getMenuItems(menuId);
+                    const updatedItems = await getMenuItemsByMenu(menuId);
                     setItems(updatedItems);
                     onItemsChange?.(updatedItems);
                 } catch (error) {
@@ -178,4 +184,4 @@ export function MenuItemsManager({ locationId, menuId, initialItems = [], onItem
             </DndContext>
         </div>
     );
-} 
+}
