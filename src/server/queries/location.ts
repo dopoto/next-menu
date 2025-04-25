@@ -105,7 +105,7 @@ export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]
                 eq(menus.locationId, locationId),
                 eq(
                     db
-                        .select({ orgId: locations.orgId })
+                        .select({ locationId: locations.id })
                         .from(locations)
                         .where(
                             and(

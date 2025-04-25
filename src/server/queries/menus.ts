@@ -1,4 +1,4 @@
-import { and, desc, eq } from 'drizzle-orm';
+import { and, desc, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItemId } from '~/domain/menu-items';
@@ -8,27 +8,47 @@ import { db } from '~/server/db';
 import { menuItemsToMenus, menus } from '~/server/db/schema';
 import { getLocation } from '~/server/queries/location';
 
-function validateAndFormatMenuData(data: z.infer<typeof menuFormSchema>) {
-    return {
-        name: data.name,
-        locationId: data.locationId,
-    };
-}
-
 export async function createMenu(data: z.infer<typeof menuFormSchema>) {
     // Needed - performs security checks and throws on failure.
     await getLocation(data.locationId);
 
-    const dbData = validateAndFormatMenuData(data);
-    await db.insert(menus).values(dbData);
+    await db.transaction(async (tx) => {
+        const [menu] = await tx
+            .insert(menus)
+            .values({
+                name: data.name,
+                locationId: data.locationId,
+                createdAt: sql`CURRENT_TIMESTAMP`,
+                updatedAt: sql`CURRENT_TIMESTAMP`,
+            })
+            .returning();
+
+        if (!menu) {
+            throw new AppError({ internalMessage: 'Could not insert menu' });
+        }
+
+        if (data.items) {
+            for (let i = 0; i < data.items.length; i++) {
+                const item = data.items[i];
+                await tx.insert(menuItemsToMenus).values({
+                    menuId: menu.id,
+                    menuItemId: item.id,
+                    sortOrderIndex: i,
+                    createdAt: sql`CURRENT_TIMESTAMP`,
+                    updatedAt: sql`CURRENT_TIMESTAMP`,
+                });
+            }
+        }
+
+        return menu;
+    });
 }
 
 export async function updateMenu(menuId: MenuId, data: z.infer<typeof menuFormSchema>) {
     const validLocation = await getLocation(data.locationId);
-    const dbData = validateAndFormatMenuData(data);
     const result = await db
         .update(menus)
-        .set(dbData)
+        .set(data)
         .where(and(eq(menus.locationId, validLocation.id), eq(menus.id, menuId)));
 
     if (result.rowCount === 0) {

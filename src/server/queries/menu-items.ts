@@ -84,11 +84,11 @@ export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuIte
     }
 }
 
-export async function addItemToMenu(menuId: number, menuItemId: number) {
+export async function addItemToMenu(menuId: number, menuItemId: number, sortOrderIndex: number) {
     await db.insert(menuItemsToMenus).values({
         menuId,
         menuItemId,
-        sortOrderIndex: 0,
+        sortOrderIndex,
         createdAt: sql`CURRENT_TIMESTAMP`,
         updatedAt: sql`CURRENT_TIMESTAMP`,
     });
