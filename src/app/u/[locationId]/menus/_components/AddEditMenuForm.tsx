@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
 import { MenuItemsManager } from '~/app/u/[locationId]/menus/_components/MenuItemsManager';
-import { PreviewMenu } from '~/app/u/[locationId]/menus/_components/PreviewMenu';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';

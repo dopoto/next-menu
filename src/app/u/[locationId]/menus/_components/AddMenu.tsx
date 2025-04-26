@@ -37,7 +37,7 @@ export function AddMenu(props: { locationId: LocationId; addMenuAction: any; all
 
     return (
         <>
-            <FormTitle title="Add menu  " subtitle="Add a menu." />
+            <FormTitle title="Add menu" subtitle="Add a menu." />
             <AddEditMenuForm
                 form={form}
                 onSubmit={onSubmit}

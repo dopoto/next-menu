@@ -24,7 +24,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu; allMenuIte
         },
     });
 
-    async function onSubmit(values: z.infer<typeof menuFormSchema>) {        
+    async function onSubmit(values: z.infer<typeof menuFormSchema>) {
         const res = await editMenuAction(props.menu.id, values);
 
         if (res.status === 'success') {

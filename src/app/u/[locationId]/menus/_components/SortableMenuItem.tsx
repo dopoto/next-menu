@@ -4,8 +4,8 @@ import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
-import { type MenuItem } from '~/domain/menu-items';
 import { Button } from '~/components/ui/button';
+import { type MenuItem } from '~/domain/menu-items';
 
 interface SortableMenuItemProps {
     item: MenuItem;
@@ -13,12 +13,12 @@ interface SortableMenuItemProps {
 }
 
 export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
         id: item.id,
         data: {
             type: 'menu-item',
-            item
-        }
+            item,
+        },
     });
 
     const style = {
@@ -28,9 +28,9 @@ export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
 
     return (
         <div ref={setNodeRef} style={style} className="flex items-center gap-2 rounded-md border p-2">
-            <div 
-                {...attributes} 
-                {...listeners} 
+            <div
+                {...attributes}
+                {...listeners}
                 className="cursor-grab rounded-md p-1 hover:bg-gray-100"
                 aria-label={`Drag to reorder ${item.name}`}
             >

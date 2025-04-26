@@ -8,15 +8,6 @@ import { db } from '~/server/db';
 import { menuItems, menuItemsToMenus } from '~/server/db/schema';
 import { getLocation } from '~/server/queries/location';
 
-export async function getAvailableMenuItems(locationId: LocationId): Promise<MenuItem[]> {
-    const items = await db.query.menuItems.findMany({
-        where: (menuItems, { eq }) => eq(menuItems.locationId, locationId),
-        orderBy: (menuItems, { desc }) => desc(menuItems.name),
-    });
-
-    return items;
-}
-
 export async function getMenuItemsByLocation(locationId: LocationId): Promise<MenuItem[]> {
     const validLocation = await getLocation(locationId);
     const items = await db.query.menuItems.findMany({
@@ -25,18 +16,6 @@ export async function getMenuItemsByLocation(locationId: LocationId): Promise<Me
     });
 
     return items;
-}
-
-export async function getMenuItemsByMenu(menuId: number): Promise<MenuItem[]> {
-    const items = await db.query.menuItemsToMenus.findMany({
-        where: (menuItemsToMenus, { eq }) => eq(menuItemsToMenus.menuId, menuId),
-        orderBy: (menuItemsToMenus, { asc }) => asc(menuItemsToMenus.sortOrderIndex),
-        with: {
-            menuItem: true,
-        },
-    });
-
-    return items.map((item) => item.menuItem);
 }
 
 export async function getMenuItemById(locationId: LocationId, menuItemId: MenuItemId): Promise<MenuItem | null> {

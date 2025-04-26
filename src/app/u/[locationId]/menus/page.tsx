@@ -13,7 +13,17 @@ export default async function MenusPage(props: { params: Params }) {
 
     return (
         <div className="flex h-full flex-col gap-2">
-            <FormTitle title="Menus" subtitle={<span>The digital menus shown on <a className="blue-link" href={ROUTES.location(locationId)}>your public location page</a></span>} />
+            <FormTitle
+                title="Menus"
+                subtitle={
+                    <span>
+                        The digital menus shown on{' '}
+                        <a className="blue-link" href={ROUTES.location(locationId)}>
+                            your public location page
+                        </a>
+                    </span>
+                }
+            />
             <Suspense fallback={<LoadingSection />}>
                 <MenusList locationId={locationId} />
             </Suspense>

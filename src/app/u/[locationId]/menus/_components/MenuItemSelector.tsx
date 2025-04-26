@@ -14,11 +14,9 @@ interface MenuItemSelectorProps {
 export function MenuItemSelector({ allMenuItems, addedItems, onSelect }: MenuItemSelectorProps) {
     const [search, setSearch] = useState('');
 
-    const filteredItems = (allMenuItems ?? []).filter(
-        (item) => addedItems.findIndex(a => a.id === item.id) === -1
-    ).filter(
-        (item) => item.name?.toLowerCase().includes(search.toLowerCase()) ?? false,
-    );
+    const filteredItems = (allMenuItems ?? [])
+        .filter((item) => addedItems.findIndex((a) => a.id === item.id) === -1)
+        .filter((item) => item.name?.toLowerCase().includes(search.toLowerCase()) ?? false);
 
     return (
         <div className="space-y-4">

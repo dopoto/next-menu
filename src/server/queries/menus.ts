@@ -1,7 +1,7 @@
 import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
-import { type MenuItem, type MenuItemId } from '~/domain/menu-items';
+import { type MenuItemId } from '~/domain/menu-items';
 import { type Menu, type menuFormSchema, type MenuId } from '~/domain/menus';
 import { AppError } from '~/lib/errors';
 import { db } from '~/server/db';
@@ -46,7 +46,7 @@ export async function createMenu(data: z.infer<typeof menuFormSchema>) {
 
 export async function updateMenu(menuId: MenuId, data: z.infer<typeof menuFormSchema>) {
     const validLocation = await getLocation(data.locationId);
-    
+
     await db.transaction(async (tx) => {
         // Update menu details
         const result = await tx
@@ -66,9 +66,7 @@ export async function updateMenu(menuId: MenuId, data: z.infer<typeof menuFormSc
         // Handle menu items if provided
         if (data.items) {
             // Delete existing menu item associations
-            await tx
-                .delete(menuItemsToMenus)
-                .where(eq(menuItemsToMenus.menuId, menuId));
+            await tx.delete(menuItemsToMenus).where(eq(menuItemsToMenus.menuId, menuId));
 
             // Add new menu item associations with proper sort order
             for (let i = 0; i < data.items.length; i++) {
@@ -87,12 +85,17 @@ export async function updateMenu(menuId: MenuId, data: z.infer<typeof menuFormSc
 
 export async function deleteMenu(locationId: LocationId, menuId: MenuId) {
     const validLocation = await getLocation(locationId);
-    const result = await db.delete(menus).where(and(eq(menus.locationId, validLocation.id), eq(menus.id, menuId)));
 
-    if (result.rowCount === 0) {
-        const internalMessage = `Menu with ID ${menuId} not found or not authorized for deletion`;
-        throw new AppError({ internalMessage });
-    }
+    await db.transaction(async (tx) => {
+        await tx.delete(menuItemsToMenus).where(eq(menuItemsToMenus.menuId, menuId));
+
+        const result = await tx.delete(menus).where(and(eq(menus.locationId, validLocation.id), eq(menus.id, menuId)));
+
+        if (result.rowCount === 0) {
+            const internalMessage = `Menu with ID ${menuId} not found or not authorized for deletion`;
+            throw new AppError({ internalMessage });
+        }
+    });
 }
 
 export async function addMenuItemToMenu(menuId: MenuId, menuItemId: MenuItemId) {
