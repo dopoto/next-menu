@@ -37,7 +37,7 @@ export const editMenuAction = async (menuId: number, data: z.infer<typeof menuFo
                 } else {
                     return {
                         status: 'error' as const,
-                        rootError: 'An error occurred during onboarding.',
+                        rootError: 'An error occurred while saving the menu.',
                     };
                 }
             }

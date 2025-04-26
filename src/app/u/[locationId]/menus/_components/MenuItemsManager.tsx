@@ -102,16 +102,7 @@ export function MenuItemsManager({
             toast({ title: 'Menu item added' });
             setShowAddDialog(false);
 
-            if (menuId) {
-                // const addRes = await addItemToMenuAction(menuId, res.menuItemId);
-                // if (addRes.status === 'error') {
-                //     toast({
-                //         title: 'Failed to add item to menu',
-                //         description: addRes.error,
-                //         variant: 'destructive',
-                //     });
-                // }
-            } else {
+            if (!menuId) {
                 setNewMenuItemId(res.menuItemId);
             }
         } else {
@@ -166,11 +157,11 @@ export function MenuItemsManager({
                 <SortableContext items={items} strategy={verticalListSortingStrategy}>
                     <div className="space-y-2">
                         {items.map((item) => (
-                            <SortableMenuItem 
-                                key={item.id} 
-                                item={item} 
+                            <SortableMenuItem
+                                key={item.id}
+                                item={item}
                                 onDelete={() => {
-                                    const updatedItems = items.filter(i => i.id !== item.id);
+                                    const updatedItems = items.filter((i) => i.id !== item.id);
                                     setItems(updatedItems);
                                     onItemsChange?.(updatedItems);
                                 }}

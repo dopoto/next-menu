@@ -16,7 +16,7 @@ export const addMenuAction = async (
 ): Promise<FormState<typeof menuFormSchema>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
-        'editMenuAction',
+        'addMenuAction',
         {
             headers: headers(),
             recordResponse: true,
@@ -48,7 +48,7 @@ export const addMenuAction = async (
                 } else {
                     return {
                         status: 'error' as const,
-                        rootError: 'An error occurred during onboarding.',
+                        rootError: 'An error occurred while saving the menu.',
                     };
                 }
             }

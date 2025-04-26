@@ -84,16 +84,6 @@ export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuIte
     }
 }
 
-export async function addItemToMenu(menuId: number, menuItemId: number, sortOrderIndex: number) {
-    await db.insert(menuItemsToMenus).values({
-        menuId,
-        menuItemId,
-        sortOrderIndex,
-        createdAt: sql`CURRENT_TIMESTAMP`,
-        updatedAt: sql`CURRENT_TIMESTAMP`,
-    });
-}
-
 export async function updateMenuItemsSortOrder(menuId: number, menuItemIds: number[]) {
     await db.transaction(async (tx) => {
         // Delete existing sort order
