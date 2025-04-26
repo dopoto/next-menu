@@ -157,7 +157,7 @@ export function MenuItemsManager({
                         <DialogHeader>
                             <DialogTitle>Select menu item</DialogTitle>
                         </DialogHeader>
-                        <MenuItemSelector allMenuItems={allMenuItems} onSelect={handleSelectItem} />
+                        <MenuItemSelector allMenuItems={allMenuItems} addedItems={items} onSelect={handleSelectItem} />
                     </DialogContent>
                 </Dialog>
             </div>

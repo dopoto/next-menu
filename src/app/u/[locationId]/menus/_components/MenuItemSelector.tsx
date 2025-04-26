@@ -7,13 +7,16 @@ import { type MenuItem } from '~/domain/menu-items';
 
 interface MenuItemSelectorProps {
     allMenuItems: MenuItem[];
+    addedItems: MenuItem[];
     onSelect: (item: MenuItem) => void;
 }
 
-export function MenuItemSelector({ allMenuItems, onSelect }: MenuItemSelectorProps) {
+export function MenuItemSelector({ allMenuItems, addedItems, onSelect }: MenuItemSelectorProps) {
     const [search, setSearch] = useState('');
 
     const filteredItems = (allMenuItems ?? []).filter(
+        (item) => addedItems.findIndex(a => a.id === item.id) === -1
+    ).filter(
         (item) => item.name?.toLowerCase().includes(search.toLowerCase()) ?? false,
     );
 
