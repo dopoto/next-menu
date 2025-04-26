@@ -13,7 +13,13 @@ interface SortableMenuItemProps {
 }
 
 export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
+    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ 
+        id: item.id,
+        data: {
+            type: 'menu-item',
+            item
+        }
+    });
 
     const style = {
         transform: CSS.Transform.toString(transform),
@@ -22,7 +28,12 @@ export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
 
     return (
         <div ref={setNodeRef} style={style} className="flex items-center gap-2 rounded-md border p-2">
-            <div {...attributes} {...listeners} className="cursor-grab rounded-md p-1 hover:bg-gray-100">
+            <div 
+                {...attributes} 
+                {...listeners} 
+                className="cursor-grab rounded-md p-1 hover:bg-gray-100"
+                aria-label={`Drag to reorder ${item.name}`}
+            >
                 <GripVertical className="h-4 w-4" />
             </div>
             <div className="flex-grow">
