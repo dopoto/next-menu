@@ -2,15 +2,17 @@
 
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { GripVertical } from 'lucide-react';
+import { GripVertical, Trash2 } from 'lucide-react';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { type MenuItem } from '~/domain/menu-items';
+import { Button } from '~/components/ui/button';
 
 interface SortableMenuItemProps {
     item: MenuItem;
+    onDelete: () => void;
 }
 
-export function SortableMenuItem({ item }: SortableMenuItemProps) {
+export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: item.id });
 
     const style = {
@@ -33,6 +35,14 @@ export function SortableMenuItem({ item }: SortableMenuItemProps) {
                     }}
                 />
             </div>
+            <Button
+                variant="ghost"
+                size="icon"
+                onClick={onDelete}
+                className="text-red-500 hover:text-red-600 hover:bg-red-50"
+            >
+                <Trash2 className="h-4 w-4" />
+            </Button>
         </div>
     );
 }

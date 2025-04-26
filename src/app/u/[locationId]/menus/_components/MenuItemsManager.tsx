@@ -166,7 +166,15 @@ export function MenuItemsManager({
                 <SortableContext items={items} strategy={verticalListSortingStrategy}>
                     <div className="space-y-2">
                         {items.map((item) => (
-                            <SortableMenuItem key={item.id} item={item} />
+                            <SortableMenuItem 
+                                key={item.id} 
+                                item={item} 
+                                onDelete={() => {
+                                    const updatedItems = items.filter(i => i.id !== item.id);
+                                    setItems(updatedItems);
+                                    onItemsChange?.(updatedItems);
+                                }}
+                            />
                         ))}
                     </div>
                 </SortableContext>
