@@ -29,10 +29,15 @@ export function AddEditMenuForm({
     initialItems?: MenuItem[];
 }) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (values: z.infer<typeof menuFormSchema>) => {
-        // Add the items to the form data
-        await onSubmit({ ...values, items });
+        setIsSubmitting(true);
+        try {
+            await onSubmit({ ...values, items });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -56,9 +61,11 @@ export function AddEditMenuForm({
                     />
 
                     <div className="flex flex-row gap-2">
-                        <Button type="submit">Save</Button>
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? 'Saving...' : 'Save'}
+                        </Button>
                         <a href={ROUTES.menus(locationId)}>
-                            <Button variant="secondary" type="button">
+                            <Button variant="secondary" type="button" disabled={isSubmitting}>
                                 Cancel
                             </Button>
                         </a>

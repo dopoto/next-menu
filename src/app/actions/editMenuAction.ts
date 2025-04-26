@@ -5,11 +5,12 @@ import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
 import { menuFormSchema } from '~/domain/menus';
 import { AppError } from '~/lib/error-utils.server';
-import { processFormErrors } from '~/lib/form-state';
+import { processFormErrors, type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { updateMenu } from '~/server/queries/menus';
+import { z } from 'zod';
 
-export const editMenuAction = async (menuId: number, formData: FormData) => {
+export const editMenuAction = async (menuId: number, data: z.infer<typeof menuFormSchema>): Promise<FormState<typeof menuFormSchema>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'editMenuAction',
@@ -19,24 +20,24 @@ export const editMenuAction = async (menuId: number, formData: FormData) => {
         },
         async () => {
             try {
-                const parsedForm = menuFormSchema.safeParse(formData);
+                const parsedForm = menuFormSchema.safeParse(data);
                 if (!parsedForm.success) {
-                    return processFormErrors(parsedForm.error, formData);
+                    return processFormErrors(parsedForm.error, data);
                 }
                 await updateMenu(menuId, parsedForm.data);
                 revalidatePath(ROUTES.menus(parsedForm.data.locationId));
                 // TODO revalidate public path
-                return { status: 'success' };
+                return { status: 'success' as const };
             } catch (error) {
                 if (error instanceof AppError) {
                     return {
-                        eventId: error.publicErrorId,
-                        errors: [error.publicMessage],
+                        status: 'error' as const,
+                        rootError: error.publicMessage,
                     };
                 } else {
                     return {
-                        eventId: 'n/a',
-                        errors: ['An error occurred during onboarding.'],
+                        status: 'error' as const,
+                        rootError: 'An error occurred during onboarding.',
                     };
                 }
             }
