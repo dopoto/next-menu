@@ -256,10 +256,6 @@ html {
     }
 }
 
-[data-radix-popper-content-wrapper] {
-    /* background-color: var(--background); */
-}
-
 /* Override Clerk CSS */
 /* .cl-cardBox, */
 /* .cl-rootBox {

@@ -2,7 +2,7 @@
 
 import { EllipsisVerticalIcon, EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
-import { deleteMenuItem } from '~/app/actions/deleteMenuItem';
+import { deleteMenuItemAction } from '~/app/actions/deleteMenuItemAction';
 import { PreviewMenuItem } from '~/app/u/[locationId]/menu-items/_components/PreviewMenuItem';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
@@ -33,7 +33,7 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
 
     async function handleDelete() {
         setIsDeleting(true);
-        const result = await deleteMenuItem(props.locationId, props.item.id);
+        const result = await deleteMenuItemAction(props.locationId, props.item.id);
         if (result.status === 'success') {
             toast({ title: 'Menu item deleted' });
             setShowDeleteDialog(false);
@@ -49,11 +49,12 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
 
     return (
         <>
-            <div className="g-2 flex w-full flex-row gap-2 p-2">
+            <div className="flex w-full flex-row">
                 <PublicMenuItem
                     item={{
                         name: props.item.name,
                         description: props.item.description,
+                        type: props.item.type,
                         price: props.item.price.toString(),
                         isNew: props.item.isNew,
                     }}

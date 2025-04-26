@@ -1,10 +1,11 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { type LocationId, type LocationSlug } from '~/domain/locations';
+import { locationIdSchema, type Location, type LocationId, type LocationSlug } from '~/domain/locations';
+import { type Menu } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { locations, organizations, type Location, type Menu } from '~/server/db/schema';
+import { locations, organizations } from '~/server/db/schema';
 
 /**
  * Generates a random string of specified length using letters and numbers
@@ -47,7 +48,13 @@ export async function generateUniqueLocationSlug(): Promise<string> {
  * @param locationId
  * @returns A valid Location.
  */
-export async function getLocation(locationId: LocationId): Promise<Location> {
+export async function getLocation(locationId: string | number): Promise<Location> {
+    const locationIdValidationResult = locationIdSchema.safeParse(locationId);
+    if (!locationIdValidationResult.success) {
+        throw new AppError({ internalMessage: `Invalid locationId: ${locationId}` });
+    }
+    const validLocationId = locationIdValidationResult.data;
+
     const { userId, sessionClaims } = await auth();
     if (!userId) {
         throw new AppError({ internalMessage: 'Unauthorized' });
@@ -63,7 +70,7 @@ export async function getLocation(locationId: LocationId): Promise<Location> {
     const location = await db.query.locations.findFirst({
         where: (locations, { and, eq }) =>
             and(
-                eq(locations.id, locationId),
+                eq(locations.id, validLocationId),
                 eq(
                     locations.orgId,
                     db
@@ -98,7 +105,7 @@ export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]
                 eq(menus.locationId, locationId),
                 eq(
                     db
-                        .select({ orgId: locations.orgId })
+                        .select({ locationId: locations.id })
                         .from(locations)
                         .where(
                             and(

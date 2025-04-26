@@ -11,7 +11,7 @@ import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
 import { changePlanUpgradeCreateCheckoutSession } from '~/lib/stripe-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 type SearchParams = Promise<Record<'toTierId', string | undefined>>;
 

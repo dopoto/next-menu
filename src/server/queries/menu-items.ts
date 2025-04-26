@@ -1,12 +1,12 @@
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem, type MenuItemId, type menuItemFormSchema } from '~/domain/menu-items';
 import { AppError } from '~/lib/error-utils.server';
 import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { db } from '~/server/db';
-import { menuItems } from '~/server/db/schema';
-import { getLocation } from '~/server/queries/location';
+import { menuItems, menuItemsToMenus } from '~/server/db/schema';
+import { getLocation } from '~/server/queries/locations';
 
 export async function getMenuItemsByLocation(locationId: LocationId): Promise<MenuItem[]> {
     const validLocation = await getLocation(locationId);
@@ -18,7 +18,7 @@ export async function getMenuItemsByLocation(locationId: LocationId): Promise<Me
     return items;
 }
 
-export async function getMenuItemById(locationId: LocationId, menuItemId: MenuItemId): Promise<MenuItem | undefined> {
+export async function getMenuItemById(locationId: LocationId, menuItemId: MenuItemId): Promise<MenuItem | null> {
     const validLocation = await getLocation(locationId);
     const item = await db.query.menuItems.findFirst({
         where: (menuItems, { and, eq }) =>
@@ -26,15 +26,15 @@ export async function getMenuItemById(locationId: LocationId, menuItemId: MenuIt
         orderBy: (menuItems, { desc }) => desc(menuItems.name),
     });
 
-    return item;
+    return item ?? null;
 }
 
 export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
     // Needed - performs security checks and throws on failure.
     await getLocation(data.locationId);
-
     const dbData = validateAndFormatMenuItemData(data);
-    await db.insert(menuItems).values(dbData);
+    const result = await db.insert(menuItems).values(dbData).returning();
+    return result[0];
 }
 
 export async function updateMenuItem(menuItemId: MenuItemId, data: z.infer<typeof menuItemFormSchema>) {
@@ -61,4 +61,22 @@ export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuIte
         const internalMessage = `Menu item with ID ${menuItemId} not found or not authorized for deletion`;
         throw new AppError({ internalMessage });
     }
+}
+
+export async function updateMenuItemsSortOrder(menuId: number, menuItemIds: number[]) {
+    await db.transaction(async (tx) => {
+        // Delete existing sort order
+        await tx.delete(menuItemsToMenus).where(eq(menuItemsToMenus.menuId, menuId));
+
+        // Insert new sort order
+        const values = menuItemIds.map((menuItemId, index) => ({
+            menuId,
+            menuItemId,
+            sortOrderIndex: index,
+            createdAt: sql`CURRENT_TIMESTAMP`,
+            updatedAt: sql`CURRENT_TIMESTAMP`,
+        }));
+
+        await tx.insert(menuItemsToMenus).values(values);
+    });
 }

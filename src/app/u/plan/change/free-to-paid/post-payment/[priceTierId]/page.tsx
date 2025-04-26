@@ -6,7 +6,7 @@ import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { obj2str } from '~/lib/string-utils';
-import { updateOrganizationStripeCustomerId } from '~/server/queries/organization';
+import { updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 

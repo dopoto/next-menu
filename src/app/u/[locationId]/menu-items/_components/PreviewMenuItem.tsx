@@ -1,5 +1,3 @@
-'use client';
-
 import { DeviceMockup } from '~/components/DeviceMockup';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { type MenuItem } from '~/domain/menu-items';

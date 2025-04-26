@@ -84,12 +84,12 @@ export const NAV_TREE: NavItem = {
             ...NAV_ITEMS.locationManager,
             children: [
                 {
-                    ...NAV_ITEMS.menus,
-                    children: [NAV_ITEMS.menusAdd],
-                },
-                {
                     ...NAV_ITEMS.menuItems,
                     children: [NAV_ITEMS.menuItemsAdd],
+                },
+                {
+                    ...NAV_ITEMS.menus,
+                    children: [NAV_ITEMS.menusAdd],
                 },
             ],
         },

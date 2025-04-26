@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { onboardCreateOrganization } from '~/app/actions/onboardCreateOrganization';
+import { onboardCreateOrganizationAction } from '~/app/actions/onboardCreateOrganizationAction';
 import { OverviewCard } from '~/components/OverviewCard';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -28,7 +28,7 @@ export const AddLocation = ({
     const router = useRouter();
 
     const handleSubmit = async (formData: FormData) => {
-        const res = await onboardCreateOrganization(formData);
+        const res = await onboardCreateOrganizationAction(formData);
         if (res?.message) {
             // Reloads the user's data from the Clerk API
             await user?.reload();

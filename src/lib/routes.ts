@@ -1,5 +1,6 @@
 import { type LocationId, type LocationSlug } from '~/domain/locations';
 import { type MenuItemId } from '~/domain/menu-items';
+import { type MenuId } from '~/domain/menus';
 import { type PriceTierId } from '~/domain/price-tiers';
 
 type PlanChangeType = 'free-to-paid' | 'free-to-free' | 'paid-to-free' | 'paid-to-paid' | 'upgrade' | 'downgrade';
@@ -29,6 +30,7 @@ export const ROUTES = {
     reports: (locationId: LocationId) => `/u/${locationId}/reports`,
     menus: (locationId: LocationId) => `/u/${locationId}/menus`,
     menusAdd: (locationId: LocationId) => `/u/${locationId}/menus/add`,
+    menusEdit: (locationId: LocationId, menuId: MenuId) => `/u/${locationId}/menus/edit/${menuId}`,
     menuItems: (locationId: LocationId) => `/u/${locationId}/menu-items`,
     menuItemsAdd: (locationId: LocationId) => `/u/${locationId}/menu-items/add`,
     menuItemsEdit: (locationId: LocationId, menuItemId: MenuItemId) => `/u/${locationId}/menu-items/edit/${menuItemId}`,

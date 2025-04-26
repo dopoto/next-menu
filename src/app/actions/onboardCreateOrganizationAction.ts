@@ -13,7 +13,7 @@ import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { isPaidPriceTier } from '~/lib/price-tier-utils';
-import { createOrganization } from '~/server/queries/organization';
+import { createOrganization } from '~/server/queries/organizations';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -45,7 +45,7 @@ const formDataSchema = z.object({
     stripeSessionId: z.string(),
 });
 
-export const onboardCreateOrganization = async (formData: FormData) => {
+export const onboardCreateOrganizationAction = async (formData: FormData) => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'onboardCreateOrganization',

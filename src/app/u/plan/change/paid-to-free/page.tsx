@@ -12,7 +12,7 @@ import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-u
 import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
-import { getOrganizationByClerkOrgId, updateOrganizationStripeCustomerId } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId, updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 

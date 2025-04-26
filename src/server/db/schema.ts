@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 
 /**
@@ -36,9 +36,7 @@ export const users = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    () => ({
-        roleCheck: sql`CHECK (role IN ('orgowner', 'admin', 'user'))`,
-    }),
+    () => [{ roleCheck: sql`CHECK (role IN ('orgowner', 'admin', 'user'))` }],
 );
 
 export const locations = createTable(
@@ -55,9 +53,11 @@ export const locations = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (example) => ({
-        nameIndex: index('location_name_idx').on(example.name),
-    }),
+    (example) => [
+        {
+            nameIndex: index('location_name_idx').on(example.name),
+        },
+    ],
 );
 
 export const menus = createTable(
@@ -73,9 +73,11 @@ export const menus = createTable(
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (example) => ({
-        nameIndex: index('menu_name_idx').on(example.name),
-    }),
+    (example) => [
+        {
+            nameIndex: index('menu_name_idx').on(example.name),
+        },
+    ],
 );
 
 export const menuItems = createTable(
@@ -88,15 +90,19 @@ export const menuItems = createTable(
         name: varchar('name', { length: 256 }),
         description: varchar('description', { length: 256 }),
         price: decimal('price').notNull(),
+        type: varchar('type', { length: 10 }).notNull().default('dish'),
         isNew: boolean('is_new').default(false).notNull(),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (example) => ({
-        nameIndex: index('menu_item_name_idx').on(example.name),
-    }),
+    (example) => [
+        {
+            nameIndex: index('menu_item_name_idx').on(example.name),
+            typeCheck: sql`CHECK (type IN ('dish', 'beverage'))`,
+        },
+    ],
 );
 
 export const menuItemsToMenus = createTable(
@@ -108,22 +114,15 @@ export const menuItemsToMenus = createTable(
         menuItemId: integer('menu_item_id')
             .notNull()
             .references(() => menuItems.id),
+        sortOrderIndex: integer('sort_order_index').notNull().default(0),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
         updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
     },
-    (table) => ({
-        menuItemIdx: index('menu_items_to_menus_menu_item_idx').on(table.menuItemId),
-        menuIdx: index('menu_items_to_menus_menu_idx').on(table.menuId),
-        pk: primaryKey({ columns: [table.menuId, table.menuItemId] }),
-    }),
+    (table) => [
+        index('menu_items_to_menus_menu_item_idx').on(table.menuItemId),
+        index('menu_items_to_menus_menu_idx').on(table.menuId),
+        primaryKey({ columns: [table.menuId, table.menuItemId] }),
+    ],
 );
-
-// Type definitions TODO move from here
-
-export type Location = InferSelectModel<typeof locations>;
-export type NewLocation = InferInsertModel<typeof locations>;
-
-export type Menu = InferSelectModel<typeof menus>;
-export type NewMenu = InferInsertModel<typeof menus>;

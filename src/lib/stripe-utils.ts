@@ -12,7 +12,7 @@ import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { obj2str } from '~/lib/string-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);

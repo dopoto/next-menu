@@ -2,7 +2,7 @@
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useCallback } from 'react';
-import { changePlanFreeToPaidCreateCheckoutSession } from '~/app/actions/changePlanFreeToPaidCreateCheckoutSession';
+import { changePlanFreeToPaidCreateCheckoutSessionAction } from '~/app/actions/changePlanFreeToPaidCreateCheckoutSessionAction';
 import { type PriceTierId } from '~/domain/price-tiers';
 import { env } from '~/env';
 
@@ -15,7 +15,7 @@ export const FreeToPaidStripeCheckoutForm = (props: {
 }) => {
     const { fromTierId, toTierId, newStripeCustomerId } = props;
     const fetchClientSecret = useCallback(async () => {
-        const stripeResponse = await changePlanFreeToPaidCreateCheckoutSession({
+        const stripeResponse = await changePlanFreeToPaidCreateCheckoutSessionAction({
             fromTierId,
             toTierId,
             newStripeCustomerId,
