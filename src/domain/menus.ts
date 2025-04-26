@@ -32,5 +32,5 @@ export const menuFormSchema = z.object({
             required_error: 'Location ID is required',
         })
         .min(0, 'Location Id must be positive'),
-    items: z.array(z.any()).optional(),
+    items: z.array(z.custom<MenuItem>()).optional(),
 });

@@ -3,7 +3,7 @@
 import {
     closestCenter,
     DndContext,
-    DragEndEvent,
+    type DragEndEvent,
     KeyboardSensor,
     PointerSensor,
     useSensor,
@@ -39,7 +39,6 @@ interface MenuItemsManagerProps {
 
 export function MenuItemsManager({
     locationId,
-    menuId,
     allMenuItems = [],
     initialItems = [],
     onItemsChange,
@@ -47,7 +46,6 @@ export function MenuItemsManager({
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [showAddDialog, setShowAddDialog] = useState(false);
     const [showSelectDialog, setShowSelectDialog] = useState(false);
-    const [newMenuItemId, setNewMenuItemId] = useState<number | null>(null);
 
     const sensors = useSensors(
         useSensor(PointerSensor),
@@ -58,30 +56,14 @@ export function MenuItemsManager({
 
     const handleDragEnd = async (event: DragEndEvent) => {
         const { active, over } = event;
-
         if (over && active.id !== over.id) {
             const newItems = arrayMove(
                 items,
                 items.findIndex((item) => item.id === active.id),
                 items.findIndex((item) => item.id === over.id),
             );
-
             setItems(newItems);
             onItemsChange?.(newItems);
-
-            // if (menuId) {
-            //     const res = await updateMenuItemsSortOrderAction(
-            //         menuId,
-            //         newItems.map((item) => item.id),
-            //     );
-            //     if (res.status === 'error') {
-            //         toast({
-            //             title: 'Failed to update sort order',
-            //             description: res.error,
-            //             variant: 'destructive',
-            //         });
-            //     }
-            // }
         }
     };
 
@@ -101,10 +83,6 @@ export function MenuItemsManager({
         if (res.status === 'success' && res.menuItemId) {
             toast({ title: 'Menu item added' });
             setShowAddDialog(false);
-
-            if (!menuId) {
-                setNewMenuItemId(res.menuItemId);
-            }
         } else {
             handleReactHookFormErrors(newMenuItemForm, res);
         }

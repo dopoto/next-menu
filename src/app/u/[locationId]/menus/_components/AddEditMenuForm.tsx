@@ -15,15 +15,13 @@ import { ROUTES } from '~/lib/routes';
 export function AddEditMenuForm({
     form,
     onSubmit,
-    locationId,
-    menuId,
+    locationId,     
     allMenuItems,
     initialItems = [],
 }: {
     form: UseFormReturn<z.infer<typeof menuFormSchema>>;
     onSubmit: (values: z.infer<typeof menuFormSchema>) => Promise<void>;
     locationId: LocationId;
-    menuId?: number;
     allMenuItems: MenuItem[];
     initialItems?: MenuItem[];
 }) {
@@ -52,8 +50,7 @@ export function AddEditMenuForm({
                     <ReactHookFormField schema={menuFormSchema} form={form} fieldName={'name'} />
 
                     <MenuItemsManager
-                        locationId={locationId}
-                        menuId={menuId}
+                        locationId={locationId}                         
                         allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}

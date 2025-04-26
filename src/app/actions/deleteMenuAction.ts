@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { type LocationId } from '~/domain/locations';
 import { type menuItemFormSchema } from '~/domain/menu-items';
-import { MenuId } from '~/domain/menus';
+import { type MenuId } from '~/domain/menus';
 import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { deleteMenu } from '~/server/queries/menus';

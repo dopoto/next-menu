@@ -3,7 +3,7 @@
 import * as Sentry from '@sentry/nextjs';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { menuFormSchema } from '~/domain/menus';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';

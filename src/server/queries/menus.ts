@@ -32,7 +32,7 @@ export async function createMenu(data: z.infer<typeof menuFormSchema>) {
                 const item = data.items[i];
                 await tx.insert(menuItemsToMenus).values({
                     menuId: menu.id,
-                    menuItemId: item.id,
+                    menuItemId: item?.id ?? 0,
                     sortOrderIndex: i,
                     createdAt: sql`CURRENT_TIMESTAMP`,
                     updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -73,7 +73,7 @@ export async function updateMenu(menuId: MenuId, data: z.infer<typeof menuFormSc
                 const item = data.items[i];
                 await tx.insert(menuItemsToMenus).values({
                     menuId: menuId,
-                    menuItemId: item.id,
+                    menuItemId: item?.id ?? 0,
                     sortOrderIndex: i,
                     createdAt: sql`CURRENT_TIMESTAMP`,
                     updatedAt: sql`CURRENT_TIMESTAMP`,

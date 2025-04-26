@@ -8,7 +8,7 @@ import { editMenuAction } from '~/app/actions/editMenuAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuForm } from '~/app/u/[locationId]/menus/_components/AddEditMenuForm';
 import { type LocationId } from '~/domain/locations';
-import { MenuItem } from '~/domain/menu-items';
+import { type MenuItem } from '~/domain/menu-items';
 import { type Menu, menuFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
@@ -41,8 +41,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu; allMenuIte
             <AddEditMenuForm
                 form={form}
                 onSubmit={onSubmit}
-                locationId={props.locationId}
-                menuId={props.menu.id}
+                locationId={props.locationId}                
                 initialItems={props.menu.items ?? []}
                 allMenuItems={props.allMenuItems}
             />

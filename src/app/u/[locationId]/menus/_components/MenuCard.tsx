@@ -21,7 +21,7 @@ import { ROUTES } from '~/lib/routes';
 
 export default function MenuCard(props: { locationId: LocationId; item: Menu }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
+    // const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
     const [isDeleting, setIsDeleting] = useState(false);
 
