@@ -40,7 +40,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu; allMenuIte
             <AddEditMenuForm
                 form={form}
                 onSubmit={onSubmit}
-                locationId={props.locationId}                
+                locationId={props.locationId}
                 initialItems={props.menu.items ?? []}
                 allMenuItems={props.allMenuItems}
             />

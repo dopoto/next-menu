@@ -15,7 +15,7 @@ import { ROUTES } from '~/lib/routes';
 export function AddEditMenuForm({
     form,
     onSubmit,
-    locationId,     
+    locationId,
     allMenuItems,
     initialItems = [],
 }: {
@@ -50,7 +50,7 @@ export function AddEditMenuForm({
                     <ReactHookFormField schema={menuFormSchema} form={form} fieldName={'name'} />
 
                     <MenuItemsManager
-                        locationId={locationId}                         
+                        locationId={locationId}
                         allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}
