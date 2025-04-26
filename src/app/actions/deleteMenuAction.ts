@@ -2,8 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { type LocationId } from '~/domain/locations';
-import { type menuItemFormSchema } from '~/domain/menu-items';
-import { type MenuId } from '~/domain/menus';
+import { menuFormSchema, type MenuId } from '~/domain/menus';
 import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { deleteMenu } from '~/server/queries/menus';
@@ -13,7 +12,7 @@ import { deleteMenu } from '~/server/queries/menus';
 export async function deleteMenuAction(
     locationId: LocationId,
     menuId: MenuId,
-): Promise<FormState<typeof menuItemFormSchema>> {
+): Promise<FormState<typeof menuFormSchema>> {
     try {
         await deleteMenu(locationId, menuId);
         revalidatePath(ROUTES.menuItems(locationId));

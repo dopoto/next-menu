@@ -3,10 +3,10 @@ import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItemId } from '~/domain/menu-items';
 import { type Menu, type menuFormSchema, type MenuId } from '~/domain/menus';
-import { AppError } from '~/lib/errors';
+import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { menuItems, menuItemsToMenus, menus } from '~/server/db/schema';
-import { getLocation } from '~/server/queries/location';
+import { getLocation } from '~/server/queries/locations';
 
 export async function createMenu(data: z.infer<typeof menuFormSchema>) {
     // Needed - performs security checks and throws on failure.

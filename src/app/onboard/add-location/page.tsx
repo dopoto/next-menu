@@ -12,7 +12,7 @@ import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPriceTier, isFreePriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
-import { generateUniqueLocationSlug } from '~/server/queries/location';
+import { generateUniqueLocationSlug } from '~/server/queries/locations';
 
 export const metadata = {
     title: `${APP_CONFIG.appName} - Onboard > Add location`,

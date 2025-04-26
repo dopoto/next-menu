@@ -19,7 +19,7 @@ export function validateAndFormatMenuData(data: z.infer<typeof menuFormSchema>) 
     const validationResult = menuFormSchema.safeParse(data);
     if (!validationResult.success) {
         throw new AppError({
-            internalMessage: `Invalid menu item data: ${JSON.stringify(validationResult.error)}`,
+            internalMessage: `Invalid menu data: ${JSON.stringify(validationResult.error)}`,
         });
     }
 

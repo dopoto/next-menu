@@ -2,7 +2,7 @@ import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
 import { ChevronsUpDown } from 'lucide-react';
 import { SidebarMenuButton } from '~/components/ui/sidebar';
 import { ROUTES } from '~/lib/routes';
-import { getLocation } from '~/server/queries/location';
+import { getLocation } from '~/server/queries/locations';
 
 export async function SidebarLocationManager(props: { locationId: number }) {
     const location = await getLocation(props.locationId);

@@ -5,7 +5,7 @@ import { type StripeCustomerId } from '~/domain/stripe';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPriceTier, isFreePriceTier, isPaidPriceTier } from '~/lib/price-tier-utils';
 import { getActiveStripeSubscriptionItem } from '~/lib/stripe-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organization';
+import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 export async function SubscriptionDetails() {
     const { userId, orgId, sessionClaims } = await auth();

@@ -4,7 +4,7 @@ import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
 import MenuCard from '~/app/u/[locationId]/menus/_components/MenuCard';
 import { type LocationId } from '~/domain/locations';
 import { ROUTES } from '~/lib/routes';
-import { getMenusByLocation } from '~/server/queries/location';
+import { getMenusByLocation } from '~/server/queries/locations';
 
 export async function MenusList(props: { locationId: LocationId }) {
     const items = await getMenusByLocation(props.locationId);

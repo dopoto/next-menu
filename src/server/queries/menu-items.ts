@@ -6,7 +6,7 @@ import { AppError } from '~/lib/error-utils.server';
 import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { db } from '~/server/db';
 import { menuItems, menuItemsToMenus } from '~/server/db/schema';
-import { getLocation } from '~/server/queries/location';
+import { getLocation } from '~/server/queries/locations';
 
 export async function getMenuItemsByLocation(locationId: LocationId): Promise<MenuItem[]> {
     const validLocation = await getLocation(locationId);
