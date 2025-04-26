@@ -2,7 +2,7 @@
 
 import { revalidatePath } from 'next/cache';
 import { type LocationId } from '~/domain/locations';
-import { menuFormSchema, type MenuId } from '~/domain/menus';
+import { type menuFormSchema, type MenuId } from '~/domain/menus';
 import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 import { deleteMenu } from '~/server/queries/menus';
