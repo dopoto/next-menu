@@ -69,16 +69,12 @@ export default async function Layout({ params, children }: { params: Params; chi
                         </div>
                     </div>
                 </div>
-                <div className="mt-6 md:mt-12 text-center md:text-left md:pl-36">
-                    <h1 className="text-3xl font-bold">Page Title</h1>
-                    <p className="mt-2 text-gray-600">
-                        This is a detailed description of the page. It provides context and additional information about
-                        the content that follows.
-                    </p>
+                <div className="mt-6 text-center md:text-left md:pl-36">
+                    <h1 className="text-3xl font-bold">{location.name}</h1>
                 </div>
             </header>
 
-            <div className="max-w-6xl mx-auto p-4 mt-8">{children}</div>
+            <div className="max-w-6xl mx-auto p-4">{children}</div>
 
             <AnalyticsEventSender
                 eventId="publicLocationVisit"
