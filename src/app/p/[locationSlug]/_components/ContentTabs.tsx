@@ -142,7 +142,7 @@ export default function ContentTabs({ sections }: ContentTabsProps) {
     return (
         <div className="mt-8">
             {/* Sticky tabs */}
-            <div ref={tabsRef} className="sticky top-0 z-10 bg-white border-b pb-2 pt-2">
+            <div ref={tabsRef} className="sticky top-0 z-10   pb-2 pt-2">
                 <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 max-w-6xl mx-auto">
                     {sections.map((section) => (
                         <button
@@ -163,7 +163,7 @@ export default function ContentTabs({ sections }: ContentTabsProps) {
             {/* Content sections */}
             <div className="max-w-6xl mx-auto px-4">
                 {sections.map((section) => (
-                    <section key={section.id} id={section.id} className="py-12">
+                    <section key={section.id} id={section.id} className="py-3">
                         {section.content}
                     </section>
                 ))}

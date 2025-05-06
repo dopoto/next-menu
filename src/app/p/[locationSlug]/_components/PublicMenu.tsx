@@ -6,7 +6,7 @@ export async function PublicMenu(props: { name: string; items: MenuItemWithSortO
         <>
             <h1>{props.name}</h1>
             {props.items?.map((item) => {
-                return <PublicMenuItem item={item} />;
+                return <PublicMenuItem key={item.id} item={item} />;
             })}
         </>
     );
