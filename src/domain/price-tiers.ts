@@ -43,7 +43,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         isPopular: false,
         features: [
             { id: 'locations', quota: 1 },
-            { id: 'menus', quota: 1 },
+            { id: 'menus', quota: 2 },
             { id: 'menuItems', quota: 10 },
         ],
         flags: [{ id: 'reports', isEnabled: false }],
