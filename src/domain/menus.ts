@@ -2,10 +2,14 @@ import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { withMeta } from '~/lib/form-validation';
 import { type menus } from '~/server/db/schema';
-import { type MenuItem } from './menu-items';
+import { type MenuItem, type MenuItemWithSortOrder } from './menu-items';
 
 export type Menu = InferSelectModel<typeof menus> & {
     items?: MenuItem[];
+};
+
+export type MenuWithItems = InferSelectModel<typeof menus> & {
+    items: MenuItemWithSortOrder[];
 };
 
 export type NewMenu = InferInsertModel<typeof menus>;

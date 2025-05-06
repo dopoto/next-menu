@@ -2,8 +2,8 @@ import { auth } from '@clerk/nextjs/server';
 import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
-import { type MenuItemId } from '~/domain/menu-items';
-import { type Menu, type menuFormSchema, type MenuId } from '~/domain/menus';
+import { type MenuItemId, type MenuItemWithSortOrder } from '~/domain/menu-items';
+import { type Menu, type MenuWithItems, type menuFormSchema, type MenuId } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
@@ -211,13 +211,64 @@ export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]
     return menus;
 }
 
-export async function getPublicMenusByLocation(locationId: LocationId): Promise<Menu[]> {
+export async function getPublicMenusByLocation(locationId: LocationId): Promise<MenuWithItems[]> {
     // TODO soft Validate locationid by schema
 
-    const menus = await db.query.menus.findMany({
-        where: (menus, { eq }) => eq(menus.locationId, locationId),
-        orderBy: (menus, { desc }) => desc(menus.name),
-    });
+    const result = await db
+        .select({
+            menu: {
+                id: menus.id,
+                name: menus.name,
+                locationId: menus.locationId,
+                createdAt: menus.createdAt,
+                updatedAt: menus.updatedAt,
+            },
+            item: {
+                id: menuItems.id,
+                name: menuItems.name,
+                description: menuItems.description,
+                price: menuItems.price,
+                type: menuItems.type,
+                isNew: menuItems.isNew,
+                locationId: menuItems.locationId,
+                createdAt: menuItems.createdAt,
+                updatedAt: menuItems.updatedAt,
+                sortOrderIndex: menuItemsToMenus.sortOrderIndex,
+            },
+        })
+        .from(menus)
+        .leftJoin(menuItemsToMenus, eq(menus.id, menuItemsToMenus.menuId))
+        .leftJoin(menuItems, eq(menuItemsToMenus.menuItemId, menuItems.id))
+        .where(eq(menus.locationId, locationId))
+        .orderBy(desc(menus.name), asc(menuItemsToMenus.sortOrderIndex));
 
-    return menus;
+    // Group items by menu
+    const menuMap = new Map<number, MenuWithItems>();
+    
+    for (const row of result) {
+        if (!menuMap.has(row.menu.id)) {
+            menuMap.set(row.menu.id, {
+                ...row.menu,
+                items: [],
+            });
+        }
+        
+        // Only add non-null items
+        if (row.item.id && row.item.name && row.item.price && row.item.type) {
+            menuMap.get(row.menu.id)?.items.push({
+                id: row.item.id,
+                name: row.item.name,
+                description: row.item.description,
+                price: row.item.price,
+                type: row.item.type,
+                isNew: row.item.isNew ?? false,
+                locationId: row.item.locationId ?? row.menu.locationId,
+                createdAt: row.item.createdAt ?? new Date(),
+                updatedAt: row.item.updatedAt,
+                sortOrderIndex: row.item.sortOrderIndex ?? 0,
+            } as MenuItemWithSortOrder);
+        }
+    }
+
+    return Array.from(menuMap.values());
 }

@@ -6,6 +6,10 @@ import { type menuItems } from '~/server/db/schema';
 export type MenuItem = InferSelectModel<typeof menuItems>;
 export type NewMenuItem = InferInsertModel<typeof menuItems>;
 
+export type MenuItemWithSortOrder = MenuItem & {
+    sortOrderIndex: number;
+};
+
 export const menuItemIdSchema = z.coerce.number().int().positive();
 export type MenuItemId = z.infer<typeof menuItemIdSchema>;
 
