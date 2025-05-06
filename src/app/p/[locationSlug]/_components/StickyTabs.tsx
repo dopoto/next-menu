@@ -11,7 +11,7 @@ export interface Section {
 export default function StickyTabs(props: { sections: Section[] }) {
     const { sections } = props;
 
-    const [activeTab, setActiveTab] = useState(sections[0]?.id || '');
+    const [activeTab, setActiveTab] = useState(sections[0]?.id ?? '');
     const [userScrolling, setUserScrolling] = useState(false);
     const [userSelected, setUserSelected] = useState<string | null>(null);
     const observerRef = useRef<IntersectionObserver | null>(null);
@@ -23,7 +23,7 @@ export default function StickyTabs(props: { sections: Section[] }) {
         if (sections.length === 0) return;
 
         // Get the height of the tabs for offset calculation
-        const tabsHeight = tabsRef.current?.offsetHeight || 50;
+        const tabsHeight = tabsRef.current?.offsetHeight ?? 50;
 
         // Clean up previous observer
         if (observerRef.current) {
@@ -111,7 +111,7 @@ export default function StickyTabs(props: { sections: Section[] }) {
         setUserSelected(id); // Mark this section as explicitly selected by user
 
         const element = document.getElementById(id);
-        const tabsHeight = tabsRef.current?.offsetHeight || 50;
+        const tabsHeight = tabsRef.current?.offsetHeight ?? 50;
 
         if (element) {
             const elementPosition = element.getBoundingClientRect().top;

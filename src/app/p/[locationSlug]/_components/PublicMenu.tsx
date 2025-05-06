@@ -1,5 +1,5 @@
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
-import { MenuItemWithSortOrder } from '~/domain/menu-items';
+import { type MenuItemWithSortOrder } from '~/domain/menu-items';
 
 export async function PublicMenu(props: { name: string; items: MenuItemWithSortOrder[] }) {
     return (
