@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
+import Image from 'next/image';
 import { PostHog } from 'posthog-node';
-import React from 'react';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import type { AnalyticsEventId } from '~/domain/analytics';
 import { CookieKey } from '~/domain/cookies';
@@ -45,11 +45,37 @@ export default async function Layout({ params, children }: { params: Params; chi
     });
 
     return (
-        <>
-            <p>
-                Welcome to {parsedLocationSlug} in org {location.orgId}
-            </p>
-            <p>{children}</p>
+        <div className="mx-auto max-w-7xl  lg:px-8">
+            <header className="w-full max-w-6xl mx-auto px-4 pt-2 md:pt-4">
+                <div className="relative">
+                    <div className="w-full rounded-2xl overflow-hidden">
+                        <Image
+                            src="/images/placeholder.svg?height=300&width=1200"
+                            alt="Hero banner"
+                            width={1200}
+                            height={300}
+                            className="w-full h-48 md:h-64 object-cover"
+                        />
+                    </div>
+                    <div className="flex justify-center md:justify-start md:absolute md:left-8 md:bottom-0 md:translate-y-1/2">
+                        <div className="relative -mt-12 md:mt-0 rounded-full border-4 border-white bg-white shadow-md">
+                            <Image
+                                src="/images/placeholder.svg?height=100&width=100"
+                                alt="Logo"
+                                width={100}
+                                height={100}
+                                className="rounded-full w-24 h-24"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-6 text-center md:text-left md:pl-36">
+                    <h1 className="text-3xl font-bold">{location.name}</h1>
+                </div>
+            </header>
+
+            <div className="max-w-6xl mx-auto p-4">{children}</div>
+
             <AnalyticsEventSender
                 eventId="publicLocationVisit"
                 payload={{
@@ -57,6 +83,6 @@ export default async function Layout({ params, children }: { params: Params; chi
                     locationSlug: parsedLocationSlug,
                 }}
             />
-        </>
+        </div>
     );
 }

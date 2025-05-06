@@ -8,7 +8,7 @@ import { type LocationId } from '~/domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
-import { getLocation } from '~/server/queries/locations';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 export async function LocationDetails(props: { id: LocationId }) {
     const { userId, orgId } = await auth();
@@ -18,7 +18,7 @@ export async function LocationDetails(props: { id: LocationId }) {
         });
     }
 
-    const locationData = await getLocation(props.id);
+    const locationData = await getLocationForCurrentUserOrThrow(props.id);
 
     if (!locationData.slug) {
         throw new AppError({

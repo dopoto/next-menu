@@ -1,11 +1,10 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { locationIdSchema, type Location, type LocationId, type LocationSlug } from '~/domain/locations';
-import { type Menu } from '~/domain/menus';
+import { locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { locations, organizations } from '~/server/db/schema';
+import { organizations } from '~/server/db/schema';
 
 /**
  * Generates a random string of specified length using letters and numbers
@@ -48,7 +47,7 @@ export async function generateUniqueLocationSlug(): Promise<string> {
  * @param locationId
  * @returns A valid Location.
  */
-export async function getLocation(locationId: string | number): Promise<Location> {
+export async function getLocationForCurrentUserOrThrow(locationId: string | number): Promise<Location> {
     const locationIdValidationResult = locationIdSchema.safeParse(locationId);
     if (!locationIdValidationResult.success) {
         throw new AppError({ internalMessage: `Invalid locationId: ${locationId}` });
@@ -89,45 +88,6 @@ export async function getLocation(locationId: string | number): Promise<Location
     }
 
     return location;
-}
-
-export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]> {
-    const { userId, sessionClaims } = await auth();
-    if (!userId) {
-        throw new AppError({ internalMessage: 'Unauthorized' });
-    }
-
-    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
-
-    const menus = await db.query.menus.findMany({
-        where: (menus, { eq, and }) =>
-            and(
-                eq(menus.locationId, locationId),
-                eq(
-                    db
-                        .select({ locationId: locations.id })
-                        .from(locations)
-                        .where(
-                            and(
-                                eq(locations.id, locationId),
-                                eq(
-                                    locations.orgId,
-                                    db
-                                        .select({ id: organizations.id })
-                                        .from(organizations)
-                                        .where(eq(organizations.clerkOrgId, validClerkOrgId))
-                                        .limit(1),
-                                ),
-                            ),
-                        )
-                        .limit(1),
-                    menus.locationId,
-                ),
-            ),
-        orderBy: (menus, { desc }) => desc(menus.name),
-    });
-
-    return menus;
 }
 
 export async function getLocationPublicData(locationSlug: LocationSlug): Promise<Location> {

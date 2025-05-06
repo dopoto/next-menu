@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const PriceTierFlagIdSchema = z.literal('reports');
+export const PriceTierFlagIdSchema = z.union([z.literal('reports'), z.literal('publicSite')]);
 
 export type PriceTierFlagId = z.infer<typeof PriceTierFlagIdSchema>;
 
@@ -21,5 +21,10 @@ export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
         id: 'reports',
         resourceSingularName: 'report',
         resourcePluralName: 'reports',
+    },
+    publicSite: {
+        id: 'publicSite',
+        resourceSingularName: 'public site',
+        resourcePluralName: 'public site',
     },
 };

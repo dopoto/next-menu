@@ -6,10 +6,10 @@ import { AppError } from '~/lib/error-utils.server';
 import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { db } from '~/server/db';
 import { menuItems, menuItemsToMenus } from '~/server/db/schema';
-import { getLocation } from '~/server/queries/locations';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 export async function getMenuItemsByLocation(locationId: LocationId): Promise<MenuItem[]> {
-    const validLocation = await getLocation(locationId);
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
     const items = await db.query.menuItems.findMany({
         where: (menuItems, { eq }) => eq(menuItems.locationId, validLocation.id),
         orderBy: (menuItems, { desc }) => desc(menuItems.name),
@@ -19,7 +19,7 @@ export async function getMenuItemsByLocation(locationId: LocationId): Promise<Me
 }
 
 export async function getMenuItemById(locationId: LocationId, menuItemId: MenuItemId): Promise<MenuItem | null> {
-    const validLocation = await getLocation(locationId);
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
     const item = await db.query.menuItems.findFirst({
         where: (menuItems, { and, eq }) =>
             and(eq(menuItems.locationId, validLocation.id), eq(menuItems.id, menuItemId)),
@@ -31,14 +31,14 @@ export async function getMenuItemById(locationId: LocationId, menuItemId: MenuIt
 
 export async function createMenuItem(data: z.infer<typeof menuItemFormSchema>) {
     // Needed - performs security checks and throws on failure.
-    await getLocation(data.locationId);
+    await getLocationForCurrentUserOrThrow(data.locationId);
     const dbData = validateAndFormatMenuItemData(data);
     const result = await db.insert(menuItems).values(dbData).returning();
     return result[0];
 }
 
 export async function updateMenuItem(menuItemId: MenuItemId, data: z.infer<typeof menuItemFormSchema>) {
-    const validLocation = await getLocation(data.locationId);
+    const validLocation = await getLocationForCurrentUserOrThrow(data.locationId);
     const dbData = validateAndFormatMenuItemData(data);
     const result = await db
         .update(menuItems)
@@ -52,7 +52,7 @@ export async function updateMenuItem(menuItemId: MenuItemId, data: z.infer<typeo
 }
 
 export async function deleteMenuItem(locationId: LocationId, menuItemId: MenuItemId) {
-    const validLocation = await getLocation(locationId);
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
     const result = await db
         .delete(menuItems)
         .where(and(eq(menuItems.locationId, validLocation.id), eq(menuItems.id, menuItemId)));
