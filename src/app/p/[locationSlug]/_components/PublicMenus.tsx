@@ -1,5 +1,5 @@
-import StickyTabs, { Section } from '~/app/p/[locationSlug]/_components/StickyTabs';
 import { PublicMenu } from '~/app/p/[locationSlug]/_components/PublicMenu';
+import StickyTabs, { Section } from '~/app/p/[locationSlug]/_components/StickyTabs';
 import { LocationId } from '~/domain/locations';
 import { getPublicMenusByLocation } from '~/server/queries/menus';
 
@@ -9,7 +9,7 @@ export async function PublicMenus(props: { locationId: LocationId }) {
         return {
             id: m.id.toString(),
             title: m.name ?? '',
-            content: <PublicMenu name={m.name ?? ''} items={m.items}/>,
+            content: <PublicMenu name={m.name ?? ''} items={m.items} />,
         };
     });
     return <StickyTabs sections={sections} />;

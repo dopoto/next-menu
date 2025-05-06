@@ -3,7 +3,7 @@ import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItemId, type MenuItemWithSortOrder } from '~/domain/menu-items';
-import { type Menu, type MenuWithItems, type menuFormSchema, type MenuId } from '~/domain/menus';
+import { type Menu, type menuFormSchema, type MenuId, type MenuWithItems } from '~/domain/menus';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
@@ -244,7 +244,7 @@ export async function getPublicMenusByLocation(locationId: LocationId): Promise<
 
     // Group items by menu
     const menuMap = new Map<number, MenuWithItems>();
-    
+
     for (const row of result) {
         if (!menuMap.has(row.menu.id)) {
             menuMap.set(row.menu.id, {
@@ -254,7 +254,7 @@ export async function getPublicMenusByLocation(locationId: LocationId): Promise<
         }
 
         const item = row.item;
-        
+
         // Only add non-null items
         if (item.id && item.name && item.price && item.type) {
             menuMap.get(row.menu.id)?.items.push({
