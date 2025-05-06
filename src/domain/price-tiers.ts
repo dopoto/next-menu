@@ -46,7 +46,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menus', quota: 2 },
             { id: 'menuItems', quota: 10 },
         ],
-        flags: [{ id: 'reports', isEnabled: false }],
+        flags: [{ id: 'reports', isEnabled: true }, {id: 'publicSite', isEnabled: true}],
     },
     start2: {
         id: 'start2',
@@ -61,7 +61,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menus', quota: 1 },
             { id: 'menuItems', quota: 0 },
         ],
-        flags: [{ id: 'reports', isEnabled: true }],
+        flags: [{ id: 'reports', isEnabled: true }, {id: 'publicSite', isEnabled: true}],
     },
     pro: {
         id: 'pro',
@@ -77,7 +77,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menus', quota: 1 },
             { id: 'menuItems', quota: 0 },
         ],
-        flags: [{ id: 'reports', isEnabled: true }],
+        flags: [{ id: 'reports', isEnabled: true }, {id: 'publicSite', isEnabled: true}],
     },
     enterprise: {
         id: 'enterprise',
@@ -93,7 +93,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menus', quota: 100 },
             { id: 'menuItems', quota: 0 },
         ],
-        flags: [{ id: 'reports', isEnabled: true }],
+        flags: [{ id: 'reports', isEnabled: true }, {id: 'publicSite', isEnabled: true}],
     },
     custom1: {
         id: 'custom1',

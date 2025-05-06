@@ -1,4 +1,4 @@
-import ContentTabs, { Section } from '~/app/p/[locationSlug]/_components/ContentTabs';
+import StickyTabs, { Section } from '~/app/p/[locationSlug]/_components/StickyTabs';
 import { PublicMenu } from '~/app/p/[locationSlug]/_components/PublicMenu';
 import { LocationId } from '~/domain/locations';
 import { getPublicMenusByLocation } from '~/server/queries/menus';
@@ -12,5 +12,5 @@ export async function PublicMenus(props: { locationId: LocationId }) {
             content: <PublicMenu name={m.name ?? ''} items={m.items}/>,
         };
     });
-    return <ContentTabs sections={sections} />;
+    return <StickyTabs sections={sections} />;
 }

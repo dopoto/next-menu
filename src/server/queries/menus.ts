@@ -252,20 +252,22 @@ export async function getPublicMenusByLocation(locationId: LocationId): Promise<
                 items: [],
             });
         }
+
+        const item = row.item;
         
         // Only add non-null items
-        if (row.item.id && row.item.name && row.item.price && row.item.type) {
+        if (item.id && item.name && item.price && item.type) {
             menuMap.get(row.menu.id)?.items.push({
-                id: row.item.id,
-                name: row.item.name,
-                description: row.item.description,
-                price: row.item.price,
-                type: row.item.type,
-                isNew: row.item.isNew ?? false,
-                locationId: row.item.locationId ?? row.menu.locationId,
-                createdAt: row.item.createdAt ?? new Date(),
-                updatedAt: row.item.updatedAt,
-                sortOrderIndex: row.item.sortOrderIndex ?? 0,
+                id: item.id,
+                name: item.name,
+                description: item.description,
+                price: item.price,
+                type: item.type,
+                isNew: item.isNew ?? false,
+                locationId: item.locationId ?? row.menu.locationId,
+                createdAt: item.createdAt ?? new Date(),
+                updatedAt: item.updatedAt,
+                sortOrderIndex: item.sortOrderIndex ?? 0,
             } as MenuItemWithSortOrder);
         }
     }

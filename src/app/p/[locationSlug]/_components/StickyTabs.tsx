@@ -8,11 +8,9 @@ export interface Section {
     content: ReactNode;
 }
 
-interface ContentTabsProps {
-    sections: Section[];
-}
+export default function StickyTabs(props: { sections: Section[] }) {
+    const { sections } = props;
 
-export default function ContentTabs({ sections }: ContentTabsProps) {
     const [activeTab, setActiveTab] = useState(sections[0]?.id || '');
     const [userScrolling, setUserScrolling] = useState(false);
     const [userSelected, setUserSelected] = useState<string | null>(null);

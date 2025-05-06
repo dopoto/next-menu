@@ -15,7 +15,7 @@ const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
 
 //TODO Use cache
 
-export type Params = Promise<{ locationSlug: string }>;
+type Params = Promise<{ locationSlug: string }>;
 
 export default async function Layout({ params, children }: { params: Params; children: React.ReactNode }) {
     const locationSlug = (await params).locationSlug;
