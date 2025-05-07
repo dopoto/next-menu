@@ -14,6 +14,7 @@ export type PriceTierFlag = {
      * @example "reports"
      */
     resourcePluralName: string;
+    description: string;
 };
 
 export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
@@ -21,10 +22,12 @@ export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
         id: 'reports',
         resourceSingularName: 'report',
         resourcePluralName: 'reports',
+        description: 'TODO rep'
     },
     publicSite: {
         id: 'publicSite',
         resourceSingularName: 'public site',
         resourcePluralName: 'public site',
+        description: 'TODO pubsi'
     },
 };

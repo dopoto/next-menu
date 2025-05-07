@@ -13,6 +13,7 @@ type PriceTierFeature = {
      * @example "menus"
      */
     resourcePluralName: string;
+    description: string;
 };
 
 export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
@@ -20,15 +21,18 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
         id: 'locations',
         resourceSingularName: 'location',
         resourcePluralName: 'locations',
+        description: 'TODO loca',
     },
     menus: {
         id: 'menus',
         resourceSingularName: 'menu',
         resourcePluralName: 'menus',
+        description: 'TODO menu',
     },
     menuItems: {
         id: 'menuItems',
         resourceSingularName: 'menu item',
         resourcePluralName: 'menu items',
+        description: 'TODO menu it',
     },
 };
