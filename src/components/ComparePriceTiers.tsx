@@ -1,18 +1,18 @@
 import { BanIcon, CircleCheckIcon } from 'lucide-react';
 import { GetStartedCta } from '~/components/GetStartedCta';
 import { PriceTierHeader } from '~/components/PriceTierHeader';
-import { priceTierFeatures } from '~/domain/price-tier-features';
-import { priceTierFlags } from '~/domain/price-tier-flags';
+import { PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
+import { PriceTierFlagId, priceTierFlags } from '~/domain/price-tier-flags';
 import { priceTiers } from '~/domain/price-tiers';
 
-export function ComparePriceTiers() {
+export function ComparePriceTiers(props: {highlightedRow?: PriceTierFlagId | PriceTierFeatureId}) {
     const priceTiersToShow = Object.values(priceTiers).filter((tier) => tier.isPublic).length;
 
     return (
         <div className="overflow-x-auto">
             <div className="inline-block min-w-full align-middle">
                 <div className="overflow-hidden">
-                    <table className="min-w-full divide-y divide-gray-200">
+                    <table className="min-w-full divide-y">
                         <thead>
                             <tr
                                 className="grid"
@@ -33,11 +33,11 @@ export function ComparePriceTiers() {
                                     ))}
                             </tr>
                         </thead>
-                        <tbody className="divide-y divide-gray-200">
+                        <tbody className="divide-y divide-gray-100 dark:divide-gray-900">
                             {Object.values(priceTierFeatures).map((feature) => (
                                 <tr
                                     key={feature.id}
-                                    className="grid"
+                                    className={`grid ${props.highlightedRow === feature.id ? 'bg-amber-100 dark:bg-amber-900/95': '' } `}
                                     style={{ gridTemplateColumns: `300px repeat(${priceTiersToShow}, 1fr)` }}
                                 >
                                     <td className="px-6 py-4">
@@ -68,7 +68,7 @@ export function ComparePriceTiers() {
                             {Object.values(priceTierFlags).map((flag) => (
                                 <tr
                                     key={flag.id}
-                                    className="grid"
+                                    className={`grid ${props.highlightedRow === flag.id ? 'bg-amber-100 dark:bg-amber-900/95': '' } `}
                                     style={{ gridTemplateColumns: `300px repeat(${priceTiersToShow}, 1fr)` }}
                                 >
                                     <td className="px-6 py-4">
