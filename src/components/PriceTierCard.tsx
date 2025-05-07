@@ -40,6 +40,12 @@ export function PriceTierCard(props: {
 }) {
     const { name, description, features, flags } = props.tier;
 
+    const availableFeatures = features.filter((f) => {
+        const m = props.exceededFeatures?.findIndex((ef) => ef.id === f.id);
+        console.log(`${f.id}|${m}`)
+        return m === -1
+    });
+
     return (
         <Card className={`${props.cardCustomizations?.containerStyle}`}>
             <CardHeader className={`relative flex h-full flex-col`}>
@@ -56,7 +62,7 @@ export function PriceTierCard(props: {
             </CardHeader>
             <CardContent>
                 <div className="flex flex-col flex-nowrap gap-2 text-sm">
-                    {features.map((feature) => {
+                    {availableFeatures.map((feature) => {
                         const featureDetails = priceTierFeatures[feature.id];
                         const quota = props.tier.features.find((f) => f.id === feature.id)?.quota ?? 0;
                         return (
@@ -80,7 +86,7 @@ export function PriceTierCard(props: {
                         return (
                             <div key={exceededFeature.id}>
                                 <div className="flex items-center">
-                                    <div className="flex-shrink-0 text-left text-red-600 capitalize dark:text-red-400">
+                                    <div className="flex-shrink-0 text-left text-red-800 capitalize dark:text-red-400">
                                         {featureDetails.resourcePluralName}
                                     </div>
                                     <DashedLine />
@@ -88,8 +94,8 @@ export function PriceTierCard(props: {
                                         <FeatureBadge quota={quota} />
                                     </div>
                                 </div>
-                                <div className="relative mt-2 rounded-md bg-red-800 p-2 text-center text-sm text-white">
-                                    <div className="absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[8px] border-b-[8px] border-l-[8px] border-r-transparent border-b-red-800 border-l-transparent"></div>
+                                <div className="dark:bg-red-800 dark:text-white relative mt-2 rounded-md text-red-800 border-2 border-red-800 p-2 text-center text-sm ">
+                                    <div className=" absolute -top-2 left-1/2 h-0 w-0 -translate-x-1/2 border-r-[8px] border-b-[8px] border-l-[8px] border-r-transparent border-b-red-800 border-l-transparent"></div>
                                     Your current usage: {exceededFeature.used}
                                 </div>
                             </div>
