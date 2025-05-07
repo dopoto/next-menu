@@ -1,4 +1,6 @@
 import { BanIcon, CircleCheckIcon } from 'lucide-react';
+import { GetStartedCta } from '~/components/GetStartedCta';
+import { PriceTierHeader } from '~/components/PriceTierHeader';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '~/components/ui/table';
 import { priceTierFeatures } from '~/domain/price-tier-features';
 import { priceTierFlags } from '~/domain/price-tier-flags';
@@ -9,12 +11,15 @@ export function ComparePriceTiers() {
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead className="w-[250px]"> </TableHead>
+                    <TableHead />
                     {Object.values(priceTiers)
                         .filter((tier) => tier.isPublic)
                         .map((tier) => (
-                            <TableHead key={tier.id} className="text-xl text-center">
-                                {tier.name}
+                            <TableHead key={tier.id} className="pb-8 ">
+                                <div className="flex flex-col gap-2">
+                                    <PriceTierHeader tier={tier} />
+                                    <GetStartedCta tier={tier.id} variant={'outline'} />
+                                </div>
                             </TableHead>
                         ))}
                 </TableRow>
@@ -23,9 +28,9 @@ export function ComparePriceTiers() {
                 {Object.values(priceTierFeatures).map((feature) => (
                     <TableRow key={feature.id}>
                         <TableCell className="font-medium capitalize flex flex-col">
-                          <div>{feature.resourcePluralName}</div>
-                          <div className="font-extralight">{feature.description}</div>
-                          </TableCell>
+                            <div>{feature.resourcePluralName}</div>
+                            <div className="font-extralight">{feature.description}</div>
+                        </TableCell>
                         {Object.values(priceTiers)
                             .filter((tier) => tier.isPublic)
                             .map((tier) => {
@@ -42,9 +47,9 @@ export function ComparePriceTiers() {
                 {Object.values(priceTierFlags).map((flag) => (
                     <TableRow key={flag.id}>
                         <TableCell className="font-medium capitalize flex flex-col">
-                          <div>{flag.resourcePluralName}</div>
-                          <div className="font-extralight">{flag.description}</div>
-                          </TableCell>
+                            <div>{flag.resourcePluralName}</div>
+                            <div className="font-extralight">{flag.description}</div>
+                        </TableCell>
                         {Object.values(priceTiers)
                             .filter((tier) => tier.isPublic)
                             .map((tier) => {
@@ -52,19 +57,27 @@ export function ComparePriceTiers() {
                                 const isEnabled = flagInTier?.isEnabled ?? false;
                                 return (
                                     <TableCell key={tier.id} className="text-center">
-                                        {isEnabled ? <CircleCheckIcon className="stroke-green-600 size-5 mx-auto" /> : <BanIcon className="stroke-gray-300 size-5 mx-auto" />}
+                                        {isEnabled ? (
+                                            <CircleCheckIcon className="stroke-green-600 size-5 mx-auto" />
+                                        ) : (
+                                            <BanIcon className="stroke-gray-300 size-5 mx-auto" />
+                                        )}
                                     </TableCell>
                                 );
                             })}
                     </TableRow>
                 ))}
+                <TableRow>
+                    <TableHead />
+                    {Object.values(priceTiers)
+                        .filter((tier) => tier.isPublic)
+                        .map((tier) => (
+                            <TableHead key={tier.id} className="pt-8 ">
+                                <GetStartedCta tier={tier.id} variant={'outline'} />
+                            </TableHead>
+                        ))}
+                </TableRow>
             </TableBody>
-            {/*<TableFooter>
-          <TableRow>
-            <TableCell colSpan={3}>Total</TableCell>
-            <TableCell className="text-right">$2,500.00</TableCell>
-          </TableRow>
-        </TableFooter> */}
         </Table>
     );
 }

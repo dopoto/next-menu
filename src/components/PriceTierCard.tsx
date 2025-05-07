@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
 import { PageSubtitle } from '~/components/PageSubtitle';
+import { PriceTierHeader } from '~/components/PriceTierHeader';
 import { Badge } from '~/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { priceTierFeatures } from '~/domain/price-tier-features';
@@ -38,7 +39,7 @@ export function PriceTierCard(props: {
     exceededFeatures?: Array<ExceededFeature>;
     footerCta?: ReactNode;
 }) {
-    const { name, description, monthlyUsdPrice, features, flags } = props.tier;
+    const { name, description, features, flags } = props.tier;
 
     return (
         <Card className={`${props.cardCustomizations?.containerStyle}`}>
@@ -50,11 +51,9 @@ export function PriceTierCard(props: {
                         {props.cardCustomizations?.badgeText}
                     </div>
                 )}
-                <CardTitle className="text-xl font-light">{name}</CardTitle>
-                <div className="font-medium">{getPrice(monthlyUsdPrice)}</div>
-                <CardDescription>
-                    <PageSubtitle>{description}</PageSubtitle>
-                </CardDescription>
+                <PriceTierHeader tier={props.tier} />
+                <CardTitle className="sr-only">{name}</CardTitle>                
+                <CardDescription className="sr-only">{description}</CardDescription>
             </CardHeader>
             <CardContent>
                 <div className="flex flex-col flex-nowrap gap-2 text-sm">
@@ -139,18 +138,4 @@ export const getExceededPlanCardCustomizations = (): CardCustomizations => {
     };
 };
 
-const getPrice = (monthlyUsdPrice: number) => {
-    if (monthlyUsdPrice === -1) return `__.__`;
-    if (monthlyUsdPrice === 0)
-        return (
-            <div>
-                <span className="text-xl font-bold">FREE</span>
-            </div>
-        );
-    return (
-        <div>
-            <span className="text-xl font-bold">${monthlyUsdPrice.toFixed(2)}</span>
-            <span className="text-muted-foreground ml-1 text-xl font-light">/month</span>
-        </div>
-    );
-};
+ 
