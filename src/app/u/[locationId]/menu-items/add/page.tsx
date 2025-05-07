@@ -1,13 +1,26 @@
+import { auth } from '@clerk/nextjs/server';
 import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenuItem } from '~/app/u/[locationId]/menu-items/_components/AddMenuItem';
+import { AppError } from '~/lib/error-utils.server';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function AddMenuItemPage(props: { params: Params }) {
+    // TODO refactor - extraxct to fn
+    const {  sessionClaims } = await auth();    
+    const tierId = sessionClaims?.metadata.tier;
+    const parsedTier = getValidPriceTier(tierId);
+    if (!parsedTier) {
+        throw new AppError({
+            internalMessage: `No valid tier found in auth.`,
+        });
+    }
+
     const params = await props.params;
 
     const parsedLocationId = getValidLocationIdOrThrow(params.locationId);
@@ -15,7 +28,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     const availableQuota = await getAvailableFeatureQuota('menuItems');
 
     if (availableQuota <= 0) {
-        return <NoQuotaLeft title={'You have used all menu items available in your current plan'} />;
+        return <NoQuotaLeft featureId='menuItems' currentPriceTierId={parsedTier.id} />;
     }
 
     return (

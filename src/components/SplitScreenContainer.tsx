@@ -8,8 +8,6 @@ import SvgIcon from '~/components/SvgIcons';
 import { ThemeSwitch } from '~/components/ThemeSwitch';
 import { ROUTES } from '~/lib/routes';
 
-//TODO Fix <p> widths
-
 export function SplitScreenContainer(props: {
     title: string;
     subtitle: string;
@@ -25,7 +23,7 @@ export function SplitScreenContainer(props: {
             >
                 <div className="py-6">
                     <nav className="flex w-full">
-                        <Link href={ROUTES.home}>
+                        <Link href={ROUTES.my}>
                             <SvgIcon kind="logo" size={'12'} className="fill-black dark:fill-white" />
                         </Link>
                         <SignedIn>

@@ -41,9 +41,7 @@ export function PriceTierCard(props: {
     const { name, description, features, flags } = props.tier;
 
     const availableFeatures = features.filter((f) => {
-        const m = props.exceededFeatures?.findIndex((ef) => ef.id === f.id);
-        console.log(`${f.id}|${m}`)
-        return m === -1
+        return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
     });
 
     return (

@@ -100,7 +100,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         features: [
             { id: 'locations', quota: 1 },
             { id: 'menus', quota: 100 },
-            { id: 'menuItems', quota: 0 },
+            { id: 'menuItems', quota: 14 },
         ],
         flags: [
             { id: 'reports', isEnabled: true },

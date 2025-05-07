@@ -3,9 +3,12 @@ import { GetStartedCta } from '~/components/GetStartedCta';
 import { PriceTierHeader } from '~/components/PriceTierHeader';
 import { PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
 import { PriceTierFlagId, priceTierFlags } from '~/domain/price-tier-flags';
-import { priceTiers } from '~/domain/price-tiers';
+import { PriceTierId, priceTiers } from '~/domain/price-tiers';
 
-export function ComparePriceTiers(props: {highlightedRow?: PriceTierFlagId | PriceTierFeatureId}) {
+export function ComparePriceTiers(props: {
+    currentPriceTierId?: PriceTierId;
+    highlightedRow?: PriceTierFlagId | PriceTierFeatureId;
+}) {
     const priceTiersToShow = Object.values(priceTiers).filter((tier) => tier.isPublic).length;
 
     return (
@@ -23,7 +26,12 @@ export function ComparePriceTiers(props: {highlightedRow?: PriceTierFlagId | Pri
                                     .filter((tier) => tier.isPublic)
                                     .map((tier) => (
                                         <th key={tier.id} className="px-6 py-3 text-center">
-                                            <div className="flex flex-col gap-2   h-full">
+                                            <div className="flex flex-col gap-2   h-full relative">
+                                                {tier.id === props.currentPriceTierId && (
+                                                    <div className="absolute top-5 -right-2 z-10 rotate-4 transform px-2 py-1 text-sm font-medium text-white shadow-md bg-blue-600">
+                                                        Your current plan
+                                                    </div>
+                                                )}
                                                 <PriceTierHeader tier={tier} />
                                                 <div className="flex justify-center mt-auto">
                                                     <GetStartedCta tier={tier.id} variant={'outline'} />
@@ -37,7 +45,7 @@ export function ComparePriceTiers(props: {highlightedRow?: PriceTierFlagId | Pri
                             {Object.values(priceTierFeatures).map((feature) => (
                                 <tr
                                     key={feature.id}
-                                    className={`grid ${props.highlightedRow === feature.id ? 'bg-amber-100 dark:bg-amber-900/95': '' } `}
+                                    className={`grid ${props.highlightedRow === feature.id ? 'bg-amber-100 dark:bg-amber-900/95' : ''} `}
                                     style={{ gridTemplateColumns: `300px repeat(${priceTiersToShow}, 1fr)` }}
                                 >
                                     <td className="px-6 py-4">
@@ -68,7 +76,7 @@ export function ComparePriceTiers(props: {highlightedRow?: PriceTierFlagId | Pri
                             {Object.values(priceTierFlags).map((flag) => (
                                 <tr
                                     key={flag.id}
-                                    className={`grid ${props.highlightedRow === flag.id ? 'bg-amber-100 dark:bg-amber-900/95': '' } `}
+                                    className={`grid ${props.highlightedRow === flag.id ? 'bg-amber-100 dark:bg-amber-900/95' : ''} `}
                                     style={{ gridTemplateColumns: `300px repeat(${priceTiersToShow}, 1fr)` }}
                                 >
                                     <td className="px-6 py-4">

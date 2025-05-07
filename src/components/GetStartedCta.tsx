@@ -2,6 +2,8 @@
 
 import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
+import { ArrowDoodleRoundUp } from '~/components/SvgIcons';
+import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { type PriceTierId } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
@@ -36,15 +38,16 @@ function SignedInCta(props: { tier?: PriceTierId; secondaryText?: string; varian
     const isOnThisTier = userTier != null && userTier === props.tier;
 
     if (isOnThisTier) {
-        return (
-            <div className="relative flex w-full flex-col gap-1">
-                <Link href={ROUTES.my} className="w-full">
-                    <Button className="w-full" variant={props.variant}>
-                        Go to my account
-                    </Button>
-                </Link>
-            </div>
-        );
+        return null;
+        // return (
+        //     <div className="relative flex w-full flex-col gap-1">
+        //         <Link href={ROUTES.my} className="w-full">
+        //             <Button className="w-full" variant={props.variant}>
+        //                 Go to my account
+        //             </Button>
+        //         </Link>
+        //     </div>
+        // );
     }
 
     return (
