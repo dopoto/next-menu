@@ -23,7 +23,7 @@ export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
         resourceSingularName: 'report',
         resourcePluralName: 'reports',
         description:
-            'Visualize, filter and process in-depth data - number of visitors, orders, break-down by menu items and much more.',
+            'Visualize, filter and process in-depth data - visitors, orders, menu items break-downs and much more.',
     },
     publicSite: {
         id: 'publicSite',

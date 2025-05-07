@@ -40,9 +40,12 @@ export function PriceTierCard(props: {
 }) {
     const { name, description, features, flags } = props.tier;
 
-    const availableFeatures = features.filter((f) => {
-        return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
-    });
+    const availableFeatures =
+        props.exceededFeatures && props.exceededFeatures.length > 0
+            ? features.filter((f) => {
+                  return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
+              })
+            : features;
 
     return (
         <Card className={`${props.cardCustomizations?.containerStyle}`}>
