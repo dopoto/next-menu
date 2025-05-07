@@ -21,7 +21,8 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
         id: 'locations',
         resourceSingularName: 'location',
         resourcePluralName: 'locations',
-        description: 'The number of individual places (e.g. restaurants, bars etc) that you can manage within your organization.',
+        description:
+            'The number of individual places (e.g. restaurants, bars etc) that you can manage within your organization.',
     },
     menus: {
         id: 'menus',

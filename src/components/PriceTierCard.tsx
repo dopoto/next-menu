@@ -1,5 +1,4 @@
 import { type ReactNode } from 'react';
-import { PageSubtitle } from '~/components/PageSubtitle';
 import { PriceTierHeader } from '~/components/PriceTierHeader';
 import { Badge } from '~/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
@@ -52,7 +51,7 @@ export function PriceTierCard(props: {
                     </div>
                 )}
                 <PriceTierHeader tier={props.tier} />
-                <CardTitle className="sr-only">{name}</CardTitle>                
+                <CardTitle className="sr-only">{name}</CardTitle>
                 <CardDescription className="sr-only">{description}</CardDescription>
             </CardHeader>
             <CardContent>
@@ -137,5 +136,3 @@ export const getExceededPlanCardCustomizations = (): CardCustomizations => {
         badgeText: 'Does not fit your current usage',
     };
 };
-
- 

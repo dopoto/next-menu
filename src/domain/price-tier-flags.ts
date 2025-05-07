@@ -22,12 +22,13 @@ export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
         id: 'reports',
         resourceSingularName: 'report',
         resourcePluralName: 'reports',
-        description: 'TODO rep'
+        description:
+            'Visualize, filter and process in-depth data - number of visitors, orders, break-down by menu items and much more.',
     },
     publicSite: {
         id: 'publicSite',
         resourceSingularName: 'public site',
         resourcePluralName: 'public site',
-        description: 'TODO pubsi'
+        description: 'A public-facing professional-looking web site that your customers can use to browse your menus.',
     },
 };

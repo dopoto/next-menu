@@ -1,16 +1,16 @@
-import { PageSubtitle } from "~/components/PageSubtitle";
-import { PriceTier } from "~/domain/price-tiers";
-
- 
+import { PageSubtitle } from '~/components/PageSubtitle';
+import { type PriceTier } from '~/domain/price-tiers';
 
 export function PriceTierHeader(props: { tier: PriceTier }) {
-    const { name, description, monthlyUsdPrice  } = props.tier;
+    const { name, description, monthlyUsdPrice } = props.tier;
 
     return (
-        <div>
+        <div className="flex flex-col items-start">
             <div className="text-xl font-light">{name}</div>
             <div className="font-medium">{getPrice(monthlyUsdPrice)}</div>
-            <PageSubtitle textSize="base">{description}</PageSubtitle>
+            <div className="w-full text-left">
+                <PageSubtitle textSize="base">{description}</PageSubtitle>
+            </div>
         </div>
     );
 }

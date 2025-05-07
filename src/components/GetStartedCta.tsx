@@ -62,7 +62,7 @@ function SignedOutCta(props: { tier?: PriceTierId; secondaryText?: string; varia
         <>
             <Link className="w-full" href={signUpLink}>
                 <Button className="w-full" variant={props.variant}>
-                    Get started
+                    Get started!
                 </Button>
             </Link>
             {props.secondaryText && <p className="mt-3 text-sm text-gray-500 italic">{props.secondaryText}</p>}
