@@ -24,19 +24,24 @@ export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
+        touchAction: 'none',
     };
 
     return (
-        <div ref={setNodeRef} style={style} className="flex items-center gap-2 rounded-md border p-2">
+        <div 
+            ref={setNodeRef} 
+            style={style} 
+            className="flex items-center gap-2 rounded-md border p-2 touch-none cursor-grab active:cursor-grabbing"
+            {...attributes}
+            {...listeners}
+        >
             <div
-                {...attributes}
-                {...listeners}
-                className="cursor-grab rounded-md p-1 hover:bg-gray-100"
+                className="rounded-md p-1 hover:bg-gray-100 touch-none"
                 aria-label={`Drag to reorder ${item.name}`}
             >
                 <GripVertical className="h-4 w-4" />
             </div>
-            <div className="flex-grow">
+            <div className="flex-grow touch-none">
                 <PublicMenuItem
                     item={{
                         name: item.name,
@@ -49,8 +54,11 @@ export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
             <Button
                 variant="ghost"
                 size="icon"
-                onClick={onDelete}
-                className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    onDelete();
+                }}
+                className="text-red-500 hover:text-red-600 hover:bg-red-50 touch-none"
             >
                 <Trash2 className="h-4 w-4" />
             </Button>
