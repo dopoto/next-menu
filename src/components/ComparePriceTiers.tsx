@@ -7,29 +7,36 @@ import { priceTierFlags } from '~/domain/price-tier-flags';
 import { priceTiers } from '~/domain/price-tiers';
 
 export function ComparePriceTiers() {
+    const priceTiersToShow = Object.values(priceTiers).filter((tier) => tier.isPublic).length;
+    const priceTierColWidth = `w-1/${priceTiersToShow-1}`;
+    
     return (
         <Table>
             <TableHeader>
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                     <TableHead />
                     {Object.values(priceTiers)
                         .filter((tier) => tier.isPublic)
-                        .map((tier) => (
-                            <TableHead key={tier.id} className="pb-8 ">
-                                <div className="flex flex-col gap-2">
-                                    <PriceTierHeader tier={tier} />
-                                    <GetStartedCta tier={tier.id} variant={'outline'} />
-                                </div>
-                            </TableHead>
-                        ))}
+                        .map((tier) => {
+                            return (
+                                <TableHead key={tier.id} className={`pb-8 ${priceTierColWidth}`}>
+                                    <div className="flex flex-col gap-2">
+                                        <PriceTierHeader tier={tier} />
+                                        <GetStartedCta tier={tier.id} variant={'outline'} />
+                                    </div>
+                                </TableHead>
+                            );
+                        })}
                 </TableRow>
             </TableHeader>
             <TableBody>
                 {Object.values(priceTierFeatures).map((feature) => (
                     <TableRow key={feature.id}>
-                        <TableCell className="font-medium capitalize flex flex-col">
-                            <div>{feature.resourcePluralName}</div>
-                            <div className="font-extralight">{feature.description}</div>
+                        <TableCell className="font-medium  w-xs flex flex-col">
+                            <div className="capitalize">{feature.resourcePluralName}</div>
+                            <div className="max-w-xs font-extralight break-words whitespace-normal">
+                                {feature.description}
+                            </div>
                         </TableCell>
                         {Object.values(priceTiers)
                             .filter((tier) => tier.isPublic)
@@ -67,7 +74,7 @@ export function ComparePriceTiers() {
                             })}
                     </TableRow>
                 ))}
-                <TableRow>
+                <TableRow className="hover:bg-transparent">
                     <TableHead />
                     {Object.values(priceTiers)
                         .filter((tier) => tier.isPublic)

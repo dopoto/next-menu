@@ -21,18 +21,18 @@ export const priceTierFeatures: Record<PriceTierFeatureId, PriceTierFeature> = {
         id: 'locations',
         resourceSingularName: 'location',
         resourcePluralName: 'locations',
-        description: 'TODO loca',
+        description: 'The number of individual places (e.g. restaurants, bars etc) that you can manage within your organization.',
     },
     menus: {
         id: 'menus',
         resourceSingularName: 'menu',
         resourcePluralName: 'menus',
-        description: 'TODO menu',
+        description: 'The number of total menus you can create across your locations.',
     },
     menuItems: {
         id: 'menuItems',
         resourceSingularName: 'menu item',
         resourcePluralName: 'menu items',
-        description: 'TODO menu it',
+        description: 'The number of menu items you can create (a menu item can be used in multiple menus).',
     },
 };
