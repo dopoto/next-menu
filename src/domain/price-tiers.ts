@@ -84,7 +84,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menuItems', quota: 0 },
         ],
         flags: [
-            { id: 'reports', isEnabled: true },
+            { id: 'reports', isEnabled: false },
             { id: 'publicSite', isEnabled: true },
         ],
     },
