@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
+import { ComparePlansButton } from '~/app/u/[locationId]/_components/ComparePlansButton';
 import {
     getCurrentPlanCardCustomizations,
     getExceededPlanCardCustomizations,
@@ -18,8 +19,9 @@ export async function PlanSelector() {
         <div className="flex flex-col gap-3">
             <div className="pb-4">
                 {`Next, we'll show you an overview page where you'll be able to complete
-        the plan changes.`}
+        the plan change.`}
             </div>
+        <ComparePlansButton currentPriceTierId={currentUserTier}   />
             {Object.entries(priceTiers).map(async ([, tier]) => {
                 if (!tier.isPublic) {
                     return null;

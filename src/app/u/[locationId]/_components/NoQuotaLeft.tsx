@@ -1,21 +1,25 @@
-'use client';
-
+import { auth } from '@clerk/nextjs/server';
 import { CrownIcon } from 'lucide-react';
 import Link from 'next/link';
-import { useState } from 'react';
+import { ComparePlansButton } from '~/app/u/[locationId]/_components/ComparePlansButton';
 import { Button } from '~/components/ui/button';
-import { Dialog, DialogContent } from '~/components/ui/dialog';
-import { ComparePriceTiers } from '~/components/ComparePriceTiers';
-import { ROUTES } from '~/lib/routes';
 import { PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
-import { PriceTierId } from '~/domain/price-tiers';
+import { AppError } from '~/lib/error-utils.server';
+import { getValidPriceTier } from '~/lib/price-tier-utils';
+import { ROUTES } from '~/lib/routes';
 
-export function NoQuotaLeft(props: { currentPriceTierId: PriceTierId, featureId: PriceTierFeatureId }) {
-    const [showCompareModal, setShowCompareModal] = useState(false);
-
+export async function NoQuotaLeft(props: {  featureId: PriceTierFeatureId }) {
     const feature = priceTierFeatures[props.featureId];
+    const title = `You have used all ${feature?.resourcePluralName} available in your current plan`;
 
-    const title = `You have used all ${feature?.resourcePluralName} available in your current plan`
+    const { sessionClaims } = await auth();
+    const tierId = sessionClaims?.metadata.tier;
+    const parsedTier = getValidPriceTier(tierId);
+    if (!parsedTier) {
+        throw new AppError({
+            internalMessage: `No valid tier found in auth.`,
+        });
+    }
 
     return (
         <div className="animate-in fade-in-50 flex h-full flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
@@ -31,18 +35,8 @@ export function NoQuotaLeft(props: { currentPriceTierId: PriceTierId, featureId:
                 <Button className="w-full" variant="secondary" asChild>
                     <Link href={ROUTES.viewPlan}>View plan usage</Link>
                 </Button>
-                <Button className="w-full" variant="secondary" onClick={() => setShowCompareModal(true)}>
-                    Compare plans
-                </Button>
+                <ComparePlansButton currentPriceTierId={parsedTier.id} featureId={props.featureId} />
             </div>
-
-            <Dialog open={showCompareModal} onOpenChange={setShowCompareModal}>
-                <DialogContent className="!max-w-[95vw] !w-[95vw] !h-[95vh] !max-h-[95vh] !p-0">
-                    <div className="h-full overflow-auto p-6">
-                        <ComparePriceTiers currentPriceTierId={props.currentPriceTierId} highlightedRow={props.featureId} />
-                    </div>
-                </DialogContent>
-            </Dialog>
         </div>
     );
 }
