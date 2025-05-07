@@ -33,6 +33,14 @@ export const sections: Record<string, Section> = {
             secondary: 'No strings attached. Upgrade, downgrade or cancel instantly, anytime.',
         },
     },
+    compare: {
+        id: 'compare',
+        header: {
+            label: 'Compare plans',
+            title: 'What fits you best?',
+            secondary: 'A detailed feature matrix of our price tiers',
+        },
+    },
     faqs: {
         id: 'faqs',
         header: {

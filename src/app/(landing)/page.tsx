@@ -1,3 +1,4 @@
+import { LandingComparePriceTiers } from '~/app/(landing)/_components/LandingComparePriceTiers';
 import { LandingCta } from '~/app/(landing)/_components/LandingCta';
 import { LandingFAQ } from '~/app/(landing)/_components/LandingFAQ';
 import { LandingFeatures } from '~/app/(landing)/_components/LandingFeatures';
@@ -17,6 +18,7 @@ export default async function HomePage() {
             <LandingFeatures />
             <LandingTestimonials />
             <LandingPricing />
+            <LandingComparePriceTiers />
             <LandingFAQ items={faqItems} />
             <LandingCta />
             <LandingFooter />
