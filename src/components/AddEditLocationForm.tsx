@@ -19,7 +19,7 @@ export function AddEditLocationForm({
     form: UseFormReturn<z.infer<typeof locationFormSchema>>;
     onSubmit: (values: z.infer<typeof locationFormSchema>) => Promise<void>;
 }) {
-     
+     console.log(JSON.stringify(form))
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
@@ -34,12 +34,12 @@ export function AddEditLocationForm({
     const options: SelectControlOptions = Object.entries(CURRENCIES).map(([code, currency]) => ({
         value: code,
         label: (
-            <>
-                <Badge variant={'secondary'} style={{ width: '70px' }}>
-                    {currency.code} {currency.symbol_native}
-                </Badge>{' '}
-                {currency.name}{' '}
-            </>
+            <span className="flex text-xs gap-1.5 items-center">
+                <Badge variant={'secondary'} className="border-1 border-gray-300 flex justify-between" style={{ width: '70px' }}>
+                    <span className="font-light">{currency.code}</span> {currency.symbol_native}
+                </Badge>
+                <span>{currency.name}</span>
+            </span>
         ),
         searchLabel: `${currency.name} ${currency.symbol}  ${currency.symbol_native}   ${currency.code}`,
     }));
@@ -54,14 +54,20 @@ export function AddEditLocationForm({
                         </div>
                     )}
 
-                    <ReactHookFormField schema={locationFormSchema} form={form} fieldName={'name'} />
+                    <ReactHookFormField schema={locationFormSchema} form={form} fieldName={'locationName'} />
  
                     <FormField  
-                        name="currency"
+                        control={form.control}
+                        name="currencyId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Currency</FormLabel>
-                                <SelectControl id="currencyId" options={options} />
+                                <SelectControl 
+                                    id="currencyId" 
+                                    options={options} 
+                                    value={field.value ? options.find(opt => opt.value === field.value) : undefined} 
+                                    onChange={(newValue) => field.onChange(newValue?.value)} 
+                                />
                                 <FormDescription>The currency used by menus in this location.</FormDescription>
                                 <FormMessage />
                             </FormItem>

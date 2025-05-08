@@ -11,15 +11,15 @@ type Params = Promise<{ locationId: string }>;
 export default async function LocationPage(props: { params: Params }) {
     const params = await props.params;
     const validLocationId = getValidLocationIdOrThrow(params.locationId);
-    const locationData = await getLocationForCurrentUserOrThrow(validLocationId);
+    const validLocation = await getLocationForCurrentUserOrThrow(validLocationId);
 
-    if (!locationData.slug) {
+    if (!validLocation.slug) {
         throw new AppError({
             internalMessage: `Missing slug for location ${validLocationId}`,
         });
     }
 
-    const locationName = locationData.name ?? '';
+    const locationName = validLocation.name ?? '';
 
     return (
         <LocationDialog locationName={locationName}>
@@ -32,7 +32,7 @@ export default async function LocationPage(props: { params: Params }) {
                     <LocationDetails id={validLocationId} />
                 </TabsContent>
                 <TabsContent value="edit">
-                    <EditLocation location={locationData as unknown as Location} />
+                    <EditLocation location={validLocation} />
                 </TabsContent>
             </Tabs>
         </LocationDialog>

@@ -6,12 +6,16 @@ import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { AddEditLocationForm } from '~/components/AddEditLocationForm';
 import { locationFormSchema } from '~/domain/locations';
+import { type LocationId, locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
 
 export function EditLocation(props: { location: Location }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof locationFormSchema>>({
         resolver: zodResolver(locationFormSchema),
-        defaultValues: {},
+        defaultValues: {
+            currencyId: props.location.currencyId,
+            locationName: props.location.name
+        },
     });
 
     async function onSubmit(values: z.infer<typeof locationFormSchema>) {
