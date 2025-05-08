@@ -99,6 +99,7 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
                             price: props.item.price.toString(),
                             isNew: props.item.isNew,
                         }}
+                        currencyId={props.currencyId}
                     />
                 </DialogContent>
             </Dialog>

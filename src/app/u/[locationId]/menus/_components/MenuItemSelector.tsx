@@ -3,15 +3,17 @@
 import { useState } from 'react';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Input } from '~/components/ui/input';
+import { CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 
 interface MenuItemSelectorProps {
     allMenuItems: MenuItem[];
     addedItems: MenuItem[];
+    currencyId: CurrencyId;
     onSelect: (item: MenuItem) => void;
 }
 
-export function MenuItemSelector({ allMenuItems, addedItems, onSelect }: MenuItemSelectorProps) {
+export function MenuItemSelector({ allMenuItems, addedItems, currencyId, onSelect }: MenuItemSelectorProps) {
     const [search, setSearch] = useState('');
 
     const filteredItems = (allMenuItems ?? [])
@@ -40,6 +42,7 @@ export function MenuItemSelector({ allMenuItems, addedItems, onSelect }: MenuIte
                                         price: item.price.toString(),
                                         isNew: item.isNew,
                                     }}
+                                    currencyId={currencyId}
                                 />
                             </div>
                         ))}

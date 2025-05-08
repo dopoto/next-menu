@@ -5,14 +5,16 @@ import { CSS } from '@dnd-kit/utilities';
 import { GripVertical, Trash2 } from 'lucide-react';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
+import { CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 
 interface SortableMenuItemProps {
     item: MenuItem;
+    currencyId: CurrencyId;
     onDelete: () => void;
 }
 
-export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
+export function SortableMenuItem({ item, currencyId, onDelete }: SortableMenuItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
         id: item.id,
         data: {
@@ -46,6 +48,7 @@ export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
                         price: item.price.toString(),
                         isNew: item.isNew,
                     }}
+                    currencyId={currencyId}
                 />
             </div>
             <Button

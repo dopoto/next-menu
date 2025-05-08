@@ -141,7 +141,12 @@ export function MenuItemsManager({
                         <DialogHeader>
                             <DialogTitle>Select menu item</DialogTitle>
                         </DialogHeader>
-                        <MenuItemSelector allMenuItems={allMenuItems} addedItems={items} onSelect={handleSelectItem} />
+                        <MenuItemSelector
+                            allMenuItems={allMenuItems}
+                            addedItems={items}
+                            currencyId={currencyId}
+                            onSelect={handleSelectItem}
+                        />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -158,6 +163,7 @@ export function MenuItemsManager({
                                     setItems(updatedItems);
                                     onItemsChange?.(updatedItems);
                                 }}
+                                currencyId={currencyId}
                             />
                         ))}
                     </div>
