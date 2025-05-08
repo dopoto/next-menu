@@ -1,8 +1,9 @@
 import { DeviceMockup } from '~/components/DeviceMockup';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
+import { CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 
-export function PreviewMenuItem(props: { menuItem: Partial<MenuItem> }) {
+export function PreviewMenuItem(props: { menuItem: Partial<MenuItem>, currencyId: CurrencyId }) {
     const { name, description, price, isNew } = props.menuItem;
     return (
         <>
@@ -15,6 +16,7 @@ export function PreviewMenuItem(props: { menuItem: Partial<MenuItem> }) {
                             price,
                             isNew,
                         }}
+                        currencyId={props.currencyId}
                     />
                 </div>
             </DeviceMockup>

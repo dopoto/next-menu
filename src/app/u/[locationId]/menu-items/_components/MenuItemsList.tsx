@@ -27,7 +27,7 @@ export async function MenusItemsList(props: { locationId: LocationId; currencyId
             )}
             {items.map((item) => (
                 <div className="border-b-2 border-b-slate-200 border-dotted w-full" key={item.id}>
-                    <MenuItemCard key={item.id} locationId={props.locationId} item={item} />
+                    <MenuItemCard key={item.id} locationId={props.locationId} item={item} currencyId={props.currencyId} />
                 </div>
             ))}
         </div>

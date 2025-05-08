@@ -20,12 +20,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
+import { CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { ROUTES } from '~/lib/routes';
 
-export default function MenuItemCard(props: { locationId: LocationId; item: MenuItem }) {
+export default function MenuItemCard(props: { locationId: LocationId; currencyId: CurrencyId; item: MenuItem }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
     const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
@@ -58,6 +59,7 @@ export default function MenuItemCard(props: { locationId: LocationId; item: Menu
                         price: props.item.price.toString(),
                         isNew: props.item.isNew,
                     }}
+                    currencyId={props.currencyId}
                 />
                 <div className="mx-auto flex items-center">
                     <DropdownMenu>

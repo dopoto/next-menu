@@ -1,5 +1,6 @@
 import { Suspense } from 'react';
 import { PublicMenus } from '~/app/p/[locationSlug]/_components/PublicMenus';
+import { CurrencyId } from '~/domain/currencies';
 import { locationSlugSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicDataBySlug } from '~/server/queries/locations';
@@ -21,7 +22,7 @@ export default async function Page({ params }: { params: Params }) {
 
     return (
         <Suspense fallback="Loading menus...">
-            <PublicMenus locationId={location.id} />
+            <PublicMenus locationId={location.id} currencyId={location.currencyId as CurrencyId} />
         </Suspense>
     );
 }
