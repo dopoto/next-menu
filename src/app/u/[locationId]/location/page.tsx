@@ -1,4 +1,5 @@
 import { LocationDialog } from '~/app/u/[locationId]/location/_components/LocationDialog';
+import { EditLocation } from '~/components/EditLocation';
 import { LocationDetails } from '~/components/LocationDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
 import { AppError } from '~/lib/error-utils.server';
@@ -21,7 +22,7 @@ export default async function LocationPage(props: { params: Params }) {
     const locationName = locationData.name ?? '';
 
     return (
-        <LocationDialog locationName={locationName}  >
+        <LocationDialog locationName={locationName}>
             <Tabs defaultValue="overview">
                 <TabsList className="grid w-full grid-cols-2">
                     <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -31,9 +32,8 @@ export default async function LocationPage(props: { params: Params }) {
                     <LocationDetails id={validLocationId} />
                 </TabsContent>
                 <TabsContent value="edit">
-                    <>edit</>
+                    <EditLocation location={locationData as unknown as Location} />
                 </TabsContent>
-     
             </Tabs>
         </LocationDialog>
     );

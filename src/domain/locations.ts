@@ -31,7 +31,7 @@ export const addLocationFormOptions = formOptions({
     },
 });
 
-export const addLocationFormDataSchema = z.object({
+export const locationFormSchema = z.object({
     locationName: z
         .string({
             required_error: 'Location Name is required',
