@@ -23,30 +23,29 @@ import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
+import { CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema, type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { SortableMenuItem } from '../_components/SortableMenuItem';
 import { MenuItemSelector } from './MenuItemSelector';
-import { type InferSelectModel } from 'drizzle-orm';
-import { type locations } from '~/server/db/schema';
 
 interface MenuItemsManagerProps {
     locationId: LocationId;
+    currencyId: CurrencyId;
     menuId?: number;
     allMenuItems?: MenuItem[];
     initialItems?: MenuItem[];
     onItemsChange?: (items: MenuItem[]) => void;
-    location: InferSelectModel<typeof locations>;
 }
 
 export function MenuItemsManager({
     locationId,
+    currencyId,
     allMenuItems = [],
     initialItems = [],
     onItemsChange,
-    location,
 }: MenuItemsManagerProps) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [showAddDialog, setShowAddDialog] = useState(false);
@@ -129,7 +128,7 @@ export function MenuItemsManager({
                             form={newMenuItemForm}
                             onSubmit={handleAddNewItem}
                             locationId={locationId}
-                            location={location}
+                            currencyId={currencyId}
                         />
                     </DialogContent>
                 </Dialog>

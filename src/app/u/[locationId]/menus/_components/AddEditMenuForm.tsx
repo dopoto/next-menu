@@ -13,6 +13,7 @@ import { menuFormSchema } from '~/domain/menus';
 import { ROUTES } from '~/lib/routes';
 import { type InferSelectModel } from 'drizzle-orm';
 import { type locations } from '~/server/db/schema';
+import { CurrencyId } from '~/domain/currencies';
 
 export function AddEditMenuForm({
     form,
@@ -58,7 +59,7 @@ export function AddEditMenuForm({
                         allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}
-                        location={location}
+                        currencyId={location.currencyId as CurrencyId}
                     />
 
                     <div className="flex flex-row gap-2">

@@ -58,6 +58,7 @@ export const locations = createTable(
     (example) => [
         {
             nameIndex: index('location_name_idx').on(example.name),
+            currencyCheck: sql`CHECK (currency_id IN (${sql.join(Object.keys(CURRENCIES))}))`,
         },
     ],
 );
@@ -78,8 +79,7 @@ export const menus = createTable(
     },
     (example) => [
         {
-            nameIndex: index('menu_name_idx').on(example.name),
-            currencyCheck: sql`CHECK (currency_id IN (${sql.join(Object.keys(CURRENCIES))}))`,
+            nameIndex: index('menu_name_idx').on(example.name)
         },
     ],
 );

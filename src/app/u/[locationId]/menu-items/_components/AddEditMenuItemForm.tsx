@@ -6,25 +6,23 @@ import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { Switch } from '~/components/ui/switch';
+import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { ROUTES } from '~/lib/routes';
-import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
-import { type InferSelectModel } from 'drizzle-orm';
-import { type locations } from '~/server/db/schema';
 
 export function AddEditMenuItemForm({
     form,
     onSubmit,
     locationId,
-    location,
+    currencyId,
 }: {
     form: UseFormReturn<z.infer<typeof menuItemFormSchema>>;
     onSubmit: (values: z.infer<typeof menuItemFormSchema>) => Promise<void>;
     locationId: LocationId;
-    location: InferSelectModel<typeof locations>;
+    currencyId: CurrencyId;
 }) {
-    const currency = CURRENCIES[location.currencyId as CurrencyId];
+    const currency = CURRENCIES[currencyId];
 
     return (
         <div className="flex flex-col gap-6 lg:flex-row">

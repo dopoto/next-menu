@@ -7,18 +7,14 @@ import { type z } from 'zod';
 import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
+import { CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
-import { type InferSelectModel } from 'drizzle-orm';
-import { type locations } from '~/server/db/schema';
 
-export function AddMenuItem(props: { 
-    locationId: LocationId;
-    location: InferSelectModel<typeof locations>;
-}) {
+export function AddMenuItem(props: { locationId: LocationId; currencyId: CurrencyId }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuItemFormSchema>>({
         resolver: zodResolver(menuItemFormSchema),
@@ -47,11 +43,11 @@ export function AddMenuItem(props: {
                 title="Add menu item"
                 subtitle="Add a dish or a beverage to your menu items catalog. Each menu item can be used in one or more menus."
             />
-            <AddEditMenuItemForm 
-                form={form} 
-                onSubmit={onSubmit} 
-                locationId={props.locationId} 
-                location={props.location}
+            <AddEditMenuItemForm
+                form={form}
+                onSubmit={onSubmit}
+                locationId={props.locationId}
+                currencyId={props.currencyId}
             />
         </>
     );

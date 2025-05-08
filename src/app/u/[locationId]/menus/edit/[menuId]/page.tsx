@@ -6,6 +6,7 @@ import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getValidMenuIdOrThrow } from '~/lib/menu-utils';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { getMenuById } from '~/server/queries/menus';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 type Params = Promise<{ locationId: string; menuId: string }>;
 
@@ -20,11 +21,17 @@ export default async function EditMenuPage(props: { params: Params }) {
     }
 
     const allMenuItems = await getMenuItemsByLocation(validLocationId);
+    const location = await getLocationForCurrentUserOrThrow(validLocationId);
 
     return (
         <div className="flex h-full flex-col gap-2">
             <Suspense fallback={<LoadingSection />}>
-                <EditMenu locationId={validLocationId} menu={menu} allMenuItems={allMenuItems} />
+                <EditMenu 
+                    locationId={validLocationId} 
+                    menu={menu} 
+                    allMenuItems={allMenuItems} 
+                    location={location}
+                />
             </Suspense>
         </div>
     );
