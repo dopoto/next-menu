@@ -20,6 +20,7 @@ export function EditMenu(props: { locationId: LocationId; menu: Menu; allMenuIte
         resolver: zodResolver(menuFormSchema),
         defaultValues: {
             name: props.menu.name ?? '',
+            
             locationId: props.locationId,
         },
     });

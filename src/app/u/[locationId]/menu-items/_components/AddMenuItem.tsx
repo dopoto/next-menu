@@ -12,8 +12,13 @@ import { menuItemFormSchema } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
+import { type InferSelectModel } from 'drizzle-orm';
+import { type locations } from '~/server/db/schema';
 
-export function AddMenuItem(props: { locationId: LocationId }) {
+export function AddMenuItem(props: { 
+    locationId: LocationId;
+    location: InferSelectModel<typeof locations>;
+}) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuItemFormSchema>>({
         resolver: zodResolver(menuItemFormSchema),
@@ -42,7 +47,12 @@ export function AddMenuItem(props: { locationId: LocationId }) {
                 title="Add menu item"
                 subtitle="Add a dish or a beverage to your menu items catalog. Each menu item can be used in one or more menus."
             />
-            <AddEditMenuItemForm form={form} onSubmit={onSubmit} locationId={props.locationId} />
+            <AddEditMenuItemForm 
+                form={form} 
+                onSubmit={onSubmit} 
+                locationId={props.locationId} 
+                location={props.location}
+            />
         </>
     );
 }

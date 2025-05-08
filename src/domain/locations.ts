@@ -2,6 +2,7 @@ import { formOptions } from '@tanstack/react-form/nextjs';
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { PriceTierIdSchema } from '~/domain/price-tiers';
+import { withMeta } from '~/lib/form-validation';
 import { type locations } from '~/server/db/schema';
 
 export type Location = InferSelectModel<typeof locations>;
@@ -42,6 +43,19 @@ export const addLocationFormDataSchema = z.object({
         .max(256, {
             message: 'Location Name must be 256 or fewer characters long',
         }),
+    currencyId: withMeta(
+        z
+            .string({
+                required_error: 'Currency is required',
+            })
+            .min(3, 'Currency must be 3 characters')
+            .max(3, 'Currency must be 3 characters'),
+        {
+            label: 'Currency',
+            placeholder: 'Choose the currency name',
+            description: 'The currency shown for menu items.',
+        },
+    ),
     priceTierId: PriceTierIdSchema,
     stripeSessionId: z.string(),
 });

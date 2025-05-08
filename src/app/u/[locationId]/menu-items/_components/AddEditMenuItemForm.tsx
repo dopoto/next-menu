@@ -9,16 +9,23 @@ import { Switch } from '~/components/ui/switch';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { ROUTES } from '~/lib/routes';
+import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
+import { type InferSelectModel } from 'drizzle-orm';
+import { type locations } from '~/server/db/schema';
 
 export function AddEditMenuItemForm({
     form,
     onSubmit,
     locationId,
+    location,
 }: {
     form: UseFormReturn<z.infer<typeof menuItemFormSchema>>;
     onSubmit: (values: z.infer<typeof menuItemFormSchema>) => Promise<void>;
     locationId: LocationId;
+    location: InferSelectModel<typeof locations>;
 }) {
+    const currency = CURRENCIES[location.currencyId as CurrencyId];
+
     return (
         <div className="flex flex-col gap-6 lg:flex-row">
             <Form {...form}>
@@ -30,6 +37,7 @@ export function AddEditMenuItemForm({
                     )}
 
                     <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'name'} />
+
                     <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'description'} />
 
                     <FormField
@@ -50,7 +58,7 @@ export function AddEditMenuItemForm({
                         name="price"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Price</FormLabel>
+                                <FormLabel>Price ({currency.code})</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"

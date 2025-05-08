@@ -29,6 +29,8 @@ import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { SortableMenuItem } from '../_components/SortableMenuItem';
 import { MenuItemSelector } from './MenuItemSelector';
+import { type InferSelectModel } from 'drizzle-orm';
+import { type locations } from '~/server/db/schema';
 
 interface MenuItemsManagerProps {
     locationId: LocationId;
@@ -36,6 +38,7 @@ interface MenuItemsManagerProps {
     allMenuItems?: MenuItem[];
     initialItems?: MenuItem[];
     onItemsChange?: (items: MenuItem[]) => void;
+    location: InferSelectModel<typeof locations>;
 }
 
 export function MenuItemsManager({
@@ -43,6 +46,7 @@ export function MenuItemsManager({
     allMenuItems = [],
     initialItems = [],
     onItemsChange,
+    location,
 }: MenuItemsManagerProps) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [showAddDialog, setShowAddDialog] = useState(false);
@@ -125,6 +129,7 @@ export function MenuItemsManager({
                             form={newMenuItemForm}
                             onSubmit={handleAddNewItem}
                             locationId={locationId}
+                            location={location}
                         />
                     </DialogContent>
                 </Dialog>

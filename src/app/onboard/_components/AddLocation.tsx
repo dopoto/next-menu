@@ -1,13 +1,16 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs';
+import { useUser } from '@clerk/nextjs'; 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { onboardCreateOrganizationAction } from '~/app/actions/onboardCreateOrganizationAction';
 import { OverviewCard } from '~/components/OverviewCard';
+import { SelectControl, SelectControlOptions } from '~/components/SelectControl';
+import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
+import { CURRENCIES } from '~/domain/currencies';
 import { type PriceTierId } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 import { cn } from '~/lib/utils';
@@ -27,6 +30,19 @@ export const AddLocation = ({
     const { user } = useUser();
     const router = useRouter();
 
+    const options: SelectControlOptions = Object.entries(CURRENCIES).map(([code, currency]) => ({
+        value: code,
+        label: (
+            <>
+                <Badge variant={'secondary'} style={{ width: '70px' }}>
+                    {currency.code} {currency.symbol_native}
+                </Badge>{' '}
+                {currency.name}{' '}
+            </>
+        ),
+        searchLabel: `${currency.name} ${currency.symbol}  ${currency.symbol_native}   ${currency.code}`,
+    }));
+
     const handleSubmit = async (formData: FormData) => {
         const res = await onboardCreateOrganizationAction(formData);
         if (res?.message) {
@@ -39,6 +55,8 @@ export const AddLocation = ({
             console.log(res?.eventId); //TODO
         }
     };
+
+
 
     return (
         <div className={cn('flex w-full flex-col gap-6', className)}>
@@ -62,6 +80,10 @@ export const AddLocation = ({
                                             placeholder="My Fancy Restaurant"
                                             required
                                         />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="currencyId">The currency to be used in the menus of this location.</Label>
+                                        <SelectControl id="currencyId" options={options} />
                                     </div>
                                     {errors && errors.length > 0 && (
                                         <div className="text-red-600">

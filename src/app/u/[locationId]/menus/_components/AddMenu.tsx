@@ -13,18 +13,20 @@ import { menuFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
+import { type InferSelectModel } from 'drizzle-orm';
+import { type locations } from '~/server/db/schema';
 
 export function AddMenu(props: {
     locationId: LocationId;
     addMenuAction: typeof addMenuAction;
     allMenuItems: MenuItem[];
+    location: InferSelectModel<typeof locations>;
 }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuFormSchema>>({
         resolver: zodResolver(menuFormSchema),
         defaultValues: {
             name: '',
-
             locationId: props.locationId,
         },
     });
@@ -47,6 +49,7 @@ export function AddMenu(props: {
                 onSubmit={onSubmit}
                 locationId={props.locationId}
                 allMenuItems={props.allMenuItems}
+                location={props.location}
             />
         </>
     );

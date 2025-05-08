@@ -11,6 +11,8 @@ import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { menuFormSchema } from '~/domain/menus';
 import { ROUTES } from '~/lib/routes';
+import { type InferSelectModel } from 'drizzle-orm';
+import { type locations } from '~/server/db/schema';
 
 export function AddEditMenuForm({
     form,
@@ -18,12 +20,14 @@ export function AddEditMenuForm({
     locationId,
     allMenuItems,
     initialItems = [],
+    location,
 }: {
     form: UseFormReturn<z.infer<typeof menuFormSchema>>;
     onSubmit: (values: z.infer<typeof menuFormSchema>) => Promise<void>;
     locationId: LocationId;
     allMenuItems: MenuItem[];
     initialItems?: MenuItem[];
+    location: InferSelectModel<typeof locations>;
 }) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -54,6 +58,7 @@ export function AddEditMenuForm({
                         allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}
+                        location={location}
                     />
 
                     <div className="flex flex-row gap-2">

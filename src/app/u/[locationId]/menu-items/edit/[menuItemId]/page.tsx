@@ -5,6 +5,7 @@ import { EditMenuItem } from '~/app/u/[locationId]/menu-items/_components/EditMe
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getValidMenuItemIdOrThrow } from '~/lib/menu-item-utils';
 import { getMenuItemById } from '~/server/queries/menu-items';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 type Params = Promise<{ locationId: string; menuItemId: string }>;
 
@@ -15,6 +16,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     const parsedMenuItemId = getValidMenuItemIdOrThrow(params.menuItemId);
 
     const menuItemToEdit = await getMenuItemById(parsedLocationId, parsedMenuItemId);
+    const location = await getLocationForCurrentUserOrThrow(parsedLocationId);
 
     if (!menuItemToEdit) {
         return notFound();
@@ -23,7 +25,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     return (
         <div className="flex h-full flex-col gap-2">
             <Suspense fallback={<LoadingSection />}>
-                <EditMenuItem locationId={parsedLocationId} menuItem={menuItemToEdit} />
+                <EditMenuItem locationId={parsedLocationId} menuItem={menuItemToEdit} location={location} />
             </Suspense>
         </div>
     );
