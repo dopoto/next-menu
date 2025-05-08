@@ -3,10 +3,11 @@ import { addMenuAction } from '~/app/actions/addMenuAction';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenu } from '~/app/u/[locationId]/menus/_components/AddMenu';
+import { type CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
-import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
+import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 
 type Params = Promise<{ locationId: string }>;
 
@@ -16,7 +17,7 @@ export default async function AddMenuPage(props: { params: Params }) {
 
     const availableQuota = await getAvailableFeatureQuota('menus');
     if (availableQuota <= 0) {
-        return <NoQuotaLeft featureId='menus' />;
+        return <NoQuotaLeft featureId="menus" />;
     }
 
     const allMenuItems = await getMenuItemsByLocation(parsedLocationId);
@@ -27,6 +28,7 @@ export default async function AddMenuPage(props: { params: Params }) {
             <Suspense fallback={<LoadingSection />}>
                 <AddMenu
                     locationId={parsedLocationId}
+                    currencyId={location.currencyId as CurrencyId}
                     addMenuAction={addMenuAction}
                     allMenuItems={allMenuItems}
                     location={location}

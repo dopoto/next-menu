@@ -28,17 +28,14 @@ export function SortableMenuItem({ item, onDelete }: SortableMenuItemProps) {
     };
 
     return (
-        <div 
-            ref={setNodeRef} 
-            style={style} 
+        <div
+            ref={setNodeRef}
+            style={style}
             className="flex items-center gap-2 rounded-md border p-2 touch-none cursor-grab active:cursor-grabbing"
             {...attributes}
             {...listeners}
         >
-            <div
-                className="rounded-md p-1 hover:bg-gray-100 touch-none"
-                aria-label={`Drag to reorder ${item.name}`}
-            >
+            <div className="rounded-md p-1 hover:bg-gray-100 touch-none" aria-label={`Drag to reorder ${item.name}`}>
                 <GripVertical className="h-4 w-4" />
             </div>
             <div className="flex-grow touch-none">

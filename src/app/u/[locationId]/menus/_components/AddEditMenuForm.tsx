@@ -7,28 +7,26 @@ import { MenuItemsManager } from '~/app/u/[locationId]/menus/_components/MenuIte
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { menuFormSchema } from '~/domain/menus';
 import { ROUTES } from '~/lib/routes';
-import { type InferSelectModel } from 'drizzle-orm';
-import { type locations } from '~/server/db/schema';
-import { CurrencyId } from '~/domain/currencies';
 
 export function AddEditMenuForm({
     form,
     onSubmit,
     locationId,
+    currencyId,
     allMenuItems,
     initialItems = [],
-    location,
 }: {
     form: UseFormReturn<z.infer<typeof menuFormSchema>>;
     onSubmit: (values: z.infer<typeof menuFormSchema>) => Promise<void>;
     locationId: LocationId;
+    currencyId: CurrencyId;
     allMenuItems: MenuItem[];
     initialItems?: MenuItem[];
-    location: InferSelectModel<typeof locations>;
 }) {
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,7 +57,7 @@ export function AddEditMenuForm({
                         allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}
-                        currencyId={location.currencyId as CurrencyId}
+                        currencyId={currencyId}
                     />
 
                     <div className="flex flex-row gap-2">

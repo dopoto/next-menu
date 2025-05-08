@@ -2,11 +2,12 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { EditMenu } from '~/app/u/[locationId]/menus/_components/EditMenu';
+import { type CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getValidMenuIdOrThrow } from '~/lib/menu-utils';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { getMenuById } from '~/server/queries/menus';
-import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 type Params = Promise<{ locationId: string; menuId: string }>;
 
@@ -26,11 +27,11 @@ export default async function EditMenuPage(props: { params: Params }) {
     return (
         <div className="flex h-full flex-col gap-2">
             <Suspense fallback={<LoadingSection />}>
-                <EditMenu 
-                    locationId={validLocationId} 
-                    menu={menu} 
-                    allMenuItems={allMenuItems} 
-                    location={location}
+                <EditMenu
+                    locationId={validLocationId}
+                    currencyId={location.currencyId as CurrencyId}
+                    menu={menu}
+                    allMenuItems={allMenuItems}
                 />
             </Suspense>
         </div>

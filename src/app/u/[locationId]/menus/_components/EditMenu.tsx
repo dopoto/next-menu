@@ -7,20 +7,19 @@ import { type z } from 'zod';
 import { editMenuAction } from '~/app/actions/editMenuAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuForm } from '~/app/u/[locationId]/menus/_components/AddEditMenuForm';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { type Menu, menuFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
-import { type InferSelectModel } from 'drizzle-orm';
-import { type locations } from '~/server/db/schema';
 
-export function EditMenu(props: { 
-    locationId: LocationId; 
-    menu: Menu; 
+export function EditMenu(props: {
+    locationId: LocationId;
+    currencyId: CurrencyId;
+    menu: Menu;
     allMenuItems: MenuItem[];
-    location: InferSelectModel<typeof locations>;
 }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuFormSchema>>({
@@ -48,9 +47,9 @@ export function EditMenu(props: {
                 form={form}
                 onSubmit={onSubmit}
                 locationId={props.locationId}
+                currencyId={props.currencyId}
                 initialItems={props.menu.items ?? []}
                 allMenuItems={props.allMenuItems}
-                location={props.location}
             />
         </>
     );

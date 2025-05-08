@@ -151,7 +151,7 @@ export async function getMenuById(locationId: LocationId, menuId: MenuId): Promi
             type: menuItems.type,
             isNew: menuItems.isNew,
             locationId: menuItems.locationId,
-            isPublished: menuItems.isPublished,             
+            isPublished: menuItems.isPublished,
             createdAt: menuItems.createdAt,
             updatedAt: menuItems.updatedAt,
             sortOrderIndex: menuItemsToMenus.sortOrderIndex,

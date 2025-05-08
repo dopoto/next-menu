@@ -3,7 +3,7 @@
 
 import { sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { CurrencyId, CURRENCIES } from '../../domain/currencies';
+import { CURRENCIES } from '../../domain/currencies';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -79,7 +79,7 @@ export const menus = createTable(
     },
     (example) => [
         {
-            nameIndex: index('menu_name_idx').on(example.name)
+            nameIndex: index('menu_name_idx').on(example.name),
         },
     ],
 );

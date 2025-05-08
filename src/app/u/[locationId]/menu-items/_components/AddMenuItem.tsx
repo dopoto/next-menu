@@ -7,7 +7,7 @@ import { type z } from 'zod';
 import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';

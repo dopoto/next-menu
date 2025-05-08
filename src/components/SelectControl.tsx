@@ -1,7 +1,7 @@
-import Select from 'react-select'
-import { type ReactNode } from 'react'
+import { type ReactNode } from 'react';
+import Select from 'react-select';
 
-export type SelectControlOptions = Array<{value: string, label: ReactNode, searchLabel?: string}>;
+export type SelectControlOptions = Array<{ value: string; label: ReactNode; searchLabel?: string }>;
 
 export interface SelectControlProps {
     options: SelectControlOptions;
@@ -26,7 +26,7 @@ export function SelectControl({
     ...props
 }: SelectControlProps) {
     return (
-        <Select 
+        <Select
             options={options}
             isSearchable={true}
             inputId={id}
@@ -42,5 +42,5 @@ export function SelectControl({
             }}
             {...props}
         />
-    )
+    );
 }

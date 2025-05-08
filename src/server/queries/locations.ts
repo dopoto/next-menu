@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import 'server-only';
-import { locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
+import { type LocationId, locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
@@ -90,7 +90,7 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
     return location;
 }
 
-export async function getLocationPublicData(locationSlug: LocationSlug): Promise<Location> {
+export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location> {
     const location = await db.query.locations.findFirst({
         where: (locations, { eq }) => eq(locations.slug, locationSlug),
     });
@@ -98,6 +98,20 @@ export async function getLocationPublicData(locationSlug: LocationSlug): Promise
     if (!location) {
         throw new AppError({
             internalMessage: `Location not found for slug ${locationSlug}.`,
+        });
+    }
+
+    return location;
+}
+
+export async function getLocationPublicDataById(locationId: LocationId): Promise<Location> {
+    const location = await db.query.locations.findFirst({
+        where: (locations, { eq }) => eq(locations.id, locationId),
+    });
+
+    if (!location) {
+        throw new AppError({
+            internalMessage: `Location not found for id ${locationId}.`,
         });
     }
 

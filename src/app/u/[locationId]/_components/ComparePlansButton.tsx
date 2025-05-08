@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { ComparePriceTiers } from '~/components/ComparePriceTiers';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/components/ui/dialog';
-import { PriceTierFeatureId } from '~/domain/price-tier-features';
-import { PriceTierId } from '~/domain/price-tiers';
+import { type PriceTierFeatureId } from '~/domain/price-tier-features';
+import { type PriceTierId } from '~/domain/price-tiers';
 
 export function ComparePlansButton(props: { currentPriceTierId: PriceTierId; featureId?: PriceTierFeatureId }) {
     const [showCompareModal, setShowCompareModal] = useState(false);

@@ -3,12 +3,12 @@ import { CrownIcon } from 'lucide-react';
 import Link from 'next/link';
 import { ComparePlansButton } from '~/app/u/[locationId]/_components/ComparePlansButton';
 import { Button } from '~/components/ui/button';
-import { PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
+import { type PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
 
-export async function NoQuotaLeft(props: {  featureId: PriceTierFeatureId }) {
+export async function NoQuotaLeft(props: { featureId: PriceTierFeatureId }) {
     const feature = priceTierFeatures[props.featureId];
     const title = `You have used all ${feature?.resourcePluralName} available in your current plan`;
 

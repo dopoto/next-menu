@@ -9,7 +9,7 @@ export function LandingComparePriceTiers() {
             <div className="mx-auto max-w-7xl   sm:px-6 lg:px-8">
                 <LandingSectionTitle label={label} title={title} secondary={secondary} />
                 <div className="py-16">
-                    <ComparePriceTiers  />
+                    <ComparePriceTiers />
                 </div>
             </div>
         </div>

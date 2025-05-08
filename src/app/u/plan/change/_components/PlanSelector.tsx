@@ -21,7 +21,7 @@ export async function PlanSelector() {
                 {`Next, we'll show you an overview page where you'll be able to complete
         the plan change.`}
             </div>
-        <ComparePlansButton currentPriceTierId={currentUserTier}   />
+            <ComparePlansButton currentPriceTierId={currentUserTier} />
             {Object.entries(priceTiers).map(async ([, tier]) => {
                 if (!tier.isPublic) {
                     return null;

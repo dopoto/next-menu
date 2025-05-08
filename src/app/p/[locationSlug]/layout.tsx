@@ -7,7 +7,7 @@ import { CookieKey } from '~/domain/cookies';
 import { locationSlugSchema } from '~/domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { getLocationPublicData } from '~/server/queries/locations';
+import { getLocationPublicDataBySlug } from '~/server/queries/locations';
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: env.NEXT_PUBLIC_POSTHOG_HOST,
@@ -28,7 +28,7 @@ export default async function Layout({ params, children }: { params: Params; chi
     }
 
     const parsedLocationSlug = locationSlugValidationResult.data;
-    const location = await getLocationPublicData(parsedLocationSlug);
+    const location = await getLocationPublicDataBySlug(parsedLocationSlug);
 
     const event: AnalyticsEventId = 'publicLocationVisit';
 

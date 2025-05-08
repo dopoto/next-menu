@@ -1,11 +1,11 @@
 'use client';
 
-import { useUser } from '@clerk/nextjs'; 
+import { useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { onboardCreateOrganizationAction } from '~/app/actions/onboardCreateOrganizationAction';
 import { OverviewCard } from '~/components/OverviewCard';
-import { SelectControl, SelectControlOptions } from '~/components/SelectControl';
+import { SelectControl, type SelectControlOptions } from '~/components/SelectControl';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
@@ -56,8 +56,6 @@ export const AddLocation = ({
         }
     };
 
-
-
     return (
         <div className={cn('flex w-full flex-col gap-6', className)}>
             <OverviewCard
@@ -82,7 +80,9 @@ export const AddLocation = ({
                                         />
                                     </div>
                                     <div className="grid gap-2">
-                                        <Label htmlFor="currencyId">The currency to be used in the menus of this location.</Label>
+                                        <Label htmlFor="currencyId">
+                                            The currency to be used in the menus of this location.
+                                        </Label>
                                         <SelectControl id="currencyId" options={options} />
                                     </div>
                                     {errors && errors.length > 0 && (
