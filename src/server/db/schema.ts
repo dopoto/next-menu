@@ -68,6 +68,7 @@ export const menus = createTable(
         locationId: integer('location_id')
             .notNull()
             .references(() => locations.id),
+            isPublished: boolean('is_published').default(true).notNull(),            
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
@@ -92,6 +93,7 @@ export const menuItems = createTable(
         price: decimal('price').notNull(),
         type: varchar('type', { length: 10 }).notNull().default('dish'),
         isNew: boolean('is_new').default(false).notNull(),
+        isPublished: boolean('is_published').default(true).notNull(),    
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
