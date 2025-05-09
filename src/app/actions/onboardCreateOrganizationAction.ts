@@ -9,12 +9,13 @@ import Stripe from 'stripe';
 import { z } from 'zod';
 import { CookieKey } from '~/domain/cookies';
 import { CurrencyId } from '~/domain/currencies';
-import { locationFormSchema, locationSlugSchema } from '~/domain/locations';
+import { locationFormSchema } from '~/domain/locations';
 import { PriceTierId, PriceTierIdSchema } from '~/domain/price-tiers';
 import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPriceTier, isPaidPriceTier } from '~/lib/price-tier-utils';
+import { generateUniqueLocationSlug } from '~/server/queries/locations';
 import { createOrganization } from '~/server/queries/organizations';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
@@ -48,15 +49,15 @@ const formDataSchema = z.object({
 });
 
 export const onboardCreateOrganizationAction = async (
-    priceTierId: PriceTierId, 
-    stripeSessionId: string, 
-    slug: string, 
+    priceTierId: PriceTierId,
+    stripeSessionId: string,
+
     data: z.infer<typeof locationFormSchema>,
 ) => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'onboardCreateOrganization',
-        { 
+        {
             headers: headers(),
             recordResponse: true,
         },
@@ -75,15 +76,9 @@ export const onboardCreateOrganizationAction = async (
                     return { errors: ['An error occurred while validating tier data. Please start over.'] };
                 }
 
-                const slugValidationResult = locationSlugSchema.safeParse(slug);
-                if (!slugValidationResult.success) {
-                    return { errors: ['An error occurred while validating site data. Please start over.'] };
-                }
-                const validSlug = slugValidationResult.data
-
                 const validatedFormFields = locationFormSchema.safeParse({
                     locationName: data.locationName,
-                    currencyId: data.currencyId
+                    currencyId: data.currencyId,
                 });
 
                 if (!validatedFormFields.success) {
@@ -163,8 +158,8 @@ export const onboardCreateOrganizationAction = async (
                     orgId,
                     stripeCustomerId: validatedStripeCustomerIdOrNull,
                     locationName: validatedFormFields.data.locationName,
-                    locationSlug: validSlug,
-                    currencyId: validatedFormFields.data.currencyId as CurrencyId
+                    locationSlug: await generateUniqueLocationSlug(),
+                    currencyId: validatedFormFields.data.currencyId as CurrencyId,
                 });
 
                 // TODO send analytics
