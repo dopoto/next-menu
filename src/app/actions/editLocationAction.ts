@@ -1,7 +1,6 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
-import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { type z } from 'zod';
 import { locationFormSchema, type LocationId } from '~/domain/locations';
@@ -29,7 +28,8 @@ export const editLocationAction = async (
 
                 await updateLocation(locationId, parsedForm.data);
 
-                revalidatePath(`/u/${locationId}/location`);
+                // TODO: 
+                //revalidatePath(`/u/${locationId}/location`);
                 // TODO revalidate public path
 
                 return { status: 'success' as const };

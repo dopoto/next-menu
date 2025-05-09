@@ -1,7 +1,5 @@
 'use server';
 
-//TODO https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/#step-4-instrument-nextjs-server-actions-optional
-
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import * as Sentry from '@sentry/nextjs';
 import { cookies, headers } from 'next/headers';
@@ -24,7 +22,6 @@ const stripe = new Stripe(stripeApiKey);
 export const onboardCreateOrganizationAction = async (
     priceTierId: PriceTierId,
     stripeSessionId: string,
-
     data: z.infer<typeof locationFormSchema>,
 ) => {
     'use server';

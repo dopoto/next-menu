@@ -131,7 +131,6 @@ export async function updateLocation(locationId: LocationId, data: z.infer<typeo
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     await db.transaction(async (tx) => {
-        // Update menu details
         const result = await tx
             .update(locations)
             .set({
