@@ -31,7 +31,7 @@ export const addLocationFormOptions = formOptions({
     },
 });
 
-export const locationFormSchema = z.object({
+export const addLocationFormSchema = z.object({
     locationName: withMeta(
         z
             .string({

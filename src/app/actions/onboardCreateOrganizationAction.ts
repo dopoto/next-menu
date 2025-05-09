@@ -8,7 +8,8 @@ import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { CookieKey } from '~/domain/cookies';
-import { PriceTierIdSchema } from '~/domain/price-tiers';
+import { addLocationFormSchema } from '~/domain/locations';
+import { PriceTierId, PriceTierIdSchema } from '~/domain/price-tiers';
 import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
@@ -45,12 +46,16 @@ const formDataSchema = z.object({
     stripeSessionId: z.string(),
 });
 
-export const onboardCreateOrganizationAction = async (formData: FormData) => {
+export const onboardCreateOrganizationAction = async (
+    priceTierId: PriceTierId, 
+    stripeSessionId: string, 
+    slug: string, 
+    data: z.infer<typeof addLocationFormSchema>,
+) => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'onboardCreateOrganization',
-        {
-            formData,
+        { 
             headers: headers(),
             recordResponse: true,
         },
@@ -65,10 +70,10 @@ export const onboardCreateOrganizationAction = async (formData: FormData) => {
                 }
 
                 const validatedFormFields = formDataSchema.safeParse({
-                    locationName: formData.get('locationName'),
-                    priceTierId: formData.get('priceTierId'),
-                    slug: formData.get('slug'),
-                    stripeSessionId: formData.get('stripeSessionId'),
+                    locationName: data.locationName,
+                    priceTierId,
+                    slug,
+                    stripeSessionId
                 });
 
                 if (!validatedFormFields.success) {

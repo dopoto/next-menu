@@ -7,7 +7,6 @@ import { type z } from 'zod';
 import { editLocationFormSchema, LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
-import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { updateLocation } from '~/server/queries/locations';
 
 export const editLocationAction = async (
