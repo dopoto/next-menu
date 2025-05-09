@@ -28,7 +28,7 @@ export const editLocationAction = async (
 
                 await updateLocation(locationId, parsedForm.data);
 
-                // TODO: 
+                // TODO:
                 //revalidatePath(`/u/${locationId}/location`);
                 // TODO revalidate public path
 
