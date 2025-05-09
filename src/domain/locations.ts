@@ -1,7 +1,6 @@
 import { formOptions } from '@tanstack/react-form/nextjs';
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
-import { PriceTierIdSchema } from '~/domain/price-tiers';
 import { withMeta } from '~/lib/form-validation';
 import { type locations } from '~/server/db/schema';
 
@@ -11,7 +10,10 @@ export type NewLocation = InferInsertModel<typeof locations>;
 export const locationIdSchema = z.coerce.number().positive().int();
 export type LocationId = z.infer<typeof locationIdSchema>;
 
-export const locationSlugSchema = z.coerce.string();
+export const LOCATION_SLUG_LENGTH = 8;
+export const locationSlugSchema = z.coerce
+    .string()
+    .length(LOCATION_SLUG_LENGTH, { message: `Slug must be exactly ${LOCATION_SLUG_LENGTH} characters long` });
 export type LocationSlug = z.infer<typeof locationSlugSchema>;
 
 export type AddLocationFormData = {
@@ -62,7 +64,5 @@ export const locationFormSchema = z.object({
             placeholder: 'Choose the currency name',
             description: 'The currency shown for menu items.',
         },
-    )
+    ),
 });
-
- 

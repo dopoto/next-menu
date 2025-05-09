@@ -8,12 +8,13 @@ import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { CookieKey } from '~/domain/cookies';
-import { locationFormSchema } from '~/domain/locations';
+import { CurrencyId } from '~/domain/currencies';
+import { locationFormSchema, locationSlugSchema } from '~/domain/locations';
 import { PriceTierId, PriceTierIdSchema } from '~/domain/price-tiers';
 import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
-import { isPaidPriceTier } from '~/lib/price-tier-utils';
+import { getValidPriceTier, isPaidPriceTier } from '~/lib/price-tier-utils';
 import { createOrganization } from '~/server/queries/organizations';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
@@ -62,18 +63,27 @@ export const onboardCreateOrganizationAction = async (
         async () => {
             try {
                 const cookieStore = await cookies();
-                cookieStore.delete(CookieKey.CurrentLocationName);
+                cookieStore.delete(CookieKey.CurrentLocationName); //TODO review
 
                 const { userId, orgId } = await auth();
                 if (!userId) {
                     return { errors: ['You must be authenticated.'] };
                 }
 
-                const validatedFormFields = formDataSchema.safeParse({
+                const validPriceTier = getValidPriceTier(priceTierId);
+                if (!validPriceTier) {
+                    return { errors: ['An error occurred while validating tier data. Please start over.'] };
+                }
+
+                const slugValidationResult = locationSlugSchema.safeParse(slug);
+                if (!slugValidationResult.success) {
+                    return { errors: ['An error occurred while validating site data. Please start over.'] };
+                }
+                const validSlug = slugValidationResult.data
+
+                const validatedFormFields = locationFormSchema.safeParse({
                     locationName: data.locationName,
-                    priceTierId,
-                    slug,
-                    stripeSessionId
+                    currencyId: data.currencyId
                 });
 
                 if (!validatedFormFields.success) {
@@ -88,14 +98,14 @@ export const onboardCreateOrganizationAction = async (
 
                 let validatedStripeCustomerIdOrNull;
 
-                if (isPaidPriceTier(validatedFormFields.data.priceTierId)) {
-                    if (validatedFormFields.data.stripeSessionId?.length === 0) {
+                if (isPaidPriceTier(validPriceTier.id)) {
+                    if (stripeSessionId.length === 0) {
                         throw new AppError({
                             publicMessage: 'Stripe payment data not found. Please try onboarding again.',
                         });
                     }
 
-                    const session = await stripe.checkout.sessions.retrieve(validatedFormFields.data.stripeSessionId);
+                    const session = await stripe.checkout.sessions.retrieve(stripeSessionId);
 
                     const validationResult = stripeCustomerIdSchema.safeParse(session.customer);
                     if (!validationResult.success) {
@@ -153,7 +163,8 @@ export const onboardCreateOrganizationAction = async (
                     orgId,
                     stripeCustomerId: validatedStripeCustomerIdOrNull,
                     locationName: validatedFormFields.data.locationName,
-                    locationSlug: validatedFormFields.data.slug,
+                    locationSlug: validSlug,
+                    currencyId: validatedFormFields.data.currencyId as CurrencyId
                 });
 
                 // TODO send analytics
@@ -167,7 +178,7 @@ export const onboardCreateOrganizationAction = async (
 
                 const customJwtSessionClaims: CustomJwtSessionClaims = {
                     metadata: {
-                        tier: validatedFormFields.data.priceTierId,
+                        tier: validPriceTier.id,
                         orgName,
                         initialLocationId: currentLocation.id.toString(),
                     },

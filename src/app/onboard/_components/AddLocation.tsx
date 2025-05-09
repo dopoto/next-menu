@@ -9,11 +9,8 @@ import { z } from 'zod';
 import { onboardCreateOrganizationAction } from '~/app/actions/onboardCreateOrganizationAction';
 import { AddEditLocationForm } from '~/components/AddEditLocationForm';
 import { OverviewCard } from '~/components/OverviewCard';
-import { SelectControl, type SelectControlOptions } from '~/components/SelectControl';
+import { type SelectControlOptions } from '~/components/SelectControl';
 import { Badge } from '~/components/ui/badge';
-import { Button } from '~/components/ui/button';
-import { Input } from '~/components/ui/input';
-import { Label } from '~/components/ui/label';
 import { CURRENCIES } from '~/domain/currencies';
 import { locationFormSchema } from '~/domain/locations';
 import { type PriceTierId } from '~/domain/price-tiers';
@@ -61,24 +58,30 @@ export const AddLocation = ({
         }
     };
 
-    const addLocationForm  = useForm<z.infer<typeof locationFormSchema>>({
+    const addLocationForm = useForm<z.infer<typeof locationFormSchema>>({
         resolver: zodResolver(locationFormSchema),
         defaultValues: {
             currencyId: 'USD',
-            locationName: ''
+            locationName: '',
         },
     });
-    const addLocationFormComponent = <AddEditLocationForm form={addLocationForm} onSubmit={handleSubmit} />
+    const addLocationFormComponent = (
+        <div className="pt-8">
+            <AddEditLocationForm form={addLocationForm} onSubmit={handleSubmit} />
+        </div>
+    );
 
     return (
         <div className={cn('flex w-full flex-col gap-6', className)}>
+            <div>Now, let's create your default location - the restaurant, bar or pub you will manage digital menus for.</div>
             <OverviewCard
+                variant={'form'}
                 title={'Add a location'}
                 subtitle={`This can be changed anytime later from your account.`}
                 sections={[
                     {
                         title: '',
-                        content: addLocationFormComponent
+                        content: addLocationFormComponent,
                         // content: (
                         //     <form action={handleSubmit}>
                         //         <input type="hidden" name="priceTierId" value={priceTierId} />
@@ -116,7 +119,6 @@ export const AddLocation = ({
                         // ),
                     },
                 ]}
-                variant={'neutral'}
             />
         </div>
     );

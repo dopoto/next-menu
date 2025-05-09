@@ -3,6 +3,7 @@ import { eq, sql } from 'drizzle-orm';
 import 'server-only';
 import { z } from 'zod';
 import {
+    LOCATION_SLUG_LENGTH,
     type Location,
     type LocationId,
     type LocationSlug,
@@ -31,10 +32,10 @@ function generateRandomSlug(length: number): string {
  * Retries with a new slug if the generated one already exists.
  * @returns A unique location slug
  */
-export async function generateUniqueLocationSlug(): Promise<string> {
+export async function generateUniqueLocationSlug(): Promise<LocationSlug> {
     while (true) {
-        // Generate an 8-character random string
-        const slug = generateRandomSlug(8);
+        // Generate a fixed-character random string
+        const slug = generateRandomSlug(LOCATION_SLUG_LENGTH);
 
         // Check if this slug already exists
         const existingLocation = await db.query.locations.findFirst({
