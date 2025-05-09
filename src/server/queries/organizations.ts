@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import { type CurrencyId } from '~/domain/currencies';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
@@ -16,6 +17,7 @@ export async function createOrganization({
     stripeCustomerId?: string;
     locationName: string;
     locationSlug: string;
+    currencyId: CurrencyId;
 }) {
     const insertedLocation = await db.transaction(async (trx) => {
         const [organization] = await trx

@@ -50,6 +50,7 @@ export const Overview = async (props: { claims: CustomJwtSessionClaims }) => {
                 <SubscriptionDetails />
             </Suspense>
             <div className="flex flex-col gap-6">
+                <div>Your next step: set up menu items and add them to your digital menus.</div>
                 <Link className="w-full" href={ROUTES.my}>
                     <Button className="w-full">Take me to my dashboard</Button>
                 </Link>

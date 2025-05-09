@@ -3,6 +3,7 @@
 
 import { sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
+import { CURRENCIES } from '../../domain/currencies';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -45,6 +46,7 @@ export const locations = createTable(
         id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
         name: varchar('name', { length: 50 }).notNull().unique(),
         slug: varchar('slug', { length: 50 }).notNull().unique(),
+        currencyId: varchar('currency_id', { length: 3 }).notNull().default('USD'),
         orgId: integer('org_id')
             .notNull()
             .references(() => organizations.id),
@@ -56,6 +58,7 @@ export const locations = createTable(
     (example) => [
         {
             nameIndex: index('location_name_idx').on(example.name),
+            currencyCheck: sql`CHECK (currency_id IN (${sql.join(Object.keys(CURRENCIES))}))`,
         },
     ],
 );
@@ -68,6 +71,7 @@ export const menus = createTable(
         locationId: integer('location_id')
             .notNull()
             .references(() => locations.id),
+        isPublished: boolean('is_published').default(true).notNull(),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
@@ -92,6 +96,7 @@ export const menuItems = createTable(
         price: decimal('price').notNull(),
         type: varchar('type', { length: 10 }).notNull().default('dish'),
         isNew: boolean('is_new').default(false).notNull(),
+        isPublished: boolean('is_published').default(true).notNull(),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),

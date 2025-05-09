@@ -1,8 +1,9 @@
 import { Suspense } from 'react';
 import { PublicMenus } from '~/app/p/[locationSlug]/_components/PublicMenus';
+import { type CurrencyId } from '~/domain/currencies';
 import { locationSlugSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
-import { getLocationPublicData } from '~/server/queries/locations';
+import { getLocationPublicDataBySlug } from '~/server/queries/locations';
 
 type Params = Promise<{ locationSlug: string }>;
 
@@ -17,11 +18,11 @@ export default async function Page({ params }: { params: Params }) {
     }
 
     const parsedLocationSlug = locationSlugValidationResult.data;
-    const location = await getLocationPublicData(parsedLocationSlug);
+    const location = await getLocationPublicDataBySlug(parsedLocationSlug);
 
     return (
         <Suspense fallback="Loading menus...">
-            <PublicMenus locationId={location.id} />
+            <PublicMenus locationId={location.id} currencyId={location.currencyId as CurrencyId} />
         </Suspense>
     );
 }

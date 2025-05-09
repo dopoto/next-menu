@@ -6,34 +6,35 @@ import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 import { Switch } from '~/components/ui/switch';
+import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { ROUTES } from '~/lib/routes';
 
-export function AddEditMenuItemForm({
-    form,
-    onSubmit,
-    locationId,
-}: {
+export function AddEditMenuItemForm(props: {
     form: UseFormReturn<z.infer<typeof menuItemFormSchema>>;
     onSubmit: (values: z.infer<typeof menuItemFormSchema>) => Promise<void>;
     locationId: LocationId;
+    currencyId: CurrencyId;
 }) {
+    const currency = CURRENCIES[props.currencyId];
+
     return (
         <div className="flex flex-col gap-6 lg:flex-row">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                    {form.formState.errors.root && (
+            <Form {...props.form}>
+                <form onSubmit={props.form.handleSubmit(props.onSubmit)} className="space-y-8">
+                    {props.form.formState.errors.root && (
                         <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
-                            {form.formState.errors.root.message}
+                            {props.form.formState.errors.root.message}
                         </div>
                     )}
 
-                    <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'name'} />
-                    <ReactHookFormField schema={menuItemFormSchema} form={form} fieldName={'description'} />
+                    <ReactHookFormField schema={menuItemFormSchema} form={props.form} fieldName={'name'} />
+
+                    <ReactHookFormField schema={menuItemFormSchema} form={props.form} fieldName={'description'} />
 
                     <FormField
-                        control={form.control}
+                        control={props.form.control}
                         name="isNew"
                         render={({ field }) => (
                             <FormItem>
@@ -46,11 +47,11 @@ export function AddEditMenuItemForm({
                     />
 
                     <FormField
-                        control={form.control}
+                        control={props.form.control}
                         name="price"
                         render={({ field }) => (
                             <FormItem>
-                                <FormLabel>Price</FormLabel>
+                                <FormLabel>Price ({currency.code})</FormLabel>
                                 <FormControl>
                                     <Input
                                         type="number"
@@ -70,7 +71,7 @@ export function AddEditMenuItemForm({
 
                     <div className="flex flex-row gap-2">
                         <Button type="submit">Save</Button>
-                        <a href={ROUTES.menuItems(locationId)}>
+                        <a href={ROUTES.menuItems(props.locationId)}>
                             <Button variant="secondary" type="button">
                                 Cancel
                             </Button>
@@ -80,11 +81,12 @@ export function AddEditMenuItemForm({
             </Form>
             <PreviewMenuItem
                 menuItem={{
-                    name: form.watch('name'),
-                    description: form.watch('description'),
-                    price: form.watch('price').toString(),
-                    isNew: form.watch('isNew'),
+                    name: props.form.watch('name'),
+                    description: props.form.watch('description'),
+                    price: props.form.watch('price').toString(),
+                    isNew: props.form.watch('isNew'),
                 }}
+                currencyId={props.currencyId}
             />
         </div>
     );

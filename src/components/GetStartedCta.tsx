@@ -2,8 +2,6 @@
 
 import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
-import { ArrowDoodleRoundUp } from '~/components/SvgIcons';
-import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { type PriceTierId } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';

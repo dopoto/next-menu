@@ -1,10 +1,19 @@
 import { auth } from '@clerk/nextjs/server';
+import { eq, sql } from 'drizzle-orm';
 import 'server-only';
-import { locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
+import { type z } from 'zod';
+import {
+    LOCATION_SLUG_LENGTH,
+    type Location,
+    type LocationId,
+    type LocationSlug,
+    type locationFormSchema,
+    locationIdSchema,
+} from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { organizations } from '~/server/db/schema';
+import { locations, organizations } from '~/server/db/schema';
 
 /**
  * Generates a random string of specified length using letters and numbers
@@ -23,10 +32,10 @@ function generateRandomSlug(length: number): string {
  * Retries with a new slug if the generated one already exists.
  * @returns A unique location slug
  */
-export async function generateUniqueLocationSlug(): Promise<string> {
+export async function generateUniqueLocationSlug(): Promise<LocationSlug> {
     while (true) {
-        // Generate an 8-character random string
-        const slug = generateRandomSlug(8);
+        // Generate a fixed-character random string
+        const slug = generateRandomSlug(LOCATION_SLUG_LENGTH);
 
         // Check if this slug already exists
         const existingLocation = await db.query.locations.findFirst({
@@ -90,7 +99,7 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
     return location;
 }
 
-export async function getLocationPublicData(locationSlug: LocationSlug): Promise<Location> {
+export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location> {
     const location = await db.query.locations.findFirst({
         where: (locations, { eq }) => eq(locations.slug, locationSlug),
     });
@@ -102,4 +111,38 @@ export async function getLocationPublicData(locationSlug: LocationSlug): Promise
     }
 
     return location;
+}
+
+export async function getLocationPublicDataById(locationId: LocationId): Promise<Location> {
+    const location = await db.query.locations.findFirst({
+        where: (locations, { eq }) => eq(locations.id, locationId),
+    });
+
+    if (!location) {
+        throw new AppError({
+            internalMessage: `Location not found for id ${locationId}.`,
+        });
+    }
+
+    return location;
+}
+
+export async function updateLocation(locationId: LocationId, data: z.infer<typeof locationFormSchema>) {
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
+
+    await db.transaction(async (tx) => {
+        const result = await tx
+            .update(locations)
+            .set({
+                name: data.locationName,
+                currencyId: data.currencyId,
+                updatedAt: sql`CURRENT_TIMESTAMP`,
+            })
+            .where(eq(locations.id, validLocation.id));
+
+        if (result.rowCount === 0) {
+            const internalMessage = `Location with ID ${locationId} not found or not authorized for update`;
+            throw new AppError({ internalMessage });
+        }
+    });
 }

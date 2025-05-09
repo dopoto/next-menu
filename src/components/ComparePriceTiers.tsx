@@ -1,9 +1,9 @@
 import { BanIcon, CircleCheckIcon } from 'lucide-react';
 import { GetStartedCta } from '~/components/GetStartedCta';
 import { PriceTierHeader } from '~/components/PriceTierHeader';
-import { PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
-import { PriceTierFlagId, priceTierFlags } from '~/domain/price-tier-flags';
-import { PriceTierId, priceTiers } from '~/domain/price-tiers';
+import { type PriceTierFeatureId, priceTierFeatures } from '~/domain/price-tier-features';
+import { type PriceTierFlagId, priceTierFlags } from '~/domain/price-tier-flags';
+import { type PriceTierId, priceTiers } from '~/domain/price-tiers';
 
 export function ComparePriceTiers(props: {
     currentPriceTierId?: PriceTierId;

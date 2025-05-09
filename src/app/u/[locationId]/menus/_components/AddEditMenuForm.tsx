@@ -7,6 +7,7 @@ import { MenuItemsManager } from '~/app/u/[locationId]/menus/_components/MenuIte
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
 import { Form } from '~/components/ui/form';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { menuFormSchema } from '~/domain/menus';
@@ -16,12 +17,14 @@ export function AddEditMenuForm({
     form,
     onSubmit,
     locationId,
+    currencyId,
     allMenuItems,
     initialItems = [],
 }: {
     form: UseFormReturn<z.infer<typeof menuFormSchema>>;
     onSubmit: (values: z.infer<typeof menuFormSchema>) => Promise<void>;
     locationId: LocationId;
+    currencyId: CurrencyId;
     allMenuItems: MenuItem[];
     initialItems?: MenuItem[];
 }) {
@@ -54,6 +57,7 @@ export function AddEditMenuForm({
                         allMenuItems={allMenuItems}
                         initialItems={initialItems}
                         onItemsChange={setItems}
+                        currencyId={currencyId}
                     />
 
                     <div className="flex flex-row gap-2">

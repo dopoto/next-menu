@@ -5,6 +5,7 @@ import {
     DndContext,
     KeyboardSensor,
     PointerSensor,
+    TouchSensor,
     useSensor,
     useSensors,
     type DragEndEvent,
@@ -22,6 +23,7 @@ import { addMenuItemAction } from '~/app/actions/addMenuItemAction';
 import { AddEditMenuItemForm } from '~/app/u/[locationId]/menu-items/_components/AddEditMenuItemForm';
 import { Button } from '~/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '~/components/ui/dialog';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { menuItemFormSchema, type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';
@@ -31,6 +33,7 @@ import { MenuItemSelector } from './MenuItemSelector';
 
 interface MenuItemsManagerProps {
     locationId: LocationId;
+    currencyId: CurrencyId;
     menuId?: number;
     allMenuItems?: MenuItem[];
     initialItems?: MenuItem[];
@@ -39,6 +42,7 @@ interface MenuItemsManagerProps {
 
 export function MenuItemsManager({
     locationId,
+    currencyId,
     allMenuItems = [],
     initialItems = [],
     onItemsChange,
@@ -48,7 +52,17 @@ export function MenuItemsManager({
     const [showSelectDialog, setShowSelectDialog] = useState(false);
 
     const sensors = useSensors(
-        useSensor(PointerSensor),
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 8,
+            },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: {
+                delay: 100,
+                tolerance: 5,
+            },
+        }),
         useSensor(KeyboardSensor, {
             coordinateGetter: sortableKeyboardCoordinates,
         }),
@@ -114,6 +128,7 @@ export function MenuItemsManager({
                             form={newMenuItemForm}
                             onSubmit={handleAddNewItem}
                             locationId={locationId}
+                            currencyId={currencyId}
                         />
                     </DialogContent>
                 </Dialog>
@@ -126,7 +141,12 @@ export function MenuItemsManager({
                         <DialogHeader>
                             <DialogTitle>Select menu item</DialogTitle>
                         </DialogHeader>
-                        <MenuItemSelector allMenuItems={allMenuItems} addedItems={items} onSelect={handleSelectItem} />
+                        <MenuItemSelector
+                            allMenuItems={allMenuItems}
+                            addedItems={items}
+                            currencyId={currencyId}
+                            onSelect={handleSelectItem}
+                        />
                     </DialogContent>
                 </Dialog>
             </div>
@@ -143,6 +163,7 @@ export function MenuItemsManager({
                                     setItems(updatedItems);
                                     onItemsChange?.(updatedItems);
                                 }}
+                                currencyId={currencyId}
                             />
                         ))}
                     </div>
