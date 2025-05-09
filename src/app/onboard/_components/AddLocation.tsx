@@ -15,7 +15,7 @@ import { Button } from '~/components/ui/button';
 import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { CURRENCIES } from '~/domain/currencies';
-import { addLocationFormSchema } from '~/domain/locations';
+import { locationFormSchema } from '~/domain/locations';
 import { type PriceTierId } from '~/domain/price-tiers';
 import { ROUTES } from '~/lib/routes';
 import { cn } from '~/lib/utils';
@@ -48,7 +48,7 @@ export const AddLocation = ({
         searchLabel: `${currency.name} ${currency.symbol}  ${currency.symbol_native}   ${currency.code}`,
     }));
 
-    const handleSubmit = async (values: z.infer<typeof addLocationFormSchema>) => {
+    const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
         const res = await onboardCreateOrganizationAction(priceTierId, stripeSessionId ?? '', slug, values);
         if (res?.message) {
             // Reloads the user's data from the Clerk API
@@ -61,8 +61,8 @@ export const AddLocation = ({
         }
     };
 
-    const addLocationForm  = useForm<z.infer<typeof addLocationFormSchema>>({
-        resolver: zodResolver(addLocationFormSchema),
+    const addLocationForm  = useForm<z.infer<typeof locationFormSchema>>({
+        resolver: zodResolver(locationFormSchema),
         defaultValues: {
             currencyId: 'USD',
             locationName: ''

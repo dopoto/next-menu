@@ -9,15 +9,15 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { CURRENCIES } from '~/domain/currencies';
-import { editLocationFormSchema } from '~/domain/locations';
+import { locationFormSchema } from '~/domain/locations';
 
 export function AddEditLocationForm(props: {
-    form: UseFormReturn<z.infer<typeof editLocationFormSchema>>;
-    onSubmit: (values: z.infer<typeof editLocationFormSchema>) => Promise<void>;
+    form: UseFormReturn<z.infer<typeof locationFormSchema>>;
+    onSubmit: (values: z.infer<typeof locationFormSchema>) => Promise<void>;
 }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (values: z.infer<typeof editLocationFormSchema>) => {
+    const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
         setIsSubmitting(true);
         try {
             await props.onSubmit({ ...values  });
@@ -49,7 +49,7 @@ export function AddEditLocationForm(props: {
                         </div>
                     )}
 
-                    <ReactHookFormField schema={editLocationFormSchema} form={props.form} fieldName={'locationName'} />
+                    <ReactHookFormField schema={locationFormSchema} form={props.form} fieldName={'locationName'} />
  
                     <FormField  
                         control={props.form.control}

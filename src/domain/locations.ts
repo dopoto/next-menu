@@ -31,7 +31,7 @@ export const addLocationFormOptions = formOptions({
     },
 });
 
-export const addLocationFormSchema = z.object({
+export const locationFormSchema = z.object({
     locationName: withMeta(
         z
             .string({
@@ -62,41 +62,7 @@ export const addLocationFormSchema = z.object({
             placeholder: 'Choose the currency name',
             description: 'The currency shown for menu items.',
         },
-    ),
-    priceTierId: PriceTierIdSchema,
-    stripeSessionId: z.string(),
+    )
 });
 
-export const editLocationFormSchema = z.object({
-    locationName: withMeta(
-        z
-            .string({
-                required_error: 'Location Name is required',
-                invalid_type_error: 'Location Name must be a string',
-            })
-            .min(2, {
-                message: 'Location Name must be 2 or more characters long',
-            })
-            .max(256, {
-                message: 'Location Name must be 256 or fewer characters long',
-            }),
-        {
-            label: 'Location name',
-            placeholder: 'My fancy restaurant',
-            description: 'The name of your location.',
-        },
-    ),
-    currencyId: withMeta(
-        z
-            .string({
-                required_error: 'Currency is required',
-            })
-            .min(3, 'Currency must be 3 characters')
-            .max(3, 'Currency must be 3 characters'),
-        {
-            label: 'Currency',
-            placeholder: 'Choose the currency name',
-            description: 'The currency shown for menu items.',
-        },
-    ),
-});
+ 

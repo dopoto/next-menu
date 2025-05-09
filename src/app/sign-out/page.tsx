@@ -7,13 +7,15 @@ export const metadata = {
     title: `${APP_CONFIG.appName} - Sign out`,
 };
 
+// TODO Sign out does not work
+
 export default async function SignOutPage() {
     return (
         <SplitScreenContainer
             mainComponent={
                 <>
                     <p>Click the button below to log out of your account.</p>
-                    <SignOutButton>
+                    <SignOutButton redirectUrl='/'>
                         <Button>Sign out</Button>
                     </SignOutButton>
                 </>

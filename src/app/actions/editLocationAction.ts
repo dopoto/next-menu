@@ -4,15 +4,15 @@ import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
-import { editLocationFormSchema, LocationId } from '~/domain/locations';
+import { locationFormSchema, LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 import { updateLocation } from '~/server/queries/locations';
 
 export const editLocationAction = async (
     locationId: LocationId, 
-    data: z.infer<typeof editLocationFormSchema>,
-): Promise<FormState<typeof editLocationFormSchema>> => {
+    data: z.infer<typeof locationFormSchema>,
+): Promise<FormState<typeof locationFormSchema>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'editLocationAction',
@@ -22,7 +22,7 @@ export const editLocationAction = async (
         },
         async () => {
             try {
-                const parsedForm = editLocationFormSchema.safeParse(data);
+                const parsedForm = locationFormSchema.safeParse(data);
                 if (!parsedForm.success) {
                     return processFormErrors(parsedForm.error, data);
                 }

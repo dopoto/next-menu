@@ -6,7 +6,7 @@ import {
     type Location,
     type LocationId,
     type LocationSlug,
-    editLocationFormSchema,
+    locationFormSchema,
     locationIdSchema,
 } from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
@@ -126,7 +126,7 @@ export async function getLocationPublicDataById(locationId: LocationId): Promise
     return location;
 }
 
-export async function updateLocation(locationId: LocationId, data: z.infer<typeof editLocationFormSchema>) {
+export async function updateLocation(locationId: LocationId, data: z.infer<typeof locationFormSchema>) {
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     await db.transaction(async (tx) => {

@@ -5,21 +5,21 @@ import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { editLocationAction } from '~/app/actions/editLocationAction';
 import { AddEditLocationForm } from '~/components/AddEditLocationForm';
-import { editLocationFormSchema } from '~/domain/locations';
+import { locationFormSchema } from '~/domain/locations';
 import { type Location } from '~/domain/locations';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 
 export function EditLocation(props: { location: Location }) {    
-    const form = useForm<z.infer<typeof editLocationFormSchema>>({
-        resolver: zodResolver(editLocationFormSchema),
+    const form = useForm<z.infer<typeof locationFormSchema>>({
+        resolver: zodResolver(locationFormSchema),
         defaultValues: {
             currencyId: props.location.currencyId,
             locationName: props.location.name
         },
     });
 
-    async function onSubmit(values: z.infer<typeof editLocationFormSchema>) {
+    async function onSubmit(values: z.infer<typeof locationFormSchema>) {
         const res = await editLocationAction(props.location.id, values);
         if (res.status === 'success') {
             toast({ title: 'Location updated' });

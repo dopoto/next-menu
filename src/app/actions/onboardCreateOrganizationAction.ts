@@ -8,7 +8,7 @@ import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';
 import { z } from 'zod';
 import { CookieKey } from '~/domain/cookies';
-import { addLocationFormSchema } from '~/domain/locations';
+import { locationFormSchema } from '~/domain/locations';
 import { PriceTierId, PriceTierIdSchema } from '~/domain/price-tiers';
 import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
@@ -50,7 +50,7 @@ export const onboardCreateOrganizationAction = async (
     priceTierId: PriceTierId, 
     stripeSessionId: string, 
     slug: string, 
-    data: z.infer<typeof addLocationFormSchema>,
+    data: z.infer<typeof locationFormSchema>,
 ) => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
