@@ -16,7 +16,7 @@ export function AddEditMenuItemForm(props: {
     onSubmit: (values: z.infer<typeof menuItemFormSchema>) => Promise<void>;
     locationId: LocationId;
     currencyId: CurrencyId;
-}) {    
+}) {
     const currency = CURRENCIES[props.currencyId];
 
     return (

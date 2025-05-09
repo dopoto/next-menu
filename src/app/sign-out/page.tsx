@@ -15,7 +15,7 @@ export default async function SignOutPage() {
             mainComponent={
                 <>
                     <p>Click the button below to log out of your account.</p>
-                    <SignOutButton redirectUrl='/'>
+                    <SignOutButton redirectUrl="/">
                         <Button>Sign out</Button>
                     </SignOutButton>
                 </>

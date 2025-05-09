@@ -1,9 +1,9 @@
 import { SoupIcon, WineIcon } from 'lucide-react';
 import { Badge } from '~/components/ui/badge';
-import { CURRENCIES, CurrencyId } from '~/domain/currencies';
+import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 
-export function PublicMenuItem(props: { item: Partial<MenuItem>, currencyId: CurrencyId }) {
+export function PublicMenuItem(props: { item: Partial<MenuItem>; currencyId: CurrencyId }) {
     const { name, description, price, isNew, type } = props.item;
     const currency = CURRENCIES[props.currencyId];
     return (
@@ -21,7 +21,9 @@ export function PublicMenuItem(props: { item: Partial<MenuItem>, currencyId: Cur
                     )}
                 </div>
                 <div className="text-xs">{description}</div>
-            <div >{price} {currency.symbol}</div>
+                <div>
+                    {price} {currency.symbol}
+                </div>
             </div>
         </div>
     );

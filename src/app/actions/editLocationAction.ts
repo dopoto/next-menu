@@ -1,16 +1,16 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
-import { headers } from 'next/headers';
 import { revalidatePath } from 'next/cache';
+import { headers } from 'next/headers';
 import { type z } from 'zod';
-import { locationFormSchema, LocationId } from '~/domain/locations';
+import { locationFormSchema, type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 import { updateLocation } from '~/server/queries/locations';
 
 export const editLocationAction = async (
-    locationId: LocationId, 
+    locationId: LocationId,
     data: z.infer<typeof locationFormSchema>,
 ): Promise<FormState<typeof locationFormSchema>> => {
     'use server';
@@ -28,7 +28,7 @@ export const editLocationAction = async (
                 }
 
                 await updateLocation(locationId, parsedForm.data);
-                
+
                 revalidatePath(`/u/${locationId}/location`);
                 // TODO revalidate public path
 

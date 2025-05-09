@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Input } from '~/components/ui/input';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 
 interface MenuItemSelectorProps {

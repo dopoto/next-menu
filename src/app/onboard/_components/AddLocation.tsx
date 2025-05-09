@@ -4,7 +4,7 @@ import { useUser } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { onboardCreateOrganizationAction } from '~/app/actions/onboardCreateOrganizationAction';
 import { AddEditLocationForm } from '~/components/AddEditLocationForm';
 import { OverviewCard } from '~/components/OverviewCard';
@@ -16,20 +16,17 @@ import { cn } from '~/lib/utils';
 export const AddLocation = ({
     priceTierId,
     stripeSessionId,
-     
     className,
 }: {
     priceTierId: PriceTierId;
     stripeSessionId?: string;
-     
     className?: string;
 }) => {
-    
     const { user } = useUser();
     const router = useRouter();
 
     const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
-        const res = await onboardCreateOrganizationAction(priceTierId, stripeSessionId ?? '',  values);
+        const res = await onboardCreateOrganizationAction(priceTierId, stripeSessionId ?? '', values);
         if (res?.message) {
             // Reloads the user's data from the Clerk API
             await user?.reload();
@@ -52,7 +49,7 @@ export const AddLocation = ({
 
     return (
         <div className={cn('flex w-full flex-col gap-6', className)}>
-            <div>Now, let's create your default location - the restaurant, bar or pub you will manage digital menus for.</div>
+            <div>{`Now, let's create your default location - the restaurant, bar or pub you will manage digital menus for.`}</div>
             <OverviewCard
                 variant={'form'}
                 title={'Add a location'}

@@ -20,7 +20,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '~/components/ui/dropdown-menu';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
 import { toast } from '~/hooks/use-toast';

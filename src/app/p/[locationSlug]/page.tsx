@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { PublicMenus } from '~/app/p/[locationSlug]/_components/PublicMenus';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { locationSlugSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicDataBySlug } from '~/server/queries/locations';

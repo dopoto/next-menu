@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';

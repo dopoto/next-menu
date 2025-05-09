@@ -1,6 +1,6 @@
 import { DeviceMockup } from '~/components/DeviceMockup';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { type Menu } from '~/domain/menus';
 
 export function PreviewMenu(props: { menuItem: Partial<Menu>; currencyId: CurrencyId }) {

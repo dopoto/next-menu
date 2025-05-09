@@ -6,11 +6,11 @@ import { auth, clerkClient } from '@clerk/nextjs/server';
 import * as Sentry from '@sentry/nextjs';
 import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { CookieKey } from '~/domain/cookies';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { locationFormSchema } from '~/domain/locations';
-import { PriceTierId, PriceTierIdSchema } from '~/domain/price-tiers';
+import { type PriceTierId } from '~/domain/price-tiers';
 import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
@@ -20,33 +20,6 @@ import { createOrganization } from '~/server/queries/organizations';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
-
-const formDataSchema = z.object({
-    locationName: z
-        .string({
-            required_error: 'Location Name is required',
-            invalid_type_error: 'Location Name must be a string',
-        })
-        .min(2, {
-            message: 'Location Name must be 2 or more characters long',
-        })
-        .max(256, {
-            message: 'Location Name must be 256 or fewer characters long',
-        }),
-    priceTierId: PriceTierIdSchema,
-    slug: z
-        .string({
-            required_error: 'Slug is required',
-            invalid_type_error: 'Slug must be a string',
-        })
-        .min(2, {
-            message: 'Slug must be 2 or more characters long',
-        })
-        .max(50, {
-            message: 'Slug must be 50 or fewer characters long',
-        }),
-    stripeSessionId: z.string(),
-});
 
 export const onboardCreateOrganizationAction = async (
     priceTierId: PriceTierId,

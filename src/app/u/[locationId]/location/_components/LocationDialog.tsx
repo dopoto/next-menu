@@ -14,8 +14,6 @@ export function LocationDialog(props: { locationName: string; children: ReactNod
         }
     };
 
-     
-
     return (
         <Dialog open={true} onOpenChange={handleOpenChange}>
             <DialogContent className="!max-w-[95vw] !w-[95vw] !h-[95vh] !max-h-[95vh] !pt-4 flex flex-col">
@@ -33,9 +31,7 @@ export function LocationDialog(props: { locationName: string; children: ReactNod
                     </DialogTitle>
                     <DialogDescription> </DialogDescription>
                 </DialogHeader>
-                <div className="flex-1 overflow-auto">
-                    {props.children}
-                </div>
+                <div className="flex-1 overflow-auto">{props.children}</div>
             </DialogContent>
         </Dialog>
     );

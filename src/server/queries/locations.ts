@@ -1,13 +1,13 @@
 import { auth } from '@clerk/nextjs/server';
 import { eq, sql } from 'drizzle-orm';
 import 'server-only';
-import { z } from 'zod';
+import { type z } from 'zod';
 import {
     LOCATION_SLUG_LENGTH,
     type Location,
     type LocationId,
     type LocationSlug,
-    locationFormSchema,
+    type locationFormSchema,
     locationIdSchema,
 } from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';

@@ -5,17 +5,16 @@ import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
 import { editLocationAction } from '~/app/actions/editLocationAction';
 import { AddEditLocationForm } from '~/components/AddEditLocationForm';
-import { locationFormSchema } from '~/domain/locations';
-import { type Location } from '~/domain/locations';
+import { locationFormSchema, type Location } from '~/domain/locations';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 
-export function EditLocation(props: { location: Location }) {    
+export function EditLocation(props: { location: Location }) {
     const form = useForm<z.infer<typeof locationFormSchema>>({
         resolver: zodResolver(locationFormSchema),
         defaultValues: {
             currencyId: props.location.currencyId,
-            locationName: props.location.name
+            locationName: props.location.name,
         },
     });
 
@@ -28,5 +27,5 @@ export function EditLocation(props: { location: Location }) {
         }
     }
 
-    return <AddEditLocationForm form={form} onSubmit={onSubmit} />;    
+    return <AddEditLocationForm form={form} onSubmit={onSubmit} />;
 }

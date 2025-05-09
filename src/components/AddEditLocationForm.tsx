@@ -1,10 +1,10 @@
 'use client';
- 
+
 import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
-import { SelectControl, SelectControlOptions } from '~/components/SelectControl';
+import { SelectControl, type SelectControlOptions } from '~/components/SelectControl';
 import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
@@ -20,7 +20,7 @@ export function AddEditLocationForm(props: {
     const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
         setIsSubmitting(true);
         try {
-            await props.onSubmit({ ...values  });
+            await props.onSubmit({ ...values });
         } finally {
             setIsSubmitting(false);
         }
@@ -30,7 +30,11 @@ export function AddEditLocationForm(props: {
         value: code,
         label: (
             <span className="flex text-xs gap-1.5 items-center">
-                <Badge variant={'secondary'} className="border-1 border-gray-300 flex justify-between" style={{ width: '70px' }}>
+                <Badge
+                    variant={'secondary'}
+                    className="border-1 border-gray-300 flex justify-between"
+                    style={{ width: '70px' }}
+                >
                     <span className="font-light">{currency.code}</span> {currency.symbol_native}
                 </Badge>
                 <span>{currency.name}</span>
@@ -50,18 +54,18 @@ export function AddEditLocationForm(props: {
                     )}
 
                     <ReactHookFormField schema={locationFormSchema} form={props.form} fieldName={'locationName'} />
- 
-                    <FormField  
+
+                    <FormField
                         control={props.form.control}
                         name="currencyId"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Currency</FormLabel>
-                                <SelectControl 
-                                    id="currencyId" 
-                                    options={options} 
-                                    value={field.value ? options.find(opt => opt.value === field.value) : undefined} 
-                                    onChange={(newValue) => field.onChange(newValue?.value)} 
+                                <SelectControl
+                                    id="currencyId"
+                                    options={options}
+                                    value={field.value ? options.find((opt) => opt.value === field.value) : undefined}
+                                    onChange={(newValue) => field.onChange(newValue?.value)}
                                 />
                                 <FormDescription>The currency used by menus in this location.</FormDescription>
                                 <FormMessage />
@@ -72,7 +76,7 @@ export function AddEditLocationForm(props: {
                     <div className="flex flex-row gap-2">
                         <Button type="submit" disabled={isSubmitting}>
                             {isSubmitting ? 'Saving...' : 'Save'}
-                        </Button>                         
+                        </Button>
                     </div>
                 </form>
             </Form>
