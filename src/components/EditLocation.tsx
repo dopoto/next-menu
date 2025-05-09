@@ -1,34 +1,32 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { type z } from 'zod';
+import { editLocationAction } from '~/app/actions/editLocationAction';
 import { AddEditLocationForm } from '~/components/AddEditLocationForm';
-import { locationFormSchema } from '~/domain/locations';
-import { type LocationId, locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
+import { editLocationFormSchema } from '~/domain/locations';
+import { type Location } from '~/domain/locations';
+import { toast } from '~/hooks/use-toast';
+import { handleReactHookFormErrors } from '~/lib/form-state';
 
-export function EditLocation(props: { location: Location }) {
-    const router = useRouter();
-    const form = useForm<z.infer<typeof locationFormSchema>>({
-        resolver: zodResolver(locationFormSchema),
+export function EditLocation(props: { location: Location }) {    
+    const form = useForm<z.infer<typeof editLocationFormSchema>>({
+        resolver: zodResolver(editLocationFormSchema),
         defaultValues: {
             currencyId: props.location.currencyId,
             locationName: props.location.name
         },
     });
 
-    async function onSubmit(values: z.infer<typeof locationFormSchema>) {
-        // TODO
-        // const res = await editMenuAction(props.menu.id, values);
-        // if (res.status === 'success') {
-        //     toast({ title: 'Menu updated' });
-        //     router.push(ROUTES.menus(props.locationId));
-        // } else {
-        //     handleReactHookFormErrors(form, res);
-        // }
+    async function onSubmit(values: z.infer<typeof editLocationFormSchema>) {
+        const res = await editLocationAction(props.location.id, values);
+        if (res.status === 'success') {
+            toast({ title: 'Location updated' });
+        } else {
+            handleReactHookFormErrors(form, res);
+        }
     }
 
-    return <AddEditLocationForm form={form} onSubmit={onSubmit} />;
-    
+    return <AddEditLocationForm form={form} onSubmit={onSubmit} />;    
 }

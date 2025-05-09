@@ -1,5 +1,4 @@
 'use client';
-
  
 import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
@@ -10,22 +9,18 @@ import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
 import { CURRENCIES } from '~/domain/currencies';
-import { locationFormSchema } from '~/domain/locations';
+import { editLocationFormSchema } from '~/domain/locations';
 
-export function AddEditLocationForm({
-    form,
-    onSubmit,
-}: {
-    form: UseFormReturn<z.infer<typeof locationFormSchema>>;
-    onSubmit: (values: z.infer<typeof locationFormSchema>) => Promise<void>;
+export function AddEditLocationForm(props: {
+    form: UseFormReturn<z.infer<typeof editLocationFormSchema>>;
+    onSubmit: (values: z.infer<typeof editLocationFormSchema>) => Promise<void>;
 }) {
-     console.log(JSON.stringify(form))
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
+    const handleSubmit = async (values: z.infer<typeof editLocationFormSchema>) => {
         setIsSubmitting(true);
         try {
-            await onSubmit({ ...values  });
+            await props.onSubmit({ ...values  });
         } finally {
             setIsSubmitting(false);
         }
@@ -46,18 +41,18 @@ export function AddEditLocationForm({
 
     return (
         <div className="flex flex-col gap-6 lg:flex-row">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-                    {form.formState.errors.root && (
+            <Form {...props.form}>
+                <form onSubmit={props.form.handleSubmit(handleSubmit)} className="space-y-8">
+                    {props.form.formState.errors.root && (
                         <div className="rounded border border-red-300 bg-red-50 p-4 text-red-500">
-                            {form.formState.errors.root.message}
+                            {props.form.formState.errors.root.message}
                         </div>
                     )}
 
-                    <ReactHookFormField schema={locationFormSchema} form={form} fieldName={'locationName'} />
+                    <ReactHookFormField schema={editLocationFormSchema} form={props.form} fieldName={'locationName'} />
  
                     <FormField  
-                        control={form.control}
+                        control={props.form.control}
                         name="currencyId"
                         render={({ field }) => (
                             <FormItem>
@@ -77,8 +72,7 @@ export function AddEditLocationForm({
                     <div className="flex flex-row gap-2">
                         <Button type="submit" disabled={isSubmitting}>
                             {isSubmitting ? 'Saving...' : 'Save'}
-                        </Button>
-                         
+                        </Button>                         
                     </div>
                 </form>
             </Form>

@@ -31,7 +31,7 @@ export default async function LocationPage(props: { params: Params }) {
                 <TabsContent value="overview">
                     <LocationDetails id={validLocationId} />
                 </TabsContent>
-                <TabsContent value="edit">
+                <TabsContent value="edit" className="p-1 pt-6">
                     <EditLocation location={validLocation} />
                 </TabsContent>
             </Tabs>

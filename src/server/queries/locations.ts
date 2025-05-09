@@ -1,10 +1,18 @@
 import { auth } from '@clerk/nextjs/server';
+import { eq, sql } from 'drizzle-orm';
 import 'server-only';
-import { type LocationId, locationIdSchema, type Location, type LocationSlug } from '~/domain/locations';
+import { z } from 'zod';
+import {
+    type Location,
+    type LocationId,
+    type LocationSlug,
+    editLocationFormSchema,
+    locationIdSchema,
+} from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { organizations } from '~/server/db/schema';
+import { locations, organizations } from '~/server/db/schema';
 
 /**
  * Generates a random string of specified length using letters and numbers
@@ -116,4 +124,25 @@ export async function getLocationPublicDataById(locationId: LocationId): Promise
     }
 
     return location;
+}
+
+export async function updateLocation(locationId: LocationId, data: z.infer<typeof editLocationFormSchema>) {
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
+
+    await db.transaction(async (tx) => {
+        // Update menu details
+        const result = await tx
+            .update(locations)
+            .set({
+                name: data.locationName,
+                currencyId: data.currencyId,
+                updatedAt: sql`CURRENT_TIMESTAMP`,
+            })
+            .where(eq(locations.id, validLocation.id));
+
+        if (result.rowCount === 0) {
+            const internalMessage = `Location with ID ${locationId} not found or not authorized for update`;
+            throw new AppError({ internalMessage });
+        }
+    });
 }
