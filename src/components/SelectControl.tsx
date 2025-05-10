@@ -1,5 +1,6 @@
 import { type ReactNode } from 'react';
-import Select from 'react-select';
+import Select, { StylesConfig } from 'react-select';
+import { cn } from '~/lib/utils';
 
 export type SelectControlOptions = Array<{ value: string; label: ReactNode; searchLabel?: string }>;
 
@@ -25,6 +26,27 @@ export function SelectControl({
     className,
     ...props
 }: SelectControlProps) {
+    const customStyles: StylesConfig = {
+        control: (provided, state) => ({
+            ...provided,
+            backgroundColor: 'var(--background)',
+            borderColor: 'var(--border)',
+            '&:hover': {
+                borderColor: 'var(--border)',
+            },
+            zIndex: 99,
+        }),
+        menu: (provided) => ({
+            ...provided,
+            backgroundColor: 'var(--background)',
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused ? 'var(--accent)' : 'var(--background)',
+            color: state.isFocused ? 'var(--accent-foreground)' : 'inherit',
+        }),
+    };
+
     return (
         <Select
             options={options}
@@ -35,11 +57,21 @@ export function SelectControl({
             onChange={onChange}
             placeholder={placeholder}
             isDisabled={isDisabled}
-            className={className}
+            className={cn('rounded-md', className)}
             filterOption={(option, inputValue) => {
                 const searchLabel = (option.data as SelectControlOptions[0]).searchLabel?.toLowerCase() ?? '';
                 return searchLabel.includes(inputValue.toLowerCase());
             }}
+            styles={customStyles}
+            theme={(theme) => ({
+                ...theme,
+                colors: {
+                    ...theme.colors,
+                    neutral0: 'hsl(var(--background))',
+                    neutral20: 'hsl(var(--border))',
+                    neutral30: 'hsl(var(--border))',
+                },
+            })}
             {...props}
         />
     );
