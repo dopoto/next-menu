@@ -21,7 +21,6 @@ import { ROUTES } from '~/lib/routes';
 
 export default function MenuCard(props: { locationId: LocationId; item: Menu }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    // const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -56,11 +55,6 @@ export default function MenuCard(props: { locationId: LocationId; item: Menu }) 
                                 <span>Edit</span>
                             </DropdownMenuItem>
                         </a>
-                        {/* TODO */}
-                        {/* <DropdownMenuItem onClick={() => setShowPreviewDialog(true)}>
-                            <EyeIcon />
-                            <span>Preview</span>
-                        </DropdownMenuItem> */}
                         <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
                             <Trash2Icon className="text-red-500" />
                             <span className="text-red-500">Delete</span>

@@ -1,6 +1,5 @@
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
-import { PreviewMenuItem } from '~/app/u/[locationId]/menu-items/_components/PreviewMenuItem';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
@@ -79,15 +78,6 @@ export function AddEditMenuItemForm(props: {
                     </div>
                 </form>
             </Form>
-            <PreviewMenuItem
-                menuItem={{
-                    name: props.form.watch('name'),
-                    description: props.form.watch('description'),
-                    price: props.form.watch('price').toString(),
-                    isNew: props.form.watch('isNew'),
-                }}
-                currencyId={props.currencyId}
-            />
         </div>
     );
 }

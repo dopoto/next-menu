@@ -45,7 +45,7 @@ export default async function Layout({ params, children }: { params: Params; chi
     });
 
     return (
-        <div className="mx-auto max-w-7xl lg:px-8">
+        <div className="mx-auto max-w-7xl lg:px-8  ">
             <header className="w-full max-w-6xl mx-auto px-4 pt-2 md:pt-4">
                 <div className="relative">
                     <div className="w-full rounded-2xl overflow-hidden">

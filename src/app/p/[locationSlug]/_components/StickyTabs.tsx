@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useTheme } from '~/components/ThemeProvider';
 
 export interface Section {
     id: string;
@@ -9,6 +10,13 @@ export interface Section {
 }
 
 export default function StickyTabs(props: { sections: Section[] }) {
+    const { setTheme } = useTheme();
+
+    // Set the theme to light mode for this route
+    useEffect(() => {
+        setTheme('light');
+    }, [setTheme]);
+
     const { sections } = props;
 
     const [activeTab, setActiveTab] = useState(sections[0]?.id ?? '');

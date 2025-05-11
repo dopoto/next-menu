@@ -277,47 +277,6 @@ html {
     .blue-link {
         @apply cursor-pointer text-blue-500 underline;
     }
-    /* 
-    .force-light {
-        color-scheme: light;
-
-        
-        --tw-bg-opacity: 1;
-        --tw-text-opacity: 1;
-
-        
-        background-color: var(--color-white, #ffffff);
-        color: var(--color-black, #000000);
-
-        & * {
-            background-color: var(--color-white, #ffffff) !important;
-            color: var(--color-black, #000000) !important;
-        }
-    } */
-
-    .force-light {
-        color-scheme: light;
-    }
-
-    .force-light :where([class*='bg-']) {
-        background-color: var(--color-white, #ffffff) !important;
-    }
-
-    .force-light :where([class*='text-']) {
-        color: var(--color-black, #000000) !important;
-    }
-
-    .force-light :where([class*='border-']) {
-        border-color: var(--color-gray-300, #d1d5db) !important;
-    }
-
-    .force-light :where(.dark\:bg-gray-900) {
-        background-color: var(--color-white, #ffffff) !important;
-    }
-
-    .force-light :where(.dark\:text-white) {
-        color: var(--color-black, #000000) !important;
-    }
 }
 
 html {
