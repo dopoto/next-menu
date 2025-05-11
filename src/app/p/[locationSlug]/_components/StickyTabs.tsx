@@ -12,7 +12,6 @@ export interface Section {
 export default function StickyTabs(props: { sections: Section[] }) {
     const { setTheme } = useTheme();
 
-    // Set the theme to light mode for this route
     useEffect(() => {
         setTheme('light');
     }, [setTheme]);
