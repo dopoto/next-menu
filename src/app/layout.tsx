@@ -21,7 +21,7 @@ export default function RootLayout(props: { children: ReactNode; modal: ReactNod
             <body>
                 <PostHogProvider>
                     <Providers>
-                        <main className="h-full w-full">{props.children}</main>
+                        <main className="h-[100dvh] w-full">{props.children}</main>
                         {props.modal}
                         <div id="modal-root" />
                         <Toaster />

@@ -1,4 +1,3 @@
-import { formOptions } from '@tanstack/react-form/nextjs';
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { withMeta } from '~/lib/form-validation';
@@ -21,17 +20,6 @@ export type AddLocationFormData = {
     priceTierId: string;
     stripeSessionId: string;
 };
-
-/**
- * @see https://tanstack.com/form/v1/docs/framework/react/guides/ssr#using-tanstack-form-in-a-nextjs-app-router.
- */
-export const addLocationFormOptions = formOptions({
-    defaultValues: {
-        locationName: '',
-        priceTierId: '',
-        stripeSessionId: '',
-    },
-});
 
 export const locationFormSchema = z.object({
     locationName: withMeta(

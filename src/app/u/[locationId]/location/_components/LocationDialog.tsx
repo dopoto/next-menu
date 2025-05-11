@@ -16,7 +16,7 @@ export function LocationDialog(props: { locationName: string; children: ReactNod
 
     return (
         <Dialog open={true} onOpenChange={handleOpenChange}>
-            <DialogContent className="!max-w-[95vw] !w-[95vw] !h-[95vh] !max-h-[95vh] !pt-4 flex flex-col">
+            <DialogContent className="!max-w-[95vw] !w-[95vw] !h-[95dvh] !max-h-[95dvh] !pt-4 flex flex-col">
                 <DialogHeader>
                     <DialogTitle>
                         <div className="flex w-full gap-2">

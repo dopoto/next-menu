@@ -72,12 +72,6 @@ export function AddEditMenuForm({
                     </div>
                 </form>
             </Form>
-            {/* TODO */}
-            {/* <PreviewMenu
-                menuItem={{
-                    name: form.watch('name'),
-                }}
-            /> */}
         </div>
     );
 }

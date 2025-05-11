@@ -1,9 +1,8 @@
 'use client';
 
-import { EllipsisVerticalIcon, EyeIcon, PencilIcon, Trash2Icon } from 'lucide-react';
+import { EllipsisVerticalIcon, PencilIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { deleteMenuItemAction } from '~/app/actions/deleteMenuItemAction';
-import { PreviewMenuItem } from '~/app/u/[locationId]/menu-items/_components/PreviewMenuItem';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { Button } from '~/components/ui/button';
 import {
@@ -28,7 +27,6 @@ import { ROUTES } from '~/lib/routes';
 
 export default function MenuItemCard(props: { locationId: LocationId; currencyId: CurrencyId; item: MenuItem }) {
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-    const [showPreviewDialog, setShowPreviewDialog] = useState(false);
 
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -73,10 +71,6 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
                                     <span>Edit</span>
                                 </DropdownMenuItem>
                             </a>
-                            <DropdownMenuItem onClick={() => setShowPreviewDialog(true)}>
-                                <EyeIcon />
-                                <span>Preview</span>
-                            </DropdownMenuItem>
                             <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
                                 <Trash2Icon className="text-red-500" />
                                 <span className="text-red-500">Delete</span>
@@ -85,24 +79,6 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
                     </DropdownMenu>
                 </div>
             </div>
-
-            <Dialog open={showPreviewDialog} onOpenChange={setShowPreviewDialog}>
-                <DialogContent className="bg-blend-color">
-                    <DialogHeader>
-                        <DialogTitle>Preview Menu Item</DialogTitle>
-                        <DialogDescription></DialogDescription>
-                    </DialogHeader>
-                    <PreviewMenuItem
-                        menuItem={{
-                            name: props.item.name,
-                            description: props.item.description,
-                            price: props.item.price.toString(),
-                            isNew: props.item.isNew,
-                        }}
-                        currencyId={props.currencyId}
-                    />
-                </DialogContent>
-            </Dialog>
 
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <DialogContent>

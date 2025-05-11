@@ -29,15 +29,15 @@ export function AddEditLocationForm(props: {
     const options: SelectControlOptions = Object.entries(CURRENCIES).map(([code, currency]) => ({
         value: code,
         label: (
-            <span className="flex text-xs gap-1.5 items-center">
+            <span className="flex text-xs gap-2 items-center">
                 <Badge
                     variant={'secondary'}
-                    className="border-1 border-gray-300 flex justify-between"
+                    className="border-1 border-gray-300 dark:border-gray-600 flex justify-between"
                     style={{ width: '70px' }}
                 >
                     <span className="font-light">{currency.code}</span> {currency.symbol_native}
                 </Badge>
-                <span>{currency.name}</span>
+                <span className="text-primary">{currency.name}</span>
             </span>
         ),
         searchLabel: `${currency.name} ${currency.symbol}  ${currency.symbol_native}   ${currency.code}`,

@@ -8,7 +8,7 @@ export function PublicMenuItem(props: { item: Partial<MenuItem>; currencyId: Cur
     const currency = CURRENCIES[props.currencyId];
     return (
         <div className="flex w-full flex-row items-center pt-2 pb-2 text-sm gap-2">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100">
+            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800">
                 {type === 'dish' ? <SoupIcon /> : <WineIcon />}
             </div>
             <div className="flex flex-col">
