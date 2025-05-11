@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react';
-import Select, { StylesConfig } from 'react-select';
+import Select, { type StylesConfig } from 'react-select';
 import { cn } from '~/lib/utils';
 
 export type SelectControlOptions = Array<{ value: string; label: ReactNode; searchLabel?: string }>;
@@ -27,7 +27,7 @@ export function SelectControl({
     ...props
 }: SelectControlProps) {
     const customStyles: StylesConfig = {
-        control: (provided, state) => ({
+        control: (provided) => ({
             ...provided,
             backgroundColor: 'var(--background)',
             borderColor: 'var(--border)',
@@ -54,7 +54,11 @@ export function SelectControl({
             inputId={id}
             name={name}
             value={value}
-            onChange={onChange}
+            onChange={(newValue) => {
+                if (onChange) {
+                    onChange(newValue as { value: string; label: ReactNode } | null);
+                }
+            }}
             placeholder={placeholder}
             isDisabled={isDisabled}
             className={cn('rounded-md', className)}
