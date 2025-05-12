@@ -1,5 +1,6 @@
 import { SoupIcon, WineIcon } from 'lucide-react';
 import { Badge } from '~/components/ui/badge';
+import { Button } from '~/components/ui/button';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 
@@ -22,7 +23,10 @@ export function PublicMenuItem(props: { item: Partial<MenuItem>; currencyId: Cur
                 </div>
                 <div className="text-xs">{description}</div>
                 <div>
-                    {price} {currency.symbol}
+                    {price} {currency.symbol}{' '}
+                    <Button variant="link" className="text-xs">
+                        Pay
+                    </Button>
                 </div>
             </div>
         </div>
