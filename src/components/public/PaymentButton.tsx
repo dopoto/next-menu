@@ -88,7 +88,7 @@ function PaymentRequestButton({ clientSecret, merchantName, amount, onSuccess, o
         });
 
         return () => {
-            pr.removeAllListeners();
+            pr.off('paymentmethod');
         };
     }, [stripe, elements, amount, clientSecret, merchantName, onError, onSuccess]);
 

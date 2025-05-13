@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { PostHog } from 'posthog-node';
+import { PublicFooter } from '~/app/p/[locationSlug]/_components/PublicFooter';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import type { AnalyticsEventId } from '~/domain/analytics';
 import { CookieKey } from '~/domain/cookies';
@@ -75,6 +76,8 @@ export default async function Layout({ params, children }: { params: Params; chi
             </header>
 
             <div className="max-w-6xl mx-auto p-4">{children}</div>
+
+            <PublicFooter />
 
             <AnalyticsEventSender
                 eventId="publicLocationVisit"
