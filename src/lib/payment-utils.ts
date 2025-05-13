@@ -24,8 +24,9 @@ export async function createPaymentIntent(item: MenuItem, merchantStripeAccountI
     const applicationFeeAmount = calculateAppFee(amountInCents);
     return stripe.paymentIntents.create(
         {
-            amount: amountInCents,            currency: 'usd',
-            payment_method_types: ['card'], // Start with just card payments, add more after enabling them in Stripe Dashboard
+            amount: amountInCents,
+            currency: 'usd',
+            payment_method_types: ['card'], // Digital wallets will be handled by the Payment Request Button
             application_fee_amount: applicationFeeAmount,
             metadata: {
                 menuItemId: item.id,

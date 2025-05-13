@@ -1,14 +1,12 @@
 'use client';
 
-import { Elements, useElements, useStripe } from '@stripe/react-stripe-js';
-import { loadStripe, type PaymentRequest } from '@stripe/stripe-js';
+import { Elements, PaymentElement, PaymentRequestButtonElement, useElements, useStripe } from '@stripe/react-stripe-js';
+import { loadStripe, type PaymentRequest, StripeElementsOptions } from '@stripe/stripe-js';
 import { useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { env } from '~/env';
 
-const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, {
-    betas: ['payment_element_beta_1'],
-});
+const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export interface PaymentButtonProps {
     clientSecret: string;
@@ -22,7 +20,9 @@ function PaymentRequestButton({ clientSecret, merchantName, amount, onSuccess, o
     const stripe = useStripe();
     const elements = useElements();
     const [paymentRequest, setPaymentRequest] = useState<PaymentRequest | null>(null);
+    const [showCardForm, setShowCardForm] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
+
     useEffect(() => {
         if (!stripe || !elements) return;
 
@@ -39,11 +39,25 @@ function PaymentRequestButton({ clientSecret, merchantName, amount, onSuccess, o
             requestPayerEmail: true,
         });
 
-        pr.canMakePayment().then((result) => {
-            if (result) {
-                setPaymentRequest(pr);
-            }
-        });
+        pr.canMakePayment()
+            .then((result) => {
+                console.log('Payment Request capability check result:', result);
+                if (result) {
+                    console.log('Available payment methods:', {
+                        applePay: result.applePay,
+                        googlePay: result.googlePay,
+                    });
+                    setPaymentRequest(pr);
+                } else {
+                    console.log('No digital wallet payment methods available');
+                    setShowCardForm(true);
+                }
+            })
+            .catch((error) => {
+                console.error('Error checking payment capability:', error);
+                setShowCardForm(true);
+            });
+
         pr.on('paymentmethod', async (e) => {
             try {
                 setIsProcessing(true);
@@ -61,22 +75,10 @@ function PaymentRequestButton({ clientSecret, merchantName, amount, onSuccess, o
                 if (error) {
                     e.complete('fail');
                     onError(new Error(error.message));
-                    return;
+                } else {
+                    e.complete('success');
+                    onSuccess();
                 }
-
-                e.complete('success');
-                if (paymentIntent.status === 'requires_action') {
-                    if (!stripe) {
-                        throw new Error('Stripe not initialized');
-                    }
-                    const { error: confirmError } = await stripe.confirmCardPayment(clientSecret);
-                    if (confirmError) {
-                        onError(new Error(confirmError.message));
-                        return;
-                    }
-                }
-
-                onSuccess();
             } catch (err) {
                 e.complete('fail');
                 onError(err instanceof Error ? err : new Error('Payment failed'));
@@ -84,37 +86,66 @@ function PaymentRequestButton({ clientSecret, merchantName, amount, onSuccess, o
                 setIsProcessing(false);
             }
         });
-        return () => {
-            // Clean up event listeners if needed
-            pr.off('paymentmethod');
-        };
-    }, [stripe, elements, clientSecret, merchantName, amount, onSuccess, onError]);
 
-    if (!paymentRequest) {
-        return null;
-    }
+        return () => {
+            pr.removeAllListeners();
+        };
+    }, [stripe, elements, amount, clientSecret, merchantName, onError, onSuccess]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!stripe || !elements) return;
+
+        setIsProcessing(true);
+        try {
+            const { error } = await stripe.confirmPayment({
+                elements,
+                confirmParams: {
+                    return_url: window.location.href,
+                },
+            });
+
+            if (error) {
+                onError(new Error(error.message));
+            } else {
+                onSuccess();
+            }
+        } catch (err) {
+            onError(err instanceof Error ? err : new Error('Payment failed'));
+        } finally {
+            setIsProcessing(false);
+        }
+    };
 
     return (
-        <Button onClick={() => paymentRequest.show()} variant="link" className="text-xs" disabled={isProcessing}>
-            Pay with Digital Wallet
-        </Button>
+        <div>
+            {paymentRequest && (
+                <div className="mb-4">
+                    <PaymentRequestButtonElement options={{ paymentRequest }} className="w-full" />
+                    <div className="mt-4 text-center text-sm text-gray-500">or pay with card below</div>
+                </div>
+            )}
+
+            {showCardForm && (
+                <form onSubmit={handleSubmit}>
+                    <PaymentElement />
+                    <Button type="submit" disabled={isProcessing || !stripe || !elements} className="mt-4 w-full">
+                        {isProcessing ? 'Processing...' : 'Pay now'}
+                    </Button>
+                </form>
+            )}
+        </div>
     );
 }
 
 export function PaymentButton(props: PaymentButtonProps) {
+    const options: StripeElementsOptions = {
+        clientSecret: props.clientSecret,
+        appearance: { theme: 'stripe' as const },
+    };
+
     return (
-        <Elements
-            stripe={stripePromise}
-            options={{
-                clientSecret: props.clientSecret,
-                appearance: {
-                    theme: 'stripe',
-                    variables: {
-                        colorPrimary: '#0099ff',
-                    },
-                },
-            }}
-        >
+        <Elements stripe={stripePromise} options={options}>
             <PaymentRequestButton {...props} />
         </Elements>
     );
