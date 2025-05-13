@@ -6,12 +6,17 @@ import { useEffect, useState } from 'react';
 import { Button } from '~/components/ui/button';
 import { env } from '~/env';
 
-const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
+// Initialize Stripe with the platform's publishable key
+const initStripe = (merchantStripeAccountId: string) =>
+    loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY, {
+        stripeAccount: merchantStripeAccountId,
+    });
 
 export interface PaymentButtonProps {
     clientSecret: string;
     merchantName: string;
     amount: number;
+    merchantStripeAccountId: string;
     onSuccess: () => void;
     onError: (error: Error) => void;
 }
@@ -145,7 +150,7 @@ export function PaymentButton(props: PaymentButtonProps) {
     };
 
     return (
-        <Elements stripe={stripePromise} options={options}>
+        <Elements stripe={initStripe(props.merchantStripeAccountId)} options={options}>
             <PaymentRequestButton {...props} />
         </Elements>
     );

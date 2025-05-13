@@ -26,6 +26,7 @@ export type PaymentStatus =
 export interface PaymentIntentResponse {
     clientSecret: string;
     paymentIntentId: string;
+    merchantStripeAccountId: string;
 }
 
 export interface PaymentErrorResponse {

@@ -10,9 +10,11 @@ export async function createCartPaymentIntent(
     locationId: number,
 ): Promise<PaymentIntentResponse> {
     try {
-        // TODO validate location
+        if (!locationId) {
+            throw new Error('Location ID is required');
+        }
 
-        //TODO actual id:
+        // TODO
         const merchantStripeAccountId = 'acct_1RNsp3CEmU5ANDgp';
 
         // Verify that the Connect account is properly set up
@@ -34,10 +36,10 @@ export async function createCartPaymentIntent(
         if (!paymentIntent.client_secret) {
             throw new Error('No client secret received from Stripe');
         }
-
         return {
             clientSecret: paymentIntent.client_secret,
             paymentIntentId: paymentIntent.id,
+            merchantStripeAccountId: merchantStripeAccountId,
         };
     } catch (error) {
         console.error('Failed to create cart payment intent:', error);

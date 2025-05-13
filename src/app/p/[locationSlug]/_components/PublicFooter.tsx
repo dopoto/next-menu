@@ -1,7 +1,5 @@
 'use client';
 
-import { Elements } from '@stripe/react-stripe-js';
-import { loadStripe } from '@stripe/stripe-js';
 import { useAtom } from 'jotai';
 import { LoaderIcon, MinusIcon, PlusIcon, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
@@ -12,10 +10,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/co
 import { cartAtom } from '~/domain/cart';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
-import { env } from '~/env';
 import { useToast } from '~/hooks/use-toast';
-
-const stripePromise = loadStripe(env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
 export function PublicFooter(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
@@ -23,6 +18,7 @@ export function PublicFooter(props: { currencyId: CurrencyId; locationId: Locati
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
+    const [merchantStripeAccountId, setMerchantStripeAccountId] = useState<string | null>(null);
     const { toast } = useToast();
 
     const totalAmount = cart.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0') * item.quantity, 0);
@@ -38,12 +34,12 @@ export function PublicFooter(props: { currencyId: CurrencyId; locationId: Locati
                 .filter((item) => item.quantity > 0),
         );
     };
-
     const handleCheckout = async () => {
         setIsLoading(true);
         try {
             const paymentIntent = await createCartPaymentIntent(cart, props.locationId);
             setClientSecret(paymentIntent.clientSecret);
+            setMerchantStripeAccountId(paymentIntent.merchantStripeAccountId);
             setIsCheckingOut(true);
         } catch (err) {
             toast({
@@ -139,23 +135,16 @@ export function PublicFooter(props: { currencyId: CurrencyId; locationId: Locati
                                     {totalAmount.toFixed(2)} {currency.symbol}
                                 </span>
                             </div>
-                            {isCheckingOut && clientSecret ? (
+                            {isCheckingOut && clientSecret && merchantStripeAccountId ? (
                                 <div className="w-full">
-                                    <Elements
-                                        stripe={stripePromise}
-                                        options={{
-                                            clientSecret,
-                                            appearance: { theme: 'stripe' },
-                                        }}
-                                    >
-                                        <PaymentButton
-                                            clientSecret={clientSecret}
-                                            merchantName="Menu"
-                                            amount={totalAmount}
-                                            onSuccess={handlePaymentSuccess}
-                                            onError={handlePaymentError}
-                                        />
-                                    </Elements>
+                                    <PaymentButton
+                                        clientSecret={clientSecret}
+                                        merchantName="Menu"
+                                        amount={totalAmount}
+                                        merchantStripeAccountId={merchantStripeAccountId}
+                                        onSuccess={handlePaymentSuccess}
+                                        onError={handlePaymentError}
+                                    />
                                 </div>
                             ) : (
                                 <Button className="w-full" disabled={isLoading} onClick={handleCheckout}>
