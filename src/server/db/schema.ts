@@ -3,7 +3,8 @@
 
 import { sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { CURRENCIES } from '../../domain/currencies';
+import { MENU_MODES, MenuModeId } from '~/domain/menu-modes';
+import { CURRENCIES, CurrencyId } from '../../domain/currencies';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -40,16 +41,20 @@ export const users = createTable(
     () => [{ roleCheck: sql`CHECK (role IN ('orgowner', 'admin', 'user'))` }],
 );
 
+const defaultCurrency: CurrencyId = 'USD';
+const defaultMenuMode: MenuModeId = 'noninteractive';
+
 export const locations = createTable(
     'location',
     {
         id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
         name: varchar('name', { length: 50 }).notNull().unique(),
         slug: varchar('slug', { length: 50 }).notNull().unique(),
-        currencyId: varchar('currency_id', { length: 3 }).notNull().default('USD'),
+        currencyId: varchar('currency_id', { length: 3 }).notNull().default(defaultCurrency),
         orgId: integer('org_id')
             .notNull()
             .references(() => organizations.id),
+        menuMode: varchar('menu_mode', { length: 20 }).notNull().default(defaultMenuMode),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
@@ -59,6 +64,7 @@ export const locations = createTable(
         {
             nameIndex: index('location_name_idx').on(example.name),
             currencyCheck: sql`CHECK (currency_id IN (${sql.join(Object.keys(CURRENCIES))}))`,
+            menuModeCheck: sql`CHECK (menu_mode IN (${sql.join(Object.keys(MENU_MODES))}))`,
         },
     ],
 );
