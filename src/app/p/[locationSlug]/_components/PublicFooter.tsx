@@ -3,7 +3,7 @@
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { useAtom } from 'jotai';
-import { LoaderIcon, ShoppingCart } from 'lucide-react';
+import { LoaderIcon, MinusIcon, PlusIcon, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { createCartPaymentIntent } from '~/app/actions/createCartPaymentIntent';
 import { PaymentButton } from '~/components/public/PaymentButton';
@@ -77,7 +77,7 @@ export function PublicFooter(props: { currencyId: CurrencyId; locationId: Locati
     return (
         <Sheet>
             <SheetTrigger asChild>
-                <Button variant="default" className="fixed bottom-4 right-4 h-16 w-16 rounded-full">
+                <Button variant="default" className="fixed bottom-4 left-4 h-16 w-16 rounded-full">
                     <ShoppingCart className="h-6 w-6" />
                     {cart.length > 0 && (
                         <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
@@ -97,7 +97,7 @@ export function PublicFooter(props: { currencyId: CurrencyId; locationId: Locati
                 ) : (
                     <>
                         <div className="flex flex-col space-y-4">
-                            {/* {cart.map((item) => (
+                            {cart.map((item) => (
                                 <div key={item.menuItem.id} className="flex items-center justify-between">
                                     <div>
                                         <p className="font-medium">{item.menuItem.name}</p>
@@ -109,21 +109,27 @@ export function PublicFooter(props: { currencyId: CurrencyId; locationId: Locati
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            onClick={() => updateItemQuantity(item.menuItem.id, -1)}
+                                            onClick={() =>
+                                                item.menuItem.id !== undefined &&
+                                                updateItemQuantity(item.menuItem.id, -1)
+                                            }
                                         >
-                                            <Minus className="h-4 w-4" />
+                                            <MinusIcon className="h-4 w-4" />
                                         </Button>
                                         <span className="w-8 text-center">{item.quantity}</span>
                                         <Button
                                             variant="outline"
                                             size="icon"
-                                            onClick={() => updateItemQuantity(item.menuItem.id, 1)}
+                                            onClick={() =>
+                                                item.menuItem.id !== undefined &&
+                                                updateItemQuantity(item.menuItem.id, 1)
+                                            }
                                         >
-                                            <Plus className="h-4 w-4" />
+                                            <PlusIcon className="h-4 w-4" />
                                         </Button>
                                     </div>
                                 </div>
-                            ))} */}
+                            ))}
                         </div>
 
                         <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
