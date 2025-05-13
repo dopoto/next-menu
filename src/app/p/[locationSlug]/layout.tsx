@@ -77,7 +77,8 @@ export default async function Layout({ params, children }: { params: Params; chi
 
             <div className="max-w-6xl mx-auto p-4">{children}</div>
 
-            <PublicFooter />
+            {/* TODO */}
+            <PublicFooter currencyId={'USD'} locationId={location.id} />
 
             <AnalyticsEventSender
                 eventId="publicLocationVisit"

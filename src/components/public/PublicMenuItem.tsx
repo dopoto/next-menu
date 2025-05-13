@@ -1,20 +1,34 @@
 'use client';
 
+import { useAtom } from 'jotai';
 import { PlusIcon, SoupIcon, WineIcon } from 'lucide-react';
-import { useState } from 'react';
 import { Badge } from '~/components/ui/badge';
+import { cartAtom } from '~/domain/cart';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
-import { type PaymentIntentResponse } from '~/domain/payments';
+import { toast } from '~/hooks/use-toast';
 
-export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; merchantStripeAccountId: string }) {
+export function PublicMenuItem(props: { item: Partial<MenuItem>; currencyId: CurrencyId }) {
     const { name, description, price, isNew, type } = props.item;
     const currency = CURRENCIES[props.currencyId];
-    const [paymentIntent, setPaymentIntent] = useState<PaymentIntentResponse | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
+    const [cart, setCart] = useAtom(cartAtom);
 
-    const addToOrder = () => {};
+    const addToOrder = () => {
+        const existingItem = cart.find((item) => item.menuItem.id === props.item.id);
+        if (existingItem) {
+            setCart(
+                cart.map((item) =>
+                    item.menuItem.id === props.item.id ? { ...item, quantity: item.quantity + 1 } : item,
+                ),
+            );
+        } else {
+            setCart([...cart, { menuItem: props.item, quantity: 1 }]);
+        }
+        toast({
+            title: 'Added to cart',
+            description: `${name} has been added to your order.`,
+        });
+    };
 
     return (
         <div className="flex w-full flex-row items-center pt-2 pb-2 text-sm gap-2">
@@ -33,51 +47,10 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
                 <div className="text-xs">{description}</div>{' '}
                 <div>
                     {price} {currency.symbol}
-                    {/* {paymentIntent ? (
-                        <PaymentButton
-                            clientSecret={paymentIntent.clientSecret}
-                            merchantName={name!}
-                            amount={parseFloat(price)}
-                            onSuccess={() => {
-                                setPaymentIntent(null);
-                                setError(null);
-                            }}
-                            onError={(err) => setError(err.message)}
-                        />
-                    ) : (
-                        <Button
-                            variant="link"
-                            className="text-xs"
-                            disabled={isLoading}
-                            onClick={async () => {
-                                try {
-                                    setIsLoading(true);
-                                    setError(null);
-                                    const intent = await createMenuItemPaymentIntent(
-                                        props.item,
-                                        props.merchantStripeAccountId,
-                                    );
-                                    setPaymentIntent(intent);
-                                } catch (err) {
-                                    setError(err instanceof Error ? err.message : 'Payment failed');
-                                } finally {
-                                    setIsLoading(false);
-                                }
-                            }}
-                        >
-                            {isLoading ? (
-                                <>
-                                    <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
-                                    Initializing payment...
-                                </>
-                            ) : (
-                                'Pay'
-                            )}
-                        </Button>
-                    )} */}
                 </div>
-                {error && <div className="text-xs text-red-500 mt-1">{error}</div>}
-                <PlusIcon onClick={addToOrder} />
+            </div>
+            <div className="ml-auto">
+                <PlusIcon className="cursor-pointer hover:text-blue-500 transition-colors" onClick={addToOrder} />
             </div>
         </div>
     );

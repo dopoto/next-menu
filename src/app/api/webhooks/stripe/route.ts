@@ -7,11 +7,11 @@ import { AppError } from '~/lib/error-utils.server';
 import { processFailedPayment, processSuccessfulPayment } from '~/lib/payment-utils';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
-const webhookSecret = env.STRIPE_WEBHOOK_SECRET;
+const webhookSecret = 'TODO'; //env.STRIPE_WEBHOOK_SECRET;
 
 export async function POST(request: Request) {
     const body = await request.text();
-    const headersList = headers();
+    const headersList = await headers();
     const signature = headersList.get('stripe-signature');
 
     if (!signature) {

@@ -7,14 +7,7 @@ export async function PublicMenu(props: { name: string; currencyId: CurrencyId; 
         <>
             <h1>{props.name}</h1>
             {props.items?.map((item) => {
-                return (
-                    <PublicMenuItem
-                        key={item.id}
-                        item={item}
-                        currencyId={props.currencyId}
-                        merchantStripeAccountId={'acct_1RNsp3CEmU5ANDgp'}
-                    />
-                );
+                return <PublicMenuItem key={item.id} item={item} currencyId={props.currencyId} />;
             })}
         </>
     );
