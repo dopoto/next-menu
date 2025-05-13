@@ -1,18 +1,15 @@
 'use server';
 
-import { type MenuItem } from '~/domain/menu-items';
 import { type PaymentIntentResponse } from '~/domain/payments';
 import { createPaymentIntent, verifyConnectAccount } from '~/lib/payment-utils';
 
 export async function createMenuItemPaymentIntent(
-    item: MenuItem,
+    amount: number,
     merchantStripeAccountId: string,
 ): Promise<PaymentIntentResponse> {
     try {
-        if (!item || !item.price || !item.name) {
-            throw new Error('Invalid menu item data');
-        }
         if (!merchantStripeAccountId || !merchantStripeAccountId.startsWith('acct_')) {
+            //TODO
             throw new Error('Invalid merchant Stripe account');
         }
 
@@ -22,7 +19,7 @@ export async function createMenuItemPaymentIntent(
             throw new Error('Merchant account is not fully set up for payments yet');
         }
 
-        const paymentIntent = await createPaymentIntent(item, merchantStripeAccountId);
+        const paymentIntent = await createPaymentIntent(amount, merchantStripeAccountId);
 
         if (!paymentIntent.client_secret) {
             throw new Error('No client secret received from Stripe');

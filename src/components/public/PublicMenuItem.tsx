@@ -1,14 +1,11 @@
 'use client';
 
-import { LoaderIcon, SoupIcon, WineIcon } from 'lucide-react';
+import { PlusIcon, SoupIcon, WineIcon } from 'lucide-react';
 import { useState } from 'react';
-import { createMenuItemPaymentIntent } from '~/app/actions/createMenuItemPaymentIntent';
 import { Badge } from '~/components/ui/badge';
-import { Button } from '~/components/ui/button';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 import { type PaymentIntentResponse } from '~/domain/payments';
-import { PaymentButton } from './PaymentButton';
 
 export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; merchantStripeAccountId: string }) {
     const { name, description, price, isNew, type } = props.item;
@@ -16,6 +13,9 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
     const [paymentIntent, setPaymentIntent] = useState<PaymentIntentResponse | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+
+    const addToOrder = () => {};
+
     return (
         <div className="flex w-full flex-row items-center pt-2 pb-2 text-sm gap-2">
             <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800">
@@ -32,8 +32,8 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
                 </div>
                 <div className="text-xs">{description}</div>{' '}
                 <div>
-                    {price} {currency.symbol}{' '}
-                    {paymentIntent ? (
+                    {price} {currency.symbol}
+                    {/* {paymentIntent ? (
                         <PaymentButton
                             clientSecret={paymentIntent.clientSecret}
                             merchantName={name!}
@@ -74,9 +74,10 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
                                 'Pay'
                             )}
                         </Button>
-                    )}
+                    )} */}
                 </div>
                 {error && <div className="text-xs text-red-500 mt-1">{error}</div>}
+                <PlusIcon onClick={addToOrder} />
             </div>
         </div>
     );

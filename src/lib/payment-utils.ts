@@ -1,5 +1,4 @@
 import Stripe from 'stripe';
-import { type MenuItem } from '~/domain/menu-items';
 import { env } from '~/env';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
@@ -14,24 +13,20 @@ export function formatStripeAmount(price: number): number {
     return Math.round(price * 100);
 }
 
-export async function createPaymentIntent(item: MenuItem, merchantStripeAccountId: string) {
-    // Convert price string to number and format for Stripe
-    const priceNum = parseFloat(item.price);
-    if (isNaN(priceNum)) {
-        throw new Error('Invalid price format');
-    }
+export async function createPaymentIntent(priceNum: number, merchantStripeAccountId: string) {
     const amountInCents = formatStripeAmount(priceNum);
     const applicationFeeAmount = calculateAppFee(amountInCents);
     return stripe.paymentIntents.create(
         {
             amount: amountInCents,
-            currency: 'usd',
+            currency: 'usd', //TODO
             payment_method_types: ['card'], // Digital wallets will be handled by the Payment Request Button
             application_fee_amount: applicationFeeAmount,
             metadata: {
-                menuItemId: item.id,
-                menuItemName: item.name,
-                type: item.type,
+                // TODO Orderid
+                // menuItemId: item.id,
+                // menuItemName: item.name,
+                // type: item.type,
                 merchantId: merchantStripeAccountId,
             },
         },
