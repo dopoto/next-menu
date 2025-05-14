@@ -15,17 +15,8 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
     const [cart, setCart] = useAtom(cartAtom);
 
     const addToOrder = () => {
-        const existingItem = cart.find((item) => item.menuItem.id === props.item.id);
-        if (existingItem) {
-            setCart(
-                cart.map((item) =>
-                    item.menuItem.id === props.item.id ? { ...item, quantity: item.quantity + 1 } : item,
-                ),
-            );
-        } else {
-            const initialStatus: CartItem['status'] = 'draft';
-            setCart([...cart, { menuItem: props.item, quantity: 1, status: initialStatus }]);
-        }
+        const initialStatus: CartItem['status'] = 'draft';
+        setCart([...cart, { menuItem: props.item, status: initialStatus }]);
         toast({
             title: 'Added to cart',
             description: `${name} has been added to your order.`,

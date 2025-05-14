@@ -1,7 +1,7 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { LoaderIcon, MinusIcon, PlusIcon, ShoppingCart } from 'lucide-react';
+import { LoaderIcon, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { createCartPaymentIntent } from '~/app/actions/createCartPaymentIntent';
 import { PaymentButton } from '~/components/public/PaymentButton';
@@ -21,19 +21,8 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
     const [merchantStripeAccountId, setMerchantStripeAccountId] = useState<string | null>(null);
     const { toast } = useToast();
 
-    const totalAmount = cart.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0') * item.quantity, 0);
+    const totalAmount = cart.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
-    const updateItemQuantity = (itemId: number, delta: number) => {
-        setCart(
-            cart
-                .map((item) => {
-                    if (item.menuItem.id !== itemId) return item;
-                    const newQuantity = item.quantity + delta;
-                    return newQuantity > 0 ? { ...item, quantity: newQuantity } : item;
-                })
-                .filter((item) => item.quantity > 0),
-        );
-    };
     const handleCheckout = async () => {
         setIsLoading(true);
         try {
@@ -77,7 +66,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                     <ShoppingCart className="h-6 w-6" />
                     {cart.length > 0 && (
                         <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
-                            {cart.reduce((sum, item) => sum + item.quantity, 0)}
+                            {cart.reduce((sum, item) => sum + Number(item.menuItem.price), 0)}
                         </span>
                     )}
                 </Button>
@@ -98,31 +87,11 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                                     <div>
                                         <p className="font-medium">{item.menuItem.name}</p>
                                         <p className="text-muted-foreground text-sm">
-                                            {item.menuItem.price} {currency.symbol} × {item.quantity}
+                                            {item.menuItem.price} {currency.symbol}
                                         </p>
                                     </div>
                                     <div className="flex items-center space-x-2">
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            onClick={() =>
-                                                item.menuItem.id !== undefined &&
-                                                updateItemQuantity(item.menuItem.id, -1)
-                                            }
-                                        >
-                                            <MinusIcon className="h-4 w-4" />
-                                        </Button>
-                                        <span className="w-8 text-center">{item.quantity}</span>
-                                        <Button
-                                            variant="outline"
-                                            size="icon"
-                                            onClick={() =>
-                                                item.menuItem.id !== undefined &&
-                                                updateItemQuantity(item.menuItem.id, 1)
-                                            }
-                                        >
-                                            <PlusIcon className="h-4 w-4" />
-                                        </Button>
+                                        <span className="w-8 text-center">1</span>
                                     </div>
                                 </div>
                             ))}

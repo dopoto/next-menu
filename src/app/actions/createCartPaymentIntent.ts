@@ -28,7 +28,7 @@ export async function createCartPaymentIntent(
         const totalAmount = cartItems.reduce((sum, item) => {
             const matchedItem = menuItems.find((mi) => mi.id === item.menuItem.id);
             const matchedItemPrice = matchedItem ? matchedItem.price : '0'; //TODO handle?
-            return sum + parseFloat(matchedItemPrice) * item.quantity;
+            return sum + parseFloat(matchedItemPrice);
         }, 0);
 
         const paymentIntent = await createPaymentIntent(totalAmount, merchantStripeAccountId);
