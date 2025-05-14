@@ -3,13 +3,13 @@
 import { useAtom } from 'jotai';
 import { PlusIcon, SoupIcon, WineIcon } from 'lucide-react';
 import { Badge } from '~/components/ui/badge';
-import { cartAtom } from '~/domain/cart';
+import { cartAtom, type CartItem } from '~/domain/cart';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 import { MenuModeId } from '~/domain/menu-modes';
 import { toast } from '~/hooks/use-toast';
 
-export function PublicMenuItem(props: { item: Partial<MenuItem>; currencyId: CurrencyId; menuMode: MenuModeId }) {
+export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; menuMode: MenuModeId }) {
     const { name, description, price, isNew, type } = props.item;
     const currency = CURRENCIES[props.currencyId];
     const [cart, setCart] = useAtom(cartAtom);
@@ -23,7 +23,8 @@ export function PublicMenuItem(props: { item: Partial<MenuItem>; currencyId: Cur
                 ),
             );
         } else {
-            setCart([...cart, { menuItem: props.item, quantity: 1 }]);
+            const initialStatus: CartItem['status'] = 'draft';
+            setCart([...cart, { menuItem: props.item, quantity: 1, status: initialStatus }]);
         }
         toast({
             title: 'Added to cart',

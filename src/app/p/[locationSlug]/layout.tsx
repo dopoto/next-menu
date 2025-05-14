@@ -1,7 +1,8 @@
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { PostHog } from 'posthog-node';
-import { PublicFooter } from '~/app/p/[locationSlug]/_components/PublicFooter';
+import { PublicFooterOrderOnlyMode } from '~/app/p/[locationSlug]/_components/PublicFooterOrderOnlyMode';
+import { PublicFooterPrepaidMode } from '~/app/p/[locationSlug]/_components/PublicFooterPrepaidMode';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import type { AnalyticsEventId } from '~/domain/analytics';
 import { CookieKey } from '~/domain/cookies';
@@ -77,8 +78,10 @@ export default async function Layout({ params, children }: { params: Params; chi
 
             <div className="max-w-6xl mx-auto p-4">{children}</div>
 
-            {/* TODO */}
-            <PublicFooter currencyId={'USD'} locationId={location.id} />
+            {location.menuMode === 'prepaid' && <PublicFooterPrepaidMode currencyId={'USD'} locationId={location.id} />}
+            {location.menuMode === 'orderonly' && (
+                <PublicFooterOrderOnlyMode currencyId={'USD'} locationId={location.id} />
+            )}
 
             <AnalyticsEventSender
                 eventId="publicLocationVisit"

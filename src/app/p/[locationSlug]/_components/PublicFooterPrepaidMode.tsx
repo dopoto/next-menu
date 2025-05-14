@@ -12,7 +12,7 @@ import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
 
-export function PublicFooter(props: { currencyId: CurrencyId; locationId: LocationId }) {
+export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
     const [cart, setCart] = useAtom(cartAtom);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
