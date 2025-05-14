@@ -1,9 +1,14 @@
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
+import { CurrencyId } from '~/domain/currencies';
 import { withMeta } from '~/lib/form-validation';
 import { type locations } from '~/server/db/schema';
+import { type MenuModeId } from './menu-modes';
 
-export type Location = InferSelectModel<typeof locations>;
+export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'currencyId'> & {
+    menuMode: MenuModeId;
+    currencyId: CurrencyId;
+};
 export type NewLocation = InferInsertModel<typeof locations>;
 
 export const locationIdSchema = z.coerce.number().positive().int();
