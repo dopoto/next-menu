@@ -1,7 +1,15 @@
 'use client';
 
 import { useState } from 'react';
-import { Drawer, DrawerClose, DrawerContent, DrawerFooter, DrawerTrigger } from '~/components/ui/drawer';
+import {
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerFooter,
+    DrawerHeader,
+    DrawerTitle,
+    DrawerTrigger,
+} from '~/components/ui/drawer';
 import { cn } from '~/lib/utils';
 
 interface FooterDrawerProps {
@@ -35,6 +43,9 @@ export function PublicFooterDrawer({
                 </div>
             </DrawerTrigger>
             <DrawerContent className={cn('max-h-[80vh]', contentClassName)}>
+                <DrawerHeader className="sr-only">
+                    <DrawerTitle>Your order</DrawerTitle>
+                </DrawerHeader>
                 <div className={cn('mx-auto w-full max-w-md', className)}>
                     <div className="px-4 pb-4">{children}</div>
                     <DrawerFooter>
