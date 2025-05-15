@@ -15,10 +15,11 @@ import { LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
 
 function OrderSummaryItem(props: { quantity: number; description: string; children?: React.ReactNode }) {
+    const textColor = props.quantity > 0 ? 'text-black' : 'text-gray-500';
     return (
         <div className="flex flex-col items-center-safe">
-            <div className="text-7xl font-bold tracking-tighter">{props.quantity}</div>
-            <div className="text-tiny truncate antialiased text-gray-400 uppercase">{props.description}</div>
+            <div className={`text-7xl font-bold tracking-tighter ${textColor}`}>{props.quantity}</div>
+            <div className={`text-sm truncate antialiased uppercase ${textColor}`}>{props.description}</div>
             <div className="pt-3 pb-3 h-23">{props.children}</div>
         </div>
     );
@@ -82,7 +83,7 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
             {draftItems.length > 0 && (
                 <Button onClick={processOrder} disabled={isLoading}>
-                    {isLoading ? 'Ordering...' : 'Order now!'}
+                    {isLoading ? 'Ordering...' : order.orderId ? 'Add to order' : 'Order now!'}
                 </Button>
             )}
         </OrderSummaryItem>
