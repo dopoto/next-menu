@@ -2,6 +2,7 @@
 
 import { useAtom } from 'jotai';
 import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
 import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
@@ -43,7 +44,7 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
 
             const res = await placeOrderAction(order);
             if (res.status === 'success') {
-                const orderId = res.orderId;
+                const orderId = res.fields?.orderId;
                 toast({
                     title: 'Order placed successfully',
                     description: `Your order number is ${orderId}`,
@@ -89,7 +90,11 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
         </OrderSummaryItem>
     );
     const inPreparationItemsSummary = (
-        <OrderSummaryItem quantity={inPreparationItems.length} description={'In preparation'} />
+        <OrderSummaryItem quantity={inPreparationItems.length} description={'In preparation'}>
+            {inPreparationItems.length > 0 && (
+                <Image src="/images/Stampede.gif" alt="Hero banner" width={140} height={18} />
+            )}
+        </OrderSummaryItem>
     );
     const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />;
 

@@ -9,10 +9,19 @@ export type FieldErrors<TSchema extends z.ZodType> = {
     [K in keyof z.infer<TSchema>]?: string[];
 };
 
-type SuccessResult = {
-    orderId: any;
+type SuccessResult<TReturnShape = undefined> = {
     status: 'success';
+    fields?: TReturnShape;
 };
+
+/**
+ * Generic form state type that works with any Zod schema
+ * TSchema is a Zod schema that defines the form's shape
+ * TFields is an optional type for the fields returned on success
+ */
+export type FormState<TSchema extends z.ZodType, TSuccessReturnShape = undefined> =
+    | SuccessResult<TSuccessReturnShape>
+    | ErrorResult<TSchema>;
 
 type ErrorResult<TSchema extends z.ZodType> = {
     status: 'error';
@@ -21,11 +30,11 @@ type ErrorResult<TSchema extends z.ZodType> = {
     rootError?: string;
 };
 
-/**
- * Generic form state type that works with any Zod schema
- * TSchema is a Zod schema that defines the form's shape
- */
-export type FormState<TSchema extends z.ZodType> = SuccessResult | ErrorResult<TSchema>;
+// /**
+//  * Generic form state type that works with any Zod schema
+//  * TSchema is a Zod schema that defines the form's shape
+//  */
+// export type FormState<TSchema extends z.ZodType> = SuccessResult | ErrorResult<TSchema>;
 
 /**
  * Helper function to process Zod validation errors into field errors
