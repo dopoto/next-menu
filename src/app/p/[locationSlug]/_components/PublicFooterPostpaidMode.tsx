@@ -36,7 +36,7 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
         try {
             setIsLoading(true);
 
-            const { orderId } = await placeOrderAction(order.items, props.locationId);
+            const { orderId } = await placeOrderAction(order);
 
             setOrder((prevOrder) => {
                 return {

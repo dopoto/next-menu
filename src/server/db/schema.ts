@@ -150,7 +150,7 @@ export const orders = createTable('order', {
     updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
 });
 
-const defaultOrderStatus: OrderItemStatus = 'draft';
+const defaultOrderItemStatus: OrderItemStatus = 'draft';
 
 export const orderItems = createTable(
     'order_item',
@@ -159,7 +159,10 @@ export const orderItems = createTable(
         orderId: integer('order_id')
             .notNull()
             .references(() => orders.id),
-        status: varchar('status', { length: 10 }).notNull().default(defaultOrderStatus),
+        menuItemId: integer('menu_item_id')
+            .notNull()
+            .references(() => menuItems.id),
+        status: varchar('status', { length: 10 }).notNull().default(defaultOrderItemStatus),
         createdAt: timestamp('created_at', { withTimezone: true })
             .default(sql`CURRENT_TIMESTAMP`)
             .notNull(),
