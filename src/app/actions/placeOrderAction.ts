@@ -37,7 +37,7 @@ export const placeOrderAction = async (
 
                 // TODO: revalidatePath(ROUTES.menus(parsedForm.data.locationId));
                 // TODO revalidate public path
-                return { status: 'success' as const, orderId: order.id };
+                return { status: 'success' as const, fields: { orderId: order.id } };
             } catch (error) {
                 if (error instanceof AppError) {
                     return {
