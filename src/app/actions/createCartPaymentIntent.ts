@@ -1,12 +1,12 @@
 'use server';
 
-import { CartItem } from '~/domain/cart';
+import { PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
 import { type PaymentIntentResponse } from '~/domain/payments';
 import { createPaymentIntent, verifyConnectAccount } from '~/lib/payment-utils';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 
 export async function createCartPaymentIntent(
-    cartItems: CartItem[],
+    cartItems: PublicOrderItem[],
     locationId: number,
 ): Promise<PaymentIntentResponse> {
     try {

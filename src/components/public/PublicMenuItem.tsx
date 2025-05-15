@@ -2,8 +2,8 @@
 
 import { useAtom } from 'jotai';
 import { PlusIcon, SoupIcon, WineIcon } from 'lucide-react';
+import { orderAtom, type PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
 import { Badge } from '~/components/ui/badge';
-import { cartAtom, type CartItem } from '~/domain/cart';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 import { MenuModeId } from '~/domain/menu-modes';
@@ -12,11 +12,17 @@ import { toast } from '~/hooks/use-toast';
 export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; menuMode: MenuModeId }) {
     const { name, description, price, isNew, type } = props.item;
     const currency = CURRENCIES[props.currencyId];
-    const [cart, setCart] = useAtom(cartAtom);
+    const [, setOrder] = useAtom(orderAtom);
 
     const addToOrder = () => {
-        const initialStatus: CartItem['status'] = 'draft';
-        setCart([...cart, { menuItem: props.item, status: initialStatus }]);
+        const initialStatus: PublicOrderItem['status'] = 'draft';
+        setOrder((prevOrder) => {
+            return {
+                ...prevOrder,
+                items: [...prevOrder.items, { menuItem: props.item, status: initialStatus }],
+            };
+        });
+
         toast({
             title: 'Added to cart',
             description: `${name} has been added to your order.`,

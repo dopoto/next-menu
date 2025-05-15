@@ -4,29 +4,29 @@ import { useAtom } from 'jotai';
 import { LoaderIcon, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { createCartPaymentIntent } from '~/app/actions/createCartPaymentIntent';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
 import { PaymentButton } from '~/components/public/PaymentButton';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet';
-import { cartAtom } from '~/domain/cart';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
 
 export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
-    const [cart, setCart] = useAtom(cartAtom);
+    const [order, setOrder] = useAtom(orderAtom);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [merchantStripeAccountId, setMerchantStripeAccountId] = useState<string | null>(null);
     const { toast } = useToast();
 
-    const totalAmount = cart.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
+    const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
     const handleCheckout = async () => {
         setIsLoading(true);
         try {
-            const paymentIntent = await createCartPaymentIntent(cart, props.locationId);
+            const paymentIntent = await createCartPaymentIntent(order.items, props.locationId);
             setClientSecret(paymentIntent.clientSecret);
             setMerchantStripeAccountId(paymentIntent.merchantStripeAccountId);
             setIsCheckingOut(true);
@@ -45,7 +45,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
             title: 'Success',
             description: 'Payment completed successfully!',
         });
-        setCart([]); // Clear cart
+        //setOrder( );
         setIsCheckingOut(false);
     };
 
@@ -57,16 +57,16 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
         setIsCheckingOut(false);
     };
 
-    console.log(JSON.stringify(cart, null, 2));
+    console.log(JSON.stringify(order, null, 2));
 
     return (
         <Sheet>
             <SheetTrigger asChild>
                 <Button variant="default" className="fixed bottom-4 left-4 h-16 w-16 rounded-full">
                     <ShoppingCart className="h-6 w-6" />
-                    {cart.length > 0 && (
+                    {order.items.length > 0 && (
                         <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
-                            {cart.reduce((sum, item) => sum + Number(item.menuItem.price), 0)}
+                            {order.items.reduce((sum, item) => sum + Number(item.menuItem.price), 0)}
                         </span>
                     )}
                 </Button>
@@ -75,14 +75,14 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                 <SheetHeader>
                     <SheetTitle>Your Order</SheetTitle>
                 </SheetHeader>
-                {cart.length === 0 ? (
+                {order.items.length === 0 ? (
                     <div className="flex h-full items-center justify-center">
                         <p className="text-muted-foreground">Your cart is empty</p>
                     </div>
                 ) : (
                     <>
                         <div className="flex flex-col space-y-4">
-                            {cart.map((item) => (
+                            {order.items.map((item) => (
                                 <div key={item.menuItem.id} className="flex items-center justify-between">
                                     <div>
                                         <p className="font-medium">{item.menuItem.name}</p>
