@@ -1,12 +1,15 @@
 'use client';
 
 import { useAtom } from 'jotai';
+import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
 import { useState } from 'react';
 import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
 import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
+import { Labeled } from '~/components/Labeled';
 import { Button } from '~/components/ui/button';
+import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
@@ -90,8 +93,11 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
     const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />;
 
     const collapsedContent = (
-        <div className="flex flex-col w-full h-full ">
-            <div className="bg-accent p-2">Your order {order.orderId}</div>
+        <div className="flex flex-col w-full h-full p-3">
+            <div className="flex flex-row justify-between">
+                <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                <ChevronsUpIcon />
+            </div>
             <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">
                 <div className="flex-1">{draftItemsSummary}</div>
                 <div className="flex-1">{inPreparationItemsSummary}</div>
@@ -102,9 +108,14 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
 
     return (
         <PublicFooterDrawer collapsedContent={collapsedContent}>
-            <div className="flex flex-col w-full h-full p-3 ">
-                <div className="text-left  p-2 text-xl ">Your order {order.orderId}</div>
-                <div className="flex flex-col w-full h-full gap-4  ">
+            <div className="flex flex-col w-full h-full p-3">
+                <div className="flex flex-row justify-between">
+                    <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                    <DrawerClose>
+                        <ChevronsDownIcon />
+                    </DrawerClose>
+                </div>
+                <div className="flex flex-col w-full h-full gap-4 pt-4">
                     <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
                         <div className="w-45">{draftItemsSummary}</div>
                         <div>

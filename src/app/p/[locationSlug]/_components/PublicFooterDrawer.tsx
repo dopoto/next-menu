@@ -12,21 +12,15 @@ import {
 } from '~/components/ui/drawer';
 import { cn } from '~/lib/utils';
 
-interface FooterDrawerProps {
+export function PublicFooterDrawer(props: {
     collapsedContent?: React.ReactNode;
     children?: React.ReactNode;
     className?: string;
     triggerClassName?: string;
     contentClassName?: string;
-}
+}) {
+    const { collapsedContent, children, className, triggerClassName, contentClassName } = props;
 
-export function PublicFooterDrawer({
-    collapsedContent,
-    children,
-    className,
-    triggerClassName,
-    contentClassName,
-}: FooterDrawerProps) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -34,7 +28,7 @@ export function PublicFooterDrawer({
             <DrawerTrigger asChild>
                 <div
                     className={cn(
-                        'fixed bottom-0 left-0 right-0 flex h-45 cursor-pointer items-center justify-center bg-background shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-all hover:bg-muted',
+                        'fixed bottom-0 left-0 right-0 flex h-50 cursor-pointer items-center justify-center bg-background shadow-[0_-2px_10px_rgba(0,0,0,0.1)] transition-all hover:bg-muted',
                         open ? 'opacity-0' : 'opacity-100',
                         triggerClassName,
                     )}
