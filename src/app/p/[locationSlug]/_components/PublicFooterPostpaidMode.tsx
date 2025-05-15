@@ -2,6 +2,7 @@
 
 import { useAtom } from 'jotai';
 import { useState } from 'react';
+import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
 import { Button } from '~/components/ui/button';
 import { cartAtom } from '~/domain/cart';
@@ -32,11 +33,44 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
 
     console.log(JSON.stringify(cart, null, 2));
 
-    const order = (e?: React.MouseEvent) => {
+    const order = async (e?: React.MouseEvent) => {
         if (e) {
             e.stopPropagation();
+            e.preventDefault();
         }
-        console.log('order');
+        
+        try {
+            setIsLoading(true);
+            
+            // Call the server action to place the order
+            const { orderNumber } = await placeOrderAction(cart, props.locationId);
+            
+            // Update the cart items status from 'draft' to 'ordered'
+            setCart(prevCart => {
+                return prevCart.map(item => {
+                    if (item.status === 'draft') {
+                        return { ...item, status: 'ordered' };
+                    }
+                    return item;
+                });
+            });
+            
+            // Show success message
+            toast({
+                title: 'Order placed successfully',
+                description: `Your order number is ${orderNumber}`,
+                variant: 'default',
+            });
+        } catch (error) {
+            console.error('Failed to place order:', error);
+            toast({
+                title: 'Failed to place order',
+                description: error instanceof Error ? error.message : 'Please try again',
+                variant: 'destructive',
+            });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const draftItems = cart.filter((item) => item.status === 'draft').length;
@@ -49,7 +83,9 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
             <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">
                 <div className="flex-1">
                     <OrderSummaryItem quantity={draftItems} description={'Not ordered yet'}>
-                        {draftItems > 0 && <Button onClick={order}>Order now!</Button>}
+                        {draftItems > 0 && <Button onClick={order} disabled={isLoading}>
+                            {isLoading ? 'Ordering...' : 'Order now!'}
+                        </Button>}
                     </OrderSummaryItem>
                 </div>
                 <div className="flex-1">
