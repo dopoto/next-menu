@@ -75,25 +75,27 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
     const inPreparationItems = order.items.filter((item) => item.status === 'ordered');
     const deliveredItems = order.items.filter((item) => item.status === 'delivered');
 
+    const draftItemsSummary = (
+        <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
+            {draftItems.length > 0 && (
+                <Button onClick={processOrder} disabled={isLoading}>
+                    {isLoading ? 'Ordering...' : 'Order now!'}
+                </Button>
+            )}
+        </OrderSummaryItem>
+    );
+    const inPreparationItemsSummary = (
+        <OrderSummaryItem quantity={inPreparationItems.length} description={'In preparation'} />
+    );
+    const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />;
+
     const collapsedContent = (
         <div className="flex flex-col w-full h-full ">
             <div className="bg-accent p-2">Your order {order.orderId}</div>
             <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">
-                <div className="flex-1">
-                    <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
-                        {draftItems.length > 0 && (
-                            <Button onClick={processOrder} disabled={isLoading}>
-                                {isLoading ? 'Ordering...' : 'Order now!'}
-                            </Button>
-                        )}
-                    </OrderSummaryItem>
-                </div>
-                <div className="flex-1">
-                    <OrderSummaryItem quantity={inPreparationItems.length} description={'In preparation'} />
-                </div>
-                <div className="flex-1">
-                    <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />
-                </div>
+                <div className="flex-1">{draftItemsSummary}</div>
+                <div className="flex-1">{inPreparationItemsSummary}</div>
+                <div className="flex-1">{deliveredItemsSummary}</div>
             </div>
         </div>
     );
@@ -101,28 +103,26 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
     return (
         <PublicFooterDrawer collapsedContent={collapsedContent}>
             <div className="flex flex-col w-full h-full p-3 ">
-                <div className="text-left  p-2">Your order {order.orderId}</div>
+                <div className="text-left  p-2 text-xl ">Your order {order.orderId}</div>
                 <div className="flex flex-col w-full h-full gap-4  ">
-                    <div className="flex flex-row gap-4">
-                        <div className=" ">
-                            <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
-                                {draftItems.length > 0 && (
-                                    <Button onClick={processOrder} disabled={isLoading}>
-                                        {isLoading ? 'Ordering...' : 'Order now!'}
-                                    </Button>
-                                )}
-                            </OrderSummaryItem>
-                        </div>
+                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-45">{draftItemsSummary}</div>
                         <div>
                             <OrderItemsList items={draftItems} />
                         </div>
                     </div>
-                    {/* <div className="flex-1">
-                        <OrderSummaryItem quantity={inPreparationItems} description={'In preparation'} />
+                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-45">{inPreparationItemsSummary}</div>
+                        <div>
+                            <OrderItemsList items={inPreparationItems} />
+                        </div>
                     </div>
-                    <div className="flex-1">
-                        <OrderSummaryItem quantity={deliveredItems} description={'Received'} />
-                    </div> */}
+                    <div className="flex flex-row gap-6  ">
+                        <div className="w-45">{deliveredItemsSummary}</div>
+                        <div>
+                            <OrderItemsList items={deliveredItems} />
+                        </div>
+                    </div>
                 </div>
             </div>
         </PublicFooterDrawer>

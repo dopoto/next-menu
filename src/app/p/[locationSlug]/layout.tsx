@@ -48,7 +48,7 @@ export default async function Layout({ params, children }: { params: Params; chi
     });
 
     return (
-        <JotaiProviderWrapper locationId={location.id}>
+        <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId}>
             <div className="mx-auto max-w-7xl lg:px-8">
                 <header className="w-full max-w-6xl mx-auto px-4 pt-2 md:pt-4">
                     <div className="relative">

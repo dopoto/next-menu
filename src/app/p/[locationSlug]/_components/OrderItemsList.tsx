@@ -1,18 +1,17 @@
-import { PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
+import { useAtom } from 'jotai';
+import { orderAtom, PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
+import { CURRENCIES } from '~/domain/currencies';
 
 export function OrderItemsList(props: { items: PublicOrderItem[] }) {
+    const [order] = useAtom(orderAtom);
+    const currency = CURRENCIES[order.currencyId];
+
     return (
         <>
             {props.items?.map((item, index) => {
                 return (
-                    <div key={index} className="flex w-full flex-row items-center pt-2 pb-2 text-sm gap-2">
-                        <div className="flex flex-col">
-                            <div className="">1 x {item.menuItem.name}</div>
-                            <div>
-                                {item.menuItem.price}
-                                {/* TODO{currency.symbol} */}
-                            </div>
-                        </div>
+                    <div key={index} className="flex w-full flex-row items-center text-sm pt-1">
+                        1 x {item.menuItem.name}, {item.menuItem.price} {currency?.symbol}
                     </div>
                 );
             })}
