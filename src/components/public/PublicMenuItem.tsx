@@ -23,7 +23,7 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
         });
     };
 
-    const hasAddIcon = props.menuMode === 'orderonly' || props.menuMode === 'prepaid';
+    const hasAddIcon = props.menuMode === 'postpaid' || props.menuMode === 'prepaid';
 
     return (
         <div className="flex w-full flex-row items-center pt-2 pb-2 text-sm gap-2">

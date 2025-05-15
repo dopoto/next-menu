@@ -1,7 +1,7 @@
-export type MenuModeId = 'noninteractive' | 'orderonly' | 'prepaid';
+export type MenuModeId = 'noninteractive' | 'postpaid' | 'prepaid';
 
 export const MENU_MODES: Record<MenuModeId, string> = {
     noninteractive: '',
-    orderonly: '',
+    postpaid: '',
     prepaid: '',
 };
