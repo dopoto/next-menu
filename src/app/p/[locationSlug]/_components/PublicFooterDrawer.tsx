@@ -42,12 +42,12 @@ export function PublicFooterDrawer({
                     {collapsedContent}
                 </div>
             </DrawerTrigger>
-            <DrawerContent className={cn('max-h-[80vh]', contentClassName)}>
+            <DrawerContent className={cn('max-h-[90dvh]', contentClassName)}>
                 <DrawerHeader className="sr-only">
                     <DrawerTitle>Your order</DrawerTitle>
                 </DrawerHeader>
-                <div className={cn('mx-auto w-full max-w-md', className)}>
-                    <div className="px-4 pb-4">{children}</div>
+                <div className={cn(className)}>
+                    {children}
                     <DrawerFooter>
                         <DrawerClose>Close</DrawerClose>
                     </DrawerFooter>

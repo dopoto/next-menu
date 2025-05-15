@@ -10,6 +10,7 @@ export type FieldErrors<TSchema extends z.ZodType> = {
 };
 
 type SuccessResult = {
+    orderId: any;
     status: 'success';
 };
 

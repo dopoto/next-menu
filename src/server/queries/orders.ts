@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { z } from 'zod';
+import { OrderItemStatus } from '~/domain/order-items';
 import { orderFormSchema } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
@@ -29,10 +30,11 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>) {
         if (data.items) {
             for (let i = 0; i < data.items.length; i++) {
                 const item = data.items[i];
+                const status: OrderItemStatus = 'ordered';
                 await tx.insert(orderItems).values({
                     orderId: order.id,
                     menuItemId: item!.menuItem.id,
-                    status: 'draft',
+                    status,
                     createdAt: sql`CURRENT_TIMESTAMP`,
                     updatedAt: sql`CURRENT_TIMESTAMP`,
                 });
