@@ -96,7 +96,11 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
         });
     }
 
-    return location;
+    return {
+        ...location,
+        menuMode: location.menuMode as Location['menuMode'],
+        currencyId: location.currencyId as Location['currencyId'],
+    };
 }
 
 export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location> {
@@ -110,7 +114,11 @@ export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): P
         });
     }
 
-    return location;
+    return {
+        ...location,
+        menuMode: location.menuMode as Location['menuMode'],
+        currencyId: location.currencyId as Location['currencyId'],
+    };
 }
 
 export async function getLocationPublicDataById(locationId: LocationId): Promise<Location> {
@@ -124,7 +132,11 @@ export async function getLocationPublicDataById(locationId: LocationId): Promise
         });
     }
 
-    return location;
+    return {
+        ...location,
+        menuMode: location.menuMode as Location['menuMode'],
+        currencyId: location.currencyId as Location['currencyId'],
+    };
 }
 
 export async function updateLocation(locationId: LocationId, data: z.infer<typeof locationFormSchema>) {

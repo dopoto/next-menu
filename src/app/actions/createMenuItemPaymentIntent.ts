@@ -28,6 +28,7 @@ export async function createMenuItemPaymentIntent(
         return {
             clientSecret: paymentIntent.client_secret,
             paymentIntentId: paymentIntent.id,
+            merchantStripeAccountId,
         };
     } catch (error) {
         console.error('Failed to create payment intent:', error);

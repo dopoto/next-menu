@@ -4,6 +4,7 @@
 import { sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { MENU_MODES, MenuModeId } from '~/domain/menu-modes';
+import { ORDER_ITEM_STATUSES, OrderItemStatus } from '~/domain/order-items';
 import { CURRENCIES, CurrencyId } from '../../domain/currencies';
 
 /**
@@ -135,5 +136,38 @@ export const menuItemsToMenus = createTable(
         index('menu_items_to_menus_menu_item_idx').on(table.menuItemId),
         index('menu_items_to_menus_menu_idx').on(table.menuId),
         primaryKey({ columns: [table.menuId, table.menuItemId] }),
+    ],
+);
+
+export const orders = createTable('order', {
+    id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
+    locationId: integer('location_id')
+        .notNull()
+        .references(() => locations.id),
+    createdAt: timestamp('created_at', { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
+});
+
+const defaultOrderStatus: OrderItemStatus = 'draft';
+
+export const orderItems = createTable(
+    'order_item',
+    {
+        id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
+        orderId: integer('order_id')
+            .notNull()
+            .references(() => orders.id),
+        status: varchar('status', { length: 10 }).notNull().default(defaultOrderStatus),
+        createdAt: timestamp('created_at', { withTimezone: true })
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
+    },
+    () => [
+        {
+            statusCheck: sql`CHECK (status IN (${sql.join(Array.from(ORDER_ITEM_STATUSES))}))`,
+        },
     ],
 );

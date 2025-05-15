@@ -41,14 +41,11 @@ export function SortableMenuItem({ item, currencyId, onDelete }: SortableMenuIte
                 <GripVertical className="h-4 w-4" />
             </div>
             <div className="flex-grow touch-none">
+                {/* TODO menumode */}
                 <PublicMenuItem
-                    item={{
-                        name: item.name,
-                        description: item.description,
-                        price: item.price.toString(),
-                        isNew: item.isNew,
-                    }}
+                    item={{ ...item, price: item.price.toString() }}
                     currencyId={currencyId}
+                    menuMode={'noninteractive'}
                 />
             </div>
             <Button
