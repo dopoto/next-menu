@@ -13,6 +13,7 @@ import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
+import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 
 function OrderSummaryItem(props: { quantity: number; description: string; children?: React.ReactNode }) {
@@ -30,6 +31,9 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
     const [order, setOrder] = useAtom(orderAtom);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
+
+    // Add real-time updates
+    useRealTimeOrderUpdates(order.orderId, props.locationId);
 
     const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 

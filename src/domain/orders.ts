@@ -6,6 +6,10 @@ import { orders } from '~/server/db/schema';
 export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 
 export type Order = InferSelectModel<typeof orders>;
+export type OrderWithItems = Order & {
+    items: PublicOrderItem[];
+    orderId?: string;
+};
 
 export const orderIdSchema = z.coerce.string();
 export type OrderId = z.infer<typeof orderIdSchema>;

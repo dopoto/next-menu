@@ -3,8 +3,9 @@
 import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
 import { z } from 'zod';
+import { notifyOrderCreated } from '~/app/api/realtime/notifications';
 import { menuFormSchema } from '~/domain/menus';
-import { orderFormSchema } from '~/domain/orders';
+import { orderFormSchema, type OrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { type FormState, processFormErrors } from '~/lib/form-state';
 import { createOrder } from '~/server/queries/orders';
@@ -35,9 +36,18 @@ export const placeOrderAction = async (
                 }
                 const order = await createOrder(parsedForm.data);
 
-                // TODO: revalidatePath(ROUTES.menus(parsedForm.data.locationId));
-                // TODO revalidate public path
-                return { status: 'success' as const, fields: { orderId: order.id } };
+                // Send real-time notification
+                const orderWithItems: OrderWithItems = {
+                    ...order,
+                    orderId: order.id.toString(),
+                    items: parsedForm.data.items,
+                };
+                await notifyOrderCreated(parsedForm.data.locationId, orderWithItems);
+
+                return {
+                    status: 'success' as const,
+                    fields: { orderId: order.id.toString() },
+                };
             } catch (error) {
                 if (error instanceof AppError) {
                     return {

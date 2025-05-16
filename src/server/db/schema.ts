@@ -1,7 +1,7 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from 'drizzle-orm';
+import { relations, sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { MENU_MODES, MenuModeId } from '~/domain/menu-modes';
 import { ORDER_ITEM_STATUSES, OrderItemStatus } from '~/domain/order-items';
@@ -174,3 +174,15 @@ export const orderItems = createTable(
         },
     ],
 );
+
+// optional: add relations for `.with`
+export const ordersRelations = relations(orders, ({ many }) => ({
+    orderItems: many(orderItems),
+}));
+
+export const orderItemsRelations = relations(orderItems, ({ one }) => ({
+    order: one(orders, {
+        fields: [orderItems.orderId],
+        references: [orders.id],
+    }),
+}));

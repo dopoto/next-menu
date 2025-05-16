@@ -1,10 +1,12 @@
-import { sql } from 'drizzle-orm';
+import { sql, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
+import type { LocationId } from '~/domain/locations';
 import { OrderItemStatus } from '~/domain/order-items';
 import { orderFormSchema } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { orderItems, orders } from '~/server/db/schema';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 // function generateUniqueOrderNumber(): string {
 //     const timestamp = new Date().getTime().toString(36).toUpperCase();
@@ -43,4 +45,20 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>) {
 
         return order;
     });
+}
+
+type OrderWithItems = InferSelectModel<typeof orders> & {
+    orderItems: Array<InferSelectModel<typeof orderItems>>;
+};
+
+export async function getOpenOrdersByLocation(locationId: LocationId): Promise<OrderWithItems[]> {
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
+    const items = await db.query.orders.findMany({
+        where: (orders, { eq }) => eq(orders.locationId, validLocation.id),
+        with: {
+            orderItems: true, // fetch all columns of each orderItem
+        },
+    });
+
+    return items;
 }

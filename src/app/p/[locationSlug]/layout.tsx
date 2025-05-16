@@ -1,20 +1,14 @@
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { PostHog } from 'posthog-node';
 import JotaiProviderWrapper from '~/app/p/[locationSlug]/_components/JotaiProviderWrapper';
 import { PublicFooterPostpaidMode } from '~/app/p/[locationSlug]/_components/PublicFooterPostpaidMode';
 import { PublicFooterPrepaidMode } from '~/app/p/[locationSlug]/_components/PublicFooterPrepaidMode';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
-import type { AnalyticsEventId } from '~/domain/analytics';
 import { CookieKey } from '~/domain/cookies';
 import { locationSlugSchema } from '~/domain/locations';
-import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicDataBySlug } from '~/server/queries/locations';
-
-const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
-    host: env.NEXT_PUBLIC_POSTHOG_HOST,
-});
+import { capturePublicLocationVisit } from './_actions/captureAnalytics';
 
 //TODO Use cache
 
@@ -32,20 +26,10 @@ export default async function Layout({ params, children }: { params: Params; chi
 
     const parsedLocationSlug = locationSlugValidationResult.data;
     const location = await getLocationPublicDataBySlug(parsedLocationSlug);
-
-    const event: AnalyticsEventId = 'publicLocationVisit';
-
     const cookieStore = cookies();
     const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
 
-    posthog.capture({
-        distinctId: machineId ?? '-- missing machine id --',
-        event,
-        properties: {
-            orgId: location.orgId,
-            locationSlug: parsedLocationSlug,
-        },
-    });
+    await capturePublicLocationVisit(machineId, location.orgId, parsedLocationSlug);
 
     return (
         <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId}>
