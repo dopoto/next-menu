@@ -1,6 +1,7 @@
 import { useAtom } from 'jotai';
-import { orderAtom, PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
 import { CURRENCIES } from '~/domain/currencies';
+import { PublicOrderItem } from '~/domain/order-items';
 
 export function OrderItemsList(props: { items: PublicOrderItem[] }) {
     const [order] = useAtom(orderAtom);

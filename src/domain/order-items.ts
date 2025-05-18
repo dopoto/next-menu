@@ -1,8 +1,19 @@
-export const PREPAID_STATUSES = ['draft', 'paid'] as const;
-export const POSTPAID_STATUSES = ['draft', 'ordered', 'delivered', 'paid'] as const;
-export const ORDER_ITEM_STATUSES = [...new Set([...POSTPAID_STATUSES, ...PREPAID_STATUSES])] as const;
+// export const PREPAID_STATUSES = ['draft', 'paid'] as const;
+// export const POSTPAID_STATUSES = ['draft', 'ordered', 'delivered', 'paid'] as const;
+// export const ORDER_ITEM_STATUSES = [...new Set([...POSTPAID_STATUSES, ...PREPAID_STATUSES])] as const;
 
-type PostpaidOrderItemStatus = (typeof POSTPAID_STATUSES)[number];
-type PrepaidOrderItemStatus = (typeof PREPAID_STATUSES)[number];
+import type { InferSelectModel } from 'drizzle-orm';
+import { MenuItem } from '~/domain/menu-items';
+import { orderItems } from '~/server/db/schema';
 
-export type OrderItemStatus = PostpaidOrderItemStatus | PrepaidOrderItemStatus;
+// type PostpaidOrderItemStatus = (typeof POSTPAID_STATUSES)[number];
+// type PrepaidOrderItemStatus = (typeof PREPAID_STATUSES)[number];
+
+// export type OrderItemStatus = PostpaidOrderItemStatus | PrepaidOrderItemStatus;
+
+export type OrderItem = InferSelectModel<typeof orderItems>;
+
+export interface PublicOrderItem {
+    menuItem: Pick<MenuItem, 'id' | 'name' | 'price'>;
+    orderItem: { id?: OrderItem['id'] } & Pick<OrderItem, 'isDelivered' | 'isPaid'>;
+}

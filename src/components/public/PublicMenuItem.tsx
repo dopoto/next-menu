@@ -2,12 +2,13 @@
 
 import { useAtom } from 'jotai';
 import { PlusIcon, SoupIcon, WineIcon } from 'lucide-react';
-import { orderAtom, type PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
 import { Badge } from '~/components/ui/badge';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 import { MenuModeId } from '~/domain/menu-modes';
 import { toast } from '~/hooks/use-toast';
+import { getTopPositionedToast } from '~/lib/toast-utils';
 
 export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; menuMode: MenuModeId }) {
     const { name, description, price, isNew, type } = props.item;
@@ -15,17 +16,24 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
     const [, setOrder] = useAtom(orderAtom);
 
     const addToOrder = () => {
-        const initialStatus: PublicOrderItem['status'] = 'draft';
         setOrder((prevOrder) => {
+            const { id, name, price, type } = props.item;
             return {
                 ...prevOrder,
-                items: [...prevOrder.items, { menuItem: props.item, status: initialStatus }],
+                items: [
+                    ...prevOrder.items,
+                    {
+                        menuItem: { id, name, price, type },
+                        orderItem: { isDelivered: false, isPaid: false },
+                    },
+                ],
             };
         });
 
         toast({
-            title: 'Added to cart',
-            description: `${name} has been added to your order.`,
+            title: `${name} was added to your cart`,
+            description: `Press 'Order now!' when you're ready to place your order.`,
+            className: getTopPositionedToast(),
         });
     };
 

@@ -1,14 +1,18 @@
 import { type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
-import { PublicOrderItem } from '~/app/p/[locationSlug]/_state/cart';
+import { CurrencyId } from '~/domain/currencies';
+import { PublicOrderItem } from '~/domain/order-items';
+
 import { orders } from '~/server/db/schema';
 
 export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 
 export type Order = InferSelectModel<typeof orders>;
-export type OrderWithItems = Order & {
+
+export type PublicOrder = z.infer<typeof orderFormSchema> & { currencyId: CurrencyId };
+
+export type PublicOrderWithItems = Order & {
     items: PublicOrderItem[];
-    orderId?: string;
 };
 
 export const orderIdSchema = z.coerce.string();

@@ -15,6 +15,7 @@ import { type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
+import { getTopPositionedToast } from '~/lib/toast-utils';
 
 function OrderSummaryItem(props: { quantity: number; description: string; children?: React.ReactNode }) {
     const textColor = props.quantity > 0 ? 'text-black' : 'text-gray-500';
@@ -48,22 +49,18 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
 
             const res = await placeOrderAction(order);
             if (res.status === 'success') {
-                const orderId = res.fields?.orderId;
+                const orderWithItems = res.fields?.orderWithItems;
                 toast({
                     title: 'Order placed successfully',
-                    description: `Your order number is ${orderId}`,
+                    description: `Your order number is ${orderWithItems?.id}`,
                     variant: 'default',
+                    className: getTopPositionedToast(),
                 });
                 setOrder((prevOrder) => {
                     return {
                         ...prevOrder,
-                        orderId,
-                        items: prevOrder.items.map((item) => {
-                            if (item.status === 'draft') {
-                                return { ...item, status: 'ordered' };
-                            }
-                            return item;
-                        }),
+                        orderId: orderWithItems?.id ? String(orderWithItems.id) : undefined, //TODO review
+                        items: orderWithItems?.items ?? [],
                     };
                 });
             } else {
@@ -71,6 +68,7 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
                     title: 'Failed to place order',
                     description: 'Please try again',
                     variant: 'destructive',
+                    className: getTopPositionedToast(),
                 });
             }
         } catch (error) {
@@ -80,9 +78,9 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
         }
     };
 
-    const draftItems = order.items.filter((item) => item.status === 'draft');
-    const inPreparationItems = order.items.filter((item) => item.status === 'ordered');
-    const deliveredItems = order.items.filter((item) => item.status === 'delivered');
+    const draftItems = order.items.filter((item) => !item.orderItem.id);
+    const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === false);
+    const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === true);
 
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>

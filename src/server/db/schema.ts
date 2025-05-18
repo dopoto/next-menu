@@ -4,7 +4,6 @@
 import { relations, sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { MENU_MODES, MenuModeId } from '~/domain/menu-modes';
-import { ORDER_ITEM_STATUSES, OrderItemStatus } from '~/domain/order-items';
 import { CURRENCIES, CurrencyId } from '../../domain/currencies';
 
 /**
@@ -150,30 +149,21 @@ export const orders = createTable('order', {
     updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
 });
 
-const defaultOrderItemStatus: OrderItemStatus = 'draft';
-
-export const orderItems = createTable(
-    'order_item',
-    {
-        id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
-        orderId: integer('order_id')
-            .notNull()
-            .references(() => orders.id),
-        menuItemId: integer('menu_item_id')
-            .notNull()
-            .references(() => menuItems.id),
-        status: varchar('status', { length: 10 }).notNull().default(defaultOrderItemStatus),
-        createdAt: timestamp('created_at', { withTimezone: true })
-            .default(sql`CURRENT_TIMESTAMP`)
-            .notNull(),
-        updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
-    },
-    () => [
-        {
-            statusCheck: sql`CHECK (status IN (${sql.join(Array.from(ORDER_ITEM_STATUSES))}))`,
-        },
-    ],
-);
+export const orderItems = createTable('order_item', {
+    id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
+    orderId: integer('order_id')
+        .notNull()
+        .references(() => orders.id),
+    menuItemId: integer('menu_item_id')
+        .notNull()
+        .references(() => menuItems.id),
+    isDelivered: boolean('is_delivered').default(false).notNull(),
+    isPaid: boolean('is_paid').default(false).notNull(),
+    createdAt: timestamp('created_at', { withTimezone: true })
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
+    updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
+});
 
 // optional: add relations for `.with`
 export const ordersRelations = relations(orders, ({ many }) => ({

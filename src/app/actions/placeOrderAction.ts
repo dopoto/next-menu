@@ -5,14 +5,14 @@ import { headers } from 'next/headers';
 import { z } from 'zod';
 import { notifyOrderCreated } from '~/app/api/realtime/notifications';
 import { menuFormSchema } from '~/domain/menus';
-import { orderFormSchema, type OrderWithItems } from '~/domain/orders';
+import { orderFormSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { type FormState, processFormErrors } from '~/lib/form-state';
 import { createOrder } from '~/server/queries/orders';
 
 export const placeOrderAction = async (
     data: z.infer<typeof orderFormSchema>,
-): Promise<FormState<typeof menuFormSchema, { orderId: string }>> => {
+): Promise<FormState<typeof menuFormSchema, { orderWithItems: PublicOrderWithItems }>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'placeOrderAction',
@@ -34,19 +34,13 @@ export const placeOrderAction = async (
                         rootError: 'Out of quota for orders.',
                     };
                 }
-                const order = await createOrder(parsedForm.data);
+                const orderWithItems = await createOrder(parsedForm.data);
 
-                // Send real-time notification
-                const orderWithItems: OrderWithItems = {
-                    ...order,
-                    orderId: order.id.toString(),
-                    items: parsedForm.data.items,
-                };
                 await notifyOrderCreated(parsedForm.data.locationId, orderWithItems);
 
                 return {
                     status: 'success' as const,
-                    fields: { orderId: order.id.toString() },
+                    fields: { orderWithItems },
                 };
             } catch (error) {
                 if (error instanceof AppError) {

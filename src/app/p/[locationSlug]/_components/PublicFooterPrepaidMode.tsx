@@ -11,6 +11,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/co
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
+import { getTopPositionedToast } from '~/lib/toast-utils';
 
 export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
@@ -34,6 +35,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
             toast({
                 title: 'Error',
                 description: err instanceof Error ? err.message : 'Failed to initiate checkout',
+                className: getTopPositionedToast(),
             });
         } finally {
             setIsLoading(false);
@@ -44,6 +46,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
         toast({
             title: 'Success',
             description: 'Payment completed successfully!',
+            className: getTopPositionedToast(),
         });
         //setOrder( );
         setIsCheckingOut(false);
@@ -53,6 +56,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
         toast({
             title: 'Payment Failed',
             description: error.message,
+            className: getTopPositionedToast(),
         });
         setIsCheckingOut(false);
     };
