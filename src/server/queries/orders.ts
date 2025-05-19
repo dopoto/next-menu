@@ -31,19 +31,6 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
             throw new AppError({ internalMessage: 'Could not insert order' });
         }
 
-        // if (data.items) {
-        //     for (let i = 0; i < data.items.length; i++) {
-        //         const item = data.items[i];
-        //         await tx.insert(orderItems).values({
-        //             orderId: order.id,
-        //             menuItemId: item!.menuItem.id,
-        //             isDelivered: false,
-        //             isPaid: false,
-        //             createdAt: sql`CURRENT_TIMESTAMP`,
-        //             updatedAt: sql`CURRENT_TIMESTAMP`,
-        //         });
-        //     }
-        // }
         const insertedItems: PublicOrderItem[] = [];
         if (data.items) {
             for (let i = 0; i < data.items.length; i++) {
@@ -79,6 +66,60 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
         const orderWithItems: PublicOrderWithItems = {
             ...order,
             items: insertedItems,
+        };
+        return orderWithItems;
+    });
+}
+
+export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promise<PublicOrderWithItems> {
+    return await db.transaction(async (tx) => {
+        const itemsToInsert = data.items?.filter((item) => item.orderItem.id === undefined) ?? [];
+        const itemsAlreadyOrdered = data.items?.filter((item) => item.orderItem.id !== undefined) ?? [];
+        const insertedItems: PublicOrderItem[] = [];
+        if (itemsToInsert) {
+            for (let i = 0; i < itemsToInsert.length; i++) {
+                const item = itemsToInsert[i];
+                const [insertedItem] = await tx
+                    .insert(orderItems)
+                    .values({
+                        orderId: Number(data.orderId), //TODO review
+                        menuItemId: item!.menuItem.id,
+                        isDelivered: false,
+                        isPaid: false,
+                        createdAt: sql`CURRENT_TIMESTAMP`,
+                        updatedAt: sql`CURRENT_TIMESTAMP`,
+                    })
+                    .returning();
+                if (insertedItem) {
+                    const insertedPublicItem: PublicOrderItem = {
+                        menuItem: {
+                            id: item!.menuItem.id,
+                            name: item!.menuItem.name,
+                            price: item!.menuItem.price,
+                        },
+                        orderItem: {
+                            id: insertedItem.id,
+                            isDelivered: false,
+                            isPaid: false,
+                        },
+                    };
+                    insertedItems.push(insertedPublicItem);
+                }
+            }
+        }
+
+        const [order] = await tx
+            .select()
+            .from(orders)
+            .where(sql`${orders.id} = ${Number(data.orderId)}`);
+
+        if (!order) {
+            throw new AppError({ internalMessage: 'Order not found after update' });
+        }
+
+        const orderWithItems: PublicOrderWithItems = {
+            ...order,
+            items: [...itemsAlreadyOrdered, ...insertedItems],
         };
         return orderWithItems;
     });

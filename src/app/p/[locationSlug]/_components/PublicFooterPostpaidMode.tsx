@@ -5,6 +5,7 @@ import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
 import { placeOrderAction } from '~/app/actions/placeOrderAction';
+import { updateOrderAction } from '~/app/actions/updateOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
 import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
@@ -38,7 +39,7 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
 
     const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
-    const processOrder = async (e?: React.MouseEvent) => {
+    const createOrder = async (e?: React.MouseEvent) => {
         if (e) {
             e.stopPropagation();
             e.preventDefault();
@@ -78,17 +79,62 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
         }
     };
 
+    const updateOrder = async (e?: React.MouseEvent) => {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        try {
+            setIsLoading(true);
+
+            const res = await updateOrderAction(order);
+            if (res.status === 'success') {
+                const orderWithItems = res.fields?.orderWithItems;
+                toast({
+                    title: 'Order updated successfully',
+                    description: `Your order number is ${orderWithItems?.id}`,
+                    variant: 'default',
+                    className: getTopPositionedToast(),
+                });
+                setOrder((prevOrder) => {
+                    return {
+                        ...prevOrder,
+                        orderId: orderWithItems?.id ? String(orderWithItems.id) : undefined, //TODO review
+                        items: orderWithItems?.items ?? [],
+                    };
+                });
+            } else {
+                toast({
+                    title: 'Failed to update order',
+                    description: 'Please try again',
+                    variant: 'destructive',
+                    className: getTopPositionedToast(),
+                });
+            }
+        } catch (error) {
+            console.error('Failed to update order:', error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const draftItems = order.items.filter((item) => !item.orderItem.id);
     const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === false);
     const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === true);
 
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
-            {draftItems.length > 0 && (
-                <Button onClick={processOrder} disabled={isLoading}>
-                    {isLoading ? 'Ordering...' : order.orderId ? 'Add to order' : 'Order now!'}
-                </Button>
-            )}
+            {draftItems.length > 0 &&
+                (order.orderId ? (
+                    <Button onClick={updateOrder} disabled={isLoading}>
+                        {isLoading ? 'Ordering...' : 'Add to order'}
+                    </Button>
+                ) : (
+                    <Button onClick={createOrder} disabled={isLoading}>
+                        {isLoading ? 'Ordering...' : 'Order now!'}
+                    </Button>
+                ))}
         </OrderSummaryItem>
     );
     const inPreparationItemsSummary = (
