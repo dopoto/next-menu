@@ -1,7 +1,7 @@
 'use server';
 
-import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
+import { revalidateTag } from 'next/cache';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
 import { type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
@@ -15,11 +15,6 @@ import { getOrderById } from '~/server/queries/orders';
 // };
 
 export async function markOrderItemAsDeliveredAction(locationId: LocationId, orderItemId: number) {
-    const { userId } = await auth(); //TODO needed?
-    if (!userId) {
-        throw new AppError({ internalMessage: 'Unauthorized' });
-    }
-
     // Verify that the location belongs to the current user's organization
     await getLocationForCurrentUserOrThrow(locationId);
 
@@ -49,7 +44,6 @@ export async function markOrderItemAsDeliveredAction(locationId: LocationId, ord
     if (!order) {
         throw new AppError({ internalMessage: 'Order not found after update' });
     }
-
     await notifyOrderUpdated(locationId, {
         ...order,
         items: order.items.map((item) => ({
@@ -66,6 +60,7 @@ export async function markOrderItemAsDeliveredAction(locationId: LocationId, ord
         })),
     });
 
-    // revalidatePath(`/u/${locationId}/live`); //TODO
+    // Revalidate data without causing a page refresh
+    revalidateTag(`location-${locationId}-orders`);
     return order;
 }

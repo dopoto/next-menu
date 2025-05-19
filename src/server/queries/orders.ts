@@ -1,4 +1,5 @@
 import { sql } from 'drizzle-orm';
+import { unstable_cache } from 'next/cache';
 import { z } from 'zod';
 import type { LocationId } from '~/domain/locations';
 import { PublicOrderItem } from '~/domain/order-items';
@@ -82,41 +83,52 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
     });
 }
 
-export async function getOpenOrdersByLocation(locationId: LocationId): Promise<PublicOrderWithItems[]> {
+export const getOpenOrdersByLocation = async (locationId: LocationId): Promise<PublicOrderWithItems[]> => {
+    // Validate location access before caching
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
-    const items = await db.query.orders.findMany({
-        where: (orders, { eq }) => eq(orders.locationId, validLocation.id),
-        with: {
-            orderItems: true,
-        },
-    });
 
-    const ordersWithItems: PublicOrderWithItems[] = items.map((order) => ({
-        id: order.id,
-        locationId: order.locationId,
-        createdAt: order.createdAt,
-        updatedAt: order.updatedAt,
-        items: order.orderItems
-            .map((orderItem) => ({
-                menuItem: {
-                    id: orderItem.menuItemId,
-                    // You may need to fetch menuItem name and price here if not included in orderItem
-                    name: '', // TODO Placeholder, replace with actual value if available
-                    price: '0', // TODO Placeholder, replace with actual value if available
+    return unstable_cache(
+        async () => {
+            // Use the locationId directly since we've already validated it
+            const items = await db.query.orders.findMany({
+                where: (orders, { eq }) => eq(orders.locationId, validLocation.id),
+                with: {
+                    orderItems: true,
                 },
-                orderItem: {
-                    id: orderItem.id,
-                    isDelivered: orderItem.isDelivered,
-                    isPaid: orderItem.isPaid,
-                    createdAt: orderItem.createdAt,
-                },
-            }))
-            .sort((a, b) => {
-                return a.orderItem.id - b.orderItem.id;
-            }),
-    }));
-    return ordersWithItems;
-}
+            });
+
+            const ordersWithItems: PublicOrderWithItems[] = items.map((order) => ({
+                id: order.id,
+                locationId: order.locationId,
+                createdAt: order.createdAt,
+                updatedAt: order.updatedAt,
+                items: order.orderItems
+                    .map((orderItem) => ({
+                        menuItem: {
+                            id: orderItem.menuItemId,
+                            name: '', // TODO Placeholder, replace with actual value if available
+                            price: '0', // TODO Placeholder, replace with actual value if available
+                        },
+                        orderItem: {
+                            id: orderItem.id,
+                            isDelivered: orderItem.isDelivered,
+                            isPaid: orderItem.isPaid,
+                            createdAt: orderItem.createdAt,
+                        },
+                    }))
+                    .sort((a, b) => {
+                        return a.orderItem.id - b.orderItem.id;
+                    }),
+            }));
+            return ordersWithItems;
+        },
+        [`location-${locationId}-orders`],
+        {
+            tags: [`location-${locationId}-orders`],
+            revalidate: 60, // Cache for 60 seconds
+        },
+    )();
+};
 
 export async function getOrderById(locationId: LocationId, orderId: OrderId): Promise<PublicOrderWithItems> {
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
