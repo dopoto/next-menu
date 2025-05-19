@@ -39,7 +39,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .insert(orderItems)
                     .values({
                         orderId: order.id,
-                        menuItemId: item!.menuItem.id,
+                        menuItemId: item!.menuItemId,
                         isDelivered: false,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
@@ -48,11 +48,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .returning();
                 if (insertedItem) {
                     const insertedPublicItem: PublicOrderItem = {
-                        menuItem: {
-                            id: item!.menuItem.id,
-                            name: item!.menuItem.name,
-                            price: item!.menuItem.price,
-                        },
+                        menuItemId: item!.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
                             isDelivered: false,
@@ -83,7 +79,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .insert(orderItems)
                     .values({
                         orderId: Number(data.orderId), //TODO review
-                        menuItemId: item!.menuItem.id,
+                        menuItemId: item!.menuItemId,
                         isDelivered: false,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
@@ -92,11 +88,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .returning();
                 if (insertedItem) {
                     const insertedPublicItem: PublicOrderItem = {
-                        menuItem: {
-                            id: item!.menuItem.id,
-                            name: item!.menuItem.name,
-                            price: item!.menuItem.price,
-                        },
+                        menuItemId: item!.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
                             isDelivered: false,
@@ -146,11 +138,7 @@ export const getOpenOrdersByLocation = async (locationId: LocationId): Promise<P
                 updatedAt: order.updatedAt,
                 items: order.orderItems
                     .map((orderItem) => ({
-                        menuItem: {
-                            id: orderItem.menuItemId,
-                            name: '', // TODO Placeholder, replace with actual value if available
-                            price: '0', // TODO Placeholder, replace with actual value if available
-                        },
+                        menuItemId: orderItem.menuItemId,
                         orderItem: {
                             id: orderItem.id,
                             isDelivered: orderItem.isDelivered,
@@ -192,12 +180,7 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
         items: order.orderItems.map((orderItem) => ({
-            menuItem: {
-                id: orderItem.menuItemId,
-                // You may need to fetch menuItem name and price here if not included in orderItem
-                name: '', // TODO Placeholder, replace with actual value if available
-                price: '0', // TODO Placeholder, replace with actual value if available
-            },
+            menuItemId: orderItem.menuItemId,
             orderItem: {
                 id: orderItem.id,
                 isDelivered: orderItem.isDelivered,

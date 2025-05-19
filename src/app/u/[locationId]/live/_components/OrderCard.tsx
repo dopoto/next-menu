@@ -44,15 +44,15 @@ export function OrderCard({
             <div className="space-y-4">
                 {order.items.map((item, index) => (
                     <div
-                        key={`${order.id}-${item.menuItem.id}-${index}`}
+                        key={`${order.id}-${item.menuItemId}-${index}`}
                         className="flex items-center justify-between border-b pb-2"
                     >
                         <div>
                             <p className="font-medium">
-                                [{item.orderItem.id}]{menuItemsMap.get(item.menuItem.id)?.name ?? 'Unknown Item'}
+                                [{item.orderItem.id}]{menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
                             </p>
                             <p className="text-sm text-gray-500">
-                                ${menuItemsMap.get(item.menuItem.id)?.price ?? 'Unknown Item'}
+                                ${menuItemsMap.get(item.menuItemId)?.price ?? 'Unknown Item'}
                             </p>
                         </div>
                         <div className="flex items-center gap-2">

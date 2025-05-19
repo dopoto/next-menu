@@ -4,7 +4,8 @@ import { useAtom } from 'jotai';
 import { LoaderIcon, ShoppingCart } from 'lucide-react';
 import { useState } from 'react';
 import { createCartPaymentIntent } from '~/app/actions/createCartPaymentIntent';
-import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
+import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { PaymentButton } from '~/components/public/PaymentButton';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet';
@@ -16,13 +17,14 @@ import { getTopPositionedToast } from '~/lib/toast-utils';
 export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
     const [order, setOrder] = useAtom(orderAtom);
+    const [menuItems] = useAtom(menuItemsAtom);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [isCheckingOut, setIsCheckingOut] = useState(false);
     const [merchantStripeAccountId, setMerchantStripeAccountId] = useState<string | null>(null);
     const { toast } = useToast();
 
-    const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
+    const totalAmount = 0; // TODO order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
     const handleCheckout = async () => {
         setIsLoading(true);
@@ -70,7 +72,10 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                     <ShoppingCart className="h-6 w-6" />
                     {order.items.length > 0 && (
                         <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
-                            {order.items.reduce((sum, item) => sum + Number(item.menuItem.price), 0)}
+                            {order.items.reduce((sum, item) => {
+                                const { price } = menuItems[item.menuItemId]!;
+                                return sum + Number(price);
+                            }, 0)}
                         </span>
                     )}
                 </Button>
@@ -86,19 +91,22 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                 ) : (
                     <>
                         <div className="flex flex-col space-y-4">
-                            {order.items.map((item) => (
-                                <div key={item.menuItem.id} className="flex items-center justify-between">
-                                    <div>
-                                        <p className="font-medium">{item.menuItem.name}</p>
-                                        <p className="text-muted-foreground text-sm">
-                                            {item.menuItem.price} {currency.symbol}
-                                        </p>
+                            {order.items.map((item) => {
+                                const { name, price } = menuItems[item.menuItemId]!;
+                                return (
+                                    <div key={item.menuItemId} className="flex items-center justify-between">
+                                        <div>
+                                            <p className="font-medium">{name}</p>
+                                            <p className="text-muted-foreground text-sm">
+                                                {price} {currency.symbol}
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center space-x-2">
+                                            <span className="w-8 text-center">1</span>
+                                        </div>
                                     </div>
-                                    <div className="flex items-center space-x-2">
-                                        <span className="w-8 text-center">1</span>
-                                    </div>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
 
                         <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">

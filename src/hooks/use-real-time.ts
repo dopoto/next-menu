@@ -1,6 +1,6 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
-import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { PublicOrder, type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';

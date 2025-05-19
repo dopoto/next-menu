@@ -20,7 +20,7 @@ export async function OpenOrdersList(props: { locationId: LocationId }) {
             });
         }
 
-        const menuItemIds = openOrders.flatMap((order) => order.items.map((item) => item.menuItem.id));
+        const menuItemIds = openOrders.flatMap((order) => order.items.map((item) => item.menuItemId));
         const menuItemsData = (await db.query.menuItems.findMany({
             where: (menuItems, { inArray }) => inArray(menuItems.id, menuItemIds),
             columns: {

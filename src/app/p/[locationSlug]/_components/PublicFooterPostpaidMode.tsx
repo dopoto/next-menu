@@ -8,7 +8,7 @@ import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { updateOrderAction } from '~/app/actions/updateOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
 import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
-import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { Labeled } from '~/components/Labeled';
 import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
@@ -37,7 +37,7 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
     // Add real-time updates
     useRealTimeOrderUpdates(order.orderId, props.locationId);
 
-    const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
+    //const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
     const createOrder = async (e?: React.MouseEvent) => {
         if (e) {

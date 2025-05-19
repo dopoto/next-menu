@@ -48,11 +48,7 @@ export async function markOrderItemAsDeliveredAction(locationId: LocationId, ord
     await notifyOrderUpdated(locationId, {
         ...order,
         items: order.items.map((item) => ({
-            menuItem: {
-                id: item.menuItem.id,
-                name: item.menuItem.name ?? '',
-                price: item.menuItem.price,
-            },
+            menuItemId: item.menuItemId,
             orderItem: {
                 id: item.orderItem.id,
                 isDelivered: item.orderItem.isDelivered,

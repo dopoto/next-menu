@@ -2,7 +2,7 @@
 
 import { useAtom } from 'jotai';
 import { PlusIcon, SoupIcon, WineIcon } from 'lucide-react';
-import { orderAtom } from '~/app/p/[locationSlug]/_state/cart';
+import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { Badge } from '~/components/ui/badge';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
@@ -17,13 +17,13 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
 
     const addToOrder = () => {
         setOrder((prevOrder) => {
-            const { id, name, price, type } = props.item;
+            const { id } = props.item;
             return {
                 ...prevOrder,
                 items: [
                     ...prevOrder.items,
                     {
-                        menuItem: { id, name, price, type },
+                        menuItemId: id,
                         orderItem: { isDelivered: false, isPaid: false },
                     },
                 ],

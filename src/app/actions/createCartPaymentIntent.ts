@@ -26,7 +26,7 @@ export async function createCartPaymentIntent(
         const menuItems = await getMenuItemsByLocation(locationId);
 
         const totalAmount = cartItems.reduce((sum, item) => {
-            const matchedItem = menuItems.find((mi) => mi.id === item.menuItem.id);
+            const matchedItem = menuItems.find((mi) => mi.id === item.menuItemId);
             const matchedItemPrice = matchedItem ? matchedItem.price : '0'; //TODO handle?
             return sum + parseFloat(matchedItemPrice);
         }, 0);

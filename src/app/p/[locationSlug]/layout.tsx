@@ -8,6 +8,7 @@ import { CookieKey } from '~/domain/cookies';
 import { locationSlugSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicDataBySlug } from '~/server/queries/locations';
+import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { capturePublicLocationVisit } from './_actions/captureAnalytics';
 
 //TODO Use cache
@@ -26,13 +27,16 @@ export default async function Layout({ params, children }: { params: Params; chi
 
     const parsedLocationSlug = locationSlugValidationResult.data;
     const location = await getLocationPublicDataBySlug(parsedLocationSlug);
+
+    const menuItems = await getMenuItemsByLocation(location.id);
+
     const cookieStore = cookies();
     const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
 
     await capturePublicLocationVisit(machineId, location.orgId, parsedLocationSlug);
 
     return (
-        <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId}>
+        <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId} menuItems={menuItems}>
             <div className="mx-auto max-w-7xl lg:px-8">
                 <header className="w-full max-w-6xl mx-auto px-4 pt-2 md:pt-4">
                     <div className="relative">
