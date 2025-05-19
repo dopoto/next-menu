@@ -48,7 +48,9 @@ export function OrderCard({
                         className="flex items-center justify-between border-b pb-2"
                     >
                         <div>
-                            <p className="font-medium">{menuItemsMap.get(item.menuItem.id)?.name ?? 'Unknown Item'}</p>
+                            <p className="font-medium">
+                                [{item.orderItem.id}]{menuItemsMap.get(item.menuItem.id)?.name ?? 'Unknown Item'}
+                            </p>
                             <p className="text-sm text-gray-500">
                                 ${menuItemsMap.get(item.menuItem.id)?.price ?? 'Unknown Item'}
                             </p>

@@ -96,19 +96,24 @@ export async function getOpenOrdersByLocation(locationId: LocationId): Promise<P
         locationId: order.locationId,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
-        items: order.orderItems.map((orderItem) => ({
-            menuItem: {
-                id: orderItem.menuItemId,
-                // You may need to fetch menuItem name and price here if not included in orderItem
-                name: '', // TODO Placeholder, replace with actual value if available
-                price: '0', // TODO Placeholder, replace with actual value if available
-            },
-            orderItem: {
-                id: orderItem.id,
-                isDelivered: orderItem.isDelivered,
-                isPaid: orderItem.isPaid,
-            },
-        })),
+        items: order.orderItems
+            .map((orderItem) => ({
+                menuItem: {
+                    id: orderItem.menuItemId,
+                    // You may need to fetch menuItem name and price here if not included in orderItem
+                    name: '', // TODO Placeholder, replace with actual value if available
+                    price: '0', // TODO Placeholder, replace with actual value if available
+                },
+                orderItem: {
+                    id: orderItem.id,
+                    isDelivered: orderItem.isDelivered,
+                    isPaid: orderItem.isPaid,
+                    createdAt: orderItem.createdAt,
+                },
+            }))
+            .sort((a, b) => {
+                return a.orderItem.id - b.orderItem.id;
+            }),
     }));
     return ordersWithItems;
 }

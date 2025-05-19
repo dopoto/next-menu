@@ -2,7 +2,6 @@
 
 import { auth } from '@clerk/nextjs/server';
 import { eq } from 'drizzle-orm';
-import { revalidatePath } from 'next/cache';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
 import { type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
@@ -67,6 +66,6 @@ export async function markOrderItemAsDeliveredAction(locationId: LocationId, ord
         })),
     });
 
-    revalidatePath(`/u/${locationId}/live`); //TODO
+    // revalidatePath(`/u/${locationId}/live`); //TODO
     return order;
 }

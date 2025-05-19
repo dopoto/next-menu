@@ -165,7 +165,6 @@ export const orderItems = createTable('order_item', {
     updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
 });
 
-// optional: add relations for `.with`
 export const ordersRelations = relations(orders, ({ many }) => ({
     orderItems: many(orderItems),
 }));
