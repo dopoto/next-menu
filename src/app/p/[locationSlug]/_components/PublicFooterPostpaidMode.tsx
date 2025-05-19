@@ -119,6 +119,8 @@ export function PublicFooterPostpaidMode(props: { currencyId: CurrencyId; locati
         }
     };
 
+    console.log('DBGA' + JSON.stringify(order.items, null, 2));
+
     const draftItems = order.items.filter((item) => !item.orderItem.id);
     const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === false);
     const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === true);

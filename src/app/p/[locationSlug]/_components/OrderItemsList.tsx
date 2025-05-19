@@ -12,7 +12,7 @@ export function OrderItemsList(props: { items: PublicOrderItem[] }) {
     return (
         <>
             {props.items?.map((item, index) => {
-                const menuItem = menuItems[item.menuItemId] ?? { name: 'Unknown item', price: 0 };
+                const menuItem = menuItems.get(item.menuItemId) ?? { name: 'Unknown item', price: 0 };
                 const { name, price } = menuItem;
                 return (
                     <div key={index} className="flex w-full flex-row items-center text-sm pt-1">
