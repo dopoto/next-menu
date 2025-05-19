@@ -4,6 +4,7 @@ import { eq } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
 import { type LocationId } from '~/domain/locations';
+import { TAGS } from '~/domain/tags';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { orderItems } from '~/server/db/schema';
@@ -60,7 +61,7 @@ export async function markOrderItemAsDeliveredAction(locationId: LocationId, ord
         })),
     });
 
-    // Revalidate data without causing a page refresh
-    revalidateTag(`location-${locationId}-orders`);
+    revalidateTag(TAGS.locationOpenOrders(locationId));
+
     return order;
 }

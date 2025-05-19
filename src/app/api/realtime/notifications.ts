@@ -3,6 +3,7 @@ import { type PublicOrderWithItems } from '~/domain/orders';
 import { CHANNELS, EVENTS, getPusherServer } from '~/lib/pusher';
 
 export async function notifyOrderCreated(locationId: LocationId, order: PublicOrderWithItems) {
+    console.log(`DBG-notifyOrderCreated`, JSON.stringify(order));
     const pusher = getPusherServer();
     // Notify all clients listening to this location about the new order
     await pusher.trigger(CHANNELS.location(locationId), EVENTS.ORDER_CREATED, order);

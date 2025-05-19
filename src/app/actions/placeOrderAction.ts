@@ -38,6 +38,9 @@ export const placeOrderAction = async (
 
                 await notifyOrderCreated(parsedForm.data.locationId, orderWithItems);
 
+                // TODO causes public page refresh, losing the order
+                //revalidateTag(TAGS.locationOpenOrders(parsedForm.data.locationId));
+
                 return {
                     status: 'success' as const,
                     fields: { orderWithItems },
