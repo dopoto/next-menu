@@ -10,7 +10,7 @@ import { PaymentButton } from '~/components/public/PaymentButton';
 import { Button } from '~/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
-import { LocationId } from '~/domain/locations';
+import { type LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
@@ -73,7 +73,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                     {order.items.length > 0 && (
                         <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
                             {order.items.reduce((sum, item) => {
-                                const { price } = menuItems[item.menuItemId]!;
+                                const { price } = menuItems.get(item.menuItemId) || { price: '0' };
                                 return sum + Number(price);
                             }, 0)}
                         </span>
@@ -92,7 +92,9 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                     <>
                         <div className="flex flex-col space-y-4">
                             {order.items.map((item) => {
-                                const { name, price } = menuItems[item.menuItemId]!;
+                                const menuItem = menuItems.get(item.menuItemId);
+                                if (!menuItem) return null;
+                                const { name, price } = menuItem;
                                 return (
                                     <div key={item.menuItemId} className="flex items-center justify-between">
                                         <div>

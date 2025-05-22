@@ -6,7 +6,7 @@ import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { Badge } from '~/components/ui/badge';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
-import { MenuModeId } from '~/domain/menu-modes';
+import { type MenuModeId } from '~/domain/menu-modes';
 import { toast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 

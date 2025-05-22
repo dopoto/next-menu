@@ -1,6 +1,6 @@
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
-import { CurrencyId } from '~/domain/currencies';
+import { type CurrencyId } from '~/domain/currencies';
 import { withMeta } from '~/lib/form-validation';
 import { type locations } from '~/server/db/schema';
 import { type MenuModeId } from './menu-modes';

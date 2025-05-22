@@ -6,12 +6,14 @@ import { ChevronLeft, ChevronRight, Minus } from 'lucide-react';
 import { cloneElement, isValidElement, useEffect, useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
 
+type SelectedItem = 0 | 1 | 2;
+
 interface ThreeStateToggleProps {
     leftIcon?: React.ReactNode;
     centerIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     onStateChange?: (state: number) => void;
-    defaultState?: 0 | 1 | 2;
+    defaultState?: SelectedItem;
     className?: string;
     size?: number;
 }
@@ -25,7 +27,7 @@ export function ThreeStateToggle({
     className,
     size = 48,
 }: ThreeStateToggleProps) {
-    const [selectedState, setSelectedState] = useState(defaultState);
+    const [selectedState, setSelectedState] = useState<0 | 1 | 2>(defaultState);
     const toggleRef = useRef<HTMLDivElement>(null);
     const startXRef = useRef<number | null>(null);
 
@@ -33,15 +35,23 @@ export function ThreeStateToggle({
     const padding = Math.max(4, Math.round(size * 0.08));
     const iconSize = Math.max(16, Math.round(size * 0.4));
 
-    const handleStateChange = (newState: number) => {
+    const handleStateChange = (newState: SelectedItem) => {
         if (newState >= 0 && newState <= 2) {
             setSelectedState(newState);
             onStateChange?.(newState);
         }
     };
 
+    const swipeLeft = () => {
+        handleStateChange(Math.min((selectedState as number) - 1, 2) as SelectedItem);
+    };
+
+    const swipeRight = () => {
+        handleStateChange(Math.min((selectedState as number) + 1, 2) as SelectedItem);
+    };
+
     const handleTouchStart = (e: React.TouchEvent) => {
-        if (e.touches && e.touches[0]) {
+        if (e.touches?.[0]) {
             startXRef.current = e.touches[0].clientX;
         }
     };
@@ -57,11 +67,9 @@ export function ThreeStateToggle({
         // Determine swipe direction if the swipe is significant enough
         if (Math.abs(diffX) > 30) {
             if (diffX > 0) {
-                // Swipe right
-                handleStateChange(Math.min(selectedState + 1, 2));
+                swipeRight();
             } else {
-                // Swipe left
-                handleStateChange(Math.max(selectedState - 1, 0));
+                swipeLeft();
             }
         }
 
@@ -80,11 +88,9 @@ export function ThreeStateToggle({
         // Determine swipe direction if the swipe is significant enough
         if (Math.abs(diffX) > 30) {
             if (diffX > 0) {
-                // Swipe right
-                handleStateChange(Math.min(selectedState + 1, 2));
+                swipeRight();
             } else {
-                // Swipe left
-                handleStateChange(Math.max(selectedState - 1, 0));
+                swipeLeft();
             }
         }
 
@@ -96,10 +102,10 @@ export function ThreeStateToggle({
         const handleKeyDown = (e: KeyboardEvent) => {
             if (document.activeElement === toggleRef.current) {
                 if (e.key === 'ArrowLeft') {
-                    handleStateChange(Math.max(selectedState - 1, 0));
+                    swipeLeft();
                     e.preventDefault();
                 } else if (e.key === 'ArrowRight') {
-                    handleStateChange(Math.min(selectedState + 1, 2));
+                    swipeRight();
                     e.preventDefault();
                 }
             }

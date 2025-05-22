@@ -1,7 +1,7 @@
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { type CurrencyId } from '~/domain/currencies';
 import { type MenuItemWithSortOrder } from '~/domain/menu-items';
-import { MenuModeId } from '~/domain/menu-modes';
+import { type MenuModeId } from '~/domain/menu-modes';
 
 export async function PublicMenu(props: {
     name: string;

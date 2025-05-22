@@ -28,7 +28,7 @@ export default async function AddMenuPage(props: { params: Params }) {
             <Suspense fallback={<LoadingSection />}>
                 <AddMenu
                     locationId={parsedLocationId}
-                    currencyId={location.currencyId as CurrencyId}
+                    currencyId={location.currencyId}
                     addMenuAction={addMenuAction}
                     allMenuItems={allMenuItems}
                     location={location}

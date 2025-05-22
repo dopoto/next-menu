@@ -6,7 +6,7 @@ import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
-import { menuItems } from '~/server/db/schema';
+import { type menuItems } from '~/server/db/schema';
 import { OrderCard } from './OrderCard';
 
 export function LiveOrders({

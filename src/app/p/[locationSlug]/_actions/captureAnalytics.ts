@@ -4,7 +4,7 @@ import { PostHog } from 'posthog-node';
 import type { LocationSlug } from '~/domain/locations';
 
 import { env } from '~/env';
-import { OrganizationId } from '~/lib/organization';
+import { type OrganizationId } from '~/lib/organization';
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: env.NEXT_PUBLIC_POSTHOG_HOST,

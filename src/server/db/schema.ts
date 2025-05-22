@@ -3,8 +3,8 @@
 
 import { relations, sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { MENU_MODES, MenuModeId } from '~/domain/menu-modes';
-import { CURRENCIES, CurrencyId } from '../../domain/currencies';
+import { MENU_MODES, type MenuModeId } from '~/domain/menu-modes';
+import { CURRENCIES, type CurrencyId } from '../../domain/currencies';
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same

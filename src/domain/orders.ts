@@ -1,9 +1,9 @@
 import { type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
-import { CurrencyId } from '~/domain/currencies';
-import { PublicOrderItem } from '~/domain/order-items';
+import { type CurrencyId } from '~/domain/currencies';
+import { type PublicOrderItem } from '~/domain/order-items';
 
-import { orders } from '~/server/db/schema';
+import { type orders } from '~/server/db/schema';
 
 export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 

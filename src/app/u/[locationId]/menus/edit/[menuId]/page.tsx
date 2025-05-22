@@ -29,7 +29,7 @@ export default async function EditMenuPage(props: { params: Params }) {
             <Suspense fallback={<LoadingSection />}>
                 <EditMenu
                     locationId={validLocationId}
-                    currencyId={location.currencyId as CurrencyId}
+                    currencyId={location.currencyId}
                     menu={menu}
                     allMenuItems={allMenuItems}
                 />

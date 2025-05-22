@@ -8,7 +8,7 @@ import { Button } from '~/components/ui/button';
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
-import { menuItems } from '~/server/db/schema';
+import { type menuItems } from '~/server/db/schema';
 import { markOrderItemAsDeliveredAction } from '../_actions/markOrderItemAsDeliveredAction';
 
 export function OrderCard({

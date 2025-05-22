@@ -20,7 +20,7 @@ export default async function MenuItemsPage(props: { params: Params }) {
                 subtitle="Your catalog of dishes and beverages. Each item can be used in one or more menus."
             />
             <Suspense fallback={<LoadingSection />}>
-                <MenusItemsList locationId={parsedlocationId} currencyId={location.currencyId as CurrencyId} />
+                <MenusItemsList locationId={parsedlocationId} currencyId={location.currencyId} />
             </Suspense>
         </div>
     );

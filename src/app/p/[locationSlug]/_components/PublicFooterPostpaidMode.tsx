@@ -13,7 +13,7 @@ import { Labeled } from '~/components/Labeled';
 import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
-import { LocationId } from '~/domain/locations';
+import { type LocationId } from '~/domain/locations';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';

@@ -15,14 +15,13 @@ export const metadata: Metadata = {
     icons: [{ rel: 'icon', url: '/favicon.ico' }],
 };
 
-export default function RootLayout(props: { children: ReactNode; modal: ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
     return (
         <html lang="en" className={buildHtmlClass()}>
             <body>
                 <PostHogProvider>
                     <Providers>
-                        <main className="h-[100dvh] w-full">{props.children}</main>
-                        {props.modal}
+                        <main className="h-[100dvh] w-full">{children}</main>
                         <div id="modal-root" />
                         <Toaster />
                         <GoogleTagManager gtmId={env.NEXT_PUBLIC_GOOGLE_TAG_MANAGER_ID ?? ''} />

@@ -29,7 +29,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
                 <EditMenuItem
                     locationId={parsedLocationId}
                     menuItem={menuItemToEdit}
-                    currencyId={location.currencyId as CurrencyId}
+                    currencyId={location.currencyId}
                 />
             </Suspense>
         </div>

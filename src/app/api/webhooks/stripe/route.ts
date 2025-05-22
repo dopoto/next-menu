@@ -36,16 +36,16 @@ export async function POST(request: Request) {
     try {
         switch (event.type) {
             case 'payment_intent.succeeded':
-                await handlePaymentIntentSucceeded(event.data.object as Stripe.PaymentIntent);
+                await handlePaymentIntentSucceeded(event.data.object);
                 break;
             case 'payment_intent.payment_failed':
-                await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+                await handlePaymentIntentFailed(event.data.object);
                 break;
             case 'charge.refunded':
-                await handleChargeRefunded(event.data.object as Stripe.Charge);
+                await handleChargeRefunded(event.data.object);
                 break;
             case 'payment_intent.requires_action':
-                await handlePaymentIntentRequiresAction(event.data.object as Stripe.PaymentIntent);
+                await handlePaymentIntentRequiresAction(event.data.object);
                 break;
             default:
                 console.log(`Unhandled event type: ${event.type}`);

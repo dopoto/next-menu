@@ -2,7 +2,7 @@ import { useAtom } from 'jotai';
 import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { CURRENCIES } from '~/domain/currencies';
-import { PublicOrderItem } from '~/domain/order-items';
+import { type PublicOrderItem } from '~/domain/order-items';
 
 export function OrderItemsList(props: { items: PublicOrderItem[] }) {
     const [order] = useAtom(orderAtom);

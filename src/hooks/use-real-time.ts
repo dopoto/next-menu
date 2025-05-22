@@ -1,12 +1,12 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
-import { PublicOrder, type PublicOrderWithItems } from '~/domain/orders';
+import { type PublicOrder, type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
-const convertToPublicOrder = (order: PublicOrderWithItems, currencyId: string = 'USD'): PublicOrder => ({
+const convertToPublicOrder = (order: PublicOrderWithItems, currencyId = 'USD'): PublicOrder => ({
     locationId: order.locationId,
     orderId: order.id.toString(),
     items: order.items,

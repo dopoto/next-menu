@@ -23,7 +23,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     return (
         <div className="flex h-full flex-col gap-2">
             <Suspense fallback={<LoadingSection />}>
-                <AddMenuItem locationId={parsedLocationId} currencyId={location.currencyId as CurrencyId} />
+                <AddMenuItem locationId={parsedLocationId} currencyId={location.currencyId} />
             </Suspense>
         </div>
     );

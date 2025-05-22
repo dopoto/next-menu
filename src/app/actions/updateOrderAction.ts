@@ -2,9 +2,9 @@
 
 import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
-import { z } from 'zod';
+import { type z } from 'zod';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
-import { menuFormSchema } from '~/domain/menus';
+import { type menuFormSchema } from '~/domain/menus';
 import { orderFormSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { type FormState, processFormErrors } from '~/lib/form-state';

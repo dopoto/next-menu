@@ -8,7 +8,7 @@ export async function createMenuItemPaymentIntent(
     merchantStripeAccountId: string,
 ): Promise<PaymentIntentResponse> {
     try {
-        if (!merchantStripeAccountId || !merchantStripeAccountId.startsWith('acct_')) {
+        if (!merchantStripeAccountId?.startsWith('acct_')) {
             //TODO
             throw new Error('Invalid merchant Stripe account');
         }

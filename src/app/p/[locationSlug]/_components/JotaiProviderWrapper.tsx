@@ -2,10 +2,10 @@
 
 import { Provider, useSetAtom } from 'jotai';
 import 'jotai-devtools/styles.css';
-import { ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
-import { CurrencyId } from '~/domain/currencies';
-import { LocationId } from '~/domain/locations';
+import { type CurrencyId } from '~/domain/currencies';
+import { type LocationId } from '~/domain/locations';
 
 import type { DevToolsProps } from 'jotai-devtools';
 import dynamic from 'next/dynamic';

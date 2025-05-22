@@ -1,6 +1,6 @@
 'use server';
 
-import { PublicOrderItem } from '~/domain/order-items';
+import { type PublicOrderItem } from '~/domain/order-items';
 import { type PaymentIntentResponse } from '~/domain/payments';
 import { createPaymentIntent, verifyConnectAccount } from '~/lib/payment-utils';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
