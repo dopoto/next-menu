@@ -1,150 +1,195 @@
 'use client';
 
 import { useAtom } from 'jotai';
-import { LoaderIcon, ShoppingCart } from 'lucide-react';
+import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
+import Image from 'next/image';
 import { useState } from 'react';
-import { createCartPaymentIntent } from '~/app/actions/createCartPaymentIntent';
-import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
+import { placeOrderAction } from '~/app/actions/placeOrderAction';
+import { updateOrderAction } from '~/app/actions/updateOrderAction';
+import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
+import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
-import { PaymentButton } from '~/components/public/PaymentButton';
+import { Labeled } from '~/components/Labeled';
 import { Button } from '~/components/ui/button';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '~/components/ui/sheet';
-import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
+import { DrawerClose } from '~/components/ui/drawer';
+import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
+import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
+function OrderSummaryItem(props: { quantity: number; description: string; children?: React.ReactNode }) {
+    const textColor = props.quantity > 0 ? 'text-black' : 'text-gray-500';
+    return (
+        <div className="flex flex-col items-center-safe">
+            <div className={`text-7xl font-bold tracking-tighter ${textColor}`}>{props.quantity}</div>
+            <div className={`text-sm truncate antialiased uppercase ${textColor}`}>{props.description}</div>
+            <div className="pt-3 pb-3 h-23">{props.children}</div>
+        </div>
+    );
+}
+
 export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
-    const currency = CURRENCIES[props.currencyId];
-    const [order] = useAtom(orderAtom);
-    const [menuItems] = useAtom(menuItemsAtom);
-    const [clientSecret, setClientSecret] = useState<string | null>(null);
+    const [order, setOrder] = useAtom(orderAtom);
     const [isLoading, setIsLoading] = useState(false);
-    const [isCheckingOut, setIsCheckingOut] = useState(false);
-    const [merchantStripeAccountId, setMerchantStripeAccountId] = useState<string | null>(null);
     const { toast } = useToast();
 
-    const totalAmount = 0; // TODO order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
+    // Add real-time updates
+    useRealTimeOrderUpdates(order.orderId, props.locationId);
 
-    const handleCheckout = async () => {
-        setIsLoading(true);
+    //const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
+
+    const createOrder = async (e?: React.MouseEvent) => {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
         try {
-            const paymentIntent = await createCartPaymentIntent(order.items, props.locationId);
-            setClientSecret(paymentIntent.clientSecret);
-            setMerchantStripeAccountId(paymentIntent.merchantStripeAccountId);
-            setIsCheckingOut(true);
-        } catch (err) {
-            toast({
-                title: 'Error',
-                description: err instanceof Error ? err.message : 'Failed to initiate checkout',
-                className: getTopPositionedToast(),
-            });
+            setIsLoading(true);
+
+            const res = await placeOrderAction(order);
+            if (res.status === 'success') {
+                const orderWithItems = res.fields?.orderWithItems;
+                toast({
+                    title: 'Order placed successfully',
+                    description: `Your order number is ${orderWithItems?.id}`,
+                    variant: 'default',
+                    className: getTopPositionedToast(),
+                });
+                setOrder((prevOrder) => {
+                    return {
+                        ...prevOrder,
+                        orderId: orderWithItems?.id ? String(orderWithItems.id) : undefined, //TODO review
+                        items: orderWithItems?.items ?? [],
+                    };
+                });
+            } else {
+                toast({
+                    title: 'Failed to place order',
+                    description: 'Please try again',
+                    variant: 'destructive',
+                    className: getTopPositionedToast(),
+                });
+            }
+        } catch (error) {
+            console.error('Failed to place order:', error);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handlePaymentSuccess = () => {
-        toast({
-            title: 'Success',
-            description: 'Payment completed successfully!',
-            className: getTopPositionedToast(),
-        });
-        //setOrder( );
-        setIsCheckingOut(false);
+    const updateOrder = async (e?: React.MouseEvent) => {
+        if (e) {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+
+        try {
+            setIsLoading(true);
+
+            const res = await updateOrderAction(order);
+            if (res.status === 'success') {
+                const orderWithItems = res.fields?.orderWithItems;
+                toast({
+                    title: 'Order updated successfully',
+                    description: `Your order number is ${orderWithItems?.id}`,
+                    variant: 'default',
+                    className: getTopPositionedToast(),
+                });
+                setOrder((prevOrder) => {
+                    return {
+                        ...prevOrder,
+                        orderId: orderWithItems?.id ? String(orderWithItems.id) : undefined, //TODO review
+                        items: orderWithItems?.items ?? [],
+                    };
+                });
+            } else {
+                toast({
+                    title: 'Failed to update order',
+                    description: 'Please try again',
+                    variant: 'destructive',
+                    className: getTopPositionedToast(),
+                });
+            }
+        } catch (error) {
+            console.error('Failed to update order:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handlePaymentError = (error: Error) => {
-        toast({
-            title: 'Payment Failed',
-            description: error.message,
-            className: getTopPositionedToast(),
-        });
-        setIsCheckingOut(false);
-    };
+    const draftItems = order.items.filter((item) => !item.orderItem.id);
+    const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === false);
+    const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === true);
 
-    console.log(JSON.stringify(order, null, 2));
+    const draftItemsSummary = (
+        <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
+            {draftItems.length > 0 &&
+                (order.orderId ? (
+                    <Button onClick={updateOrder} disabled={isLoading}>
+                        {isLoading ? 'Ordering...' : 'Add to order'}
+                    </Button>
+                ) : (
+                    <Button onClick={createOrder} disabled={isLoading}>
+                        {isLoading ? 'Ordering...' : 'Order now!'}
+                    </Button>
+                ))}
+        </OrderSummaryItem>
+    );
+    const inPreparationItemsSummary = (
+        <OrderSummaryItem quantity={inPreparationItems.length} description={'In preparation'}>
+            {inPreparationItems.length > 0 && (
+                <Image src="/images/Stampede.gif" alt="Hero banner" width={140} height={18} />
+            )}
+        </OrderSummaryItem>
+    );
+    const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />;
+
+    const collapsedContent = (
+        <div className="flex flex-col w-full h-full p-3">
+            <div className="flex flex-row justify-between">
+                <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                <ChevronsUpIcon />
+            </div>
+            <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">
+                <div className="flex-1">{draftItemsSummary}</div>
+                <div className="flex-1">{inPreparationItemsSummary}</div>
+                <div className="flex-1">{deliveredItemsSummary}</div>
+            </div>
+        </div>
+    );
 
     return (
-        <Sheet>
-            <SheetTrigger asChild>
-                <Button variant="default" className="fixed bottom-4 left-4 h-16 w-16 rounded-full">
-                    <ShoppingCart className="h-6 w-6" />
-                    {order.items.length > 0 && (
-                        <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
-                            {order.items.reduce((sum, item) => {
-                                const { price } = menuItems.get(item.menuItemId) ?? { price: '0' };
-                                return sum + Number(price);
-                            }, 0)}
-                        </span>
-                    )}
-                </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-[400px] sm:w-[540px]">
-                <SheetHeader>
-                    <SheetTitle>Your Order</SheetTitle>
-                </SheetHeader>
-                {order.items.length === 0 ? (
-                    <div className="flex h-full items-center justify-center">
-                        <p className="text-muted-foreground">Your cart is empty</p>
+        <PublicFooterDrawer collapsedContent={collapsedContent}>
+            <div className="flex flex-col w-full h-full p-3">
+                <div className="flex flex-row justify-between">
+                    <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                    <DrawerClose>
+                        <ChevronsDownIcon />
+                    </DrawerClose>
+                </div>
+                <div className="flex flex-col w-full h-full gap-4 pt-4">
+                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-45">{draftItemsSummary}</div>
+                        <div>
+                            <OrderItemsList items={draftItems} />
+                        </div>
                     </div>
-                ) : (
-                    <>
-                        <div className="flex flex-col space-y-4">
-                            {order.items.map((item) => {
-                                const menuItem = menuItems.get(item.menuItemId);
-                                if (!menuItem) return null;
-                                const { name, price } = menuItem;
-                                return (
-                                    <div key={item.menuItemId} className="flex items-center justify-between">
-                                        <div>
-                                            <p className="font-medium">{name}</p>
-                                            <p className="text-muted-foreground text-sm">
-                                                {price} {currency.symbol}
-                                            </p>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <span className="w-8 text-center">1</span>
-                                        </div>
-                                    </div>
-                                );
-                            })}
+                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-45">{inPreparationItemsSummary}</div>
+                        <div>
+                            <OrderItemsList items={inPreparationItems} />
                         </div>
-
-                        <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4">
-                            <div className="flex items-center justify-between py-4">
-                                <span className="text-lg font-medium">Total:</span>
-                                <span className="text-lg font-medium">
-                                    {totalAmount.toFixed(2)} {currency.symbol}
-                                </span>
-                            </div>
-                            {isCheckingOut && clientSecret && merchantStripeAccountId ? (
-                                <div className="w-full">
-                                    <PaymentButton
-                                        clientSecret={clientSecret}
-                                        merchantName="Menu"
-                                        amount={totalAmount}
-                                        merchantStripeAccountId={merchantStripeAccountId}
-                                        onSuccess={handlePaymentSuccess}
-                                        onError={handlePaymentError}
-                                    />
-                                </div>
-                            ) : (
-                                <Button className="w-full" disabled={isLoading} onClick={handleCheckout}>
-                                    {isLoading ? (
-                                        <>
-                                            <LoaderIcon className="mr-2 h-4 w-4 animate-spin" />
-                                            Processing...
-                                        </>
-                                    ) : (
-                                        'Checkout'
-                                    )}
-                                </Button>
-                            )}
+                    </div>
+                    <div className="flex flex-row gap-6  ">
+                        <div className="w-45">{deliveredItemsSummary}</div>
+                        <div>
+                            <OrderItemsList items={deliveredItems} />
                         </div>
-                    </>
-                )}
-            </SheetContent>
-        </Sheet>
+                    </div>
+                </div>
+            </div>
+        </PublicFooterDrawer>
     );
 }

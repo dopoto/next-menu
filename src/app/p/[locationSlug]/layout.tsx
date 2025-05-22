@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import JotaiProviderWrapper from '~/app/p/[locationSlug]/_components/JotaiProviderWrapper';
 import { PublicFooterInteractiveMode } from '~/app/p/[locationSlug]/_components/PublicFooterInteractiveMode';
-import { PublicFooterPostpaidMode } from '~/app/p/[locationSlug]/_components/PublicFooterPostpaidMode';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import { CookieKey } from '~/domain/cookies';
 import { locationSlugSchema } from '~/domain/locations';
@@ -70,9 +69,6 @@ export default async function Layout({ params, children }: { params: Params; chi
 
                 {location.menuMode === 'interactive' && (
                     <PublicFooterInteractiveMode currencyId={location.currencyId} locationId={location.id} />
-                )}
-                {location.menuMode === 'postpaid' && (
-                    <PublicFooterPostpaidMode currencyId={location.currencyId} locationId={location.id} />
                 )}
 
                 <AnalyticsEventSender
