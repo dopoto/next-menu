@@ -54,11 +54,16 @@ export async function OpenOrdersList(props: { locationId: LocationId }) {
 
         return <LiveOrders locationId={props.locationId} initialOrders={openOrders} menuItemsMap={menuItemsMap} />;
     } catch (error) {
+        //TODO revisit
         console.error('Error in OpenOrdersList:', error);
         throw error instanceof AppError
             ? error
             : new AppError({
-                  internalMessage: `Unexpected error in OpenOrdersList: ${error}`,
+                  internalMessage: `Unexpected error in OpenOrdersList: ${
+                      typeof error === 'object' && error !== null && 'toString' in error
+                          ? (error as { toString: () => string }).toString()
+                          : String(error)
+                  }`,
                   publicMessage: 'Failed to load orders. Please try refreshing the page.',
               });
     }

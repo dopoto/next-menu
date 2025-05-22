@@ -69,7 +69,7 @@ function PaymentRequestButton({ clientSecret, merchantName, amount, onSuccess, o
                 if (!stripe) {
                     throw new Error('Stripe not initialized');
                 }
-                const { error, paymentIntent } = await stripe.confirmCardPayment(
+                const { error } = await stripe.confirmCardPayment(
                     clientSecret,
                     {
                         payment_method: e.paymentMethod.id,

@@ -25,7 +25,7 @@ function Initializer(props: { locationId: LocationId; currencyId: CurrencyId; me
 
     useEffect(() => {
         setOrder({ locationId: props.locationId, currencyId: props.currencyId, items: [] });
-    }, [props.locationId, setOrder]);
+    }, [props.locationId, props.currencyId, setOrder]);
 
     useEffect(() => {
         setMenuItems(new Map(props.menuItems.map((item) => [item.id, item])));

@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { EditMenu } from '~/app/u/[locationId]/menus/_components/EditMenu';
-import { type CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getValidMenuIdOrThrow } from '~/lib/menu-utils';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';

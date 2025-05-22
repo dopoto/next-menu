@@ -16,7 +16,7 @@ import { getTopPositionedToast } from '~/lib/toast-utils';
 
 export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
-    const [order, setOrder] = useAtom(orderAtom);
+    const [order] = useAtom(orderAtom);
     const [menuItems] = useAtom(menuItemsAtom);
     const [clientSecret, setClientSecret] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +73,7 @@ export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locatio
                     {order.items.length > 0 && (
                         <span className="absolute right-0 top-0 -translate-y-1/2 translate-x-1/2 rounded-full bg-white px-2 py-1 text-sm font-medium text-black">
                             {order.items.reduce((sum, item) => {
-                                const { price } = menuItems.get(item.menuItemId) || { price: '0' };
+                                const { price } = menuItems.get(item.menuItemId) ?? { price: '0' };
                                 return sum + Number(price);
                             }, 0)}
                         </span>

@@ -10,12 +10,12 @@ const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: env.NEXT_PUBLIC_POSTHOG_HOST,
 });
 
-export async function capturePublicLocationVisit(
+export function capturePublicLocationVisit(
     machineId: string | undefined,
     orgId: OrganizationId,
     locationSlug: LocationSlug,
 ) {
-    await posthog.capture({
+    posthog.capture({
         distinctId: machineId ?? '-- missing machine id --',
         event: 'publicLocationVisit',
         properties: {

@@ -3,7 +3,7 @@
 // export const ORDER_ITEM_STATUSES = [...new Set([...POSTPAID_STATUSES, ...PREPAID_STATUSES])] as const;
 
 import type { InferSelectModel } from 'drizzle-orm';
-import { MenuItem, type MenuItemId } from '~/domain/menu-items';
+import { type MenuItemId } from '~/domain/menu-items';
 import { type orderItems } from '~/server/db/schema';
 
 // type PostpaidOrderItemStatus = (typeof POSTPAID_STATUSES)[number];

@@ -3,7 +3,7 @@
 import type React from 'react';
 
 import { ChevronLeft, ChevronRight, Minus } from 'lucide-react';
-import { cloneElement, isValidElement, useEffect, useRef, useState } from 'react';
+import { cloneElement, isValidElement, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
 
 type SelectedItem = 0 | 1 | 2;
@@ -35,20 +35,23 @@ export function ThreeStateToggle({
     const padding = Math.max(4, Math.round(size * 0.08));
     const iconSize = Math.max(16, Math.round(size * 0.4));
 
-    const handleStateChange = (newState: SelectedItem) => {
-        if (newState >= 0 && newState <= 2) {
-            setSelectedState(newState);
-            onStateChange?.(newState);
-        }
-    };
+    const handleStateChange = useCallback(
+        (newState: SelectedItem) => {
+            if (newState >= 0 && newState <= 2) {
+                setSelectedState(newState);
+                onStateChange?.(newState);
+            }
+        },
+        [setSelectedState, onStateChange],
+    );
 
-    const swipeLeft = () => {
+    const swipeLeft = useCallback(() => {
         handleStateChange(Math.min((selectedState as number) - 1, 2) as SelectedItem);
-    };
+    }, [handleStateChange, selectedState]);
 
-    const swipeRight = () => {
+    const swipeRight = useCallback(() => {
         handleStateChange(Math.min((selectedState as number) + 1, 2) as SelectedItem);
-    };
+    }, [handleStateChange, selectedState]);
 
     const handleTouchStart = (e: React.TouchEvent) => {
         if (e.touches?.[0]) {
@@ -95,9 +98,7 @@ export function ThreeStateToggle({
         }
 
         startXRef.current = null;
-    };
-
-    // Handle keyboard navigation
+    }; // Handle keyboard navigation
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (document.activeElement === toggleRef.current) {
@@ -113,11 +114,12 @@ export function ThreeStateToggle({
 
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [selectedState]);
+    }, [selectedState, swipeLeft, swipeRight]);
 
     // Helper function to resize icons
     const resizeIcon = (icon: React.ReactNode) => {
         if (isValidElement(icon)) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const iconProps: Record<string, any> = {};
             // Only add className if the element supports it
             if (icon.props && typeof icon.props === 'object' && 'className' in icon.props) {
@@ -149,7 +151,7 @@ export function ThreeStateToggle({
             onTouchEnd={handleTouchEnd}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
-            onMouseLeave={(e) => startXRef.current !== null && handleMouseUp(e as any)}
+            onMouseLeave={(e) => startXRef.current !== null && handleMouseUp(e)}
             tabIndex={0}
             role="slider"
             aria-valuemin={0}

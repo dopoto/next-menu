@@ -33,13 +33,12 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
 
         const insertedItems: PublicOrderItem[] = [];
         if (data.items) {
-            for (let i = 0; i < data.items.length; i++) {
-                const item = data.items[i];
+            for (const item of data.items) {
                 const [insertedItem] = await tx
                     .insert(orderItems)
                     .values({
                         orderId: order.id,
-                        menuItemId: item!.menuItemId,
+                        menuItemId: item.menuItemId,
                         isDelivered: false,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
@@ -48,7 +47,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .returning();
                 if (insertedItem) {
                     const insertedPublicItem: PublicOrderItem = {
-                        menuItemId: item!.menuItemId,
+                        menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
                             isDelivered: false,
@@ -73,13 +72,12 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
         const itemsAlreadyOrdered = data.items?.filter((item) => item.orderItem.id !== undefined) ?? [];
         const insertedItems: PublicOrderItem[] = [];
         if (itemsToInsert) {
-            for (let i = 0; i < itemsToInsert.length; i++) {
-                const item = itemsToInsert[i];
+            for (const item of itemsToInsert) {
                 const [insertedItem] = await tx
                     .insert(orderItems)
                     .values({
                         orderId: Number(data.orderId), //TODO review
-                        menuItemId: item!.menuItemId,
+                        menuItemId: item.menuItemId,
                         isDelivered: false,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
@@ -88,7 +86,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .returning();
                 if (insertedItem) {
                     const insertedPublicItem: PublicOrderItem = {
-                        menuItemId: item!.menuItemId,
+                        menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
                             isDelivered: false,

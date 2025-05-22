@@ -67,7 +67,10 @@ export async function processSuccessfulPayment(paymentIntent: Stripe.PaymentInte
         await stripe.transfers.create({
             amount: amountReceived - appFeeAmount,
             currency: paymentIntent.currency,
-            destination: paymentIntent.transfer_data.destination.toString(),
+            destination:
+                typeof paymentIntent.transfer_data.destination === 'string'
+                    ? paymentIntent.transfer_data.destination
+                    : paymentIntent.transfer_data.destination.id,
             transfer_group: paymentIntent.id,
             description: `Transfer for payment ${paymentIntent.id}`,
             metadata: {
@@ -129,7 +132,7 @@ export async function createConnectAccount(params: CreateConnectAccountParams) {
             business_profile: {
                 name: params.businessProfile.name,
                 url: params.businessProfile.url,
-                mcc: params.businessProfile.mcc || '5812', // Default to restaurants
+                mcc: params.businessProfile.mcc ?? '5812', // Default to restaurants
             },
         });
 
