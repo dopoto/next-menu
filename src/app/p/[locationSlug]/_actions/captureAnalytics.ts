@@ -2,9 +2,8 @@
 
 import { PostHog } from 'posthog-node';
 import type { LocationSlug } from '~/domain/locations';
-
 import { env } from '~/env';
-import { type OrganizationId } from '~/lib/organization';
+import { OrganizationId } from '~/lib/organization';
 
 const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: env.NEXT_PUBLIC_POSTHOG_HOST,
@@ -12,14 +11,14 @@ const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
 
 export async function capturePublicLocationVisit(
     machineId: string | undefined,
-    orgId: OrganizationId,
+    organizationId: OrganizationId,
     locationSlug: LocationSlug,
 ) {
     posthog.capture({
         distinctId: machineId ?? '-- missing machine id --',
         event: 'publicLocationVisit',
         properties: {
-            orgId,
+            organizationId,
             locationSlug,
         },
     });

@@ -1,4 +1,4 @@
-'use client';
+l'use client';
 
 import { Elements, PaymentElement, PaymentRequestButtonElement, useElements, useStripe } from '@stripe/react-stripe-js';
 import { loadStripe, type PaymentRequest, type StripeElementsOptions } from '@stripe/stripe-js';
