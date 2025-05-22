@@ -30,12 +30,6 @@ type ErrorResult<TSchema extends z.ZodType> = {
     rootError?: string;
 };
 
-// /**
-//  * Generic form state type that works with any Zod schema
-//  * TSchema is a Zod schema that defines the form's shape
-//  */
-// export type FormState<TSchema extends z.ZodType> = SuccessResult | ErrorResult<TSchema>;
-
 /**
  * Helper function to process Zod validation errors into field errors
  */

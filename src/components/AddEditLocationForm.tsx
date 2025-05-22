@@ -68,17 +68,19 @@ export function AddEditLocationForm(props: {
                                     value={field.value ? options.find((opt) => opt.value === field.value) : undefined}
                                     onChange={(newValue) => field.onChange(newValue?.value)}
                                 />
-                                <FormDescription>The currency used by menus in this location.</FormDescription>
+                                <FormDescription>The currency used by menus in this location</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}
-                    />{' '}
+                    />
+
                     <FormField
                         control={props.form.control}
                         name="menuMode"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel>Menu Mode</FormLabel>
+                                <FormDescription>Controls how customers can interact with your menus</FormDescription>
                                 <RadioGroup onValueChange={field.onChange} value={field.value ?? 'noninteractive'}>
                                     {Object.keys(MENU_MODES).map((k) => {
                                         const menuMode = MENU_MODES[k as keyof typeof MENU_MODES];
@@ -88,9 +90,11 @@ export function AddEditLocationForm(props: {
                                         return (
                                             <div key={menuMode.id} className="flex items-center space-x-4 py-2">
                                                 <RadioGroupItem value={menuMode.id} id={menuMode.id} />
-                                                <div className="flex flex-col gap-1">
-                                                    <Label htmlFor={menuMode.id}>{menuMode.name}</Label>
-                                                    <Label className="font-light" htmlFor={menuMode.id}>
+                                                <div className="flex flex-col gap-0.5">
+                                                    <Label className="  text-xs" htmlFor={menuMode.id}>
+                                                        {menuMode.name}
+                                                    </Label>
+                                                    <Label className="font-light text-xs" htmlFor={menuMode.id}>
                                                         {menuMode.description}
                                                     </Label>
                                                 </div>
@@ -98,7 +102,6 @@ export function AddEditLocationForm(props: {
                                         );
                                     })}
                                 </RadioGroup>
-                                <FormDescription>Controls how customers can interact with your menus</FormDescription>
                                 <FormMessage />
                             </FormItem>
                         )}

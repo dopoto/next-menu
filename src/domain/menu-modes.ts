@@ -13,7 +13,7 @@ export const MENU_MODES: Record<MenuModeId, MenuMode> = {
     noninteractive: {
         id: 'noninteractive',
         name: 'Non-interactive',
-        description: 'Customers can use your menus to browse, filter, search and view you menu items.',
+        description: 'Customers can use your menus to browse, filter, search and view your menu items.',
         allowsAddToOrder: false,
         isEnabled: true,
     },

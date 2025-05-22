@@ -6,6 +6,7 @@ import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
+//TODO revisit:
 const convertToPublicOrder = (order: PublicOrderWithItems, currencyId = 'USD'): PublicOrder => ({
     locationId: order.locationId,
     orderId: order.id.toString(),
@@ -26,7 +27,6 @@ export function useRealTimeOrderUpdates(orderId: string | undefined, locationId:
 
         // Handle new orders in the location
         locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
-            console.log(`DBG-useRealTimeOrderUpdates`, JSON.stringify(data));
             toast({
                 title: 'New Order',
                 description: `Order #${orderId} has been created`,
@@ -66,7 +66,6 @@ export function useRealTimeLocationUpdates(locationId: number) {
 
         // Handle new orders in the location
         locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
-            console.log(`DBG-useRealTimeLocationUpdates`, JSON.stringify(data));
             toast({
                 title: 'New Order',
                 description: `Order #${data.id} has been created`,

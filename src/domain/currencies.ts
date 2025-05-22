@@ -1,4 +1,4 @@
-export type Currency = {
+type Currency = {
     symbol: string;
     name: string;
     symbol_native: string;

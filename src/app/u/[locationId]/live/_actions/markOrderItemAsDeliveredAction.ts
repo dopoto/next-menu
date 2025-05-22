@@ -21,6 +21,7 @@ export async function markOrderItemAsDeliveredAction(locationId: LocationId, ord
 
     // TODO Check that the order item id is in the order items for the location
 
+    // TODO move to queries
     // Update the order item status
     const [updatedItem] = await db
         .update(orderItems)

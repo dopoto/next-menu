@@ -9,6 +9,7 @@ const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: env.NEXT_PUBLIC_POSTHOG_HOST,
 });
 
+// TODO refactor - merge into AnalyticsEventSender or at least use AnalyticsEventMap
 export async function capturePublicLocationVisit(
     machineId: string | undefined,
     organizationId: OrganizationId,

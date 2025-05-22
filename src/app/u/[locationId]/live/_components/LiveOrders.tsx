@@ -27,7 +27,6 @@ export function LiveOrders({
 
         // Handle new orders
         locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
-            console.log(`DBG-EVENTS.ORDER_CREATED`);
             setOrders((current) => [...current, data]);
             toast({
                 title: 'New Order Received',
@@ -37,7 +36,6 @@ export function LiveOrders({
 
         // Handle updates to any order
         locationChannel.bind(EVENTS.ORDER_UPDATED, (data: PublicOrderWithItems) => {
-            console.log(`DBG-EVENTS.ORDER_UPDATED`);
             setOrders((current) => current.map((order) => (order.id === data.id ? data : order)));
         });
 

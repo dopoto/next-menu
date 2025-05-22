@@ -42,7 +42,7 @@ export const locationFormSchema = z.object({
         {
             label: 'Location name',
             placeholder: 'My fancy restaurant',
-            description: 'The name of your location.',
+            description: 'The name of your location',
         },
     ),
     currencyId: withMeta(
@@ -55,7 +55,7 @@ export const locationFormSchema = z.object({
         {
             label: 'Currency',
             placeholder: 'Choose the currency name',
-            description: 'The currency shown for menu items.',
+            description: 'The currency shown for menu items',
         },
     ),
 
@@ -66,7 +66,7 @@ export const locationFormSchema = z.object({
         {
             label: 'Menu mode',
             placeholder: 'Choose the menu mode',
-            description: 'The operation mode of menus in this location.',
+            description: 'The operation mode of menus in this location',
         },
     ),
 });
