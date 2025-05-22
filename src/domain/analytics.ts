@@ -1,5 +1,5 @@
-import { ClerkOrganizationId } from '~/domain/clerk';
 import { type LocationSlug } from '~/domain/locations';
+import { OrganizationId } from '~/lib/organization';
 
 /**
  * NOTE: Each field (E.G. "orgId", "locationSlug") needs to be configured
@@ -12,7 +12,7 @@ export interface AnalyticsEventMap {
      * Fired when the /p/[locationSlug] is accessed.
      */
     publicLocationVisit: {
-        orgId: ClerkOrganizationId;
+        orgId: OrganizationId;
         locationSlug: LocationSlug;
     };
 }
