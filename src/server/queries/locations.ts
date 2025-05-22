@@ -63,23 +63,15 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
     }
     const validLocationId = locationIdValidationResult.data;
 
-    // Get the auth data outside the cache function
     const { userId, sessionClaims } = await auth();
-
     if (!userId) {
         throw new AppError({ internalMessage: 'Unauthorized - no user ID provided' });
     }
 
-    const clerkOrgId = sessionClaims?.org_id;
-
-    if (!clerkOrgId) {
-        throw new AppError({ internalMessage: 'Unauthorized - no organization ID provided' });
-    }
-
-    const validClerkOrgId = getValidClerkOrgIdOrThrow(clerkOrgId);
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
     if (!validClerkOrgId) {
         throw new AppError({
-            internalMessage: `Invalid organization ID: ${clerkOrgId}`,
+            internalMessage: `Invalid organization ID: ${sessionClaims?.org_id}`,
         });
     }
 

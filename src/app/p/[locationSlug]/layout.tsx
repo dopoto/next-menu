@@ -32,7 +32,7 @@ export default async function Layout({ params, children }: { params: Params; chi
     const cookieStore = cookies();
     const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
 
-    capturePublicLocationVisit(machineId, location.orgId, parsedLocationSlug);
+    await capturePublicLocationVisit(machineId, location.orgId, parsedLocationSlug);
 
     return (
         <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId} menuItems={menuItems}>

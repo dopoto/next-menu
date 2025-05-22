@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { type CurrencyId } from '~/domain/currencies';
-import { MenuModeId } from '~/domain/menu-modes';
+import { type MenuModeId } from '~/domain/menu-modes';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';

@@ -2,7 +2,7 @@ import { env } from 'process';
 import { type AnalyticsEventId } from '~/domain/analytics';
 import { type LocationSlug } from '~/domain/locations';
 import { generateErrorId, logException } from '~/lib/error-utils.server';
-import { OrganizationId } from '~/lib/organization';
+import { type OrganizationId } from '~/lib/organization';
 
 export async function getViews(organizationId: OrganizationId, locationSlug: LocationSlug): Promise<number | null> {
     const eventName: AnalyticsEventId = 'publicLocationVisit';

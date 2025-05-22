@@ -1,5 +1,5 @@
 import { type LocationSlug } from '~/domain/locations';
-import { OrganizationId } from '~/lib/organization';
+import { type OrganizationId } from '~/lib/organization';
 
 /**
  * NOTE: Each field (E.G. "orgId", "locationSlug") needs to be configured

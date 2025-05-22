@@ -4,7 +4,7 @@ import { getViews } from '~/app/u/[locationId]/reports/_utils/posthog-utils';
 import { Skeleton } from '~/components/ui/skeleton';
 import { type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
-import { OrganizationId } from '~/lib/organization';
+import { type OrganizationId } from '~/lib/organization';
 import { ROUTES } from '~/lib/routes';
 
 export async function LocationViewsCard(props: {
