@@ -65,13 +65,13 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
 
     const { userId, sessionClaims } = await auth();
     if (!userId) {
-        throw new AppError({ internalMessage: 'Unauthorized' });
+        throw new AppError({ internalMessage: 'Unauthorized - no user ID provided' });
     }
 
     const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
     if (!validClerkOrgId) {
         throw new AppError({
-            internalMessage: `No valid clerk org id found in session claims - ${JSON.stringify(sessionClaims)}.`,
+            internalMessage: `Invalid organization ID: ${sessionClaims?.org_id}`,
         });
     }
 
@@ -96,7 +96,11 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
         });
     }
 
-    return location;
+    return {
+        ...location,
+        menuMode: location.menuMode as Location['menuMode'],
+        currencyId: location.currencyId as Location['currencyId'],
+    };
 }
 
 export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location> {
@@ -110,7 +114,11 @@ export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): P
         });
     }
 
-    return location;
+    return {
+        ...location,
+        menuMode: location.menuMode as Location['menuMode'],
+        currencyId: location.currencyId as Location['currencyId'],
+    };
 }
 
 export async function getLocationPublicDataById(locationId: LocationId): Promise<Location> {
@@ -124,7 +132,11 @@ export async function getLocationPublicDataById(locationId: LocationId): Promise
         });
     }
 
-    return location;
+    return {
+        ...location,
+        menuMode: location.menuMode as Location['menuMode'],
+        currencyId: location.currencyId as Location['currencyId'],
+    };
 }
 
 export async function updateLocation(locationId: LocationId, data: z.infer<typeof locationFormSchema>) {
@@ -136,6 +148,7 @@ export async function updateLocation(locationId: LocationId, data: z.infer<typeo
             .set({
                 name: data.locationName,
                 currencyId: data.currencyId,
+                menuMode: data.menuMode,
                 updatedAt: sql`CURRENT_TIMESTAMP`,
             })
             .where(eq(locations.id, validLocation.id));

@@ -12,22 +12,24 @@ export const env = createEnv({
     /**
      * Specify your server-side environment variables schema here. This way you can ensure the app
      * isn't built with invalid env vars.
-     */
-    server: {
+     */ server: {
         POSTGRES_URL: z.string().url(),
         STRIPE_SECRET_KEY: z.string(),
         SENTRY_AUTH_TOKEN: z.string(),
         POSTHOG_ANALYTICS_QUERIES_API_KEY: z.string(),
         POSTHOG_PROJECT_ID: z.string(),
         NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+        PUSHER_APP_ID: z.string(),
+        PUSHER_APP_KEY: z.string(),
+        PUSHER_APP_SECRET: z.string(),
+        PUSHER_CLUSTER: z.string(),
     },
 
     /**
      * Specify your client-side environment variables schema here. This way you can ensure the app
      * isn't built with invalid env vars. To expose them to the client, prefix them with
      * `NEXT_PUBLIC_`.
-     */
-    client: {
+     */ client: {
         NEXT_PUBLIC_APP_URL: z.string().url(),
         NEXT_PUBLIC_ENV: z.string(),
         NEXT_PUBLIC_LOG_TO_SENTRY: z.enum(['yes', 'no']),
@@ -35,6 +37,8 @@ export const env = createEnv({
         NEXT_PUBLIC_SENTRY_DSN: z.string(),
         NEXT_PUBLIC_SENTRY_ORG: z.string(),
         NEXT_PUBLIC_SENTRY_PROJECT: z.string(),
+        NEXT_PUBLIC_PUSHER_APP_KEY: z.string(),
+        NEXT_PUBLIC_PUSHER_CLUSTER: z.string(),
         NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string(),
         NEXT_PUBLIC_CLERK_SIGN_UP_FORCE_REDIRECT_URL: z.string(),
         NEXT_PUBLIC_CLERK_SIGN_UP_FALLBACK_REDIRECT_URL: z.string(),
@@ -54,8 +58,7 @@ export const env = createEnv({
     /**
      * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
      * middlewares) or client-side so we need to destruct manually.
-     */
-    runtimeEnv: {
+     */ runtimeEnv: {
         NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
         NEXT_PUBLIC_ENV: process.env.NEXT_PUBLIC_ENV,
         POSTGRES_URL: process.env.POSTGRES_URL,
@@ -64,6 +67,12 @@ export const env = createEnv({
         NODE_ENV: process.env.NODE_ENV,
         NEXT_PUBLIC_LOG_TO_SENTRY: process.env.NEXT_PUBLIC_LOG_TO_SENTRY,
         NEXT_PUBLIC_LOG_TO_CONSOLE: process.env.NEXT_PUBLIC_LOG_TO_CONSOLE,
+        PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+        PUSHER_APP_KEY: process.env.PUSHER_APP_KEY,
+        PUSHER_APP_SECRET: process.env.PUSHER_APP_SECRET,
+        PUSHER_CLUSTER: process.env.PUSHER_CLUSTER,
+        NEXT_PUBLIC_PUSHER_APP_KEY: process.env.NEXT_PUBLIC_PUSHER_APP_KEY,
+        NEXT_PUBLIC_PUSHER_CLUSTER: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
         NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
         NEXT_PUBLIC_SENTRY_ORG: process.env.NEXT_PUBLIC_SENTRY_ORG,
         NEXT_PUBLIC_SENTRY_PROJECT: process.env.NEXT_PUBLIC_SENTRY_PROJECT,

@@ -7,9 +7,16 @@ import { ReactHookFormLabelWithCharCounter } from '~/components/forms/ReactHookF
 import { FormControl, FormDescription, FormField, FormItem, FormMessage } from '~/components/ui/form';
 import { Input } from '~/components/ui/input';
 
+interface ZodMaxCheck {
+    kind: 'max';
+    value: number;
+    message?: string;
+}
+
 function getMaxLength(schema?: ZodString | ZodOptional<ZodString>): number {
     const stringSchema = schema instanceof ZodOptional ? schema.unwrap() : schema;
-    return stringSchema?._def?.checks?.find((check) => check.kind === 'max')?.value ?? 0;
+    const maxCheck = stringSchema?._def?.checks?.find((check): check is ZodMaxCheck => check.kind === 'max');
+    return maxCheck?.value ?? 0;
 }
 
 export function ReactHookFormField(props: { schema: ZodObject<ZodRawShape>; form: any; fieldName: string }) {

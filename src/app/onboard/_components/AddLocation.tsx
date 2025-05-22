@@ -39,6 +39,7 @@ export const AddLocation = ({
         defaultValues: {
             currencyId: 'USD',
             locationName: '',
+            menuMode: 'interactive',
         },
     });
     const addLocationFormComponent = (
@@ -50,10 +51,10 @@ export const AddLocation = ({
     return (
         <div className={cn('flex w-full flex-col gap-6', className)}>
             <div>{`Now, let's create your default location - the restaurant, bar or pub you will manage digital menus for.`}</div>
+            <div>{`All these settings can be changed anytime later from your account.`}</div>
             <OverviewCard
                 variant={'form'}
-                title={'Add a location'}
-                subtitle={`This can be changed anytime later from your account.`}
+                title={'Add location'}
                 sections={[
                     {
                         title: '',

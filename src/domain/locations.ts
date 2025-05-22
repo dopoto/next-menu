@@ -1,9 +1,14 @@
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
+import { type CurrencyId } from '~/domain/currencies';
 import { withMeta } from '~/lib/form-validation';
 import { type locations } from '~/server/db/schema';
+import { menuModeValues, type MenuModeId } from './menu-modes';
 
-export type Location = InferSelectModel<typeof locations>;
+export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'currencyId'> & {
+    menuMode: MenuModeId;
+    currencyId: CurrencyId;
+};
 export type NewLocation = InferInsertModel<typeof locations>;
 
 export const locationIdSchema = z.coerce.number().positive().int();
@@ -37,7 +42,7 @@ export const locationFormSchema = z.object({
         {
             label: 'Location name',
             placeholder: 'My fancy restaurant',
-            description: 'The name of your location.',
+            description: 'The name of your location',
         },
     ),
     currencyId: withMeta(
@@ -50,7 +55,18 @@ export const locationFormSchema = z.object({
         {
             label: 'Currency',
             placeholder: 'Choose the currency name',
-            description: 'The currency shown for menu items.',
+            description: 'The currency shown for menu items',
+        },
+    ),
+
+    menuMode: withMeta(
+        z.enum(menuModeValues, {
+            required_error: 'Menu mode is required',
+        }),
+        {
+            label: 'Menu mode',
+            placeholder: 'Choose the menu mode',
+            description: 'The operation mode of menus in this location',
         },
     ),
 });

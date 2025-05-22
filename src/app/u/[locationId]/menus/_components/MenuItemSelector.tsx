@@ -34,16 +34,8 @@ export function MenuItemSelector({ allMenuItems, addedItems, currencyId, onSelec
                                 className="cursor-pointer rounded-lg border p-4 hover:bg-gray-50"
                                 onClick={() => onSelect(item)}
                             >
-                                <PublicMenuItem
-                                    item={{
-                                        name: item.name,
-                                        description: item.description,
-                                        type: item.type,
-                                        price: item.price.toString(),
-                                        isNew: item.isNew,
-                                    }}
-                                    currencyId={currencyId}
-                                />
+                                {/* TODO menumode */}
+                                <PublicMenuItem item={item} currencyId={currencyId} menuMode={'noninteractive'} />
                             </div>
                         ))}
                     </div>

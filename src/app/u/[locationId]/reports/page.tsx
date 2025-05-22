@@ -2,14 +2,14 @@ import { auth } from '@clerk/nextjs/server';
 import { Suspense } from 'react';
 import { LocationViewsCard } from '~/app/u/[locationId]/reports/_components/LocationViewsCard';
 import { AppError } from '~/lib/error-utils.server';
-import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { isFlagAvailableInCurrentTier } from '~/lib/quota-utils.server-only';
+import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function ReportsPage(props: { params: Params }) {
     const params = await props.params;
-    const locationId = getValidLocationIdOrThrow(params.locationId);
+    const location = await getLocationForCurrentUserOrThrow(params.locationId);
 
     const { userId, orgId } = await auth();
     if (!userId || !orgId) {
@@ -23,8 +23,15 @@ export default async function ReportsPage(props: { params: Params }) {
 
     return (
         <div>
-            <Suspense fallback={<LocationViewsCard mode="placeholder" locationId={locationId} />}>
-                <LocationViewsCard mode={mode} locationId={locationId} />
+            <Suspense
+                fallback={<LocationViewsCard mode="placeholder" locationId={0} organizationId={0} locationSlug={''} />}
+            >
+                <LocationViewsCard
+                    mode={mode}
+                    locationId={location.id}
+                    organizationId={location.orgId}
+                    locationSlug={location.slug}
+                />
             </Suspense>
         </div>
     );

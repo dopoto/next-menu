@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { MenusItemsList } from '~/app/u/[locationId]/menu-items/_components/MenuItemsList';
-import { type CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getLocationPublicDataById } from '~/server/queries/locations';
 
@@ -20,7 +19,7 @@ export default async function MenuItemsPage(props: { params: Params }) {
                 subtitle="Your catalog of dishes and beverages. Each item can be used in one or more menus."
             />
             <Suspense fallback={<LoadingSection />}>
-                <MenusItemsList locationId={parsedlocationId} currencyId={location.currencyId as CurrencyId} />
+                <MenusItemsList locationId={parsedlocationId} currencyId={location.currencyId} />
             </Suspense>
         </div>
     );

@@ -3,7 +3,6 @@ import { addMenuAction } from '~/app/actions/addMenuAction';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenu } from '~/app/u/[locationId]/menus/_components/AddMenu';
-import { type CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
@@ -28,7 +27,7 @@ export default async function AddMenuPage(props: { params: Params }) {
             <Suspense fallback={<LoadingSection />}>
                 <AddMenu
                     locationId={parsedLocationId}
-                    currencyId={location.currencyId as CurrencyId}
+                    currencyId={location.currencyId}
                     addMenuAction={addMenuAction}
                     allMenuItems={allMenuItems}
                     location={location}

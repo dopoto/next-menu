@@ -4,9 +4,15 @@ import { getViews } from '~/app/u/[locationId]/reports/_utils/posthog-utils';
 import { Skeleton } from '~/components/ui/skeleton';
 import { type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
+import { type OrganizationId } from '~/lib/organization';
 import { ROUTES } from '~/lib/routes';
 
-export async function LocationViewsCard(props: { mode: 'regular' | 'placeholder' | 'locked'; locationId: LocationId }) {
+export async function LocationViewsCard(props: {
+    mode: 'regular' | 'placeholder' | 'locked';
+    organizationId: OrganizationId;
+    locationId: LocationId;
+    locationSlug: string;
+}) {
     const title = 'Total views';
     const footer = (
         <div className="text-muted-foreground">
@@ -32,14 +38,14 @@ export async function LocationViewsCard(props: { mode: 'regular' | 'placeholder'
         return <GenericReportsCard isLocked={true} title={title} value={'683562'} footer={footer} />;
     }
 
-    const { userId, orgId } = await auth();
-    if (!userId || !orgId) {
+    const { userId, orgId: clerkOrgId } = await auth();
+    if (!userId || !clerkOrgId) {
         throw new AppError({
             internalMessage: `No userId or orgId found in auth.`,
         });
     }
 
-    const locationViewsValue = await getViews(orgId);
+    const locationViewsValue = await getViews(props.organizationId, props.locationSlug);
     const isError = locationViewsValue === null;
 
     return (

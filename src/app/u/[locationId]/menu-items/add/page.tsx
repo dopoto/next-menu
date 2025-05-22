@@ -2,7 +2,6 @@ import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenuItem } from '~/app/u/[locationId]/menu-items/_components/AddMenuItem';
-import { type CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
@@ -23,7 +22,7 @@ export default async function AddMenuItemPage(props: { params: Params }) {
     return (
         <div className="flex h-full flex-col gap-2">
             <Suspense fallback={<LoadingSection />}>
-                <AddMenuItem locationId={parsedLocationId} currencyId={location.currencyId as CurrencyId} />
+                <AddMenuItem locationId={parsedLocationId} currencyId={location.currencyId} />
             </Suspense>
         </div>
     );
