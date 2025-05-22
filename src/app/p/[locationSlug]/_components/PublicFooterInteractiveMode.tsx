@@ -14,7 +14,7 @@ import { type LocationId } from '~/domain/locations';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
-export function PublicFooterPrepaidMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
+export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const currency = CURRENCIES[props.currencyId];
     const [order] = useAtom(orderAtom);
     const [menuItems] = useAtom(menuItemsAtom);
