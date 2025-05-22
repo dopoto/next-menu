@@ -10,7 +10,7 @@ const posthog = new PostHog(env.NEXT_PUBLIC_POSTHOG_KEY!, {
     host: env.NEXT_PUBLIC_POSTHOG_HOST,
 });
 
-export function capturePublicLocationVisit(
+export async function capturePublicLocationVisit(
     machineId: string | undefined,
     orgId: OrganizationId,
     locationSlug: LocationSlug,
