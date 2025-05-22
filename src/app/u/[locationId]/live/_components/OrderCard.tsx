@@ -1,8 +1,9 @@
 'use client';
 
 import type { InferSelectModel } from 'drizzle-orm';
-import { Check, Clock } from 'lucide-react';
+import { BanIcon, Check, CircleCheckIcon, Clock, ClockIcon } from 'lucide-react';
 import { useState } from 'react';
+import { ThreeStateToggle } from '~/components/ThreeStateToggle';
 import { Button } from '~/components/ui/button';
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
@@ -56,6 +57,12 @@ export function OrderCard({
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
+                            <ThreeStateToggle
+                                size={44}
+                                leftIcon={<BanIcon />}
+                                centerIcon={<ClockIcon />}
+                                rightIcon={<CircleCheckIcon />}
+                            />
                             {item.orderItem.isDelivered === false && (
                                 <>
                                     <Clock className="h-4 w-4 text-yellow-500" />
