@@ -1,4 +1,5 @@
-export type MenuModeId = 'noninteractive' | 'interactive' | 'postpaid' | 'prepaid';
+export const menuModeValues = ['noninteractive', 'interactive', 'postpaid', 'prepaid'] as const;
+export type MenuModeId = (typeof menuModeValues)[number];
 
 export type MenuMode = {
     id: MenuModeId;
@@ -12,7 +13,7 @@ export const MENU_MODES: Record<MenuModeId, MenuMode> = {
     noninteractive: {
         id: 'noninteractive',
         name: 'Non-interactive',
-        description: 'Customers will be able to use your menus to browse, filter, search and view you menu items.',
+        description: 'Customers can use your menus to browse, filter, search and view you menu items.',
         allowsAddToOrder: false,
         isEnabled: true,
     },

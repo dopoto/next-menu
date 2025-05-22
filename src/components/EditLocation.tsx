@@ -15,6 +15,7 @@ export function EditLocation(props: { location: Location }) {
         defaultValues: {
             currencyId: props.location.currencyId,
             locationName: props.location.name,
+            menuMode: props.location.menuMode,
         },
     });
 

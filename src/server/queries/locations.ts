@@ -156,6 +156,7 @@ export async function updateLocation(locationId: LocationId, data: z.infer<typeo
             .set({
                 name: data.locationName,
                 currencyId: data.currencyId,
+                menuMode: data.menuMode,
                 updatedAt: sql`CURRENT_TIMESTAMP`,
             })
             .where(eq(locations.id, validLocation.id));

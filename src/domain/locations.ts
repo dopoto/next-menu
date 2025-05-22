@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import { withMeta } from '~/lib/form-validation';
 import { type locations } from '~/server/db/schema';
-import { type MenuModeId } from './menu-modes';
+import { menuModeValues, type MenuModeId } from './menu-modes';
 
 export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'currencyId'> & {
     menuMode: MenuModeId;
@@ -56,6 +56,17 @@ export const locationFormSchema = z.object({
             label: 'Currency',
             placeholder: 'Choose the currency name',
             description: 'The currency shown for menu items.',
+        },
+    ),
+
+    menuMode: withMeta(
+        z.enum(menuModeValues, {
+            required_error: 'Menu mode is required',
+        }),
+        {
+            label: 'Menu mode',
+            placeholder: 'Choose the menu mode',
+            description: 'The operation mode of menus in this location.',
         },
     ),
 });
