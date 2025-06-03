@@ -65,11 +65,9 @@ export default async function Layout({ params, children }: { params: Params; chi
                     </div>
                 </header>
 
-                <div className="max-w-6xl mx-auto p-4">{children}</div>
-
-                {location.menuMode === 'interactive' && (
-                    <PublicFooterInteractiveMode currencyId={location.currencyId} locationId={location.id} />
-                )}
+                <div className="max-w-6xl p-4 pb-[200px]">
+                    {children}
+                </div>
 
                 <AnalyticsEventSender
                     eventId="publicLocationVisit"
@@ -79,6 +77,11 @@ export default async function Layout({ params, children }: { params: Params; chi
                     }}
                 />
             </div>
+            {/* Footer */}
+            {location.menuMode === 'interactive' && (
+                <PublicFooterInteractiveMode currencyId={location.currencyId} locationId={location.id} />
+            )}
+
         </JotaiProviderWrapper>
     );
 }
