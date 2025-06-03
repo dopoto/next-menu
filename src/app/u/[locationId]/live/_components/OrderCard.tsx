@@ -55,13 +55,12 @@ export function OrderCard({
                     <p className="text-sm text-gray-500">{new Date(order.createdAt).toLocaleTimeString()}</p>
                 </div>
             </div>
-
             <div className="space-y-4">
-                {order.items.map((item, index) => {
+                {order.items.map((item) => {
                     const itemState: ThreeStateToggleSelectedItem = ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId] || 1;
                     return (
                         <div
-                            key={`${order.id}-${item.menuItemId}-${index}`}
+                            key={item.orderItem.id}
                             className="flex items-center justify-between border-b pb-2"
                         >
                             <div>
@@ -81,20 +80,6 @@ export function OrderCard({
                                     centerIcon={<ClockIcon />}
                                     rightIcon={<CircleCheckIcon />}
                                 />
-                                {/* {item.orderItem.isDelivered === false && (
-                                    <>
-                                        <Clock className="h-4 w-4 text-yellow-500" />
-                                        <Button
-                                            variant="outline"
-                                            size="sm"
-                                            disabled={isUpdating}
-                                            onClick={() => markAsDelivered(item.orderItem.id!)}
-                                        >
-                                            Mark Delivered
-                                        </Button>
-                                    </>
-                                )} */}
-                                {/* {item.orderItem.isDelivered && <Check className="h-5 w-5 text-green-500" />} */}
                             </div>
                         </div>
                     );

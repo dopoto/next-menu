@@ -59,12 +59,11 @@ export async function OpenOrdersList(props: { locationId: LocationId }) {
         throw error instanceof AppError
             ? error
             : new AppError({
-                  internalMessage: `Unexpected error in OpenOrdersList: ${
-                      typeof error === 'object' && error !== null && 'toString' in error
-                          ? (error as { toString: () => string }).toString()
-                          : String(error)
-                  }`,
-                  publicMessage: 'Failed to load orders. Please try refreshing the page.',
-              });
+                internalMessage: `Unexpected error in OpenOrdersList: ${typeof error === 'object' && error !== null && 'toString' in error
+                        ? (error as { toString: () => string }).toString()
+                        : String(error)
+                    }`,
+                publicMessage: 'Failed to load orders. Please try refreshing the page.',
+            });
     }
 }

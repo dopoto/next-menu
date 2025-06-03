@@ -116,39 +116,43 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
 }
 
 export const getOpenOrdersByLocation = async (locationId: LocationId): Promise<PublicOrderWithItems[]> => {
+    const items = await db.query.orders.findMany({
+        where: (orders, { eq }) => eq(orders.locationId, locationId),
+        with: {
+            orderItems: true,
+        },
+    });
+
+    const ordersWithItems: PublicOrderWithItems[] = items.map((order) => ({
+        id: order.id,
+        locationId: order.locationId,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        items: order.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus,
+                    isPaid: orderItem.isPaid,
+                    createdAt: orderItem.createdAt,
+                },
+            }))
+            .sort((a, b) => {
+                return a.orderItem.id - b.orderItem.id;
+            }),
+    }));
+    return ordersWithItems;
+}
+
+export const getCachedOpenOrdersByLocation = async (locationId: LocationId): Promise<PublicOrderWithItems[]> => {
     // Validate location access before caching
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     return unstable_cache(
         async () => {
-            // Use the locationId directly since we've already validated it
-            const items = await db.query.orders.findMany({
-                where: (orders, { eq }) => eq(orders.locationId, validLocation.id),
-                with: {
-                    orderItems: true,
-                },
-            });
-
-            const ordersWithItems: PublicOrderWithItems[] = items.map((order) => ({
-                id: order.id,
-                locationId: order.locationId,
-                createdAt: order.createdAt,
-                updatedAt: order.updatedAt,
-                items: order.orderItems
-                    .map((orderItem) => ({
-                        menuItemId: orderItem.menuItemId,
-                        orderItem: {
-                            id: orderItem.id,
-                            deliveryStatus: orderItem.deliveryStatus,
-                            isPaid: orderItem.isPaid,
-                            createdAt: orderItem.createdAt,
-                        },
-                    }))
-                    .sort((a, b) => {
-                        return a.orderItem.id - b.orderItem.id;
-                    }),
-            }));
-            return ordersWithItems;
+            const items = await getOpenOrdersByLocation(validLocation.id);
+            return items;
         },
         [TAGS.locationOpenOrders(locationId)],
         {
