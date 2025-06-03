@@ -5,16 +5,19 @@ import { useAtom } from 'jotai';
 import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { commonSentryOptions } from 'sentry.common.config';
 import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { updateOrderAction } from '~/app/actions/updateOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
 import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
+import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { Labeled } from '~/components/Labeled';
 import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
+import { OrderItemId } from '~/domain/order-items';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
@@ -32,6 +35,7 @@ function OrderSummaryItem(props: { quantity: number; description: string; childr
 
 export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const [order, setOrder] = useAtom(orderAtom);
+    const [menuItems,] = useAtom(menuItemsAtom);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
@@ -120,9 +124,9 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
         }
     };
 
-    const draftItems = order.items.filter((item) => !item.orderItem.id);
-    const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.deliveryStatus === 'pending');
-    const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.deliveryStatus === 'delivered');
+    const draftItems = order.items.filter((item) => item.orderItem.deliveryStatus == '');
+    const inPreparationItems = order.items.filter((item) => item.orderItem.deliveryStatus === 'pending');
+    const deliveredItems = order.items.filter((item) => item.orderItem.deliveryStatus === 'delivered');
 
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
@@ -161,6 +165,30 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
         </div>
     );
 
+    function handleDeleteDraftItem(orderItemId: OrderItemId) {
+        setOrder((prevOrder) => {
+            const itemIndex = prevOrder.items.findIndex((item) => item.orderItem.id === orderItemId);
+            if (itemIndex === -1) return prevOrder;
+
+            const menuItemId = prevOrder.items[itemIndex]!.menuItemId;
+            const name = menuItems.get(menuItemId)?.name ?? 'Unknown item';
+
+            const updatedItems = [...prevOrder.items];
+            updatedItems.splice(itemIndex, 1);
+
+            toast({
+                title: `${name} was removed from your cart`,
+                description: `Press 'Order now!' when you're ready to place your order.`,
+                className: getTopPositionedToast(),
+            });
+
+            return {
+                ...prevOrder,
+                items: updatedItems,
+            };
+        });
+    }
+
     return (
         <PublicFooterDrawer collapsedContent={collapsedContent}>
             <div className="flex flex-col w-full h-full p-3">
@@ -174,7 +202,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
                     <div className="flex flex-row gap-3 md:gap-6 border-b-2 border-b-gray-200">
                         <div className="w-30">{draftItemsSummary}</div>
                         <div>
-                            <OrderItemsList items={draftItems} />
+                            <OrderItemsList items={draftItems} onDelete={handleDeleteDraftItem} />
                         </div>
                     </div>
                     <div className="flex flex-row gap-3 md:gap-6 border-b-2 border-b-gray-200">

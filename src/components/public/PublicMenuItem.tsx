@@ -26,7 +26,7 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
                     ...prevOrder.items,
                     {
                         menuItemId: id,
-                        orderItem: { deliveryStatus: 'pending', isPaid: false },
+                        orderItem: { id: `TEMP-${Date.now()}`, deliveryStatus: '', isPaid: false },
                     },
                 ],
             };

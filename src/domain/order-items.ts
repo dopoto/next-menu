@@ -3,6 +3,7 @@
 // export const ORDER_ITEM_STATUSES = [...new Set([...POSTPAID_STATUSES, ...PREPAID_STATUSES])] as const;
 
 import type { InferSelectModel } from 'drizzle-orm';
+import z from 'zod';
 import { type MenuItemId } from '~/domain/menu-items';
 import { type orderItems } from '~/server/db/schema';
 
@@ -16,7 +17,10 @@ export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
 
 export type OrderItem = InferSelectModel<typeof orderItems>;
 
+export const orderItemIdSchema = z.coerce.string();
+export type OrderItemId = z.infer<typeof orderItemIdSchema>;
+
 export interface PublicOrderItem {
     menuItemId: MenuItemId;
-    orderItem: { id?: OrderItem['id'] } & Pick<OrderItem, 'deliveryStatus' | 'isPaid'>;
+    orderItem: { id?: OrderItemId } & Pick<OrderItem, 'deliveryStatus' | 'isPaid'>;
 }
