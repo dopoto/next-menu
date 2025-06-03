@@ -71,7 +71,7 @@ export function LiveOrders({
             <div className="space-y-4">
                 <div className="grid gap-4">
                     {orders
-                        .filter((order) => order.items.some((i) => i.orderItem.isDelivered === false))
+                        .filter((order) => order.items.some((i) => i.orderItem.deliveryStatus === 'pending'))
                         .map((order) => (
                             <OrderCard
                                 key={order.id}

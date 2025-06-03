@@ -6,14 +6,14 @@ import { ChevronLeft, ChevronRight, Minus } from 'lucide-react';
 import { cloneElement, isValidElement, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
 
-type SelectedItem = 0 | 1 | 2;
+export type ThreeStateToggleSelectedItem = 0 | 1 | 2;
 
 interface ThreeStateToggleProps {
     leftIcon?: React.ReactNode;
     centerIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
-    onStateChange?: (state: number) => void;
-    defaultState?: SelectedItem;
+    onStateChange?: (state: ThreeStateToggleSelectedItem) => void;
+    defaultState?: ThreeStateToggleSelectedItem;
     className?: string;
     size?: number;
 }
@@ -36,7 +36,7 @@ export function ThreeStateToggle({
     const iconSize = Math.max(16, Math.round(size * 0.4));
 
     const handleStateChange = useCallback(
-        (newState: SelectedItem) => {
+        (newState: ThreeStateToggleSelectedItem) => {
             if (newState >= 0 && newState <= 2) {
                 setSelectedState(newState);
                 onStateChange?.(newState);
@@ -46,11 +46,11 @@ export function ThreeStateToggle({
     );
 
     const swipeLeft = useCallback(() => {
-        handleStateChange(Math.min((selectedState as number) - 1, 2) as SelectedItem);
+        handleStateChange(Math.min((selectedState as number) - 1, 2) as ThreeStateToggleSelectedItem);
     }, [handleStateChange, selectedState]);
 
     const swipeRight = useCallback(() => {
-        handleStateChange(Math.min((selectedState as number) + 1, 2) as SelectedItem);
+        handleStateChange(Math.min((selectedState as number) + 1, 2) as ThreeStateToggleSelectedItem);
     }, [handleStateChange, selectedState]);
 
     const handleTouchStart = (e: React.TouchEvent) => {

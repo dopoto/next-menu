@@ -39,7 +39,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .values({
                         orderId: order.id,
                         menuItemId: item.menuItemId,
-                        isDelivered: false,
+                        deliveryStatus: 'pending',
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
                         updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -50,7 +50,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                         menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
-                            isDelivered: false,
+                            deliveryStatus: 'pending',
                             isPaid: false,
                         },
                     };
@@ -78,7 +78,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .values({
                         orderId: Number(data.orderId), //TODO review
                         menuItemId: item.menuItemId,
-                        isDelivered: false,
+                        deliveryStatus: 'pending',
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
                         updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -89,7 +89,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                         menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
-                            isDelivered: false,
+                            deliveryStatus: 'pending',
                             isPaid: false,
                         },
                     };
@@ -139,7 +139,7 @@ export const getOpenOrdersByLocation = async (locationId: LocationId): Promise<P
                         menuItemId: orderItem.menuItemId,
                         orderItem: {
                             id: orderItem.id,
-                            isDelivered: orderItem.isDelivered,
+                            deliveryStatus: orderItem.deliveryStatus,
                             isPaid: orderItem.isPaid,
                             createdAt: orderItem.createdAt,
                         },
@@ -181,7 +181,7 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
             menuItemId: orderItem.menuItemId,
             orderItem: {
                 id: orderItem.id,
-                isDelivered: orderItem.isDelivered,
+                deliveryStatus: orderItem.deliveryStatus,
                 isPaid: orderItem.isPaid,
             },
         })),

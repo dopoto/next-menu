@@ -1,5 +1,6 @@
 'use client';
 
+import NumberFlow from '@number-flow/react';
 import { useAtom } from 'jotai';
 import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -22,7 +23,7 @@ function OrderSummaryItem(props: { quantity: number; description: string; childr
     const textColor = props.quantity > 0 ? 'text-black' : 'text-gray-500';
     return (
         <div className="flex flex-col items-center-safe">
-            <div className={`text-7xl font-bold tracking-tighter ${textColor}`}>{props.quantity}</div>
+            <NumberFlow className={`text-5xl font-bold tracking-tighter ${textColor}`} value={props.quantity} />
             <div className={`text-sm truncate antialiased uppercase ${textColor}`}>{props.description}</div>
             <div className="pt-3 pb-3 h-23">{props.children}</div>
         </div>
@@ -120,8 +121,8 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     };
 
     const draftItems = order.items.filter((item) => !item.orderItem.id);
-    const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === false);
-    const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === true);
+    const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.deliveryStatus === 'pending');
+    const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.deliveryStatus === 'delivered');
 
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
@@ -147,7 +148,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />;
 
     const collapsedContent = (
-        <div className="flex flex-col w-full h-full p-3">
+        <div className=" flex flex-col w-full h-full p-3">
             <div className="flex flex-row justify-between">
                 <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
                 <ChevronsUpIcon />
@@ -170,20 +171,20 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
                     </DrawerClose>
                 </div>
                 <div className="flex flex-col w-full h-full gap-4 pt-4">
-                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
-                        <div className="w-45">{draftItemsSummary}</div>
+                    <div className="flex flex-row gap-3 md:gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-30">{draftItemsSummary}</div>
                         <div>
                             <OrderItemsList items={draftItems} />
                         </div>
                     </div>
-                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
-                        <div className="w-45">{inPreparationItemsSummary}</div>
+                    <div className="flex flex-row gap-3 md:gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-30">{inPreparationItemsSummary}</div>
                         <div>
                             <OrderItemsList items={inPreparationItems} />
                         </div>
                     </div>
-                    <div className="flex flex-row gap-6  ">
-                        <div className="w-45">{deliveredItemsSummary}</div>
+                    <div className="flex flex-row gap-3 md:gap-6  ">
+                        <div className="w-30">{deliveredItemsSummary}</div>
                         <div>
                             <OrderItemsList items={deliveredItems} />
                         </div>

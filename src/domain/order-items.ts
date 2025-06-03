@@ -11,9 +11,12 @@ import { type orderItems } from '~/server/db/schema';
 
 // export type OrderItemStatus = PostpaidOrderItemStatus | PrepaidOrderItemStatus;
 
+export const deliveryStatusValues = ['pending', 'delivered', 'canceled'] as const;
+export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
+
 export type OrderItem = InferSelectModel<typeof orderItems>;
 
 export interface PublicOrderItem {
     menuItemId: MenuItemId;
-    orderItem: { id?: OrderItem['id'] } & Pick<OrderItem, 'isDelivered' | 'isPaid'>;
+    orderItem: { id?: OrderItem['id'] } & Pick<OrderItem, 'deliveryStatus' | 'isPaid'>;
 }
