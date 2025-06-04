@@ -12,7 +12,7 @@ export type OrderId = Order['id'];
 export const orderIdSchema = z.custom<OrderId>();
 
 export const orderFormSchema = z.object({
-    orderId: orderIdSchema.optional(),
+    id: orderIdSchema.optional(),
     locationId: z
         .number({
             required_error: 'Location ID is required',
