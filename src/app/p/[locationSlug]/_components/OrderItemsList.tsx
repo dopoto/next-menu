@@ -18,7 +18,7 @@ export function OrderItemsList(props: { items: PublicOrderItem[], onDelete?: (or
                 const { name, price } = menuItem;
                 return (
                     <div key={index} className="flex w-full flex-row items-center text-sm pt-1 gap-1">
-                        {props.onDelete && <Trash2Icon size={12} onClick={() => props.onDelete!(item.orderItem.id ?? '')} />} 1 x {name}, {price} {currency?.symbol}
+                        {props.onDelete && <Trash2Icon size={12} onClick={() => props.onDelete?.(item.orderItem.id ?? 0)} />} 1 x {name}, {price} {currency?.symbol}
                     </div>
                 );
             })}

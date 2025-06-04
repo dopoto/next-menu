@@ -190,7 +190,9 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
                 deliveryStatus: orderItem.deliveryStatus,
                 isPaid: orderItem.isPaid,
             },
-        })),
+        })).sort((a, b) => {
+            return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+        }),
     };
     return orderWithItems;
 }
