@@ -9,7 +9,7 @@ import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { type menuItems } from '~/server/db/schema';
 import { updateOrderItemDeliveryStatusAction } from '../../../../actions/updateOrderItemDeliveryStatusAction';
-import { DeliveryStatusId } from '~/domain/order-items';
+import { DeliveryStatusId, OrderItemId } from '~/domain/order-items';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     'canceled': 0,
@@ -28,7 +28,7 @@ export function OrderCard({
 }) {
     const [isUpdating, setIsUpdating] = useState(false);
 
-    async function handleItemStateChange(state: ThreeStateToggleSelectedItem, itemId: number) {
+    async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
 
         const status = Object.keys(ITEM_STATE).find(
             key => ITEM_STATE[key as DeliveryStatusId] === state
@@ -38,7 +38,7 @@ export function OrderCard({
 
         try {
             setIsUpdating(true);
-            await updateOrderItemDeliveryStatusAction(locationId, itemId, status);
+            await updateOrderItemDeliveryStatusAction(locationId, orderItemId, status);
         } catch (error) {
             console.error('Failed to mark as pending:', error);
         } finally {
@@ -65,7 +65,7 @@ export function OrderCard({
                         >
                             <div>
                                 <p className="font-medium">
-                                    {menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
+                                    [{item.orderItem.id}]{menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
                                 </p>
                                 <p className="text-sm text-gray-500">
                                     ${menuItemsMap.get(item.menuItemId)?.price ?? 'Unknown Item'}

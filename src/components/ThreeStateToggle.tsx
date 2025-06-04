@@ -166,7 +166,7 @@ export function ThreeStateToggle({
                     top: `${padding}px`,
                     height: `${size - padding * 2}px`,
                     width: `calc(100%/3 - ${padding}px)`,
-                    left: `calc(${selectedState} * (100% - 100%/3 + ${padding / 2}px)/2)`,
+                    left: `calc((${selectedState} * 66.67%)/2 + ${['4px', '2px', '0px'][selectedState]})`,
                 }}
             />
 

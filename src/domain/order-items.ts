@@ -17,7 +17,7 @@ export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
 
 export type OrderItem = InferSelectModel<typeof orderItems>;
 
-export const orderItemIdSchema = z.coerce.string();
+export const orderItemIdSchema = z.coerce.number();
 export type OrderItemId = z.infer<typeof orderItemIdSchema>;
 
 export interface PublicOrderItem {

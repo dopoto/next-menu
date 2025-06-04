@@ -4,7 +4,7 @@ import { eq } from 'drizzle-orm';
 import { revalidateTag } from 'next/cache';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
 import { type LocationId } from '~/domain/locations';
-import { DeliveryStatusId } from '~/domain/order-items';
+import { DeliveryStatusId, OrderItemId } from '~/domain/order-items';
 import { TAGS } from '~/domain/tags';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
@@ -17,7 +17,7 @@ import { getOrderById } from '~/server/queries/orders';
 // };
 
 export async function updateOrderItemDeliveryStatusAction(
-    locationId: LocationId, orderItemId: number, status: DeliveryStatusId) {
+    locationId: number, orderItemId: number, status: DeliveryStatusId) {
 
     // TODO Other validations
 
