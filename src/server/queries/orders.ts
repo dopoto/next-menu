@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import type { LocationId } from '~/domain/locations';
-import { type PublicOrderItem } from '~/domain/order-items';
+import { OrderItem, type PublicOrderItem } from '~/domain/order-items';
 import {
     orderIdSchema,
     type OrderId,
@@ -164,7 +164,7 @@ export async function getOpenOrdersByLocation(locationId: LocationId): Promise<P
                 menuItemId: orderItem.menuItemId,
                 orderItem: {
                     id: orderItem.id,
-                    deliveryStatus: orderItem.deliveryStatus,
+                    deliveryStatus: orderItem.deliveryStatus as OrderItem['deliveryStatus'],
                     isPaid: orderItem.isPaid,
                 },
             }))
@@ -205,7 +205,7 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
                 menuItemId: orderItem.menuItemId,
                 orderItem: {
                     id: orderItem.id,
-                    deliveryStatus: orderItem.deliveryStatus,
+                    deliveryStatus: orderItem.deliveryStatus as OrderItem['deliveryStatus'],
                     isPaid: orderItem.isPaid,
                 },
             }))

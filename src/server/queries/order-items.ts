@@ -48,5 +48,8 @@ export async function updateOrderItemStatus(
         });
     }
 
-    return updatedOrderItem;
+    return {
+        ...updatedOrderItem,
+        deliveryStatus: updatedOrderItem.deliveryStatus as OrderItem['deliveryStatus'],
+    };
 }

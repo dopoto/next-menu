@@ -15,7 +15,9 @@ import { type orderItems } from '~/server/db/schema';
 export const deliveryStatusValues = ['pending', 'delivered', 'canceled'] as const;
 export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
 
-export type OrderItem = InferSelectModel<typeof orderItems>;
+export type OrderItem = Omit<InferSelectModel<typeof orderItems>, 'deliveryStatus'> & {
+    deliveryStatus?: DeliveryStatusId
+};
 
 export type OrderItemId = OrderItem['id'];
 export const orderItemIdSchema = z.custom<OrderItemId>();
