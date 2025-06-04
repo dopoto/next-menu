@@ -109,7 +109,9 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
 
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            items: [...itemsAlreadyOrdered, ...insertedItems],
+            items: [...itemsAlreadyOrdered, ...insertedItems].sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+            }),
         };
         return orderWithItems;
     });
