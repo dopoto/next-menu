@@ -1,23 +1,27 @@
-import { sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { unstable_cache } from 'next/cache';
 import { type z } from 'zod';
+import { type CurrencyId } from '~/domain/currencies';
 import type { LocationId } from '~/domain/locations';
 import { type PublicOrderItem } from '~/domain/order-items';
-import { type orderFormSchema, type OrderId, type PublicOrderWithItems } from '~/domain/orders';
+import { orderIdSchema, publicOrderWithItemsSchema, type OrderId, type PublicOrderWithItems } from '~/domain/orders';
 import { TAGS } from '~/domain/tags';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { orderItems, orders } from '~/server/db/schema';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
-// function generateUniqueOrderNumber(): string {
-//     const timestamp = new Date().getTime().toString(36).toUpperCase();
-//     const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
-//     return `ORD-${timestamp}${randomStr}`;
-// }
-
-export async function createOrder(data: z.infer<typeof orderFormSchema>): Promise<PublicOrderWithItems> {
+export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
     return await db.transaction(async (tx) => {
+        // Get the location to get its currency
+        const location = await tx.query.locations.findFirst({
+            where: (locations, { eq }) => eq(locations.id, data.locationId),
+        });
+
+        if (!location) {
+            throw new AppError({ internalMessage: `Location ${data.locationId} not found` });
+        }
+
         const [order] = await tx
             .insert(orders)
             .values({
@@ -60,14 +64,31 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
         }
         const orderWithItems: PublicOrderWithItems = {
             ...order,
+            currencyId: location.currencyId as CurrencyId,
             items: insertedItems,
         };
         return orderWithItems;
     });
 }
 
-export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promise<PublicOrderWithItems> {
+export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
+
+    const orderIdValidationResult = orderIdSchema.safeParse(data.orderId);
+    if (!orderIdValidationResult.success) {
+        throw new AppError({ publicMessage: `Invalid Order ID` });
+    }
+    const validatedOrderId = orderIdValidationResult.data;
+
     return await db.transaction(async (tx) => {
+        // Get the location to get its currency
+        const location = await tx.query.locations.findFirst({
+            where: (locations, { eq }) => eq(locations.id, data.locationId),
+        });
+
+        if (!location) {
+            throw new AppError({ internalMessage: `Location ${data.locationId} not found` });
+        }
+
         const itemsToInsert = data.items?.filter((item) => item.orderItem.id === undefined) ?? [];
         const itemsAlreadyOrdered = data.items?.filter((item) => item.orderItem.id !== undefined) ?? [];
         const insertedItems: PublicOrderItem[] = [];
@@ -76,7 +97,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                 const [insertedItem] = await tx
                     .insert(orderItems)
                     .values({
-                        orderId: Number(data.orderId), //TODO review
+                        orderId: validatedOrderId,
                         menuItemId: item.menuItemId,
                         deliveryStatus: 'pending',
                         isPaid: false,
@@ -98,71 +119,62 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
             }
         }
 
-        const [order] = await tx
-            .select()
-            .from(orders)
-            .where(sql`${orders.id} = ${Number(data.orderId)}`);
+        const order = await getOrderById(location.id, validatedOrderId)
 
         if (!order) {
-            throw new AppError({ internalMessage: 'Order not found after update' });
+            throw new AppError({ internalMessage: 'Could not find order to update' });
         }
+
+        // Combine existing and new items
+        const allItems = [...itemsAlreadyOrdered, ...insertedItems].sort((a, b) => {
+            return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+        });
 
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            items: [...itemsAlreadyOrdered, ...insertedItems].sort((a, b) => {
-                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
-            }),
+            currencyId: location.currencyId as CurrencyId,
+            items: allItems,
         };
         return orderWithItems;
     });
 }
 
-export const getOpenOrdersByLocation = async (locationId: LocationId): Promise<PublicOrderWithItems[]> => {
-    const items = await db.query.orders.findMany({
-        where: (orders, { eq }) => eq(orders.locationId, locationId),
+export async function getOpenOrdersByLocation(locationId: LocationId): Promise<PublicOrderWithItems[]> {
+    // Get the location to get its currency
+    const location = await db.query.locations.findFirst({
+        where: (locations, { eq }) => eq(locations.id, locationId),
+    });
+
+    if (!location) {
+        throw new AppError({ internalMessage: `Location ${locationId} not found` });
+    }
+
+    const rows = await db.query.orders.findMany({
         with: {
             orderItems: true,
         },
+        where: (orders, { eq }) => eq(orders.locationId, locationId),
     });
 
-    const ordersWithItems: PublicOrderWithItems[] = items.map((order) => ({
-        id: order.id,
-        locationId: order.locationId,
-        createdAt: order.createdAt,
-        updatedAt: order.updatedAt,
-        items: order.orderItems
-            .map((orderItem) => ({
-                menuItemId: orderItem.menuItemId,
-                orderItem: {
-                    id: orderItem.id,
-                    deliveryStatus: orderItem.deliveryStatus,
-                    isPaid: orderItem.isPaid,
-                    createdAt: orderItem.createdAt,
-                },
-            }))
-            .sort((a, b) => {
-                return a.orderItem.id - b.orderItem.id;
-            }),
-    }));
-    return ordersWithItems;
+    return rows.map((row): PublicOrderWithItems => {
+        const items: PublicOrderItem[] = row.orderItems.map((orderItem) => ({
+            menuItemId: orderItem.menuItemId,
+            orderItem: {
+                id: orderItem.id,
+                deliveryStatus: orderItem.deliveryStatus,
+                isPaid: orderItem.isPaid,
+            },
+        })).sort((a, b) => {
+            return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+        });
+
+        return {
+            ...row,
+            currencyId: location.currencyId as CurrencyId,
+            items,
+        };
+    });
 }
-
-export const getCachedOpenOrdersByLocation = async (locationId: LocationId): Promise<PublicOrderWithItems[]> => {
-    // Validate location access before caching
-    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
-
-    return unstable_cache(
-        async () => {
-            const items = await getOpenOrdersByLocation(validLocation.id);
-            return items;
-        },
-        [TAGS.locationOpenOrders(locationId)],
-        {
-            tags: [TAGS.locationOpenOrders(locationId)],
-            revalidate: 60, // Cache for 60 seconds
-        },
-    )();
-};
 
 export async function getOrderById(locationId: LocationId, orderId: OrderId): Promise<PublicOrderWithItems> {
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
@@ -183,6 +195,7 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
         locationId: order.locationId,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
+        currencyId: validLocation.currencyId as CurrencyId,
         items: order.orderItems.map((orderItem) => ({
             menuItemId: orderItem.menuItemId,
             orderItem: {

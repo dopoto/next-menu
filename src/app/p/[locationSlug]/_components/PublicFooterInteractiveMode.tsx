@@ -5,7 +5,6 @@ import { useAtom } from 'jotai';
 import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
-import { commonSentryOptions } from 'sentry.common.config';
 import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { updateOrderAction } from '~/app/actions/updateOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
@@ -17,7 +16,6 @@ import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
-import { type OrderItemId } from '~/domain/order-items';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
@@ -40,7 +38,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const { toast } = useToast();
 
     // Add real-time updates
-    useRealTimeOrderUpdates(order.orderId, props.locationId);
+    useRealTimeOrderUpdates(order.id, props.locationId);
 
     //const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
@@ -131,7 +129,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
             {draftItems.length > 0 &&
-                (order.orderId ? (
+                (order.id ? (
                     <Button onClick={updateOrder} disabled={isLoading}>
                         {isLoading ? 'Ordering...' : 'Add to order'}
                     </Button>
@@ -154,7 +152,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const collapsedContent = (
         <div className=" flex flex-col w-full h-full p-3">
             <div className="flex flex-row justify-between">
-                <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                <Labeled label={'Your order'} text={order.id ?? 'No order number yet'} />
                 <ChevronsUpIcon />
             </div>
             <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">
@@ -165,9 +163,9 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
         </div>
     );
 
-    function handleDeleteDraftItem(orderItemId: OrderItemId) {
+    function handleDeleteDraftItem(orderItemTempId: string) {
         setOrder((prevOrder) => {
-            const itemIndex = prevOrder.items.findIndex((item) => item.orderItem.id === orderItemId);
+            const itemIndex = prevOrder.items.findIndex((item) => item.orderItem.tempId === orderItemTempId);
             if (itemIndex === -1) return prevOrder;
 
             const menuItemId = prevOrder.items[itemIndex]!.menuItemId;
@@ -193,7 +191,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
         <PublicFooterDrawer collapsedContent={collapsedContent}>
             <div className="flex flex-col w-full h-full p-3">
                 <div className="flex flex-row justify-between">
-                    <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                    <Labeled label={'Your order'} text={order.id ?? 'No order number yet'} />
                     <DrawerClose>
                         <ChevronsDownIcon />
                     </DrawerClose>

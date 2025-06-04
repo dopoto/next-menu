@@ -17,10 +17,16 @@ export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
 
 export type OrderItem = InferSelectModel<typeof orderItems>;
 
-export const orderItemIdSchema = z.coerce.number();
-export type OrderItemId = z.infer<typeof orderItemIdSchema>;
+export type OrderItemId = OrderItem['id']
+export const orderItemIdSchema = z.custom<OrderItemId>();
 
 export interface PublicOrderItem {
     menuItemId: MenuItemId;
-    orderItem: { id?: OrderItemId } & Pick<OrderItem, 'deliveryStatus' | 'isPaid'>;
+    orderItem: {
+        /**
+         * Temporary client-side only ID for tracking items not ordered yet.
+         */
+        tempId?: string,
+        id?: OrderItemId
+    } & Pick<OrderItem, 'deliveryStatus' | 'isPaid'>;
 }

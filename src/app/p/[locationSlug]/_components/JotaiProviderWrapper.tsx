@@ -12,6 +12,7 @@ import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
 import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import type { MenuItem } from '~/domain/menu-items';
+import { PublicOrderWithItems } from '~/domain/orders';
 
 let DevTools: ComponentType<DevToolsProps> | null = null;
 
@@ -24,7 +25,15 @@ function Initializer(props: { locationId: LocationId; currencyId: CurrencyId; me
     const setMenuItems = useSetAtom(menuItemsAtom);
 
     useEffect(() => {
-        setOrder({ locationId: props.locationId, currencyId: props.currencyId, items: [] });
+        const newOrder: PublicOrderWithItems = {
+            id: 0,
+            createdAt: new Date(),
+            updatedAt: null,
+            locationId: props.locationId,
+            currencyId: props.currencyId,
+            items: [],
+        };
+        setOrder(newOrder);
     }, [props.locationId, props.currencyId, setOrder]);
 
     useEffect(() => {

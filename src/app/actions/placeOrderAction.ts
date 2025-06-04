@@ -5,13 +5,13 @@ import { headers } from 'next/headers';
 import { type z } from 'zod';
 import { notifyOrderCreated } from '~/app/api/realtime/notifications';
 import { type menuFormSchema } from '~/domain/menus';
-import { orderFormSchema, type PublicOrderWithItems } from '~/domain/orders';
+import { orderFormSchema, publicOrderWithItemsSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { type FormState, processFormErrors } from '~/lib/form-state';
 import { createOrder } from '~/server/queries/orders';
 
 export const placeOrderAction = async (
-    data: z.infer<typeof orderFormSchema>,
+    data: z.infer<typeof publicOrderWithItemsSchema>,
 ): Promise<FormState<typeof menuFormSchema, { orderWithItems: PublicOrderWithItems }>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
@@ -22,7 +22,7 @@ export const placeOrderAction = async (
         },
         async () => {
             try {
-                const parsedForm = orderFormSchema.safeParse(data);
+                const parsedForm = publicOrderWithItemsSchema.safeParse(data);
                 if (!parsedForm.success) {
                     return processFormErrors(parsedForm.error, data);
                 }

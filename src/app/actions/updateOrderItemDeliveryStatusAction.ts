@@ -34,7 +34,7 @@ export const updateOrderItemDeliveryStatusAction = async (
                 throw new AppError({ internalMessage: 'Could not update order item' });
             }
 
-            const order = await getOrderById(locationId, updatedItem.orderId.toString());
+            const order = await getOrderById(locationId, updatedItem.orderId);
             if (!order) {
                 throw new AppError({ internalMessage: 'Order not found after update' });
             }
