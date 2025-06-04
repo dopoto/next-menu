@@ -16,13 +16,7 @@ export async function updateOrderItemStatus(
     // First verify that the order item belongs to this location through its order
     const orderItem = await db.query.orderItems.findFirst({
         where: eq(orderItems.id, orderItemId),
-        with: {
-            order: {
-                columns: {
-                    locationId: true,
-                },
-            },
-        },
+        with: { order: { columns: { locationId: true } } },
     });
 
     if (!orderItem || orderItem.order.locationId !== validLocation.id) {

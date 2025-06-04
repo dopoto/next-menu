@@ -3,7 +3,7 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import { BanIcon, CircleCheckIcon, ClockIcon } from 'lucide-react';
 import { useState } from 'react';
-import { ThreeStateToggle, type ThreeStateToggleSelectedItem } from '~/components/ThreeStateToggle';
+import { ThreeStateToggle, ThreeStateToggleMetadata, type ThreeStateToggleSelectedItem } from '~/components/ThreeStateToggle';
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
@@ -26,7 +26,7 @@ export function OrderCard({
     locationId: LocationId;
     menuItemsMap: Map<number, InferSelectModel<typeof menuItems>>;
 }) {
-    const [, setIsUpdating] = useState(false);
+    const [itemIdBeingUpdated, setItemIdBeingUpdated] = useState<OrderItemId | null>(null);
 
     async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
         const status = Object.keys(ITEM_STATE).find((key) => ITEM_STATE[key as DeliveryStatusId] === state) as
@@ -36,12 +36,12 @@ export function OrderCard({
         if (!status) return;
 
         try {
-            setIsUpdating(true);
+            setItemIdBeingUpdated(orderItemId);
             await updateOrderItemDeliveryStatusAction(locationId, orderItemId, status);
         } catch (error) {
             console.error('Failed to mark as pending:', error);
         } finally {
-            setIsUpdating(false);
+            setItemIdBeingUpdated(null);
         }
     }
 
@@ -57,11 +57,34 @@ export function OrderCard({
                 {order.items.map((item) => {
                     const itemState: ThreeStateToggleSelectedItem =
                         ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId] || 1;
+
+                    const left: ThreeStateToggleMetadata = {
+                        id: 0,
+                        className: itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-gray-600',
+                        labelWhenSelected: 'Marked as cancelled',
+                        labelWhenNotSelected: 'Mark as cancelled',
+                        component: <BanIcon />,
+                    };
+                    const center: ThreeStateToggleMetadata = {
+                        id: 1,
+                        className: itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-orange-500',
+                        labelWhenSelected: 'Marked as in preparation',
+                        labelWhenNotSelected: 'Mark as in preparation',
+                        component: <ClockIcon />,
+                    };
+                    const right: ThreeStateToggleMetadata = {
+                        id: 2,
+                        className: itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-green-600',
+                        labelWhenSelected: 'Marked as delivered',
+                        labelWhenNotSelected: 'Mark as delivered',
+                        component: <CircleCheckIcon />,
+                    };
+
                     return (
                         <div key={item.orderItem.id} className="flex items-center justify-between border-b pb-2">
                             <div>
                                 <p className="font-medium">
-                                    [{item.orderItem.id}]{menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
+                                    {menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
                                 </p>
                                 <p className="text-sm text-gray-500">
                                     ${menuItemsMap.get(item.menuItemId)?.price ?? 'Unknown Item'}
@@ -69,12 +92,15 @@ export function OrderCard({
                             </div>
                             <div className="flex items-center gap-2">
                                 <ThreeStateToggle
+                                    left={left}
+                                    center={center}
+                                    right={right}
                                     defaultState={itemState}
                                     onStateChange={(state) => handleItemStateChange(state, item.orderItem.id!)}
                                     size={44}
-                                    leftIcon={<BanIcon />}
-                                    centerIcon={<ClockIcon />}
-                                    rightIcon={<CircleCheckIcon />}
+                                // leftIcon={<BanIcon />}
+                                // centerIcon={<ClockIcon />}
+                                // rightIcon={<CircleCheckIcon />}
                                 />
                             </div>
                         </div>

@@ -19,3 +19,4 @@ Next.js Server Actions Supercharged (5 Must-Know Upgrades) https://www.youtube.c
 Storybook 9
 Storybook snapshot testing + pipeline integration
 Zod 4
+Shadcn registry

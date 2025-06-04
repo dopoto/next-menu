@@ -2,7 +2,7 @@ import { sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import type { LocationId } from '~/domain/locations';
-import { OrderItem, type PublicOrderItem } from '~/domain/order-items';
+import { DeliveryStatusId, OrderItem, type PublicOrderItem } from '~/domain/order-items';
 import {
     orderIdSchema,
     type OrderId,
@@ -14,17 +14,15 @@ import { db } from '~/server/db';
 import { orderItems, orders } from '~/server/db/schema';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
+// function generateUniqueOrderNumber(): string {
+//     const timestamp = new Date().getTime().toString(36).toUpperCase();
+//     const randomStr = Math.random().toString(36).substring(2, 6).toUpperCase();
+//     return `ORD-${timestamp}${randomStr}`;
+// }
+
 export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
+    const validLocation = await getLocationForCurrentUserOrThrow(data.locationId);
     return await db.transaction(async (tx) => {
-        // Get the location to get its currency
-        const location = await tx.query.locations.findFirst({
-            where: (locations, { eq }) => eq(locations.id, data.locationId),
-        });
-
-        if (!location) {
-            throw new AppError({ internalMessage: `Location ${data.locationId} not found` });
-        }
-
         const [order] = await tx
             .insert(orders)
             .values({
@@ -39,6 +37,7 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
         }
 
         const insertedItems: PublicOrderItem[] = [];
+        const pending: DeliveryStatusId = 'pending';
         if (data.items) {
             for (const item of data.items) {
                 const [insertedItem] = await tx
@@ -46,7 +45,7 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
                     .values({
                         orderId: order.id,
                         menuItemId: item.menuItemId,
-                        deliveryStatus: 'pending',
+                        deliveryStatus: pending,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
                         updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -57,7 +56,7 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
                         menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
-                            deliveryStatus: 'pending',
+                            deliveryStatus: pending,
                             isPaid: false,
                         },
                     };
@@ -67,7 +66,7 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
         }
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            currencyId: location.currencyId as CurrencyId,
+            currencyId: validLocation.currencyId as CurrencyId,
             items: insertedItems,
         };
         return orderWithItems;
@@ -75,6 +74,8 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
 }
 
 export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
+    const validLocation = await getLocationForCurrentUserOrThrow(data.locationId);
+
     const orderIdValidationResult = orderIdSchema.safeParse(data.id);
     if (!orderIdValidationResult.success) {
         throw new AppError({ publicMessage: `Invalid Order ID` });
@@ -82,18 +83,10 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
     const validatedOrderId = orderIdValidationResult.data;
 
     return await db.transaction(async (tx) => {
-        // Get the location to get its currency
-        const location = await tx.query.locations.findFirst({
-            where: (locations, { eq }) => eq(locations.id, data.locationId),
-        });
-
-        if (!location) {
-            throw new AppError({ internalMessage: `Location ${data.locationId} not found` });
-        }
-
         const itemsToInsert = data.items?.filter((item) => item.orderItem.id === undefined) ?? [];
         const itemsAlreadyOrdered = data.items?.filter((item) => item.orderItem.id !== undefined) ?? [];
         const insertedItems: PublicOrderItem[] = [];
+        const pending: DeliveryStatusId = 'pending';
         if (itemsToInsert) {
             for (const item of itemsToInsert) {
                 const [insertedItem] = await tx
@@ -101,7 +94,7 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
                     .values({
                         orderId: validatedOrderId,
                         menuItemId: item.menuItemId,
-                        deliveryStatus: 'pending',
+                        deliveryStatus: pending,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
                         updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -112,7 +105,7 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
                         menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
-                            deliveryStatus: 'pending',
+                            deliveryStatus: pending,
                             isPaid: false,
                         },
                     };
@@ -121,20 +114,19 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
             }
         }
 
-        const order = await getOrderById(location.id, validatedOrderId);
+        const order = await getOrderById(validLocation.id, validatedOrderId);
 
         if (!order) {
             throw new AppError({ internalMessage: 'Could not find order to update' });
         }
 
-        // Combine existing and new items
         const allItems = [...itemsAlreadyOrdered, ...insertedItems].sort((a, b) => {
             return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
         });
 
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            currencyId: location.currencyId as CurrencyId,
+            currencyId: validLocation.currencyId as CurrencyId,
             items: allItems,
         };
         return orderWithItems;
@@ -142,19 +134,10 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
 }
 
 export async function getOpenOrdersByLocation(locationId: LocationId): Promise<PublicOrderWithItems[]> {
-    // Get the location to get its currency
-    const location = await db.query.locations.findFirst({
-        where: (locations, { eq }) => eq(locations.id, locationId),
-    });
-
-    if (!location) {
-        throw new AppError({ internalMessage: `Location ${locationId} not found` });
-    }
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     const rows = await db.query.orders.findMany({
-        with: {
-            orderItems: true,
-        },
+        with: { orderItems: true },
         where: (orders, { eq }) => eq(orders.locationId, locationId),
     });
 
@@ -174,7 +157,7 @@ export async function getOpenOrdersByLocation(locationId: LocationId): Promise<P
 
         return {
             ...row,
-            currencyId: location.currencyId as CurrencyId,
+            currencyId: validLocation.currencyId as CurrencyId,
             items,
         };
     });
@@ -185,9 +168,7 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
 
     const order = await db.query.orders.findFirst({
         where: (orders, { and, eq }) => and(eq(orders.locationId, validLocation.id), eq(orders.id, Number(orderId))),
-        with: {
-            orderItems: true,
-        },
+        with: { orderItems: true },
     });
 
     if (!order) {
