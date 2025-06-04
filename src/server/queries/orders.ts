@@ -75,7 +75,7 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
 }
 
 export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
-    const orderIdValidationResult = orderIdSchema.safeParse(data.orderId);
+    const orderIdValidationResult = orderIdSchema.safeParse(data.id);
     if (!orderIdValidationResult.success) {
         throw new AppError({ publicMessage: `Invalid Order ID` });
     }

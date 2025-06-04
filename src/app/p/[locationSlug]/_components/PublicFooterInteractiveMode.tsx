@@ -16,7 +16,7 @@ import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
-import { PublicOrderWithItems } from '~/domain/orders';
+import { type PublicOrderWithItems } from '~/domain/orders';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
