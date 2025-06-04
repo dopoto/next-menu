@@ -3,7 +3,7 @@ import { Trash2Icon } from 'lucide-react';
 import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { CURRENCIES } from '~/domain/currencies';
-import { OrderItemId, type PublicOrderItem } from '~/domain/order-items';
+import { type OrderItemId, type PublicOrderItem } from '~/domain/order-items';
 
 export function OrderItemsList(props: { items: PublicOrderItem[], onDelete?: (orderItemId: OrderItemId) => void }) {
     const [order] = useAtom(orderAtom);

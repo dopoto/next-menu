@@ -3,13 +3,13 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import { BanIcon, CircleCheckIcon, ClockIcon } from 'lucide-react';
 import { useState } from 'react';
-import { ThreeStateToggle, ThreeStateToggleSelectedItem } from '~/components/ThreeStateToggle';
+import { ThreeStateToggle, type ThreeStateToggleSelectedItem } from '~/components/ThreeStateToggle';
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { type menuItems } from '~/server/db/schema';
 import { updateOrderItemDeliveryStatusAction } from '../../../../actions/updateOrderItemDeliveryStatusAction';
-import { DeliveryStatusId, OrderItemId } from '~/domain/order-items';
+import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     'canceled': 0,
