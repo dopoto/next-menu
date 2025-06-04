@@ -7,7 +7,7 @@ import { Badge } from '~/components/ui/badge';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 import { MENU_MODES, type MenuModeId } from '~/domain/menu-modes';
-import { PublicOrderItem } from '~/domain/order-items';
+import { type PublicOrderItem } from '~/domain/order-items';
 import { toast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
@@ -26,16 +26,13 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
                 orderItem: {
                     tempId: Date.now().toString(),
                     deliveryStatus: '',
-                    isPaid: false
-                }
+                    isPaid: false,
+                },
             };
 
             return {
                 ...prevOrder,
-                items: [
-                    ...prevOrder.items,
-                    newOrderItem
-                ],
+                items: [...prevOrder.items, newOrderItem],
             };
         });
 

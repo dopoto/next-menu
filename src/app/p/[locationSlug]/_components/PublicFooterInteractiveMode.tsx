@@ -33,7 +33,7 @@ function OrderSummaryItem(props: { quantity: number; description: string; childr
 
 export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const [order, setOrder] = useAtom(orderAtom);
-    const [menuItems,] = useAtom(menuItemsAtom);
+    const [menuItems] = useAtom(menuItemsAtom);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 

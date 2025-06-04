@@ -17,7 +17,7 @@ export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
 
 export type OrderItem = InferSelectModel<typeof orderItems>;
 
-export type OrderItemId = OrderItem['id']
+export type OrderItemId = OrderItem['id'];
 export const orderItemIdSchema = z.custom<OrderItemId>();
 
 export interface PublicOrderItem {
@@ -26,7 +26,7 @@ export interface PublicOrderItem {
         /**
          * Temporary client-side only ID for tracking items not ordered yet.
          */
-        tempId?: string,
-        id?: OrderItemId
+        tempId?: string;
+        id?: OrderItemId;
     } & Pick<OrderItem, 'deliveryStatus' | 'isPaid'>;
 }

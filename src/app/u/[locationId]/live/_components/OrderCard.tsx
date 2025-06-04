@@ -6,15 +6,15 @@ import { useState } from 'react';
 import { ThreeStateToggle, type ThreeStateToggleSelectedItem } from '~/components/ThreeStateToggle';
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
+import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { type menuItems } from '~/server/db/schema';
 import { updateOrderItemDeliveryStatusAction } from '../../../../actions/updateOrderItemDeliveryStatusAction';
-import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
-    'canceled': 0,
-    'pending': 1,
-    'delivered': 2,
+    canceled: 0,
+    pending: 1,
+    delivered: 2,
 };
 
 export function OrderCard({
@@ -26,13 +26,12 @@ export function OrderCard({
     locationId: LocationId;
     menuItemsMap: Map<number, InferSelectModel<typeof menuItems>>;
 }) {
-    const [isUpdating, setIsUpdating] = useState(false);
+    const [, setIsUpdating] = useState(false);
 
     async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
-
-        const status = Object.keys(ITEM_STATE).find(
-            key => ITEM_STATE[key as DeliveryStatusId] === state
-        ) as DeliveryStatusId | undefined;
+        const status = Object.keys(ITEM_STATE).find((key) => ITEM_STATE[key as DeliveryStatusId] === state) as
+            | DeliveryStatusId
+            | undefined;
 
         if (!status) return;
 
@@ -44,7 +43,6 @@ export function OrderCard({
         } finally {
             setIsUpdating(false);
         }
-
     }
 
     return (
@@ -57,12 +55,10 @@ export function OrderCard({
             </div>
             <div className="space-y-4">
                 {order.items.map((item) => {
-                    const itemState: ThreeStateToggleSelectedItem = ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId] || 1;
+                    const itemState: ThreeStateToggleSelectedItem =
+                        ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId] || 1;
                     return (
-                        <div
-                            key={item.orderItem.id}
-                            className="flex items-center justify-between border-b pb-2"
-                        >
+                        <div key={item.orderItem.id} className="flex items-center justify-between border-b pb-2">
                             <div>
                                 <p className="font-medium">
                                     [{item.orderItem.id}]{menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}

@@ -3,10 +3,14 @@ import type { LocationId } from '~/domain/locations';
 import type { DeliveryStatusId, OrderItem, OrderItemId } from '~/domain/order-items';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
-import { orderItems, orders } from '~/server/db/schema';
+import { orderItems } from '~/server/db/schema';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
-export async function updateOrderItemStatus(locationId: LocationId, orderItemId: OrderItemId, status: DeliveryStatusId): Promise<OrderItem> {
+export async function updateOrderItemStatus(
+    locationId: LocationId,
+    orderItemId: OrderItemId,
+    status: DeliveryStatusId,
+): Promise<OrderItem> {
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     // First verify that the order item belongs to this location through its order
@@ -15,10 +19,10 @@ export async function updateOrderItemStatus(locationId: LocationId, orderItemId:
         with: {
             order: {
                 columns: {
-                    locationId: true
-                }
-            }
-        }
+                    locationId: true,
+                },
+            },
+        },
     });
 
     if (!orderItem || orderItem.order.locationId !== validLocation.id) {

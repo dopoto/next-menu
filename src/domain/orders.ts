@@ -21,9 +21,8 @@ export const orderFormSchema = z.object({
     items: z.array(z.custom<PublicOrderItem>()),
 });
 
-
 export type PublicOrderWithItems = Order & {
-    currencyId: CurrencyId
+    currencyId: CurrencyId;
     items: PublicOrderItem[];
 };
 

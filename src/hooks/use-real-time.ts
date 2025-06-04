@@ -1,7 +1,7 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
-import { OrderId, type PublicOrderWithItems } from '~/domain/orders';
+import { type OrderId, type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
 import { getTopPositionedToast } from '~/lib/toast-utils';
@@ -18,7 +18,7 @@ export function useRealTimeOrderUpdates(orderId: OrderId | undefined, locationId
         const orderChannel = pusherClient.subscribe(CHANNELS.order(orderId));
 
         // Handle new orders in the location
-        locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
+        locationChannel.bind(EVENTS.ORDER_CREATED, () => {
             toast({
                 title: 'New Order',
                 description: `Order #${orderId} has been created`,

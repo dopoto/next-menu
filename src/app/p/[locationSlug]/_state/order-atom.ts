@@ -1,5 +1,5 @@
 import { atom } from 'jotai';
-import { PublicOrderWithItems } from '~/domain/orders';
+import { type PublicOrderWithItems } from '~/domain/orders';
 
 export const orderAtom = atom<PublicOrderWithItems>({
     id: 0,
@@ -7,6 +7,6 @@ export const orderAtom = atom<PublicOrderWithItems>({
     updatedAt: null,
     locationId: 0,
     currencyId: 'USD',
-    items: []
+    items: [],
 });
 orderAtom.debugLabel = 'orderAtom';

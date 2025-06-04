@@ -5,9 +5,9 @@ import { headers } from 'next/headers';
 import { type z } from 'zod';
 import { notifyOrderCreated } from '~/app/api/realtime/notifications';
 import { type menuFormSchema } from '~/domain/menus';
-import { orderFormSchema, publicOrderWithItemsSchema, type PublicOrderWithItems } from '~/domain/orders';
+import { publicOrderWithItemsSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
-import { type FormState, processFormErrors } from '~/lib/form-state';
+import { processFormErrors, type FormState } from '~/lib/form-state';
 import { createOrder } from '~/server/queries/orders';
 
 export const placeOrderAction = async (

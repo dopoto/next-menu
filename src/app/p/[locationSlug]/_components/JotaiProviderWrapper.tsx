@@ -12,7 +12,7 @@ import dynamic from 'next/dynamic';
 import type { ComponentType } from 'react';
 import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import type { MenuItem } from '~/domain/menu-items';
-import { PublicOrderWithItems } from '~/domain/orders';
+import { type PublicOrderWithItems } from '~/domain/orders';
 
 let DevTools: ComponentType<DevToolsProps> | null = null;
 

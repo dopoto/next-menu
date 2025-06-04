@@ -4,14 +4,17 @@ import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
 import { orderItemIdSchema, type DeliveryStatusId } from '~/domain/order-items';
-import { PublicOrderWithItems } from '~/domain/orders';
+import { type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 import { updateOrderItemStatus } from '~/server/queries/order-items';
 import { getOrderById } from '~/server/queries/orders';
 
 export const updateOrderItemDeliveryStatusAction = async (
-    locationId: number, orderItemId: number, status: DeliveryStatusId): Promise<PublicOrderWithItems> => {
+    locationId: number,
+    orderItemId: number,
+    status: DeliveryStatusId,
+): Promise<PublicOrderWithItems> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'updateOrderItemDeliveryStatusAction',
@@ -52,6 +55,6 @@ export const updateOrderItemDeliveryStatusAction = async (
             });
 
             return order;
-        }
-    )
-}
+        },
+    );
+};

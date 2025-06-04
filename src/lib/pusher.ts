@@ -1,6 +1,6 @@
 import PusherServer from 'pusher';
 import PusherClient from 'pusher-js';
-import { OrderId } from '~/domain/orders';
+import { type OrderId } from '~/domain/orders';
 import { env } from '~/env';
 
 // Server-side Pusher instance (only import in server components)

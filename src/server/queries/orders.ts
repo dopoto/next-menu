@@ -1,11 +1,14 @@
-import { eq, sql } from 'drizzle-orm';
-import { unstable_cache } from 'next/cache';
+import { sql } from 'drizzle-orm';
 import { type z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import type { LocationId } from '~/domain/locations';
 import { type PublicOrderItem } from '~/domain/order-items';
-import { orderIdSchema, publicOrderWithItemsSchema, type OrderId, type PublicOrderWithItems } from '~/domain/orders';
-import { TAGS } from '~/domain/tags';
+import {
+    orderIdSchema,
+    type OrderId,
+    type PublicOrderWithItems,
+    type publicOrderWithItemsSchema,
+} from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { orderItems, orders } from '~/server/db/schema';
@@ -72,7 +75,6 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
 }
 
 export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
-
     const orderIdValidationResult = orderIdSchema.safeParse(data.orderId);
     if (!orderIdValidationResult.success) {
         throw new AppError({ publicMessage: `Invalid Order ID` });
@@ -119,7 +121,7 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
             }
         }
 
-        const order = await getOrderById(location.id, validatedOrderId)
+        const order = await getOrderById(location.id, validatedOrderId);
 
         if (!order) {
             throw new AppError({ internalMessage: 'Could not find order to update' });
@@ -157,16 +159,18 @@ export async function getOpenOrdersByLocation(locationId: LocationId): Promise<P
     });
 
     return rows.map((row): PublicOrderWithItems => {
-        const items: PublicOrderItem[] = row.orderItems.map((orderItem) => ({
-            menuItemId: orderItem.menuItemId,
-            orderItem: {
-                id: orderItem.id,
-                deliveryStatus: orderItem.deliveryStatus,
-                isPaid: orderItem.isPaid,
-            },
-        })).sort((a, b) => {
-            return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
-        });
+        const items: PublicOrderItem[] = row.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus,
+                    isPaid: orderItem.isPaid,
+                },
+            }))
+            .sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+            });
 
         return {
             ...row,
@@ -195,17 +199,19 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
         locationId: order.locationId,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
-        currencyId: validLocation.currencyId as CurrencyId,
-        items: order.orderItems.map((orderItem) => ({
-            menuItemId: orderItem.menuItemId,
-            orderItem: {
-                id: orderItem.id,
-                deliveryStatus: orderItem.deliveryStatus,
-                isPaid: orderItem.isPaid,
-            },
-        })).sort((a, b) => {
-            return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
-        }),
+        currencyId: validLocation.currencyId,
+        items: order.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus,
+                    isPaid: orderItem.isPaid,
+                },
+            }))
+            .sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+            }),
     };
     return orderWithItems;
 }
