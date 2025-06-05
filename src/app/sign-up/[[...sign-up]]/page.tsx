@@ -31,6 +31,7 @@ export default async function SignUpPage(props: { searchParams: SearchParams }) 
 
     return (
         <SplitScreenContainer
+            showSignInLink={true}
             mainComponent={
                 <SignUp
                     appearance={{

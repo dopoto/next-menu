@@ -39,7 +39,11 @@ export default clerkMiddleware(
 
         // If the user is signed in and accessing the /my route, redirect them
         // to their actual dashboard URL if possible.
-        if (userId && isMyRoute(req)) {
+        if (isMyRoute(req)) {
+            if (!userId) {
+                return redirectTo(req, ROUTES.signIn);
+            }
+
             if (!orgId) {
                 console.log(`DBG-MDLW [/my] Redirecting to ${ROUTES.onboardAddOrg} - no orgId`);
                 return redirectTo(req, ROUTES.onboardAddOrg);
