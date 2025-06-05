@@ -56,7 +56,7 @@ export function OrderCard({
             <div className="space-y-4">
                 {order.items.map((item) => {
                     const itemState: ThreeStateToggleSelectedItem =
-                        ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId] || 1;
+                        ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId];
 
                     const left: ThreeStateToggleMetadata = {
                         id: 0,
