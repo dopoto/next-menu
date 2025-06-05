@@ -10,7 +10,7 @@ export const LandingHero: React.FC = () => {
                     <div className="gap-4 sm:text-center md:mx-auto md:max-w-2xl lg:col-span-6 lg:flex lg:flex-col lg:justify-center lg:text-left">
                         <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl xl:text-5xl dark:text-gray-700">
                             <span className="block">QR menus,</span>
-                            <span className="text-pop workflow block pb-6">now super-powered!</span>
+                            <span className="text-pop workflow block pb-6 ml-3">  super-powered!</span>
                         </h1>
                         <p className="text-base font-light text-gray-500 sm:text-xl lg:text-lg xl:text-xl">
                             TheMenu is the ultimate QR code menu platform for restaurants, bars, cafes, food trucks and
