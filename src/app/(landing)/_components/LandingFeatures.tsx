@@ -1,4 +1,4 @@
-import { Airplay, ChartPieIcon, Clock, Globe, HandCoinsIcon, PiggyBankIcon, ScanQrCode, Users, Utensils } from 'lucide-react';
+import { Airplay, ChartPieIcon, Clock, PiggyBankIcon, ScanQrCode, Utensils } from 'lucide-react';
 import React from 'react';
 import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
 import { sections } from '~/domain/landing-content';
@@ -23,7 +23,8 @@ export const LandingFeatures: React.FC = () => {
         },
         {
             title: 'No app required',
-            description: 'Customers that scan your QR codes are taken to your public menu page, that simply works on any mobile device.',
+            description:
+                'Customers that scan your QR codes are taken to your public menu page, that simply works on any mobile device.',
             icon: <Airplay className="text-pop h-6 w-6" />,
         },
         {
@@ -33,13 +34,13 @@ export const LandingFeatures: React.FC = () => {
         },
         {
             title: 'No hidden costs',
-            description: 'No purchases of expensive terminals or app installs are required. Your guests and your staff only need a device with a browser - be it a phone, a tablet, a laptop or a desktop PC.',
+            description:
+                'No purchases of expensive terminals or app installs are required. Your guests and your staff only need a device with a browser - be it a phone, a tablet, a laptop or a desktop PC.',
             icon: <PiggyBankIcon className="text-pop h-6 w-6" />,
         },
         {
             title: 'In-depth reports',
-            description:
-                `How many guests opened your menus? What's your best selling menu item? What is never ordered? Easy - learn all these and much more from our reports page, included in all price plans!`,
+            description: `How many guests opened your menus? What's your best selling menu item? What is never ordered? Easy - learn all these and much more from our reports page, included in all price plans!`,
             icon: <ChartPieIcon className="text-pop h-6 w-6" />,
         },
     ];

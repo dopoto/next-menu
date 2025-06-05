@@ -13,8 +13,8 @@ export const LandingHero: React.FC = () => {
                             <span className="text-pop workflow block pb-6">now super-powered!</span>
                         </h1>
                         <p className="text-base font-light text-gray-500 sm:text-xl lg:text-lg xl:text-xl">
-                            TheMenu is the ultimate QR code menu platform for restaurants,
-                            bars, cafes, food trucks and hotels.
+                            TheMenu is the ultimate QR code menu platform for restaurants, bars, cafes, food trucks and
+                            hotels.
                         </p>
                         <p className="text-base font-light text-gray-500 sm:text-xl lg:text-lg xl:text-xl">
                             Ready to start accepting orders for dine-in, takeaway and delivery?
