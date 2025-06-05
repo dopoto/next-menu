@@ -22,8 +22,7 @@ export const locationIdSchema = z
     ])
     .refine((val) => Number.isSafeInteger(val) && val > 0, {
         message: 'Location ID must be a positive integer',
-    })
-    .transform((val) => val as LocationId);
+    });
 
 export const LOCATION_SLUG_LENGTH = 8;
 export const locationSlugSchema = z.coerce
