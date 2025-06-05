@@ -7,6 +7,7 @@ import { Badge } from '~/components/ui/badge';
 import { CURRENCIES, type CurrencyId } from '~/domain/currencies';
 import { type MenuItem } from '~/domain/menu-items';
 import { MENU_MODES, type MenuModeId } from '~/domain/menu-modes';
+import { type PublicOrderItem } from '~/domain/order-items';
 import { toast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
@@ -20,15 +21,17 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
     const addToOrder = () => {
         setOrder((prevOrder) => {
             const { id } = props.item;
+            const newOrderItem: PublicOrderItem = {
+                menuItemId: id,
+                orderItem: {
+                    tempId: Date.now().toString(),
+                    isPaid: false,
+                },
+            };
+
             return {
                 ...prevOrder,
-                items: [
-                    ...prevOrder.items,
-                    {
-                        menuItemId: id,
-                        orderItem: { isDelivered: false, isPaid: false },
-                    },
-                ],
+                items: [...prevOrder.items, newOrderItem],
             };
         });
 

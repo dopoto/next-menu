@@ -48,30 +48,12 @@ export function LiveOrders({
         };
     }, [locationId, toast]);
 
-    // const orderedCount = orders.filter((o) => o.items.some((i) => i.status === 'ordered')).length;
-    // const preparingCount = orderedCount; // For now they're the same
-    // const deliveredCount = orders.filter((o) => o.items.every((i) => i.status === 'delivered')).length;
-
     return (
         <div className="flex flex-col space-y-8">
-            {/* <div className="flex flex-wrap gap-4">
-                <DashboardCard
-                    title="New Orders"
-                    value={orderedCount.toString()}
-                    secondaryValue="Waiting to be prepared"
-                />
-                <DashboardCard
-                    title="In Preparation"
-                    value={preparingCount.toString()}
-                    secondaryValue="Being prepared"
-                />
-                <DashboardCard title="Delivered" value={deliveredCount.toString()} secondaryValue="Completed orders" />
-            </div> */}
-
             <div className="space-y-4">
                 <div className="grid gap-4">
                     {orders
-                        .filter((order) => order.items.some((i) => i.orderItem.isDelivered === false))
+                        .filter((order) => order.items.some((i) => i.orderItem.deliveryStatus === 'pending'))
                         .map((order) => (
                             <OrderCard
                                 key={order.id}

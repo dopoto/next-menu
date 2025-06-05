@@ -153,7 +153,7 @@ export default function StickyTabs(props: { sections: Section[] }) {
                         <button
                             key={section.id}
                             onClick={() => scrollToSection(section.id)}
-                            className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-colors ${
+                            className={`px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium transition-colors ${
                                 activeTab === section.id
                                     ? 'bg-primary text-primary-foreground'
                                     : 'bg-muted text-muted-foreground hover:bg-muted/80'

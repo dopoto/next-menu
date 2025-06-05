@@ -1,5 +1,6 @@
 'use client';
 
+import NumberFlow from '@number-flow/react';
 import { useAtom } from 'jotai';
 import { ChevronsDownIcon, ChevronsUpIcon } from 'lucide-react';
 import Image from 'next/image';
@@ -8,12 +9,15 @@ import { placeOrderAction } from '~/app/actions/placeOrderAction';
 import { updateOrderAction } from '~/app/actions/updateOrderAction';
 import { OrderItemsList } from '~/app/p/[locationSlug]/_components/OrderItemsList';
 import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFooterDrawer';
+import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { Labeled } from '~/components/Labeled';
 import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
+import { type DeliveryStatusId } from '~/domain/order-items';
+import { type PublicOrderWithItems } from '~/domain/orders';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
@@ -22,7 +26,7 @@ function OrderSummaryItem(props: { quantity: number; description: string; childr
     const textColor = props.quantity > 0 ? 'text-black' : 'text-gray-500';
     return (
         <div className="flex flex-col items-center-safe">
-            <div className={`text-7xl font-bold tracking-tighter ${textColor}`}>{props.quantity}</div>
+            <NumberFlow className={`text-5xl font-bold tracking-tighter ${textColor}`} value={props.quantity} />
             <div className={`text-sm truncate antialiased uppercase ${textColor}`}>{props.description}</div>
             <div className="pt-3 pb-3 h-23">{props.children}</div>
         </div>
@@ -31,11 +35,12 @@ function OrderSummaryItem(props: { quantity: number; description: string; childr
 
 export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; locationId: LocationId }) {
     const [order, setOrder] = useAtom(orderAtom);
+    const [menuItems] = useAtom(menuItemsAtom);
     const [isLoading, setIsLoading] = useState(false);
     const { toast } = useToast();
 
     // Add real-time updates
-    useRealTimeOrderUpdates(order.orderId, props.locationId);
+    useRealTimeOrderUpdates(order.id, props.locationId);
 
     //const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
@@ -58,11 +63,12 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
                     className: getTopPositionedToast(),
                 });
                 setOrder((prevOrder) => {
-                    return {
+                    const newOrder: PublicOrderWithItems = {
                         ...prevOrder,
-                        orderId: orderWithItems?.id ? String(orderWithItems.id) : undefined, //TODO review
+                        id: orderWithItems?.id ?? 0,
                         items: orderWithItems?.items ?? [],
                     };
+                    return newOrder;
                 });
             } else {
                 toast({
@@ -119,14 +125,21 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
         }
     };
 
-    const draftItems = order.items.filter((item) => !item.orderItem.id);
-    const inPreparationItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === false);
-    const deliveredItems = order.items.filter((item) => item.orderItem.id && item.orderItem.isDelivered === true);
+    const filteredItems = (deliveryStatus: DeliveryStatusId | null) => {
+        return order.items.filter((item) => {
+            return item.orderItem.deliveryStatus == deliveryStatus;
+        });
+    };
+
+    const draftItems = filteredItems(null);
+    const inPreparationItems = filteredItems('pending');
+    const deliveredItems = filteredItems('delivered');
+    const cancelledItems = filteredItems('canceled');
 
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
             {draftItems.length > 0 &&
-                (order.orderId ? (
+                (order.id ? (
                     <Button onClick={updateOrder} disabled={isLoading}>
                         {isLoading ? 'Ordering...' : 'Add to order'}
                     </Button>
@@ -144,12 +157,16 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
             )}
         </OrderSummaryItem>
     );
-    const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} />;
+    const deliveredItemsSummary = (
+        <OrderSummaryItem quantity={deliveredItems.length} description={'Received'}>
+            {cancelledItems.length > 0 && <>+ {cancelledItems.length} cancelled</>}
+        </OrderSummaryItem>
+    );
 
     const collapsedContent = (
-        <div className="flex flex-col w-full h-full p-3">
+        <div className=" flex flex-col w-full h-full p-3">
             <div className="flex flex-row justify-between">
-                <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                <Labeled label={'Your order'} text={order.id ?? 'No order number yet'} />
                 <ChevronsUpIcon />
             </div>
             <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">
@@ -160,30 +177,54 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
         </div>
     );
 
+    function handleDeleteDraftItem(orderItemTempId: string) {
+        setOrder((prevOrder) => {
+            const itemIndex = prevOrder.items.findIndex((item) => item.orderItem.tempId === orderItemTempId);
+            if (itemIndex === -1) return prevOrder;
+
+            const menuItemId = prevOrder.items[itemIndex]!.menuItemId;
+            const name = menuItems.get(menuItemId)?.name ?? 'Unknown item';
+
+            const updatedItems = [...prevOrder.items];
+            updatedItems.splice(itemIndex, 1);
+
+            toast({
+                title: `${name} was removed from your cart`,
+                description: `Press 'Order now!' when you're ready to place your order.`,
+                className: getTopPositionedToast(),
+            });
+
+            return {
+                ...prevOrder,
+                items: updatedItems,
+            };
+        });
+    }
+
     return (
         <PublicFooterDrawer collapsedContent={collapsedContent}>
             <div className="flex flex-col w-full h-full p-3">
                 <div className="flex flex-row justify-between">
-                    <Labeled label={'Your order'} text={order.orderId ?? 'No order number yet'} />
+                    <Labeled label={'Your order'} text={order.id ?? 'No order number yet'} />
                     <DrawerClose>
                         <ChevronsDownIcon />
                     </DrawerClose>
                 </div>
                 <div className="flex flex-col w-full h-full gap-4 pt-4">
-                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
-                        <div className="w-45">{draftItemsSummary}</div>
+                    <div className="flex flex-row gap-3 md:gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-30">{draftItemsSummary}</div>
                         <div>
-                            <OrderItemsList items={draftItems} />
+                            <OrderItemsList items={draftItems} onDelete={handleDeleteDraftItem} />
                         </div>
                     </div>
-                    <div className="flex flex-row gap-6 border-b-2 border-b-gray-200">
-                        <div className="w-45">{inPreparationItemsSummary}</div>
+                    <div className="flex flex-row gap-3 md:gap-6 border-b-2 border-b-gray-200">
+                        <div className="w-30">{inPreparationItemsSummary}</div>
                         <div>
                             <OrderItemsList items={inPreparationItems} />
                         </div>
                     </div>
-                    <div className="flex flex-row gap-6  ">
-                        <div className="w-45">{deliveredItemsSummary}</div>
+                    <div className="flex flex-row gap-3 md:gap-6  ">
+                        <div className="w-30">{deliveredItemsSummary}</div>
                         <div>
                             <OrderItemsList items={deliveredItems} />
                         </div>

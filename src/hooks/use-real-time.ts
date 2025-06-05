@@ -1,20 +1,12 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
-import { type PublicOrder, type PublicOrderWithItems } from '~/domain/orders';
+import { type OrderId, type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
-//TODO revisit:
-const convertToPublicOrder = (order: PublicOrderWithItems, currencyId = 'USD'): PublicOrder => ({
-    locationId: order.locationId,
-    orderId: order.id.toString(),
-    items: order.items,
-    currencyId: currencyId as PublicOrder['currencyId'],
-});
-
-export function useRealTimeOrderUpdates(orderId: string | undefined, locationId: number) {
+export function useRealTimeOrderUpdates(orderId: OrderId | undefined, locationId: number) {
     const [order, setOrder] = useAtom(orderAtom);
     const { toast } = useToast();
 
@@ -26,7 +18,7 @@ export function useRealTimeOrderUpdates(orderId: string | undefined, locationId:
         const orderChannel = pusherClient.subscribe(CHANNELS.order(orderId));
 
         // Handle new orders in the location
-        locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
+        locationChannel.bind(EVENTS.ORDER_CREATED, () => {
             toast({
                 title: 'New Order',
                 description: `Order #${orderId} has been created`,
@@ -36,7 +28,7 @@ export function useRealTimeOrderUpdates(orderId: string | undefined, locationId:
 
         // Handle updates to the current order
         orderChannel.bind(EVENTS.ORDER_UPDATED, (data: PublicOrderWithItems) => {
-            setOrder(convertToPublicOrder(data, order.currencyId));
+            setOrder(data);
             toast({
                 title: 'Order Updated',
                 description: `Order #${orderId} has been updated`,
@@ -46,7 +38,7 @@ export function useRealTimeOrderUpdates(orderId: string | undefined, locationId:
 
         // Handle updates to order items
         orderChannel.bind(EVENTS.ORDER_ITEM_UPDATED, (data: PublicOrderWithItems) => {
-            setOrder(convertToPublicOrder(data, order.currencyId));
+            setOrder(data);
         });
 
         return () => {

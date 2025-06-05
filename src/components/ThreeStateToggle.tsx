@@ -1,27 +1,36 @@
 'use client';
 
 import type React from 'react';
-
-import { ChevronLeft, ChevronRight, Minus } from 'lucide-react';
 import { cloneElement, isValidElement, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
 
-type SelectedItem = 0 | 1 | 2;
+export type ThreeStateToggleSelectedItem = 0 | 1 | 2;
+
+export type ThreeStateToggleMetadata = {
+    id: ThreeStateToggleSelectedItem;
+    component: React.ReactNode;
+    className?: string;
+    labelWhenSelected?: string;
+    labelWhenNotSelected?: string;
+};
 
 interface ThreeStateToggleProps {
+    left: ThreeStateToggleMetadata;
+    right: ThreeStateToggleMetadata;
+    center: ThreeStateToggleMetadata;
     leftIcon?: React.ReactNode;
     centerIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
-    onStateChange?: (state: number) => void;
-    defaultState?: SelectedItem;
+    onStateChange?: (state: ThreeStateToggleSelectedItem) => void;
+    defaultState?: ThreeStateToggleSelectedItem;
     className?: string;
     size?: number;
 }
 
 export function ThreeStateToggle({
-    leftIcon = <ChevronLeft className="h-5 w-5" />,
-    centerIcon = <Minus className="h-5 w-5" />,
-    rightIcon = <ChevronRight className="h-5 w-5" />,
+    left,
+    center,
+    right,
     onStateChange,
     defaultState = 2,
     className,
@@ -36,7 +45,7 @@ export function ThreeStateToggle({
     const iconSize = Math.max(16, Math.round(size * 0.4));
 
     const handleStateChange = useCallback(
-        (newState: SelectedItem) => {
+        (newState: ThreeStateToggleSelectedItem) => {
             if (newState >= 0 && newState <= 2) {
                 setSelectedState(newState);
                 onStateChange?.(newState);
@@ -46,11 +55,11 @@ export function ThreeStateToggle({
     );
 
     const swipeLeft = useCallback(() => {
-        handleStateChange(Math.min((selectedState as number) - 1, 2) as SelectedItem);
+        handleStateChange(Math.min((selectedState as number) - 1, 2) as ThreeStateToggleSelectedItem);
     }, [handleStateChange, selectedState]);
 
     const swipeRight = useCallback(() => {
-        handleStateChange(Math.min((selectedState as number) + 1, 2) as SelectedItem);
+        handleStateChange(Math.min((selectedState as number) + 1, 2) as ThreeStateToggleSelectedItem);
     }, [handleStateChange, selectedState]);
 
     const handleTouchStart = (e: React.TouchEvent) => {
@@ -166,45 +175,27 @@ export function ThreeStateToggle({
                     top: `${padding}px`,
                     height: `${size - padding * 2}px`,
                     width: `calc(100%/3 - ${padding}px)`,
-                    left: `calc(${selectedState} * (100% - 100%/3 + ${padding / 2}px)/2)`,
+                    left: `calc((${selectedState} * 66.67%)/2 + ${['4px', '2px', '0px'][selectedState]})`,
                 }}
             />
 
-            {/* Left state */}
-            <div
-                className={cn(
-                    'flex flex-1 items-center justify-center rounded-full transition-colors z-10',
-                    selectedState === 0 ? 'text-gray-800' : 'text-gray-400',
-                )}
-                onClick={() => handleStateChange(0)}
-            >
-                {resizeIcon(leftIcon)}
-                <span className="sr-only">Left state</span>
-            </div>
-
-            {/* Center state */}
-            <div
-                className={cn(
-                    'flex flex-1 items-center justify-center rounded-full transition-colors z-10',
-                    selectedState === 1 ? 'text-gray-800' : 'text-gray-400',
-                )}
-                onClick={() => handleStateChange(1)}
-            >
-                {resizeIcon(centerIcon)}
-                <span className="sr-only">Center state</span>
-            </div>
-
-            {/* Right state */}
-            <div
-                className={cn(
-                    'flex flex-1 items-center justify-center rounded-full transition-colors z-10',
-                    selectedState === 2 ? 'text-gray-800' : 'text-gray-400',
-                )}
-                onClick={() => handleStateChange(2)}
-            >
-                {resizeIcon(rightIcon)}
-                <span className="sr-only">Right state</span>
-            </div>
+            {[left, center, right].map((item) => {
+                const label = selectedState === item.id ? item.labelWhenSelected : item.labelWhenNotSelected;
+                return (
+                    <div
+                        key={item.id}
+                        className={cn(
+                            'flex flex-1 items-center justify-center rounded-full transition-colors z-10',
+                            selectedState === item.id ? item.className : 'text-gray-400',
+                        )}
+                        title={label}
+                        onClick={() => handleStateChange(item.id)}
+                    >
+                        {resizeIcon(item.component)}
+                        <span className="sr-only">{label}</span>
+                    </div>
+                );
+            })}
         </div>
     );
 }

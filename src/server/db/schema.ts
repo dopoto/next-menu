@@ -4,6 +4,7 @@
 import { relations, sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
 import { MENU_MODES, type MenuModeId } from '~/domain/menu-modes';
+import { type DeliveryStatusId, deliveryStatusValues } from '~/domain/order-items';
 import { CURRENCIES, type CurrencyId } from '../../domain/currencies';
 
 /**
@@ -149,21 +150,30 @@ export const orders = createTable('order', {
     updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
 });
 
-export const orderItems = createTable('order_item', {
-    id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
-    orderId: integer('order_id')
-        .notNull()
-        .references(() => orders.id),
-    menuItemId: integer('menu_item_id')
-        .notNull()
-        .references(() => menuItems.id),
-    isDelivered: boolean('is_delivered').default(false).notNull(),
-    isPaid: boolean('is_paid').default(false).notNull(),
-    createdAt: timestamp('created_at', { withTimezone: true })
-        .default(sql`CURRENT_TIMESTAMP`)
-        .notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
-});
+const defaultDeliveryStatus: DeliveryStatusId = 'pending';
+export const orderItems = createTable(
+    'order_item',
+    {
+        id: integer('id').primaryKey().generatedByDefaultAsIdentity(),
+        orderId: integer('order_id')
+            .notNull()
+            .references(() => orders.id),
+        menuItemId: integer('menu_item_id')
+            .notNull()
+            .references(() => menuItems.id),
+        deliveryStatus: varchar('delivery_status', { length: 10 }).notNull().default(defaultDeliveryStatus),
+        isPaid: boolean('is_paid').default(false).notNull(),
+        createdAt: timestamp('created_at', { withTimezone: true })
+            .default(sql`CURRENT_TIMESTAMP`)
+            .notNull(),
+        updatedAt: timestamp('updated_at', { withTimezone: true }).$onUpdate(() => new Date()),
+    },
+    () => [
+        {
+            deliveryStatus: sql`CHECK (delivery_status IN (${sql.join([...deliveryStatusValues])}))`,
+        },
+    ],
+);
 
 export const ordersRelations = relations(orders, ({ many }) => ({
     orderItems: many(orderItems),

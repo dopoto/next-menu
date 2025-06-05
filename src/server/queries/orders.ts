@@ -1,10 +1,13 @@
 import { sql } from 'drizzle-orm';
-import { unstable_cache } from 'next/cache';
 import { type z } from 'zod';
 import type { LocationId } from '~/domain/locations';
-import { type PublicOrderItem } from '~/domain/order-items';
-import { type orderFormSchema, type OrderId, type PublicOrderWithItems } from '~/domain/orders';
-import { TAGS } from '~/domain/tags';
+import { type DeliveryStatusId, type OrderItem, type PublicOrderItem } from '~/domain/order-items';
+import {
+    orderIdSchema,
+    type OrderId,
+    type PublicOrderWithItems,
+    type publicOrderWithItemsSchema,
+} from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { db } from '~/server/db';
 import { orderItems, orders } from '~/server/db/schema';
@@ -16,7 +19,8 @@ import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 //     return `ORD-${timestamp}${randomStr}`;
 // }
 
-export async function createOrder(data: z.infer<typeof orderFormSchema>): Promise<PublicOrderWithItems> {
+export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
+    const validLocation = await getLocationForCurrentUserOrThrow(data.locationId);
     return await db.transaction(async (tx) => {
         const [order] = await tx
             .insert(orders)
@@ -32,6 +36,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
         }
 
         const insertedItems: PublicOrderItem[] = [];
+        const pending: DeliveryStatusId = 'pending';
         if (data.items) {
             for (const item of data.items) {
                 const [insertedItem] = await tx
@@ -39,7 +44,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                     .values({
                         orderId: order.id,
                         menuItemId: item.menuItemId,
-                        isDelivered: false,
+                        deliveryStatus: pending,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
                         updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -50,7 +55,7 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
                         menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
-                            isDelivered: false,
+                            deliveryStatus: pending,
                             isPaid: false,
                         },
                     };
@@ -60,25 +65,35 @@ export async function createOrder(data: z.infer<typeof orderFormSchema>): Promis
         }
         const orderWithItems: PublicOrderWithItems = {
             ...order,
+            currencyId: validLocation.currencyId,
             items: insertedItems,
         };
         return orderWithItems;
     });
 }
 
-export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promise<PublicOrderWithItems> {
+export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchema>): Promise<PublicOrderWithItems> {
+    const validLocation = await getLocationForCurrentUserOrThrow(data.locationId);
+
+    const orderIdValidationResult = orderIdSchema.safeParse(data.id);
+    if (!orderIdValidationResult.success) {
+        throw new AppError({ publicMessage: `Invalid Order ID` });
+    }
+    const validatedOrderId = orderIdValidationResult.data;
+
     return await db.transaction(async (tx) => {
         const itemsToInsert = data.items?.filter((item) => item.orderItem.id === undefined) ?? [];
         const itemsAlreadyOrdered = data.items?.filter((item) => item.orderItem.id !== undefined) ?? [];
         const insertedItems: PublicOrderItem[] = [];
+        const pending: DeliveryStatusId = 'pending';
         if (itemsToInsert) {
             for (const item of itemsToInsert) {
                 const [insertedItem] = await tx
                     .insert(orderItems)
                     .values({
-                        orderId: Number(data.orderId), //TODO review
+                        orderId: validatedOrderId,
                         menuItemId: item.menuItemId,
-                        isDelivered: false,
+                        deliveryStatus: pending,
                         isPaid: false,
                         createdAt: sql`CURRENT_TIMESTAMP`,
                         updatedAt: sql`CURRENT_TIMESTAMP`,
@@ -89,7 +104,7 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
                         menuItemId: item.menuItemId,
                         orderItem: {
                             id: insertedItem.id,
-                            isDelivered: false,
+                            deliveryStatus: pending,
                             isPaid: false,
                         },
                     };
@@ -98,74 +113,61 @@ export async function updateOrder(data: z.infer<typeof orderFormSchema>): Promis
             }
         }
 
-        const [order] = await tx
-            .select()
-            .from(orders)
-            .where(sql`${orders.id} = ${Number(data.orderId)}`);
+        const order = await getOrderById(validLocation.id, validatedOrderId);
 
         if (!order) {
-            throw new AppError({ internalMessage: 'Order not found after update' });
+            throw new AppError({ internalMessage: 'Could not find order to update' });
         }
+
+        const allItems = [...itemsAlreadyOrdered, ...insertedItems].sort((a, b) => {
+            return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+        });
 
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            items: [...itemsAlreadyOrdered, ...insertedItems],
+            currencyId: validLocation.currencyId,
+            items: allItems,
         };
         return orderWithItems;
     });
 }
 
-export const getOpenOrdersByLocation = async (locationId: LocationId): Promise<PublicOrderWithItems[]> => {
-    // Validate location access before caching
+export async function getOpenOrdersByLocation(locationId: LocationId): Promise<PublicOrderWithItems[]> {
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
-    return unstable_cache(
-        async () => {
-            // Use the locationId directly since we've already validated it
-            const items = await db.query.orders.findMany({
-                where: (orders, { eq }) => eq(orders.locationId, validLocation.id),
-                with: {
-                    orderItems: true,
+    const rows = await db.query.orders.findMany({
+        with: { orderItems: true },
+        where: (orders, { eq }) => eq(orders.locationId, locationId),
+    });
+
+    return rows.map((row): PublicOrderWithItems => {
+        const items: PublicOrderItem[] = row.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus as OrderItem['deliveryStatus'],
+                    isPaid: orderItem.isPaid,
                 },
+            }))
+            .sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
             });
 
-            const ordersWithItems: PublicOrderWithItems[] = items.map((order) => ({
-                id: order.id,
-                locationId: order.locationId,
-                createdAt: order.createdAt,
-                updatedAt: order.updatedAt,
-                items: order.orderItems
-                    .map((orderItem) => ({
-                        menuItemId: orderItem.menuItemId,
-                        orderItem: {
-                            id: orderItem.id,
-                            isDelivered: orderItem.isDelivered,
-                            isPaid: orderItem.isPaid,
-                            createdAt: orderItem.createdAt,
-                        },
-                    }))
-                    .sort((a, b) => {
-                        return a.orderItem.id - b.orderItem.id;
-                    }),
-            }));
-            return ordersWithItems;
-        },
-        [TAGS.locationOpenOrders(locationId)],
-        {
-            tags: [TAGS.locationOpenOrders(locationId)],
-            revalidate: 60, // Cache for 60 seconds
-        },
-    )();
-};
+        return {
+            ...row,
+            currencyId: validLocation.currencyId,
+            items,
+        };
+    });
+}
 
 export async function getOrderById(locationId: LocationId, orderId: OrderId): Promise<PublicOrderWithItems> {
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     const order = await db.query.orders.findFirst({
         where: (orders, { and, eq }) => and(eq(orders.locationId, validLocation.id), eq(orders.id, Number(orderId))),
-        with: {
-            orderItems: true,
-        },
+        with: { orderItems: true },
     });
 
     if (!order) {
@@ -177,14 +179,19 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
         locationId: order.locationId,
         createdAt: order.createdAt,
         updatedAt: order.updatedAt,
-        items: order.orderItems.map((orderItem) => ({
-            menuItemId: orderItem.menuItemId,
-            orderItem: {
-                id: orderItem.id,
-                isDelivered: orderItem.isDelivered,
-                isPaid: orderItem.isPaid,
-            },
-        })),
+        currencyId: validLocation.currencyId,
+        items: order.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus as OrderItem['deliveryStatus'],
+                    isPaid: orderItem.isPaid,
+                },
+            }))
+            .sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+            }),
     };
     return orderWithItems;
 }
