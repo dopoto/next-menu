@@ -1,7 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import { and, asc, desc, eq, sql } from 'drizzle-orm';
 import { type z } from 'zod';
-import { ClerkSessionClaimsV2 } from '~/domain/clerk';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItemId, type MenuItemWithSortOrder } from '~/domain/menu-items';
 import { type Menu, type menuFormSchema, type MenuId, type MenuWithItems } from '~/domain/menus';

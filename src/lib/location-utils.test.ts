@@ -1,5 +1,5 @@
-import { getValidLocationId, getValidLocationIdOrThrow } from './location-utils';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidLocationId, getValidLocationIdOrThrow } from './location-utils';
 
 describe('location-utils', () => {
     describe('getValidLocationId', () => {

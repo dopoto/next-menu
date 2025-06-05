@@ -1,8 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
-import { ClerkSessionClaimsV2 } from '~/domain/clerk';
 import { CookieKey } from '~/domain/cookies';
-import { locationIdSchema } from '~/domain/locations';
 import { getValidLocationId } from '~/lib/location-utils';
 import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
@@ -59,7 +57,11 @@ export default clerkMiddleware(
                 if (validInitialLocationId) {
                     const fallbackMyDashboardRoute = ROUTES.live(Number(validInitialLocationId));
                     const fallbackResponse = redirectTo(req, fallbackMyDashboardRoute);
-                    fallbackResponse.cookies.set(CookieKey.CurrentLocationId, validInitialLocationId.toString(), cookieOptions);
+                    fallbackResponse.cookies.set(
+                        CookieKey.CurrentLocationId,
+                        validInitialLocationId.toString(),
+                        cookieOptions,
+                    );
                     console.log(
                         `DBG-MDLW [/my] Fall back to initial location id. Redirecting from ${req.url} to ${fallbackMyDashboardRoute}`,
                     );

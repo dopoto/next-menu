@@ -6,8 +6,8 @@ import { z } from 'zod';
 export type ClerkSessionClaimsV2 = {
     o: {
         id: string;
-    }
-}
+    };
+};
 
 export type ClerkOrganizationId = `org_${string}`;
 export const clerkOrgIdPrefix = (() => {

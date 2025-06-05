@@ -2,14 +2,12 @@ import { auth } from '@clerk/nextjs/server';
 import { eq, sql } from 'drizzle-orm';
 import 'server-only';
 import { type z } from 'zod';
-import { ClerkSessionClaimsV2 } from '~/domain/clerk';
 import {
     LOCATION_SLUG_LENGTH,
     type Location,
     type LocationId,
     type LocationSlug,
     type locationFormSchema,
-    locationIdSchema,
 } from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
@@ -59,7 +57,7 @@ export async function generateUniqueLocationSlug(): Promise<LocationSlug> {
  * @returns A valid Location.
  */
 export async function getLocationForCurrentUserOrThrow(locationId: string | number): Promise<Location> {
-    const validLocationId = getValidLocationIdOrThrow(locationId)
+    const validLocationId = getValidLocationIdOrThrow(locationId);
 
     const { userId, orgId } = await auth();
     if (!userId) {
