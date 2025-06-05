@@ -20,3 +20,5 @@ Storybook 9
 Storybook snapshot testing + pipeline integration
 Zod 4
 Shadcn registry
+GLobal open orders checker in Admin -> show toast, count badge over open orders menu icon
+Server actions errors - show friendly error message in modal / parallel route -

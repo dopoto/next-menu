@@ -127,9 +127,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
 
     const filteredItems = (deliveryStatus: DeliveryStatusId | null) => {
         return order.items.filter((item) => {
-            return deliveryStatus == null
-                ? item.orderItem.deliveryStatus == null
-                : item.orderItem.deliveryStatus == deliveryStatus;
+            return item.orderItem.deliveryStatus == deliveryStatus;
         });
     };
 

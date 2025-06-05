@@ -33,6 +33,7 @@ export function OrderCard({
     const [itemIdBeingUpdated, setItemIdBeingUpdated] = useState<OrderItemId | null>(null);
 
     async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
+        //TODO refactor, simplify
         const status = Object.keys(ITEM_STATE).find((key) => ITEM_STATE[key as DeliveryStatusId] === state) as
             | DeliveryStatusId
             | undefined;
@@ -43,7 +44,8 @@ export function OrderCard({
             setItemIdBeingUpdated(orderItemId);
             await updateOrderItemDeliveryStatusAction(locationId, orderItemId, status);
         } catch (error) {
-            console.error('Failed to mark as pending:', error);
+            //TODO proper error handling
+            alert(`Failed to update order item\n${error?.toString()}`);
         } finally {
             setItemIdBeingUpdated(null);
         }
@@ -104,9 +106,6 @@ export function OrderCard({
                                     defaultState={itemState}
                                     onStateChange={(state) => handleItemStateChange(state, item.orderItem.id!)}
                                     size={44}
-                                    // leftIcon={<BanIcon />}
-                                    // centerIcon={<ClockIcon />}
-                                    // rightIcon={<CircleCheckIcon />}
                                 />
                             </div>
                         </div>

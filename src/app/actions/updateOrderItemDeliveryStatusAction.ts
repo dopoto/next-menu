@@ -23,6 +23,8 @@ export const updateOrderItemDeliveryStatusAction = async (
             recordResponse: true,
         },
         async () => {
+            //TODO try / catch ,change return
+
             const orderItemIdValidationResult = orderItemIdSchema.safeParse(orderItemId);
             if (!orderItemIdValidationResult.success) {
                 throw new AppError({ publicMessage: `Invalid order item id` });
