@@ -22,3 +22,6 @@ Zod 4
 Shadcn registry
 GLobal open orders checker in Admin -> show toast, count badge over open orders menu icon
 Server actions errors - show friendly error message in modal / parallel route -
+language switch in menu - non-free tiers
+360 view?
+pricing - nm scans a month
