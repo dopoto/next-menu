@@ -12,7 +12,12 @@ export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'cu
 export type NewLocation = InferInsertModel<typeof locations>;
 
 export type LocationId = Location['id'];
-export const locationIdSchema = z.coerce.number().int().positive();
+export const locationIdSchema = z.union([
+    z.number().int().min(1),
+    z.string().regex(/^\d+$/).transform(val => parseInt(val, 10))
+]).refine(val => Number.isSafeInteger(val) && val > 0, {
+    message: 'Location ID must be a positive integer'
+}).transform(val => val as LocationId);
 
 export const LOCATION_SLUG_LENGTH = 8;
 export const locationSlugSchema = z.coerce

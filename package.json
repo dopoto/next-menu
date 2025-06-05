@@ -3,9 +3,6 @@
     "version": "0.0.71",
     "private": true,
     "type": "module",
-    "jest": {
-        "preset": "next/jest"
-    },
     "scripts": {
         "build": "next build",
         "check": "next lint && tsc --noEmit",
