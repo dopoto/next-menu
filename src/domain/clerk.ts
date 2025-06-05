@@ -1,5 +1,14 @@
 import { z } from 'zod';
 
+/**
+ * @see https://clerk.com/docs/backend-requests/resources/session-tokens > Version 2.
+ */
+export type ClerkSessionClaimsV2 = {
+    o: {
+        id: string;
+    };
+};
+
 export type ClerkOrganizationId = `org_${string}`;
 export const clerkOrgIdPrefix = (() => {
     const testValue: ClerkOrganizationId = 'org_';

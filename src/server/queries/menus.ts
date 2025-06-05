@@ -174,13 +174,13 @@ export async function getMenuById(locationId: LocationId, menuId: MenuId): Promi
 }
 
 export async function getMenusByLocation(locationId: LocationId): Promise<Menu[]> {
-    const { userId, sessionClaims } = await auth();
+    const { userId, orgId } = await auth();
     if (!userId) {
         throw new AppError({ internalMessage: 'Unauthorized' });
     }
 
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
-    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(orgId);
 
     const menus = await db.query.menus.findMany({
         where: (menus, { eq, and }) =>
