@@ -36,16 +36,15 @@ function SignedInCta(props: { tier?: PriceTierId; secondaryText?: string; varian
     const isOnThisTier = userTier != null && userTier === props.tier;
 
     if (isOnThisTier) {
-        return null;
-        // return (
-        //     <div className="relative flex w-full flex-col gap-1">
-        //         <Link href={ROUTES.my} className="w-full">
-        //             <Button className="w-full" variant={props.variant}>
-        //                 Go to my account
-        //             </Button>
-        //         </Link>
-        //     </div>
-        // );
+        return (
+            <div className="relative flex w-full flex-col gap-1">
+                <Link href={ROUTES.my} className="w-full">
+                    <Button className="w-full" variant={props.variant}>
+                        Go to my account
+                    </Button>
+                </Link>
+            </div>
+        );
     }
 
     return (

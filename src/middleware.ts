@@ -75,16 +75,6 @@ export default clerkMiddleware(
             }
         }
 
-        // For auth-protected routes, ensure we have a last location cookie
-        if (isAuthProtectedRoute(req)) {
-            const machineId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
-            if (!machineId) {
-                const anonResponse = NextResponse.next();
-                anonResponse.cookies.set(CookieKey.MachineId, crypto.randomUUID(), cookieOptions);
-                return anonResponse;
-            }
-        }
-
         // For public routes, ensure we have a machineId cookie
         if (!isAuthProtectedRoute(req)) {
             const machineId = req.cookies.get(CookieKey.MachineId);

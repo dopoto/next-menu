@@ -1,4 +1,4 @@
-import { Airplay, Clock, Globe, ScanQrCode, Users, Utensils } from 'lucide-react';
+import { Airplay, ChartPieIcon, Clock, PiggyBankIcon, ScanQrCode, Utensils } from 'lucide-react';
 import React from 'react';
 import { LandingSectionTitle } from '~/app/(landing)/_components/LandingSectionTitle';
 import { sections } from '~/domain/landing-content';
@@ -12,35 +12,36 @@ export interface Feature {
 export const LandingFeatures: React.FC = () => {
     const features: Feature[] = [
         {
-            title: 'Step into the QR age',
-            description: 'Create and manage QR-powered menus for your customers',
+            title: `Your own site - on us`,
+            description: `Once you set up your menus, you get a public link that hosts them - always online, ready to be shared, no web hosting required.`,
             icon: <ScanQrCode className="text-pop h-6 w-6" />,
         },
         {
-            title: 'Handle take-out orders with ease',
-            description: 'Nunc eget tincidunt libero. Pellentesque fringilla congue nisi id lobortis.',
+            title: 'Always in sync',
+            description: `Publish updates to your menu items and prices any time - they're instantly reflected in your menus.`,
             icon: <Utensils className="text-pop h-6 w-6" />,
         },
         {
-            title: 'Set up and manage kiosk screens',
-            description: 'Mauris turpis lectus, finibus eget gravida a, sollicitudin sit amet risus.',
+            title: 'No app required',
+            description:
+                'Customers that scan your QR codes are taken to your public menu page, that simply works on any mobile device.',
             icon: <Airplay className="text-pop h-6 w-6" />,
         },
         {
-            title: 'See open orders in real time, anytime',
-            description: 'Donec ac lobortis enim, id pellentesque massa. Nulla quis enim ut elit consequat malesuada.',
+            title: 'Fully-automated ordering system',
+            description: `In interactive mode, guests can order items directly from your menu and can see instant updates for items marked as received at the table by your staff.`,
             icon: <Clock className="text-pop h-6 w-6" />,
         },
         {
-            title: 'Team Collaboration',
-            description: 'Quisque tincidunt aliquam malesuada. Maecenas maximus purus ac metus congue viverra. ',
-            icon: <Users className="text-pop h-6 w-6" />,
+            title: 'No hidden costs',
+            description:
+                'No purchases of expensive terminals or app installs are required. Your guests and your staff only need a device with a browser - be it a phone, a tablet, a laptop or a desktop PC.',
+            icon: <PiggyBankIcon className="text-pop h-6 w-6" />,
         },
         {
-            title: 'Global Accessibility',
-            description:
-                'Suspendisse tincidunt diam non risus venenatis, ac efficitur velit sodales. Aenean blandit consequat elit in pellentesque.',
-            icon: <Globe className="text-pop h-6 w-6" />,
+            title: 'In-depth reports',
+            description: `How many guests opened your menus? What's your best selling menu item? What is never ordered? Easy - learn all these and much more from our reports page, included in all price plans!`,
+            icon: <ChartPieIcon className="text-pop h-6 w-6" />,
         },
     ];
 

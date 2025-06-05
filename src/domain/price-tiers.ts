@@ -49,6 +49,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         flags: [
             { id: 'reports', isEnabled: true },
             { id: 'publicSite', isEnabled: true },
+            { id: 'nonInteractiveMode', isEnabled: true },
+            { id: 'interactiveMode', isEnabled: true },
         ],
     },
     start2: {
@@ -57,7 +59,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         description: 'Takes two minutes to get started',
         monthlyUsdPrice: 0,
         yearlyUsdPrice: 0,
-        isPublic: true,
+        isPublic: false,
         isPopular: false,
         features: [
             { id: 'locations', quota: 1 },
@@ -67,6 +69,8 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         flags: [
             { id: 'reports', isEnabled: true },
             { id: 'publicSite', isEnabled: true },
+            { id: 'nonInteractiveMode', isEnabled: true },
+            { id: 'interactiveMode', isEnabled: true },
         ],
     },
     pro: {
@@ -80,12 +84,14 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         isPopular: true,
         features: [
             { id: 'locations', quota: 1 },
-            { id: 'menus', quota: 1 },
-            { id: 'menuItems', quota: 0 },
+            { id: 'menus', quota: 10 },
+            { id: 'menuItems', quota: 100 },
         ],
         flags: [
             { id: 'reports', isEnabled: false },
             { id: 'publicSite', isEnabled: true },
+            { id: 'nonInteractiveMode', isEnabled: true },
+            { id: 'interactiveMode', isEnabled: true },
         ],
     },
     enterprise: {
@@ -99,12 +105,14 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
         isPopular: false,
         features: [
             { id: 'locations', quota: 1 },
-            { id: 'menus', quota: 100 },
-            { id: 'menuItems', quota: 14 },
+            { id: 'menus', quota: 50 },
+            { id: 'menuItems', quota: 1000 },
         ],
         flags: [
             { id: 'reports', isEnabled: true },
             { id: 'publicSite', isEnabled: true },
+            { id: 'nonInteractiveMode', isEnabled: true },
+            { id: 'interactiveMode', isEnabled: true },
         ],
     },
     custom1: {
