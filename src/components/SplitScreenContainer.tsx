@@ -43,11 +43,15 @@ export function SplitScreenContainer(props: {
                                 />
                             </div>
                         </SignedIn>
-                        {props.showSignInLink && <SignedOut>
-                            <div className="ml-auto flex items-center-safe">
-                                <Link className="blue-link sm:mr-14" href={ROUTES.signIn}>I already have an account</Link>
-                            </div>
-                        </SignedOut>}
+                        {props.showSignInLink && (
+                            <SignedOut>
+                                <div className="ml-auto flex items-center-safe">
+                                    <Link className="blue-link sm:mr-14" href={ROUTES.signIn}>
+                                        I already have an account
+                                    </Link>
+                                </div>
+                            </SignedOut>
+                        )}
                     </nav>
                 </div>
                 <div className="flex flex-col flex-nowrap">
