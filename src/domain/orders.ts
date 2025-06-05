@@ -13,9 +13,7 @@ export const orderIdSchema = z.custom<OrderId>();
 
 export const orderFormSchema = z.object({
     id: orderIdSchema.optional(),
-    locationId: z
-        .number({ required_error: 'Location ID is required' })
-        .min(0, 'Location Id must be positive'),
+    locationId: z.number({ required_error: 'Location ID is required' }).min(0, 'Location Id must be positive'),
     items: z.array(z.custom<PublicOrderItem>()),
 });
 

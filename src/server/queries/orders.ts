@@ -1,8 +1,7 @@
 import { sql } from 'drizzle-orm';
 import { type z } from 'zod';
-import { type CurrencyId } from '~/domain/currencies';
 import type { LocationId } from '~/domain/locations';
-import { DeliveryStatusId, OrderItem, type PublicOrderItem } from '~/domain/order-items';
+import { type DeliveryStatusId, type OrderItem, type PublicOrderItem } from '~/domain/order-items';
 import {
     orderIdSchema,
     type OrderId,
@@ -66,7 +65,7 @@ export async function createOrder(data: z.infer<typeof publicOrderWithItemsSchem
         }
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            currencyId: validLocation.currencyId as CurrencyId,
+            currencyId: validLocation.currencyId,
             items: insertedItems,
         };
         return orderWithItems;
@@ -126,7 +125,7 @@ export async function updateOrder(data: z.infer<typeof publicOrderWithItemsSchem
 
         const orderWithItems: PublicOrderWithItems = {
             ...order,
-            currencyId: validLocation.currencyId as CurrencyId,
+            currencyId: validLocation.currencyId,
             items: allItems,
         };
         return orderWithItems;
@@ -157,7 +156,7 @@ export async function getOpenOrdersByLocation(locationId: LocationId): Promise<P
 
         return {
             ...row,
-            currencyId: validLocation.currencyId as CurrencyId,
+            currencyId: validLocation.currencyId,
             items,
         };
     });

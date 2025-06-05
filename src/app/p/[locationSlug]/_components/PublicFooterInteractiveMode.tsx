@@ -16,7 +16,7 @@ import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
-import { DeliveryStatusId } from '~/domain/order-items';
+import { type DeliveryStatusId } from '~/domain/order-items';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { useRealTimeOrderUpdates } from '~/hooks/use-real-time';
 import { useToast } from '~/hooks/use-toast';
@@ -127,7 +127,9 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
 
     const filteredItems = (deliveryStatus: DeliveryStatusId | null) => {
         return order.items.filter((item) => {
-            return deliveryStatus == null ? item.orderItem.deliveryStatus == null : item.orderItem.deliveryStatus == deliveryStatus;
+            return deliveryStatus == null
+                ? item.orderItem.deliveryStatus == null
+                : item.orderItem.deliveryStatus == deliveryStatus;
         });
     };
 
@@ -157,11 +159,11 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
             )}
         </OrderSummaryItem>
     );
-    const deliveredItemsSummary = <OrderSummaryItem quantity={deliveredItems.length} description={'Received'} >
-        {cancelledItems.length > 0 && (
-            <>+ {cancelledItems.length} cancelled</>
-        )}
-    </OrderSummaryItem>;
+    const deliveredItemsSummary = (
+        <OrderSummaryItem quantity={deliveredItems.length} description={'Received'}>
+            {cancelledItems.length > 0 && <>+ {cancelledItems.length} cancelled</>}
+        </OrderSummaryItem>
+    );
 
     const collapsedContent = (
         <div className=" flex flex-col w-full h-full p-3">

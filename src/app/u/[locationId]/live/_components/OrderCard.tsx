@@ -3,7 +3,11 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import { BanIcon, CircleCheckIcon, ClockIcon } from 'lucide-react';
 import { useState } from 'react';
-import { ThreeStateToggle, ThreeStateToggleMetadata, type ThreeStateToggleSelectedItem } from '~/components/ThreeStateToggle';
+import {
+    ThreeStateToggle,
+    type ThreeStateToggleMetadata,
+    type ThreeStateToggleSelectedItem,
+} from '~/components/ThreeStateToggle';
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
@@ -55,26 +59,28 @@ export function OrderCard({
             </div>
             <div className="space-y-4">
                 {order.items.map((item) => {
-                    const itemState: ThreeStateToggleSelectedItem =
-                        ITEM_STATE[item.orderItem.deliveryStatus as DeliveryStatusId];
+                    const itemState: ThreeStateToggleSelectedItem = ITEM_STATE[item.orderItem.deliveryStatus!];
 
                     const left: ThreeStateToggleMetadata = {
                         id: 0,
-                        className: itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-gray-600',
+                        className:
+                            itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-gray-600',
                         labelWhenSelected: 'Marked as cancelled',
                         labelWhenNotSelected: 'Mark as cancelled',
                         component: <BanIcon />,
                     };
                     const center: ThreeStateToggleMetadata = {
                         id: 1,
-                        className: itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-orange-500',
+                        className:
+                            itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-orange-500',
                         labelWhenSelected: 'Marked as in preparation',
                         labelWhenNotSelected: 'Mark as in preparation',
                         component: <ClockIcon />,
                     };
                     const right: ThreeStateToggleMetadata = {
                         id: 2,
-                        className: itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-green-600',
+                        className:
+                            itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-green-600',
                         labelWhenSelected: 'Marked as delivered',
                         labelWhenNotSelected: 'Mark as delivered',
                         component: <CircleCheckIcon />,
@@ -98,9 +104,9 @@ export function OrderCard({
                                     defaultState={itemState}
                                     onStateChange={(state) => handleItemStateChange(state, item.orderItem.id!)}
                                     size={44}
-                                // leftIcon={<BanIcon />}
-                                // centerIcon={<ClockIcon />}
-                                // rightIcon={<CircleCheckIcon />}
+                                    // leftIcon={<BanIcon />}
+                                    // centerIcon={<ClockIcon />}
+                                    // rightIcon={<CircleCheckIcon />}
                                 />
                             </div>
                         </div>

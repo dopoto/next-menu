@@ -1,12 +1,8 @@
 'use client';
 
 import type React from 'react';
-
-import { ChevronLeft, ChevronRight, Minus } from 'lucide-react';
 import { cloneElement, isValidElement, useCallback, useEffect, useRef, useState } from 'react';
 import { cn } from '~/lib/utils';
-import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
-import { idText } from 'typescript';
 
 export type ThreeStateToggleSelectedItem = 0 | 1 | 2;
 
@@ -16,7 +12,7 @@ export type ThreeStateToggleMetadata = {
     className?: string;
     labelWhenSelected?: string;
     labelWhenNotSelected?: string;
-}
+};
 
 interface ThreeStateToggleProps {
     left: ThreeStateToggleMetadata;
@@ -32,9 +28,6 @@ interface ThreeStateToggleProps {
 }
 
 export function ThreeStateToggle({
-    // leftIcon = <ChevronLeft className="h-5 w-5" />,
-    // centerIcon = <Minus className="h-5 w-5" />,
-    // rightIcon = <ChevronRight className="h-5 w-5" />,
     left,
     center,
     right,
@@ -187,7 +180,7 @@ export function ThreeStateToggle({
             />
 
             {[left, center, right].map((item) => {
-                const label = selectedState === item.id ? item.labelWhenSelected : item.labelWhenNotSelected
+                const label = selectedState === item.id ? item.labelWhenSelected : item.labelWhenNotSelected;
                 return (
                     <div
                         key={item.id}
@@ -201,7 +194,7 @@ export function ThreeStateToggle({
                         {resizeIcon(item.component)}
                         <span className="sr-only">{label}</span>
                     </div>
-                )
+                );
             })}
         </div>
     );
