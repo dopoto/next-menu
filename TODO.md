@@ -27,3 +27,4 @@ language switch in menu - non-free tiers
 pricing - number of scans per month
 info icon on Price card
 /docs route - GitBook?  https://docusaurus.io/docs/playground?
+custom layouts
