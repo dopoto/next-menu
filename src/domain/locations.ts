@@ -12,7 +12,7 @@ export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'cu
 export type NewLocation = InferInsertModel<typeof locations>;
 
 export type LocationId = Location['id'];
-export const locationIdSchema = z.custom<LocationId>();
+export const locationIdSchema = z.coerce.number().int().positive();
 
 export const LOCATION_SLUG_LENGTH = 8;
 export const locationSlugSchema = z.coerce

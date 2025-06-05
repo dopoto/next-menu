@@ -1,7 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
 import { type NextRequest, NextResponse } from 'next/server';
+import { ClerkSessionClaimsV2 } from '~/domain/clerk';
 import { CookieKey } from '~/domain/cookies';
 import { locationIdSchema } from '~/domain/locations';
+import { getValidLocationId } from '~/lib/location-utils';
 import { getValidPriceTier } from '~/lib/price-tier-utils';
 import { ROUTES } from '~/lib/routes';
 
@@ -17,8 +19,7 @@ const isAuthProtectedRoute = createRouteMatcher([`${ROUTES.userRoot}(.*)`]);
 
 export default clerkMiddleware(
     async (auth, req: NextRequest) => {
-        const { userId, sessionClaims, redirectToSignIn } = await auth();
-        const orgId = sessionClaims?.org_id;
+        const { userId, orgId, sessionClaims, redirectToSignIn } = await auth();
 
         if (isSignUpRoute(req)) {
             console.log(`DBG-MDLW [${req.url}] Is sign-up route`);
@@ -47,18 +48,18 @@ export default clerkMiddleware(
             }
 
             const currentLocationId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
-            const currentLocationValidationResult = locationIdSchema.safeParse(currentLocationId);
-            if (currentLocationValidationResult.success) {
-                const myDashboardRoute = ROUTES.live(currentLocationValidationResult.data);
+            const validCurrentLocationId = getValidLocationId(currentLocationId);
+            if (validCurrentLocationId) {
+                const myDashboardRoute = ROUTES.live(validCurrentLocationId);
                 console.log(`DBG-MDLW [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
                 return redirectTo(req, myDashboardRoute);
             } else {
                 // Fall back to the initial location id in the session claims
-                const initialLocationId = sessionClaims?.metadata?.initialLocationId;
-                if (initialLocationId) {
-                    const fallbackMyDashboardRoute = ROUTES.live(Number(initialLocationId));
+                const validInitialLocationId = getValidLocationId(sessionClaims?.metadata?.initialLocationId);
+                if (validInitialLocationId) {
+                    const fallbackMyDashboardRoute = ROUTES.live(Number(validInitialLocationId));
                     const fallbackResponse = redirectTo(req, fallbackMyDashboardRoute);
-                    fallbackResponse.cookies.set(CookieKey.CurrentLocationId, initialLocationId, cookieOptions);
+                    fallbackResponse.cookies.set(CookieKey.CurrentLocationId, validInitialLocationId.toString(), cookieOptions);
                     console.log(
                         `DBG-MDLW [/my] Fall back to initial location id. Redirecting from ${req.url} to ${fallbackMyDashboardRoute}`,
                     );

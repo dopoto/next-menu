@@ -2,6 +2,7 @@ import { auth } from '@clerk/nextjs/server';
 import { eq, sql } from 'drizzle-orm';
 import 'server-only';
 import { type z } from 'zod';
+import { ClerkSessionClaimsV2 } from '~/domain/clerk';
 import {
     LOCATION_SLUG_LENGTH,
     type Location,
@@ -12,6 +13,7 @@ import {
 } from '~/domain/locations';
 import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
 import { AppError } from '~/lib/error-utils.server';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { db } from '~/server/db';
 import { locations, organizations } from '~/server/db/schema';
 
@@ -57,23 +59,14 @@ export async function generateUniqueLocationSlug(): Promise<LocationSlug> {
  * @returns A valid Location.
  */
 export async function getLocationForCurrentUserOrThrow(locationId: string | number): Promise<Location> {
-    const locationIdValidationResult = locationIdSchema.safeParse(locationId);
-    if (!locationIdValidationResult.success) {
-        throw new AppError({ internalMessage: `Invalid locationId: ${locationId}` });
-    }
-    const validLocationId = locationIdValidationResult.data;
+    const validLocationId = getValidLocationIdOrThrow(locationId)
 
-    const { userId, sessionClaims } = await auth();
+    const { userId, orgId } = await auth();
     if (!userId) {
         throw new AppError({ internalMessage: 'Unauthorized - no user ID provided' });
     }
 
-    const validClerkOrgId = getValidClerkOrgIdOrThrow(sessionClaims?.org_id);
-    if (!validClerkOrgId) {
-        throw new AppError({
-            internalMessage: `Invalid organization ID: ${sessionClaims?.org_id}`,
-        });
-    }
+    const validClerkOrgId = getValidClerkOrgIdOrThrow(orgId);
 
     const location = await db.query.locations.findFirst({
         where: (locations, { and, eq }) =>

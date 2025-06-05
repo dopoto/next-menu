@@ -1,4 +1,3 @@
-import type { Config } from 'jest';
 import nextJest from 'next/jest.js';
 
 const createJestConfig = nextJest({
@@ -6,7 +5,8 @@ const createJestConfig = nextJest({
     dir: './',
 });
 
-const config: Config = {
+/** @type {import('jest').Config} */
+const config = {
     coverageProvider: 'v8',
     testEnvironment: 'jsdom',
     transform: {
@@ -14,6 +14,10 @@ const config: Config = {
     },
     transformIgnorePatterns: ['/node_modules/(?!@t3-oss)'],
     setupFilesAfterEnv: ['<rootDir>/src/test/test-setup.ts'],
+    extensionsToTreatAsEsm: ['.ts', '.tsx'],
+    moduleNameMapper: {
+        '^(\\.{1,2}/.*)\\.js$': '$1',
+    }
 };
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
