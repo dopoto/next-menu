@@ -29,7 +29,7 @@ export const sections: Record<string, Section> = {
         id: 'pricing',
         header: {
             label: 'Pricing',
-            title: 'Plans for teams of all sizes',
+            title: 'Plans for any business size',
             secondary: 'No strings attached. Upgrade, downgrade or cancel instantly, anytime.',
         },
     },

@@ -1,4 +1,4 @@
-import { SignedIn, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
 import Link from 'next/link';
 import { type ReactNode } from 'react';
 import { AppVersion } from '~/components/AppVersion';
@@ -9,6 +9,7 @@ import { ThemeSwitch } from '~/components/ThemeSwitch';
 import { ROUTES } from '~/lib/routes';
 
 export function SplitScreenContainer(props: {
+    showSignInLink?: boolean;
     title: string;
     subtitle: string;
     mainComponent: ReactNode;
@@ -42,6 +43,15 @@ export function SplitScreenContainer(props: {
                                 />
                             </div>
                         </SignedIn>
+                        {props.showSignInLink && (
+                            <SignedOut>
+                                <div className="ml-auto flex items-center-safe">
+                                    <Link className="blue-link sm:mr-14" href={ROUTES.signIn}>
+                                        I already have an account
+                                    </Link>
+                                </div>
+                            </SignedOut>
+                        )}
                     </nav>
                 </div>
                 <div className="flex flex-col flex-nowrap">
