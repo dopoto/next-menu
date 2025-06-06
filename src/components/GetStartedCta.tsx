@@ -23,13 +23,7 @@ function SignedInCta(props: { tier?: PriceTierId; secondaryText?: string; varian
     const { user } = useUser();
 
     if (props.tier == null) {
-        return (
-            <Link className="w-full" href={ROUTES.my}>
-                <Button className="w-full" variant={props.variant}>
-                    Go to my account
-                </Button>
-            </Link>
-        );
+        return null;
     }
 
     const userTier = user?.publicMetadata?.tier;

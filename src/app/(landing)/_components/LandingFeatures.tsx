@@ -12,8 +12,8 @@ export interface Feature {
 export const LandingFeatures: React.FC = () => {
     const features: Feature[] = [
         {
-            title: `Your own site - on us`,
-            description: `Once you set up your menus, you get a public link that hosts them - always online, ready to be shared, no web hosting required.`,
+            title: `Your own public page - on us`,
+            description: `Once you set up your menus, you get a public link, hosted by us - always online, ready to be shared.`,
             icon: <ScanQrCode className="text-pop h-6 w-6" />,
         },
         {

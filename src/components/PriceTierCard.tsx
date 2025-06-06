@@ -1,7 +1,10 @@
+import { InfoIcon } from 'lucide-react';
 import { type ReactNode } from 'react';
 import { PriceTierHeader } from '~/components/PriceTierHeader';
 import { Badge } from '~/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '~/components/ui/hover-card';
+import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
 import { priceTierFeatures } from '~/domain/price-tier-features';
 import { priceTierFlags } from '~/domain/price-tier-flags';
 import { type ExceededFeature } from '~/domain/price-tier-usage';
@@ -43,8 +46,8 @@ export function PriceTierCard(props: {
     const availableFeatures =
         props.exceededFeatures && props.exceededFeatures.length > 0
             ? features.filter((f) => {
-                  return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
-              })
+                return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
+            })
             : features;
 
     return (
@@ -69,9 +72,10 @@ export function PriceTierCard(props: {
                         return (
                             <div key={feature.id} className="flex items-center">
                                 <div
-                                    className={`flex-shrink-0 text-left capitalize ${quota ? enabledTextColor : disabledTextColor}`}
+                                    className={`flex-shrink-0 flex flex-row items-center gap-1 text-left capitalize ${quota ? enabledTextColor : disabledTextColor}`}
                                 >
-                                    {featureDetails.resourcePluralName}
+                                    <Info title={featureDetails.resourcePluralName} text={featureDetails.description} footer={`${quota} available in this plan`} />
+                                    <span>{featureDetails.resourcePluralName}</span>
                                 </div>
                                 <DashedLine />
                                 <div className="flex-shrink-0 text-right">
@@ -87,8 +91,9 @@ export function PriceTierCard(props: {
                         return (
                             <div key={exceededFeature.id}>
                                 <div className="flex items-center">
-                                    <div className="flex-shrink-0 text-left text-red-800 capitalize dark:text-red-400">
-                                        {featureDetails.resourcePluralName}
+                                    <div className="flex-shrink-0 flex flex-row items-center gap-1 text-left capitalize text-red-800 dark:text-red-400">
+                                        <Info title={featureDetails.resourcePluralName} text={featureDetails.description} footer={`${quota} available in this plan`} />
+                                        <span>{featureDetails.resourcePluralName}</span>
                                     </div>
                                     <DashedLine />
                                     <div className="flex-shrink-0 text-right">
@@ -106,11 +111,12 @@ export function PriceTierCard(props: {
                         const flagDetails = priceTierFlags[flag.id];
                         const isEnabled = props.tier.flags.find((f) => f.id === flag.id)?.isEnabled ?? false;
                         return (
-                            <div key={flag.id} className="flex items-center">
+                            <div key={flag.id} className="flex flex-row items-center gap-1">
                                 <div
-                                    className={`${isEnabled ? enabledTextColor : disabledTextColor} flex-shrink-0 text-left capitalize`}
+                                    className={`${isEnabled ? enabledTextColor : disabledTextColor} flex-shrink-0 flex flex-row items-center gap-1 text-left capitalize`}
                                 >
-                                    {flagDetails.resourcePluralName}
+                                    <Info title={flagDetails.resourcePluralName} text={flagDetails.description} footer={isEnabled ? 'Available in this plan' : 'Not available in this plan'} />
+                                    <span>{flagDetails.resourcePluralName}</span>
                                 </div>
                                 <DashedLine />
                                 <div className="flex-shrink-0 text-right">
@@ -143,3 +149,26 @@ export const getExceededPlanCardCustomizations = (): CardCustomizations => {
         badgeText: 'Does not fit your current usage',
     };
 };
+
+export const Info = (props: { title: string, text: string, footer: string }) => {
+    return (
+        <HoverCard>
+            <HoverCardTrigger asChild>
+                <InfoIcon className="cursor-pointer" size="14" />
+            </HoverCardTrigger>
+            <HoverCardContent className="w-80">
+                <div className="flex justify-between gap-4">
+                    <div className="space-y-1">
+                        <h4 className="text-sm font-semibold capitalize">{props.title}</h4>
+                        <p className="text-sm">
+                            {props.text}
+                        </p>
+                        <div className="text-muted-foreground text-xs space-y-2">
+                            {props.footer}
+                        </div>
+                    </div>
+                </div>
+            </HoverCardContent>
+        </HoverCard>
+    )
+}

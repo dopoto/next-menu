@@ -47,7 +47,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menuItems', quota: 10 },
         ],
         flags: [
-            { id: 'reports', isEnabled: true },
+            { id: 'reports', isEnabled: false },
             { id: 'publicSite', isEnabled: true },
             { id: 'nonInteractiveMode', isEnabled: true },
             { id: 'interactiveMode', isEnabled: true },
@@ -67,7 +67,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menuItems', quota: 0 },
         ],
         flags: [
-            { id: 'reports', isEnabled: true },
+            { id: 'reports', isEnabled: false },
             { id: 'publicSite', isEnabled: true },
             { id: 'nonInteractiveMode', isEnabled: true },
             { id: 'interactiveMode', isEnabled: true },
@@ -88,7 +88,7 @@ export const priceTiers: Record<PriceTierId, PriceTier> = {
             { id: 'menuItems', quota: 100 },
         ],
         flags: [
-            { id: 'reports', isEnabled: false },
+            { id: 'reports', isEnabled: true },
             { id: 'publicSite', isEnabled: true },
             { id: 'nonInteractiveMode', isEnabled: true },
             { id: 'interactiveMode', isEnabled: true },
