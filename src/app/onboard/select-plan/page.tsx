@@ -9,11 +9,11 @@ export const metadata = {
 
 /**
  * This is the first step of signing up a user.
- * TODO act if user is already signed in
  */
 export default async function SignUpSelectPlanPage() {
     return (
         <SplitScreenContainer
+            showSignInLink={true}
             mainComponent={<SignUpPlanSelector />}
             secondaryComponent={<OnboardingStepper currentStep={'selectPlan'} />}
             title={"Let's get you onboarded!"}

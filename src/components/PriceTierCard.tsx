@@ -4,7 +4,6 @@ import { PriceTierHeader } from '~/components/PriceTierHeader';
 import { Badge } from '~/components/ui/badge';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '~/components/ui/card';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '~/components/ui/hover-card';
-import { Tooltip, TooltipContent, TooltipTrigger } from '~/components/ui/tooltip';
 import { priceTierFeatures } from '~/domain/price-tier-features';
 import { priceTierFlags } from '~/domain/price-tier-flags';
 import { type ExceededFeature } from '~/domain/price-tier-usage';
@@ -46,8 +45,8 @@ export function PriceTierCard(props: {
     const availableFeatures =
         props.exceededFeatures && props.exceededFeatures.length > 0
             ? features.filter((f) => {
-                return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
-            })
+                  return props.exceededFeatures?.findIndex((ef) => ef.id === f.id) === -1;
+              })
             : features;
 
     return (
@@ -74,7 +73,11 @@ export function PriceTierCard(props: {
                                 <div
                                     className={`flex-shrink-0 flex flex-row items-center gap-1 text-left capitalize ${quota ? enabledTextColor : disabledTextColor}`}
                                 >
-                                    <Info title={featureDetails.resourcePluralName} text={featureDetails.description} footer={`${quota} available in this plan`} />
+                                    <Info
+                                        title={featureDetails.resourcePluralName}
+                                        text={featureDetails.description}
+                                        footer={`${quota} available in this plan`}
+                                    />
                                     <span>{featureDetails.resourcePluralName}</span>
                                 </div>
                                 <DashedLine />
@@ -92,7 +95,11 @@ export function PriceTierCard(props: {
                             <div key={exceededFeature.id}>
                                 <div className="flex items-center">
                                     <div className="flex-shrink-0 flex flex-row items-center gap-1 text-left capitalize text-red-800 dark:text-red-400">
-                                        <Info title={featureDetails.resourcePluralName} text={featureDetails.description} footer={`${quota} available in this plan`} />
+                                        <Info
+                                            title={featureDetails.resourcePluralName}
+                                            text={featureDetails.description}
+                                            footer={`${quota} available in this plan`}
+                                        />
                                         <span>{featureDetails.resourcePluralName}</span>
                                     </div>
                                     <DashedLine />
@@ -115,7 +122,11 @@ export function PriceTierCard(props: {
                                 <div
                                     className={`${isEnabled ? enabledTextColor : disabledTextColor} flex-shrink-0 flex flex-row items-center gap-1 text-left capitalize`}
                                 >
-                                    <Info title={flagDetails.resourcePluralName} text={flagDetails.description} footer={isEnabled ? 'Available in this plan' : 'Not available in this plan'} />
+                                    <Info
+                                        title={flagDetails.resourcePluralName}
+                                        text={flagDetails.description}
+                                        footer={isEnabled ? 'Available in this plan' : 'Not available in this plan'}
+                                    />
                                     <span>{flagDetails.resourcePluralName}</span>
                                 </div>
                                 <DashedLine />
@@ -150,7 +161,7 @@ export const getExceededPlanCardCustomizations = (): CardCustomizations => {
     };
 };
 
-export const Info = (props: { title: string, text: string, footer: string }) => {
+export const Info = (props: { title: string; text: string; footer: string }) => {
     return (
         <HoverCard>
             <HoverCardTrigger asChild>
@@ -160,15 +171,11 @@ export const Info = (props: { title: string, text: string, footer: string }) => 
                 <div className="flex justify-between gap-4">
                     <div className="space-y-1">
                         <h4 className="text-sm font-semibold capitalize">{props.title}</h4>
-                        <p className="text-sm">
-                            {props.text}
-                        </p>
-                        <div className="text-muted-foreground text-xs space-y-2">
-                            {props.footer}
-                        </div>
+                        <p className="text-sm">{props.text}</p>
+                        <div className="text-muted-foreground text-xs space-y-2">{props.footer}</div>
                     </div>
                 </div>
             </HoverCardContent>
         </HoverCard>
-    )
-}
+    );
+};

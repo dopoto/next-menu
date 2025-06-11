@@ -15,8 +15,9 @@ export const LandingHero: React.FC = () => {
                             <span className="block pb-6">QR code menus</span>
                         </h1>
                         <p className="text-base font-light text-gray-500 sm:text-xl lg:text-lg xl:text-xl">
-                            We are the ultimate QR code menu platform for restaurants, bars, cafes, food trucks and
-                            hotels!
+                            <i>the</i>
+                            <b>Menu</b> is the ultimate QR code menu platform for restaurants, bars, cafes, food trucks
+                            and hotels.
                         </p>
                         <LandingReadyTo />
                         <div className="mt-4 h-[36px] sm:mx-auto sm:max-w-[270px] sm:text-center lg:mx-0 lg:text-left">
@@ -34,4 +35,3 @@ export const LandingHero: React.FC = () => {
         </div>
     );
 };
-
