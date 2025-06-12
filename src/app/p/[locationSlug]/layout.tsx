@@ -37,7 +37,7 @@ export default async function Layout({ params, children }: { params: Params; chi
     return (
         <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId} menuItems={menuItems}>
             <div className="mx-auto max-w-7xl px-2 pt-2 lg:px-8">
-                <header className="w-full flex flex-row ">
+                <header className="w-full flex flex-row  items-center-safe gap-3">
 
                     <Image
                         src="/images/placeholder.svg?height=100&width=100"

@@ -147,7 +147,7 @@ export default function StickyTabs(props: { sections: Section[] }) {
     return (
         <div className="mt-8">
             {/* Sticky tabs */}
-            <div ref={tabsRef} className="sticky top-0 z-10   pb-2 pt-2">
+            {sections.length > 1 && <div ref={tabsRef} className="sticky top-0 z-10   pb-2 pt-2">
                 <div className="flex space-x-2 overflow-x-auto hide-scrollbar   max-w-6xl mx-auto">
                     {sections.map((section) => (
                         <button
@@ -162,7 +162,7 @@ export default function StickyTabs(props: { sections: Section[] }) {
                         </button>
                     ))}
                 </div>
-            </div>
+            </div>}
 
             {/* Content sections */}
             <div className="max-w-6xl mx-auto">
