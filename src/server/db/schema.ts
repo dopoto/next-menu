@@ -176,6 +176,13 @@ export const orderItems = createTable(
     ],
 );
 
+export const locationsRelations = relations(locations, ({ one }) => ({
+    organization: one(organizations, {
+        fields: [locations.orgId],
+        references: [organizations.id],
+    }),
+}));
+
 export const ordersRelations = relations(orders, ({ many }) => ({
     orderItems: many(orderItems),
 }));

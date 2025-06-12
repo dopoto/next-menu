@@ -94,9 +94,16 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
     };
 }
 
-export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location> {
+export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location & { clerkOrgId: string }> {
     const location = await db.query.locations.findFirst({
         where: (locations, { eq }) => eq(locations.slug, locationSlug),
+        with: {
+            organization: {
+                columns: {
+                    clerkOrgId: true,
+                },
+            },
+        },
     });
 
     if (!location) {
@@ -109,12 +116,20 @@ export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): P
         ...location,
         menuMode: location.menuMode as Location['menuMode'],
         currencyId: location.currencyId as Location['currencyId'],
+        clerkOrgId: location.organization.clerkOrgId,
     };
 }
 
-export async function getLocationPublicDataById(locationId: LocationId): Promise<Location> {
+export async function getLocationPublicDataById(locationId: LocationId): Promise<Location & { clerkOrgId: string }> {
     const location = await db.query.locations.findFirst({
         where: (locations, { eq }) => eq(locations.id, locationId),
+        with: {
+            organization: {
+                columns: {
+                    clerkOrgId: true,
+                },
+            },
+        },
     });
 
     if (!location) {
@@ -127,6 +142,7 @@ export async function getLocationPublicDataById(locationId: LocationId): Promise
         ...location,
         menuMode: location.menuMode as Location['menuMode'],
         currencyId: location.currencyId as Location['currencyId'],
+        clerkOrgId: location.organization.clerkOrgId,
     };
 }
 
