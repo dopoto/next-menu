@@ -46,13 +46,13 @@ export function PublicMenuItem(props: { item: MenuItem; currencyId: CurrencyId; 
 
     return (
         <div className="flex w-full flex-row items-center pt-2 pb-2 text-sm gap-2">
-            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 overflow-hidden">
+            <div className="flex items-center justify-center w-15 h-15 rounded-xl bg-gray-100 dark:bg-gray-800 overflow-hidden">
                 {props.item.imageId && props.item.imageId.length > 0 ? (
                     <Image
                         src={`${getCloudinaryScaledImageUrl(props.item.imageId)}`}
                         alt={name || 'Menu item image'}
-                        width={40}
-                        height={40}
+                        width={60}
+                        height={60}
                         className="object-cover"
                     />
                 ) : (

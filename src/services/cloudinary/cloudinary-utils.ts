@@ -7,5 +7,5 @@ export function getCloudinaryImageUrl(imageId: CloudinaryImageId) {
 }
 
 export function getCloudinaryScaledImageUrl(imageId: CloudinaryImageId) {
-    return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_40,h_40/${imageId}`
+    return `https://res.cloudinary.com/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload/c_fill,w_120,h_120/${imageId}`
 }
