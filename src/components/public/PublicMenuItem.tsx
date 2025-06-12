@@ -12,8 +12,8 @@ import { getCloudinaryScaledImageUrl } from '~/services/cloudinary/cloudinary-ut
 export function PublicMenuItem(props: {
     item: MenuItem;
     currencyId: CurrencyId;
-    menuMode: MenuModeId,
-    actionComponent?: React.ReactNode
+    menuMode: MenuModeId;
+    actionComponent?: React.ReactNode;
 }) {
     const { name, description, price, isNew, type } = props.item;
     const currency = CURRENCIES[props.currencyId];
@@ -47,7 +47,7 @@ export function PublicMenuItem(props: {
                 <div className="text-xs relative">
                     <EllipsisText text={description ?? ''} />
                 </div>
-                <div >
+                <div>
                     {price} {currency.symbol}
                 </div>
             </div>

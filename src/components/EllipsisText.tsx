@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
 type EllipsisTextProps = {
     text: string;
@@ -12,9 +12,9 @@ const EllipsisText: React.FC<EllipsisTextProps> = ({ text, className }) => {
         <div
             className={className}
             style={{
-                width: "100%",
-                cursor: "pointer",
-                userSelect: "text",
+                width: '100%',
+                cursor: 'pointer',
+                userSelect: 'text',
             }}
             onClick={() => setExpanded((prev) => !prev)}
             title={expanded ? undefined : text}
@@ -24,11 +24,11 @@ const EllipsisText: React.FC<EllipsisTextProps> = ({ text, className }) => {
             ) : (
                 <span
                     style={{
-                        display: "block",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        width: "100%",
+                        display: 'block',
+                        whiteSpace: 'nowrap',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        width: '100%',
                     }}
                 >
                     {text}

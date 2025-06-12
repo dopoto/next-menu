@@ -17,12 +17,10 @@ export function PublicMenu(props: {
     menuMode: MenuModeId;
     items: MenuItemWithSortOrder[];
 }) {
-
     const [, setOrder] = useAtom(orderAtom);
 
     const addToOrder = (id: MenuItemId, name: string) => {
         setOrder((prevOrder) => {
-
             const newOrderItem: PublicOrderItem = {
                 menuItemId: id,
                 orderItem: {
@@ -51,10 +49,23 @@ export function PublicMenu(props: {
             <h1>{props.name}</h1>
             {props.items?.map((item) => {
                 return (
-                    <PublicMenuItem key={item.id} item={item} currencyId={props.currencyId} menuMode={props.menuMode} actionComponent={menuConfig.allowsAddToOrder ? (
-                        <div className="ml-auto w-[40px] h-[40px] rounded-full bg-accent-foreground items-center-safe flex justify-center-safe">
-                            <PlusIcon strokeWidth={2} className="cursor-pointer text-white transition-colors" onClick={() => addToOrder(item.id, item.name ?? 'Item')} />
-                        </div>) : null} />
+                    <PublicMenuItem
+                        key={item.id}
+                        item={item}
+                        currencyId={props.currencyId}
+                        menuMode={props.menuMode}
+                        actionComponent={
+                            menuConfig.allowsAddToOrder ? (
+                                <div className="ml-auto w-[40px] h-[40px] rounded-full bg-accent-foreground items-center-safe flex justify-center-safe">
+                                    <PlusIcon
+                                        strokeWidth={2}
+                                        className="cursor-pointer text-white transition-colors"
+                                        onClick={() => addToOrder(item.id, item.name ?? 'Item')}
+                                    />
+                                </div>
+                            ) : null
+                        }
+                    />
                 );
             })}
         </>

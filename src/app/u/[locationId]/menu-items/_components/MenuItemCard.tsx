@@ -46,25 +46,27 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
         setIsDeleting(false);
     }
 
-    const dropdownMenu = <div className="mx-auto flex items-end-safe w-[20px]">
-        <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-                <EllipsisVerticalIcon />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56">
-                <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Edit">
-                    <DropdownMenuItem>
-                        <PencilIcon />
-                        <span>Edit</span>
+    const dropdownMenu = (
+        <div className="mx-auto flex items-end-safe w-[20px]">
+            <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                    <EllipsisVerticalIcon />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56">
+                    <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Edit">
+                        <DropdownMenuItem>
+                            <PencilIcon />
+                            <span>Edit</span>
+                        </DropdownMenuItem>
+                    </a>
+                    <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
+                        <Trash2Icon className="text-red-500" />
+                        <span className="text-red-500">Delete</span>
                     </DropdownMenuItem>
-                </a>
-                <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
-                    <Trash2Icon className="text-red-500" />
-                    <span className="text-red-500">Delete</span>
-                </DropdownMenuItem>
-            </DropdownMenuContent>
-        </DropdownMenu>
-    </div>
+                </DropdownMenuContent>
+            </DropdownMenu>
+        </div>
+    );
 
     return (
         <>
@@ -87,7 +89,6 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
                     menuMode={'noninteractive'}
                     actionComponent={dropdownMenu}
                 />
-
             </div>
 
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>

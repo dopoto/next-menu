@@ -17,7 +17,8 @@ import { ROUTES } from '~/lib/routes';
 export function EditMenuItem(props: { locationId: LocationId; menuItem: MenuItem; currencyId: CurrencyId }) {
     const router = useRouter();
     const form = useForm<z.infer<typeof menuItemFormSchema>>({
-        resolver: zodResolver(menuItemFormSchema), defaultValues: {
+        resolver: zodResolver(menuItemFormSchema),
+        defaultValues: {
             name: props.menuItem.name ?? '',
             description: props.menuItem.description ?? '',
             price: parseFloat(props.menuItem.price) || 0,

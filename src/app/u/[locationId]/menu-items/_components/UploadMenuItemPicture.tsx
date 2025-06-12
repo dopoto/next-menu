@@ -1,15 +1,15 @@
 'use client';
 
+import { ExternalLinkIcon, ImageIcon, Loader2, TrashIcon } from 'lucide-react';
 import { CldUploadWidget } from 'next-cloudinary';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { ExternalLinkIcon, ImageIcon, TrashIcon, Loader2 } from 'lucide-react';
+import { type z } from 'zod';
 import { Button } from '~/components/ui/button';
 import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
-import { type z } from 'zod';
 import { type menuItemFormSchema } from '~/domain/menu-items';
-import Image from 'next/image';
 import { toast } from '~/hooks/use-toast';
-import { useState } from 'react';
 import { getCloudinaryImageUrl } from '~/services/cloudinary/cloudinary-utils';
 
 export function UploadMenuItemPicture() {
@@ -57,7 +57,7 @@ export function UploadMenuItemPicture() {
             form.setValue('imageId', publicId, {
                 shouldDirty: true,
                 shouldTouch: true,
-                shouldValidate: true
+                shouldValidate: true,
             });
 
             toast({
@@ -82,82 +82,85 @@ export function UploadMenuItemPicture() {
             control={form.control}
             name="imageId"
             render={({ field }) => {
-                return <FormItem>
-                    <FormLabel>Picture</FormLabel>
-                    <FormControl>
-
-                        <div className="flex flex-col gap-4">
-                            {field.value ? (
-                                <div className="relative group">
-                                    <div className="relative w-[200px] h-[200px]">
-                                        <Image
-                                            src={getCloudinaryImageUrl(field.value ?? '')}
-                                            alt="Menu item image"
-                                            fill
-                                            className="object-cover rounded-md"
-                                        />
+                return (
+                    <FormItem>
+                        <FormLabel>Picture</FormLabel>
+                        <FormControl>
+                            <div className="flex flex-col gap-4">
+                                {field.value ? (
+                                    <div className="relative group">
+                                        <div className="relative w-[200px] h-[200px]">
+                                            <Image
+                                                src={getCloudinaryImageUrl(field.value ?? '')}
+                                                alt="Menu item image"
+                                                fill
+                                                className="object-cover rounded-md"
+                                            />
+                                        </div>
+                                        <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                                            <Button
+                                                variant="secondary"
+                                                size="sm"
+                                                className="w-8 h-8 p-0"
+                                                onClick={() =>
+                                                    window.open(`${getCloudinaryImageUrl(field.value ?? '')}`, '_blank')
+                                                }
+                                            >
+                                                <ExternalLinkIcon className="h-4 w-4" />
+                                            </Button>
+                                            <Button
+                                                variant="destructive"
+                                                size="sm"
+                                                className="w-8 h-8 p-0"
+                                                onClick={() => {
+                                                    field.onChange('');
+                                                    form.setValue('imageId', '', {
+                                                        shouldDirty: true,
+                                                        shouldTouch: true,
+                                                        shouldValidate: true,
+                                                    });
+                                                }}
+                                            >
+                                                <TrashIcon className="h-4 w-4" />
+                                            </Button>
+                                        </div>
                                     </div>
-                                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                        <Button
-                                            variant="secondary"
-                                            size="sm"
-                                            className="w-8 h-8 p-0"
-                                            onClick={() => window.open(`${getCloudinaryImageUrl(field.value ?? '')}`, '_blank')}
-                                        >
-                                            <ExternalLinkIcon className="h-4 w-4" />
-                                        </Button>
-                                        <Button
-                                            variant="destructive"
-                                            size="sm"
-                                            className="w-8 h-8 p-0"
-                                            onClick={() => {
-                                                field.onChange('');
-                                                form.setValue('imageId', '', {
-                                                    shouldDirty: true,
-                                                    shouldTouch: true,
-                                                    shouldValidate: true
-                                                });
-                                            }}
-                                        >
-                                            <TrashIcon className="h-4 w-4" />
-                                        </Button>
-                                    </div>
-                                </div>
-                            ) : (
-                                <CldUploadWidget
-                                    uploadPreset="menu-item-picture"
-                                    options={{
-                                        maxFiles: 1,
-                                        resourceType: "image",
-                                        clientAllowedFormats: ["png", "jpeg", "jpg", "webp"],
-                                        maxFileSize: 5000000, // 5MB
-                                    }}
-                                    onSuccess={handleUpload}
-                                >
-                                    {({ open }) => (
-                                        <Button
-                                            type="button"
-                                            variant="secondary"
-                                            className="w-[200px] h-[200px] border-2 border-dashed"
-                                            onClick={() => open()}
-                                            disabled={isUploading}
-                                        >
-                                            {isUploading ? (
-                                                <Loader2 className="h-8 w-8 animate-spin" />
-                                            ) : (
-                                                <ImageIcon className="h-8 w-8" />
-                                            )}
-                                        </Button>
-                                    )}
-                                </CldUploadWidget>
-                            )}
-                        </div>
-                    </FormControl>
-                    <FormDescription>
-                        Upload a picture of your menu item (use a square picture for best results).
-                    </FormDescription>
-                    <FormMessage />
-                </FormItem>
+                                ) : (
+                                    <CldUploadWidget
+                                        uploadPreset="menu-item-picture"
+                                        options={{
+                                            maxFiles: 1,
+                                            resourceType: 'image',
+                                            clientAllowedFormats: ['png', 'jpeg', 'jpg', 'webp'],
+                                            maxFileSize: 5000000, // 5MB
+                                        }}
+                                        onSuccess={handleUpload}
+                                    >
+                                        {({ open }) => (
+                                            <Button
+                                                type="button"
+                                                variant="secondary"
+                                                className="w-[200px] h-[200px] border-2 border-dashed"
+                                                onClick={() => open()}
+                                                disabled={isUploading}
+                                            >
+                                                {isUploading ? (
+                                                    <Loader2 className="h-8 w-8 animate-spin" />
+                                                ) : (
+                                                    <ImageIcon className="h-8 w-8" />
+                                                )}
+                                            </Button>
+                                        )}
+                                    </CldUploadWidget>
+                                )}
+                            </div>
+                        </FormControl>
+                        <FormDescription>
+                            Upload a picture of your menu item (use a square picture for best results).
+                        </FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                );
             }}
         />
     );
