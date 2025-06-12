@@ -81,16 +81,17 @@ export function UploadMenuItemPicture() {
         <FormField
             control={form.control}
             name="imageId"
-            render={({ field }) => (
-                <FormItem>
+            render={({ field }) => {
+                return <FormItem>
                     <FormLabel>Picture</FormLabel>
                     <FormControl>
+
                         <div className="flex flex-col gap-4">
                             {field.value ? (
                                 <div className="relative group">
                                     <div className="relative w-[200px] h-[200px]">
                                         <Image
-                                            src={getCloudinaryImageUrl(field.value)}
+                                            src={getCloudinaryImageUrl(field.value ?? '')}
                                             alt="Menu item image"
                                             fill
                                             className="object-cover rounded-md"
@@ -157,7 +158,7 @@ export function UploadMenuItemPicture() {
                     </FormDescription>
                     <FormMessage />
                 </FormItem>
-            )}
+            }}
         />
     );
 }
