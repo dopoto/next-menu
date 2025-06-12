@@ -24,7 +24,7 @@ export function PublicMenuItem(props: {
                 <div className="flex items-center justify-center min-w-[60px] min-h-[60px] w-[60px] h-[60px] rounded-xl  overflow-hidden">
                     <Image
                         src={getCloudinaryScaledImageUrl(props.item.imageId)}
-                        alt={name || 'Menu item image'}
+                        alt={name ?? 'Menu item image'}
                         width={60}
                         height={60}
                         className="object-contain"

@@ -1,7 +1,7 @@
 'use client';
 
 import { ExternalLinkIcon, ImageIcon, Loader2, TrashIcon } from 'lucide-react';
-import { CldUploadWidget } from 'next-cloudinary';
+import { CldUploadWidget, type CloudinaryUploadWidgetResults } from 'next-cloudinary';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -16,13 +16,11 @@ export function UploadMenuItemPicture() {
     const form = useFormContext<z.infer<typeof menuItemFormSchema>>();
     const [isUploading, setIsUploading] = useState(false);
 
-    const handleUpload = (result: any) => {
-        console.log('Upload result:', result);
+    const handleUpload = (result: CloudinaryUploadWidgetResults) => {
         setIsUploading(true);
 
         try {
             if (result.event !== 'success') {
-                console.log('Upload was not successful:', result.event);
                 toast({
                     title: 'Upload failed',
                     description: 'The image upload was not successful. Please try again.',
@@ -32,7 +30,6 @@ export function UploadMenuItemPicture() {
             }
 
             if (!result.info) {
-                console.log('No info in upload result');
                 toast({
                     title: 'Upload failed',
                     description: 'Could not get image information from upload.',
@@ -42,7 +39,12 @@ export function UploadMenuItemPicture() {
             }
 
             // Handle both object and string responses
-            const publicId = typeof result.info === 'object' ? result.info.public_id : result.info;
+            let publicId: string | undefined;
+            if (typeof result.info === 'object' && result.info !== null) {
+                publicId = result.info.public_id;
+            } else if (typeof result.info === 'string') {
+                publicId = result.info;
+            }
 
             if (!publicId) {
                 toast({
@@ -53,7 +55,6 @@ export function UploadMenuItemPicture() {
                 return;
             }
 
-            console.log('Setting public_id:', publicId);
             form.setValue('imageId', publicId, {
                 shouldDirty: true,
                 shouldTouch: true,
@@ -65,8 +66,8 @@ export function UploadMenuItemPicture() {
                 description: 'The image was successfully uploaded.',
                 variant: 'default',
             });
-        } catch (error) {
-            console.error('Error handling upload:', error);
+        } catch {
+            // TODO report error to Sentry
             toast({
                 title: 'Upload error',
                 description: 'An unexpected error occurred while uploading the image.',
@@ -152,6 +153,7 @@ export function UploadMenuItemPicture() {
                                             </Button>
                                         )}
                                     </CldUploadWidget>
+
                                 )}
                             </div>
                         </FormControl>

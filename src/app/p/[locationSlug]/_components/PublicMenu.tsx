@@ -5,9 +5,9 @@ import { PlusIcon } from 'lucide-react';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { PublicMenuItem } from '~/components/public/PublicMenuItem';
 import { type CurrencyId } from '~/domain/currencies';
-import { MenuItemId, type MenuItemWithSortOrder } from '~/domain/menu-items';
+import { type MenuItemId, type MenuItemWithSortOrder } from '~/domain/menu-items';
 import { MENU_MODES, type MenuModeId } from '~/domain/menu-modes';
-import { PublicOrderItem } from '~/domain/order-items';
+import { type PublicOrderItem } from '~/domain/order-items';
 import { toast } from '~/hooks/use-toast';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 

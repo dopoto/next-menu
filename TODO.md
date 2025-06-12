@@ -28,4 +28,6 @@ pricing - number of scans per month
 custom layouts
 feature matrix - mobile friendly
 SplitScreenContainer logo link - home page where it makes sense - e.g. if not signed in
-currency in add menu items
+client side report error to Sentry
+Open Orders - empty state
+Completed orders
