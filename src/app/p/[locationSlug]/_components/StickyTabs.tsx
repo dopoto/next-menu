@@ -148,16 +148,15 @@ export default function StickyTabs(props: { sections: Section[] }) {
         <div className="mt-8">
             {/* Sticky tabs */}
             <div ref={tabsRef} className="sticky top-0 z-10   pb-2 pt-2">
-                <div className="flex space-x-2 overflow-x-auto hide-scrollbar px-4 max-w-6xl mx-auto">
+                <div className="flex space-x-2 overflow-x-auto hide-scrollbar   max-w-6xl mx-auto">
                     {sections.map((section) => (
                         <button
                             key={section.id}
                             onClick={() => scrollToSection(section.id)}
-                            className={`px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium transition-colors ${
-                                activeTab === section.id
-                                    ? 'bg-primary text-primary-foreground'
-                                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                            }`}
+                            className={`px-4 py-2 rounded-md whitespace-nowrap text-sm font-medium transition-colors ${activeTab === section.id
+                                ? 'bg-primary text-primary-foreground'
+                                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                                }`}
                         >
                             {section.title}
                         </button>
@@ -166,7 +165,7 @@ export default function StickyTabs(props: { sections: Section[] }) {
             </div>
 
             {/* Content sections */}
-            <div className="max-w-6xl mx-auto px-4">
+            <div className="max-w-6xl mx-auto">
                 {sections.map((section) => (
                     <section key={section.id} id={section.id} className="py-3">
                         {section.content}
