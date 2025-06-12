@@ -154,7 +154,7 @@ export function UploadMenuItemPicture() {
                         </div>
                     </FormControl>
                     <FormDescription>
-                        Upload a picture of your menu item. Recommended size: 800x800 pixels.
+                        Upload a picture of your menu item (use a square picture for best results).
                     </FormDescription>
                     <FormMessage />
                 </FormItem>
