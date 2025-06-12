@@ -46,10 +46,30 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
         setIsDeleting(false);
     }
 
+    const dropdownMenu = <div className="mx-auto flex items-end-safe w-[20px]">
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <EllipsisVerticalIcon />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+                <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Edit">
+                    <DropdownMenuItem>
+                        <PencilIcon />
+                        <span>Edit</span>
+                    </DropdownMenuItem>
+                </a>
+                <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
+                    <Trash2Icon className="text-red-500" />
+                    <span className="text-red-500">Delete</span>
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    </div>
+
     return (
         <>
             <div className="flex w-full flex-row">
-                {/* TODO menumode */}                <PublicMenuItem
+                <PublicMenuItem
                     item={{
                         id: props.item.id,
                         name: props.item.name,
@@ -65,26 +85,9 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
                     }}
                     currencyId={props.currencyId}
                     menuMode={'noninteractive'}
+                    actionComponent={dropdownMenu}
                 />
-                <div className="mx-auto flex items-center">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <EllipsisVerticalIcon />
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent className="w-56">
-                            <a href={ROUTES.menuItemsEdit(props.locationId, props.item.id)} title="Edit">
-                                <DropdownMenuItem>
-                                    <PencilIcon />
-                                    <span>Edit</span>
-                                </DropdownMenuItem>
-                            </a>
-                            <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
-                                <Trash2Icon className="text-red-500" />
-                                <span className="text-red-500">Delete</span>
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
+
             </div>
 
             <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
