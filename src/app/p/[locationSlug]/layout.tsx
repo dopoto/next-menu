@@ -1,3 +1,4 @@
+import { clerkClient } from '@clerk/nextjs/server';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import JotaiProviderWrapper from '~/app/p/[locationSlug]/_components/JotaiProviderWrapper';
@@ -9,7 +10,6 @@ import { AppError } from '~/lib/error-utils.server';
 import { getLocationPublicDataBySlug } from '~/server/queries/locations';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { capturePublicLocationVisit } from './_actions/captureAnalytics';
-import { clerkClient } from "@clerk/nextjs/server";
 
 //TODO Use cache
 
@@ -33,9 +33,9 @@ export default async function Layout({ params, children }: { params: Params; chi
     const cookieStore = cookies();
     const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;
 
-    const organization = (await clerkClient()).organizations.getOrganization({ organizationId: location.clerkOrgId })
-    const logo = (await organization).imageUrl ?? "/images/placeholder.svg?height=100&width=100"
-    console.log("DBG", logo)
+    const organization = (await clerkClient()).organizations.getOrganization({ organizationId: location.clerkOrgId });
+    const logo = (await organization).imageUrl ?? '/images/placeholder.svg?height=100&width=100';
+    console.log('DBG', logo);
 
     await capturePublicLocationVisit(machineId, location.orgId, parsedLocationSlug);
 
@@ -43,13 +43,7 @@ export default async function Layout({ params, children }: { params: Params; chi
         <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId} menuItems={menuItems}>
             <div className="mx-auto max-w-7xl px-2 pt-2 lg:px-8">
                 <header className="w-full flex flex-row  items-center-safe gap-3">
-                    <Image
-                        src={logo}
-                        alt="Logo"
-                        width={96}
-                        height={96}
-                        className=" w-24 h-24"
-                    />
+                    <Image src={logo} alt="Logo" width={96} height={96} className=" w-24 h-24" />
                     <h1 className="text-3xl font-bold">{location.name}</h1>
                 </header>
 

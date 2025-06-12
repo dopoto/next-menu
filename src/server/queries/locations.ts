@@ -94,7 +94,9 @@ export async function getLocationForCurrentUserOrThrow(locationId: string | numb
     };
 }
 
-export async function getLocationPublicDataBySlug(locationSlug: LocationSlug): Promise<Location & { clerkOrgId: string }> {
+export async function getLocationPublicDataBySlug(
+    locationSlug: LocationSlug,
+): Promise<Location & { clerkOrgId: string }> {
     const location = await db.query.locations.findFirst({
         where: (locations, { eq }) => eq(locations.slug, locationSlug),
         with: {

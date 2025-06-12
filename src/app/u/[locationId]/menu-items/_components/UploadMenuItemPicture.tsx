@@ -153,7 +153,6 @@ export function UploadMenuItemPicture() {
                                             </Button>
                                         )}
                                     </CldUploadWidget>
-
                                 )}
                             </div>
                         </FormControl>
