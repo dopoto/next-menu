@@ -1,0 +1,1 @@
+ALTER TABLE "next-menu_menu_item" ADD COLUMN "image_id" varchar(256) DEFAULT null;

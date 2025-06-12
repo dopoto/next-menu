@@ -69,7 +69,7 @@ export function AddEditMenuItemForm(props: {
                         )}
                     />
 
-                    [<UploadMenuItemPicture />]
+                    <UploadMenuItemPicture />
 
                     <div className="flex flex-row gap-2">
                         <Button type="submit">Save</Button>

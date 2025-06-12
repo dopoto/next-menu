@@ -147,6 +147,7 @@ export async function getMenuById(locationId: LocationId, menuId: MenuId): Promi
             id: menuItems.id,
             name: menuItems.name,
             description: menuItems.description,
+            imageId: menuItems.imageId,
             price: menuItems.price,
             type: menuItems.type,
             isNew: menuItems.isNew,

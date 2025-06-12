@@ -11,7 +11,7 @@ const cspHeader = `
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://*.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js https://upload-widget.cloudinary.com/global/all.js;
     script-src-elem 'self' 'unsafe-inline' https://checkout.stripe.com https://js.stripe.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://www.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js https://upload-widget.cloudinary.com/global/all.js;
     style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://*.google-analytics.com https://*.googletagmanager.com https://fonts.gstatic.com;
+    img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://*.google-analytics.com https://*.googletagmanager.com https://fonts.gstatic.com https://res.cloudinary.com;
     font-src 'self';
     frame-src https://checkout.stripe.com https://*.js.stripe.com https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com https://upload-widget.cloudinary.com;
     object-src ${process.env.NODE_ENV !== 'development' ? "'self' data:;" : "'none';"}
@@ -58,15 +58,19 @@ const nextConfig: NextConfig = {
                 ],
             },
         ];
-    },
-
-    images: {
+    }, images: {
         remotePatterns: [
             {
                 protocol: 'https',
                 hostname: 'img.clerk.com',
                 port: '',
                 search: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+                port: '',
+                pathname: `/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/**`,
             },
         ],
     },
