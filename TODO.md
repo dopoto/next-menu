@@ -31,3 +31,4 @@ SplitScreenContainer logo link - home page where it makes sense - e.g. if not si
 client side report error to Sentry
 Open Orders - empty state
 Completed orders
+image upload max file size / per tier
