@@ -137,7 +137,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const cancelledItems = filteredItems('canceled');
 
     const draftItemsSummary = (
-        <OrderSummaryItem quantity={draftItems.length} description={'Not ordered yet'}>
+        <OrderSummaryItem quantity={draftItems.length} description={'Your cart'}>
             {draftItems.length > 0 &&
                 (order.id ? (
                     <Button onClick={updateOrder} disabled={isLoading}>

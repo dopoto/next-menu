@@ -35,7 +35,7 @@ export const priceTierFlags: Record<PriceTierFlagId, PriceTierFlag> = {
         id: 'publicSite',
         resourceSingularName: 'public site',
         resourcePluralName: 'public site',
-        description: 'A public-facing professional-looking web site that your customers can use to browse your menus.',
+        description: 'A public-facing professional-looking web page that your customers can use to browse your menus.',
     },
     nonInteractiveMode: {
         id: 'nonInteractiveMode',

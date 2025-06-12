@@ -23,6 +23,7 @@ export function EditMenuItem(props: { locationId: LocationId; menuItem: MenuItem
             description: props.menuItem.description ?? '',
             price: parseFloat(props.menuItem.price) || 0,
             isNew: props.menuItem.isNew,
+            imageId: props.menuItem.imageId ?? '',
             locationId: props.locationId,
         },
     });

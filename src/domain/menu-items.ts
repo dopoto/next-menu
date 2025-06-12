@@ -14,6 +14,10 @@ export const menuItemIdSchema = z.coerce.number().int().positive();
 export type MenuItemId = z.infer<typeof menuItemIdSchema>;
 
 export const menuItemFormSchema = z.object({
+    imageId: withMeta(z.string().optional(), {
+        label: 'Image',
+        description: 'Upload an image for this menu item',
+    }),
     name: withMeta(
         z
             .string({

@@ -147,6 +147,7 @@ export async function getMenuById(locationId: LocationId, menuId: MenuId): Promi
             id: menuItems.id,
             name: menuItems.name,
             description: menuItems.description,
+            imageId: menuItems.imageId,
             price: menuItems.price,
             type: menuItems.type,
             isNew: menuItems.isNew,
@@ -229,6 +230,7 @@ export async function getPublicMenusByLocation(locationId: LocationId): Promise<
             item: {
                 id: menuItems.id,
                 name: menuItems.name,
+                imageId: menuItems.imageId,
                 description: menuItems.description,
                 price: menuItems.price,
                 type: menuItems.type,
@@ -263,6 +265,7 @@ export async function getPublicMenusByLocation(locationId: LocationId): Promise<
             menuMap.get(row.menu.id)?.items.push({
                 id: item.id,
                 name: item.name,
+                imageId: item.imageId,
                 description: item.description,
                 price: item.price,
                 type: item.type,

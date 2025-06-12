@@ -34,7 +34,9 @@
     }
 
     h1 {
-        font-size: var(--text-xl);
+        padding-top: 2px;
+        padding-bottom: 2px;
+        font-size: var(--text-2xl);
         color: var(--color-gray-700);
     }
 }

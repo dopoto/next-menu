@@ -100,6 +100,7 @@ export const menuItems = createTable(
             .references(() => locations.id),
         name: varchar('name', { length: 256 }),
         description: varchar('description', { length: 256 }),
+        imageId: varchar('image_id', { length: 256 }).default(sql`NULL`),
         price: decimal('price').notNull(),
         type: varchar('type', { length: 10 }).notNull().default('dish'),
         isNew: boolean('is_new').default(false).notNull(),
@@ -174,6 +175,13 @@ export const orderItems = createTable(
         },
     ],
 );
+
+export const locationsRelations = relations(locations, ({ one }) => ({
+    organization: one(organizations, {
+        fields: [locations.orgId],
+        references: [organizations.id],
+    }),
+}));
 
 export const ordersRelations = relations(orders, ({ many }) => ({
     orderItems: many(orderItems),

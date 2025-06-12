@@ -21,7 +21,7 @@ export const MENU_MODES: Record<MenuModeId, MenuMode> = {
         id: 'interactive',
         name: 'Interactive',
         description:
-            'Customers can use your menus to create orders and track delivered items in real time, but they will not be able to pay through the app.',
+            'Customers can use your QR menus to create orders and see which order items are being prepared or have been delivered.',
         allowsAddToOrder: true,
         isEnabled: true,
     },
@@ -29,7 +29,7 @@ export const MENU_MODES: Record<MenuModeId, MenuMode> = {
         id: 'postpaid',
         name: 'Post-paid',
         description:
-            'Customers can use your menus to create orders, track delivered items in real time and pay their bill through the app.',
+            'Customers can use your QR menus to create orders, track delivered items in real time and pay their bill through the app.',
         allowsAddToOrder: true,
         isEnabled: false,
     },
@@ -37,7 +37,7 @@ export const MENU_MODES: Record<MenuModeId, MenuMode> = {
         id: 'prepaid',
         name: 'Pre-paid',
         description:
-            'Customers can use your menus to create orders and track delivered items in real time. They will be required to pay for items beforehand.',
+            'Customers can use your QR menus to create orders and track delivered items in real time. They will be required to pay for items beforehand.',
         allowsAddToOrder: true,
         isEnabled: false,
     },

@@ -1,5 +1,6 @@
 import { type UseFormReturn } from 'react-hook-form';
 import { type z } from 'zod';
+import { UploadMenuItemPicture } from '~/app/u/[locationId]/menu-items/_components/UploadMenuItemPicture';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { Button } from '~/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '~/components/ui/form';
@@ -67,6 +68,8 @@ export function AddEditMenuItemForm(props: {
                             </FormItem>
                         )}
                     />
+
+                    <UploadMenuItemPicture />
 
                     <div className="flex flex-row gap-2">
                         <Button type="submit">Save</Button>

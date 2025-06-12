@@ -10,7 +10,7 @@ import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 export async function MenusItemsList(props: { locationId: LocationId; currencyId: CurrencyId }) {
     const items = await getMenuItemsByLocation(props.locationId);
     return (
-        <div className="flex h-full flex-col gap-2">
+        <div className="flex h-full flex-col gap-0">
             <Link
                 className="flex w-full flex-row items-center-safe justify-center-safe gap-2 rounded-sm border-1 border-dashed p-4 font-bold"
                 href={ROUTES.menuItemsAdd(props.locationId)}

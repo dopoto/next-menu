@@ -8,15 +8,15 @@ import { env } from '~/env';
  */
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://*.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js;
-    script-src-elem 'self' 'unsafe-inline' https://checkout.stripe.com https://js.stripe.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://www.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://*.js.stripe.com https://js.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://*.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js https://upload-widget.cloudinary.com/global/all.js;
+    script-src-elem 'self' 'unsafe-inline' https://checkout.stripe.com https://js.stripe.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://challenges.cloudflare.com https://www.googletagmanager.com https://va.vercel-scripts.com/v1/script.debug.js https://upload-widget.cloudinary.com/global/all.js;
     style-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://fonts.googleapis.com;
-    img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://*.google-analytics.com https://*.googletagmanager.com https://fonts.gstatic.com;
+    img-src 'self' blob: data: https://*.stripe.com https://img.clerk.com https://*.google-analytics.com https://*.googletagmanager.com https://fonts.gstatic.com https://res.cloudinary.com;
     font-src 'self';
-    frame-src https://checkout.stripe.com https://*.js.stripe.com https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com;
+    frame-src https://checkout.stripe.com https://*.js.stripe.com https://js.stripe.com https://hooks.stripe.com https://challenges.cloudflare.com https://upload-widget.cloudinary.com;
     object-src ${process.env.NODE_ENV !== 'development' ? "'self' data:;" : "'none';"}
     worker-src 'self' blob: ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN};
-    connect-src 'self' https://checkout.stripe.com https://api.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com wss://ws-eu.pusher.com/app/${env.NEXT_PUBLIC_PUSHER_APP_KEY} https://sockjs-eu.pusher.com/pusher/app/${env.NEXT_PUBLIC_PUSHER_APP_KEY};
+    connect-src 'self' https://checkout.stripe.com https://api.stripe.com https://maps.googleapis.com ${env.NEXT_PUBLIC_CLERK_SUBDOMAIN} https://clerk-telemetry.com/v1/event https://*.sentry.io https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com wss://ws-eu.pusher.com/app/${env.NEXT_PUBLIC_PUSHER_APP_KEY} https://sockjs-eu.pusher.com/pusher/app/${env.NEXT_PUBLIC_PUSHER_APP_KEY}*;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
@@ -59,7 +59,6 @@ const nextConfig: NextConfig = {
             },
         ];
     },
-
     images: {
         remotePatterns: [
             {
@@ -67,6 +66,12 @@ const nextConfig: NextConfig = {
                 hostname: 'img.clerk.com',
                 port: '',
                 search: '',
+            },
+            {
+                protocol: 'https',
+                hostname: 'res.cloudinary.com',
+                port: '',
+                pathname: `/${env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/**`,
             },
         ],
     },

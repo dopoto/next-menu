@@ -45,9 +45,10 @@ export function SplitScreenContainer(props: {
                         </SignedIn>
                         {props.showSignInLink && (
                             <SignedOut>
-                                <div className="ml-auto flex items-center-safe">
-                                    <Link className="blue-link sm:mr-14" href={ROUTES.signIn}>
-                                        I already have an account
+                                <div className="ml-auto flex flex-col items-end-safe">
+                                    <p className="text-gray-700 font-light italic">Already have an account?</p>
+                                    <Link className="blue-link text-end ml-auto" href={ROUTES.signIn}>
+                                        Sign in
                                     </Link>
                                 </div>
                             </SignedOut>
