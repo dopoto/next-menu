@@ -5,7 +5,7 @@ export interface LandingPageNavItem {
 
 export const landingPageNavItems: LandingPageNavItem[] = [
     { name: 'Features', href: '#features' },
-    { name: 'Testimonials', href: '#testimonials' },
+    // { name: 'Use cases', href: '#usecases' },
     { name: 'Pricing', href: '#pricing' },
     { name: 'Compare plans', href: '#compare' },
     { name: 'FAQ', href: '#faq' },

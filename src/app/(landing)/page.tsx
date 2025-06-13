@@ -7,6 +7,7 @@ import { LandingHero } from '~/app/(landing)/_components/LandingHero';
 import { LandingNavbar } from '~/app/(landing)/_components/LandingNavbar';
 import { LandingPricing } from '~/app/(landing)/_components/LandingPricing';
 import { LandingTestimonials } from '~/app/(landing)/_components/LandingTestimonials';
+import { LandingUseCases } from '~/app/(landing)/_components/LandingUseCases';
 import { faqItems } from '~/domain/faq';
 import { landingPageNavItems } from '~/domain/nav-items';
 
@@ -16,7 +17,8 @@ export default async function HomePage() {
             <LandingNavbar navItems={landingPageNavItems} />
             <LandingHero />
             <LandingFeatures />
-            <LandingTestimonials />
+            {/* <LandingTestimonials /> */}
+            {/* <LandingUseCases /> */}
             <LandingPricing />
             <LandingComparePriceTiers />
             <LandingFAQ items={faqItems} />

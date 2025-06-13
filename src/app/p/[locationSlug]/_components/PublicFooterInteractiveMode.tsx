@@ -12,6 +12,7 @@ import { PublicFooterDrawer } from '~/app/p/[locationSlug]/_components/PublicFoo
 import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
 import { Labeled } from '~/components/Labeled';
+import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import { DrawerClose } from '~/components/ui/drawer';
 import { type CurrencyId } from '~/domain/currencies';
@@ -159,7 +160,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     );
     const deliveredItemsSummary = (
         <OrderSummaryItem quantity={deliveredItems.length} description={'Received'}>
-            {cancelledItems.length > 0 && <>+ {cancelledItems.length} cancelled</>}
+            {cancelledItems.length > 0 && <Badge className="text-base text-gray-600" variant="secondary">+ {cancelledItems.length} cancelled</Badge>}
         </OrderSummaryItem>
     );
 

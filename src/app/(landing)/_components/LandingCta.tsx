@@ -24,7 +24,7 @@ export const LandingCta: React.FC = () => {
                     <PageSubtitle textColor="text-white">{"Let's get started!"}</PageSubtitle>
                 </h2>
                 <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
-                    <GetStartedCta variant={'outline'} />
+                    <GetStartedCta variant={'outline'} tier={'start'} />
                 </div>
             </div>
         </div>
