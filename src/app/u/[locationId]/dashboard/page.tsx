@@ -1,5 +1,5 @@
 import { Suspense } from 'react';
-import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
+import { LoadingSection } from '~/app/u/[locationId]/_components/LoadingSection';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 
 type Params = Promise<{ locationId: string }>;

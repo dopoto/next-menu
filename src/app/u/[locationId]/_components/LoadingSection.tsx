@@ -1,4 +1,4 @@
-export default function LoadingSection() {
+export function LoadingSection() {
     return (
         <div className="animate-in fade-in-50 flex h-full flex-col items-center justify-center rounded-md border border-dashed p-8 text-center">
             <div className="mx-auto flex max-w-[420px] flex-col items-center justify-center text-center">

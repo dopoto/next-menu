@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { addMenuAction } from '~/app/actions/addMenuAction';
-import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
+import { LoadingSection } from '~/app/u/[locationId]/_components/LoadingSection';
 import { NoQuotaLeft } from '~/app/u/[locationId]/_components/NoQuotaLeft';
 import { AddMenu } from '~/app/u/[locationId]/menus/_components/AddMenu';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
