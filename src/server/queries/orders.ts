@@ -137,7 +137,57 @@ export async function getOpenOrdersByLocation(locationId: LocationId): Promise<P
 
     const rows = await db.query.orders.findMany({
         with: { orderItems: true },
-        where: (orders, { eq }) => eq(orders.locationId, locationId),
+        where: (orders, { eq, exists, and }) =>
+            and(
+                eq(orders.locationId, locationId),
+                exists(
+                    db.select().from(orderItems)
+                        .where(and(
+                            eq(orderItems.orderId, orders.id),
+                            eq(orderItems.deliveryStatus, 'pending')
+                        ))
+                )
+            ),
+    });
+
+    return rows.map((row): PublicOrderWithItems => {
+        const items: PublicOrderItem[] = row.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus as OrderItem['deliveryStatus'],
+                    isPaid: orderItem.isPaid,
+                },
+            }))
+            .sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+            });
+
+        return {
+            ...row,
+            currencyId: validLocation.currencyId,
+            items,
+        };
+    });
+}
+
+export async function getCompletedOrdersByLocation(locationId: LocationId): Promise<PublicOrderWithItems[]> {
+    const validLocation = await getLocationForCurrentUserOrThrow(locationId);
+
+    const rows = await db.query.orders.findMany({
+        with: { orderItems: true },
+        where: (orders, { eq, notExists, and }) =>
+            and(
+                eq(orders.locationId, locationId),
+                notExists(
+                    db.select().from(orderItems)
+                        .where(and(
+                            eq(orderItems.orderId, orders.id),
+                            eq(orderItems.deliveryStatus, 'pending')
+                        ))
+                )
+            ),
     });
 
     return rows.map((row): PublicOrderWithItems => {
