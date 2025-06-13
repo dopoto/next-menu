@@ -55,26 +55,26 @@ export function CompletedOrderCard({
     }
 
     const formattedDate = order.createdAt.toLocaleString('en-US', {
-        month: 'short',    // "Jun"
-        day: '2-digit',    // "05"
-        year: 'numeric',   // "2025"
-        hour: '2-digit',   // "21"
-        minute: '2-digit', // "21"
-        second: '2-digit', // "01"
-        hour12: false      // 24-hour format
+        month: 'short',
+        day: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
     });
 
     return (
-        <Card className="p-3">
-            <div className="flex justify-between items-start mb-4">
-                <div className="w-[20px]"><EllipsisVerticalIcon /></div>
+        <Card className="p-2">
+            <div className="flex justify-between items-start cursor-pointer" onClick={onToggleExpanded}>
                 <div className="flex-1">
-                    <h3 className="text-lg font-semibold">Order #{order.id}</h3>
+                    <div className="flex items-center gap-1" >
+                        <button className="cursor-pointer" >{order.isExpanded ? <ChevronsUpIcon size={16} /> : <ChevronsDownIcon size={16} />}</button>
+                        <h4 className="text-base font-semibold mr-2">Order #{order.id}</h4>
+                    </div>
                     <p className="text-sm text-gray-500">{formattedDate}</p>
                 </div>
-                <div className="w-[20px]" onClick={onToggleExpanded}>
-                    {order.isExpanded ? <ChevronsUpIcon /> : <ChevronsDownIcon />}
-                </div>
+                <div className="w-[24px] h-[24px] py-2"><EllipsisVerticalIcon /></div>
             </div>
             {order.isExpanded && <div className="space-y-4">
                 {order.items.map((item) => {
