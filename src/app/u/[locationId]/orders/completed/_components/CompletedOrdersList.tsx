@@ -27,6 +27,7 @@ export async function CompletedOrdersList(props: { locationId: LocationId }) {
             columns: {
                 id: true,
                 name: true,
+                imageId: true,
                 price: true,
             },
         })) as InferSelectModel<typeof menuItems>[];
