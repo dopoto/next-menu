@@ -16,10 +16,14 @@ export function LandingNavbar(props: { navItems: LandingPageNavItem[] }) {
             <div className="mx-auto max-w-7xl px-4 pt-4 sm:px-6 lg:px-8">
                 <div className="flex h-16 justify-between">
                     <div className="flex items-center">
-                        <div className="flex flex-shrink-0 items-center">
+                        <div className="flex flex-shrink-0 items-center gap-2 pr-6">
                             <Link href={ROUTES.home}>
                                 <SvgIcon kind="logo" size={'12'} />
-                            </Link>
+
+                            </Link><p className="antialiased   font-light text-gray-500 lg:text-xl xl:text-2xl">
+                                <i>the</i>
+                                <b>Menu</b>
+                            </p>
                         </div>
                         <div className="hidden md:ml-6 md:flex md:space-x-8">
                             {props.navItems.map((item) => (

@@ -19,7 +19,7 @@ export const LandingHero: React.FC = () => {
                             <b>Menu</b> is the ultimate QR code menu platform for restaurants, bars, cafes, food trucks
                             and hotels.
                         </p>
-                        <LandingReadyTo />
+                        {/* <LandingReadyTo /> */}
                         <div className="mt-4 h-[36px] sm:mx-auto sm:max-w-[270px] sm:text-center lg:mx-0 lg:text-left">
                             <GetStartedCta
                                 secondaryText="Start for free now - no credit card required!"
