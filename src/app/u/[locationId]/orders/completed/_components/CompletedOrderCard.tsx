@@ -4,7 +4,7 @@ import type { InferSelectModel } from 'drizzle-orm';
 import { BanIcon, ChevronsDownIcon, ChevronsUpIcon, CircleCheckIcon, ClockIcon, EllipsisVerticalIcon, SoupIcon, SquareArrowDownIcon, WineIcon } from 'lucide-react';
 import { useState } from 'react';
 import { updateOrderItemDeliveryStatusAction } from '~/app/actions/updateOrderItemDeliveryStatusAction';
-import { ExpandableOrderWithItems } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrders';
+import { CompletedOrderWithItems } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrders';
 import {
     ThreeStateToggle,
     type ThreeStateToggleMetadata,
@@ -26,12 +26,16 @@ export function CompletedOrderCard({
     order,
     locationId,
     menuItemsMap,
-    onToggleExpanded
+    overlayComponent,
+    onToggleExpanded,
+    onItemStatusChanged
 }: {
-    order: ExpandableOrderWithItems;
+    order: CompletedOrderWithItems;
     locationId: LocationId;
     menuItemsMap: Map<number, InferSelectModel<typeof menuItems>>;
+    overlayComponent: React.ReactNode,
     onToggleExpanded: () => void
+    onItemStatusChanged: () => void
 }) {
     const [itemIdBeingUpdated, setItemIdBeingUpdated] = useState<OrderItemId | null>(null);
 
@@ -51,6 +55,7 @@ export function CompletedOrderCard({
             alert(`Failed to update order item\n${error?.toString()}`);
         } finally {
             setItemIdBeingUpdated(null);
+            onItemStatusChanged();
         }
     }
 
@@ -65,73 +70,76 @@ export function CompletedOrderCard({
     });
 
     return (
-        <Card className="p-2">
-            <div className="flex justify-between items-start cursor-pointer" onClick={onToggleExpanded}>
-                <div className="flex-1">
-                    <div className="flex items-center gap-1" >
-                        <button className="cursor-pointer" >{order.isExpanded ? <ChevronsUpIcon size={16} /> : <ChevronsDownIcon size={16} />}</button>
-                        <h4 className="text-base font-semibold mr-2">Order #{order.id}</h4>
-                    </div>
-                    <p className="text-sm text-gray-500">{formattedDate}</p>
-                </div>
-                <div className="w-[24px] h-[24px] py-2"><EllipsisVerticalIcon /></div>
-            </div>
-            {order.isExpanded && <div className="space-y-4">
-                {order.items.map((item) => {
-                    const itemState: ThreeStateToggleSelectedItem = ITEM_STATE[item.orderItem.deliveryStatus!];
-
-                    const left: ThreeStateToggleMetadata = {
-                        id: 0,
-                        className:
-                            itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-gray-600',
-                        labelWhenSelected: 'Marked as cancelled',
-                        labelWhenNotSelected: 'Mark as cancelled',
-                        component: <BanIcon />,
-                    };
-                    const center: ThreeStateToggleMetadata = {
-                        id: 1,
-                        className:
-                            itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-orange-500',
-                        labelWhenSelected: 'Marked as in preparation',
-                        labelWhenNotSelected: 'Mark as in preparation',
-                        component: <ClockIcon />,
-                    };
-                    const right: ThreeStateToggleMetadata = {
-                        id: 2,
-                        className:
-                            itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-green-600',
-                        labelWhenSelected: 'Marked as delivered',
-                        labelWhenNotSelected: 'Mark as delivered',
-                        component: <CircleCheckIcon />,
-                    };
-
-                    const { id, name, imageId, type } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
-
-                    return (
-                        <div key={item.orderItem.id} className="flex  justify-between   gap-2">
-                            <MenuItemImage imageId={imageId} sizeInPx={40} />
-                            <div className="flex-1">
-                                <p className="font-medium">
-                                    {menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                    ${menuItemsMap.get(item.menuItemId)?.price ?? 'Unknown Item'}
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-2">
-                                <ThreeStateToggle
-                                    left={left}
-                                    center={center}
-                                    right={right}
-                                    defaultState={itemState}
-                                    onStateChange={(state) => handleItemStateChange(state, item.orderItem.id!)}
-                                    size={44}
-                                />
-                            </div>
+        <div className="relative">
+            <Card className={`p-2`}>
+                <div className="flex justify-between items-start cursor-pointer" onClick={onToggleExpanded}>
+                    <div className="flex-1">
+                        <div className="flex items-center gap-1" >
+                            <button className="cursor-pointer" >{order.isExpanded ? <ChevronsUpIcon size={16} /> : <ChevronsDownIcon size={16} />}</button>
+                            <h4 className="text-base font-semibold mr-2">Order #{order.id}</h4>
                         </div>
-                    );
-                })}
-            </div>}
-        </Card>
+                        <p className="text-sm text-gray-500">{formattedDate}</p>
+                    </div>
+                    <div className="w-[24px] h-[24px] py-2"><EllipsisVerticalIcon /></div>
+                </div>
+                {order.isExpanded && <div className="space-y-4">
+                    {order.items.map((item) => {
+                        const itemState: ThreeStateToggleSelectedItem = ITEM_STATE[item.orderItem.deliveryStatus!];
+
+                        const left: ThreeStateToggleMetadata = {
+                            id: 0,
+                            className:
+                                itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-gray-600',
+                            labelWhenSelected: 'Marked as cancelled',
+                            labelWhenNotSelected: 'Mark as cancelled',
+                            component: <BanIcon />,
+                        };
+                        const center: ThreeStateToggleMetadata = {
+                            id: 1,
+                            className:
+                                itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-orange-500',
+                            labelWhenSelected: 'Marked as in preparation',
+                            labelWhenNotSelected: 'Mark as in preparation',
+                            component: <ClockIcon />,
+                        };
+                        const right: ThreeStateToggleMetadata = {
+                            id: 2,
+                            className:
+                                itemIdBeingUpdated === item.orderItem.id ? 'animate-spin text-gray-400' : 'text-green-600',
+                            labelWhenSelected: 'Marked as delivered',
+                            labelWhenNotSelected: 'Mark as delivered',
+                            component: <CircleCheckIcon />,
+                        };
+
+                        const { id, name, imageId, type } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
+
+                        return (
+                            <div key={item.orderItem.id} className="flex  justify-between   gap-2">
+                                <MenuItemImage imageId={imageId} sizeInPx={40} />
+                                <div className="flex-1">
+                                    <p className="font-medium">
+                                        {menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
+                                    </p>
+                                    <p className="text-sm text-gray-500">
+                                        ${menuItemsMap.get(item.menuItemId)?.price ?? 'Unknown Item'}
+                                    </p>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <ThreeStateToggle
+                                        left={left}
+                                        center={center}
+                                        right={right}
+                                        defaultState={itemState}
+                                        onStateChange={(state) => handleItemStateChange(state, item.orderItem.id!)}
+                                        size={44}
+                                    />
+                                </div>
+                            </div>
+                        );
+                    })}
+                </div>}
+            </Card>
+            {overlayComponent}
+        </div>
     );
 }
