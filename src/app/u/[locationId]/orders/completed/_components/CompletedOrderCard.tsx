@@ -108,7 +108,7 @@ export function CompletedOrderCard({
                     const { id, name, imageId, type } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
 
                     return (
-                        <div key={item.orderItem.id} className="flex  justify-between border-b pb-2 gap-2">
+                        <div key={item.orderItem.id} className="flex  justify-between   gap-2">
                             <MenuItemImage imageId={imageId} sizeInPx={40} />
                             <div className="flex-1">
                                 <p className="font-medium">
