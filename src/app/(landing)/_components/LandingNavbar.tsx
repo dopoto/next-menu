@@ -19,11 +19,11 @@ export function LandingNavbar(props: { navItems: LandingPageNavItem[] }) {
                         <div className="flex flex-shrink-0 items-center gap-2 pr-6">
                             <Link href={ROUTES.home}>
                                 <SvgIcon kind="logo" size={'12'} />
-
-                            </Link><p className="antialiased   font-light text-gray-500 lg:text-xl xl:text-2xl">
-                                <i>the</i>
-                                <b>Menu</b>
-                            </p>
+                            </Link>
+                            <div className="antialiased relative  w-[60px] h-[60px]     lg:text-xl xl:text-2xl">
+                                <i className="absolute top-0 -left-[3px] font-light text-gray-500">the</i>
+                                <b className="absolute top-[20px] text-gray-700">Menu</b>
+                            </div>
                         </div>
                         <div className="hidden md:ml-6 md:flex md:space-x-8">
                             {props.navItems.map((item) => (
