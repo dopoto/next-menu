@@ -71,7 +71,7 @@ export function CompletedOrderCard({
 
     return (
         <div className="relative">
-            <Card className={`p-2`}>
+            <Card className={`p-2 relative`}>
                 <div className="flex justify-between items-start cursor-pointer" onClick={onToggleExpanded}>
                     <div className="flex-1">
                         <div className="flex items-center gap-1" >
@@ -138,8 +138,8 @@ export function CompletedOrderCard({
                         );
                     })}
                 </div>}
+                {overlayComponent}
             </Card>
-            {overlayComponent}
         </div>
     );
 }
