@@ -13,6 +13,8 @@ export async function DataLoader(props: { locationId: string, children: ReactNod
         getMenuItemsByLocation(locationId),
     ]);
 
+    console.log('DBG-DL', completedOrders)
+
     return (
         <JotaiProviderWrapper
             openOrders={openOrders}

@@ -1,11 +1,16 @@
-'use client';
 
-import { useAtom } from "jotai";
-import { completedOrdersAtom, menuItemsAtom } from "~/app/u/[locationId]/orders2/_state/atoms";
+import { CompletedOrdersList } from "~/app/u/[locationId]/orders2/_components/CompletedOrdersList";
+import { getLocationForCurrentUserOrThrow } from "~/server/queries/locations";
 
-export default function Page() {
-    const [completedOrders] = useAtom(completedOrdersAtom)
-    const [menuItems] = useAtom(menuItemsAtom)
+type Params = Promise<{ locationId: string }>;
 
-    return <>completed. {JSON.stringify(menuItems.get(12))}</>
+export default async function Page(props: {
+
+    params: Params;
+}) {
+
+    const params = await props.params;
+    const locationId = (await getLocationForCurrentUserOrThrow(params.locationId)).id;
+
+    return <CompletedOrdersList locationId={locationId} />
 }
