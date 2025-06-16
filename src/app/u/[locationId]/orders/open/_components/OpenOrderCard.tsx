@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { BanIcon, ChevronsDownIcon, ChevronsUpIcon, CircleCheckIcon, ClockIcon } from 'lucide-react';
 import { useState } from 'react';
 import {
@@ -11,7 +12,7 @@ import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 import type { MenuItem } from '~/domain/menu-items';
-import type { OpenOrderWithItems } from './OpenOrdersList'
+import type { OrderWithExpanded } from '../../_state/atoms';
 import { updateOrderItemDeliveryStatusAction } from '~/app/actions/updateOrderItemDeliveryStatusAction';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
@@ -20,14 +21,14 @@ const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     delivered: 2,
 };
 
-export function OpenOrderCard({
+function OpenOrderCard({
     order,
     locationId,
     menuItemsMap, overlayComponent,
     onToggleExpanded,
     onItemStatusChanged
 }: {
-    order: OpenOrderWithItems;
+    order: OrderWithExpanded;
     locationId: LocationId;
     menuItemsMap: Map<number, MenuItem>;
     overlayComponent: React.ReactNode
@@ -137,3 +138,8 @@ export function OpenOrderCard({
         </div>
     );
 }
+
+// Export with NoSSR to prevent hydration issues
+export default dynamic(() => Promise.resolve(OpenOrderCard), {
+    ssr: false,
+});

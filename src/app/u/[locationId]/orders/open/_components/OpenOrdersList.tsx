@@ -1,29 +1,28 @@
 'use client';
 
+import { useAtom, useAtomValue } from 'jotai';
 import { Progress } from '~/components/ui/progress';
+import { Card } from '~/components/ui/card';
 import { useEffect, useState } from 'react';
 import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
-import { OpenOrderCard } from './OpenOrderCard';
+import OpenOrderCard from './OpenOrderCard';
 import type { MenuItemId, MenuItem } from '~/domain/menu-items';
+import { menuItemsAtom, openOrdersAtom, sortedOpenOrdersAtom, isLoadingAtom, type OrderWithExpanded } from '../../_state/atoms';
 
 const OVERLAY_DURATION_IN_MS = 5000
 
-export type OpenOrderWithItems = PublicOrderWithItems & { isExpanded: boolean }
-
 export function OpenOrdersList({
     locationId,
-    initialOrders = [],
-    menuItemsMap,
 }: {
     locationId: LocationId;
-    initialOrders: PublicOrderWithItems[];
-    menuItemsMap: Map<MenuItemId, MenuItem>;
 }) {
-    const collapsedOrders: OpenOrderWithItems[] = initialOrders.map(i => { return { ...i, isExpanded: true } });
-    const [orders, setOrders] = useState<OpenOrderWithItems[]>(collapsedOrders);
+    const [orders, setOrders] = useAtom(openOrdersAtom);
+    const sortedOrders = useAtomValue(sortedOpenOrdersAtom);
+    const menuItemsMap = useAtomValue(menuItemsAtom);
+    const isLoading = useAtomValue(isLoadingAtom);
     const { toast } = useToast();
 
     // Track orders where the user changes delivery status, so we can show a 
@@ -59,7 +58,7 @@ export function OpenOrdersList({
         const locationChannel = pusherClient.subscribe(CHANNELS.location(locationId));
 
         // Handle new orders
-        locationChannel.bind(EVENTS.ORDER_CREATED, (data: OpenOrderWithItems) => {
+        locationChannel.bind(EVENTS.ORDER_CREATED, (data: OrderWithExpanded) => {
             setOrders((current) => [...current, data]);
             toast({
                 title: 'New Order Received',
@@ -68,7 +67,7 @@ export function OpenOrdersList({
         });
 
         // Handle updates to any order
-        locationChannel.bind(EVENTS.ORDER_UPDATED, (data: OpenOrderWithItems) => {
+        locationChannel.bind(EVENTS.ORDER_UPDATED, (data: OrderWithExpanded) => {
             setOrders((current) => current.map((order) => (order.id === data.id ? data : order)));
         });
 
@@ -126,30 +125,43 @@ export function OpenOrdersList({
 
     return (
         <div className="flex flex-col space-y-8">
-            <div className="space-y-4">
-                <div className="grid gap-4">
-                    {orders
-                        //.filter((order) => order.items.some((i) => i.orderItem.deliveryStatus === 'pending'))
-                        .map((order) => (
-                            <OpenOrderCard
-                                key={order.id}
-                                order={order}
-                                locationId={locationId}
-                                menuItemsMap={menuItemsMap}
-                                overlayComponent={orderOverlayCountdown.has(order.id) ? (
-                                    <div className="w-full absolute inset-0 bg-background/80 backdrop-blur-sm rounded-lg flex items-center justify-center  z-50">
-                                        <div className="w-full max-w-xs flex flex-col gap-1 ">
-                                            <p className="font-bold">Delivery status changed</p>
-                                            <p className="pb-3">Order #{order.id} will now move to Open Orders.</p>
-                                            <Progress value={orderOverlayCountdown.get(order.id)} className="w-full" />
-                                        </div>
-                                    </div>
-                                ) : null}
-                                onToggleExpanded={() => toggleExpanded(order.id)}
-                                onItemStatusChanged={() => handleItemStatusChanged(order.id)}
-                            />
-                        ))}
-                </div>
+            <div className="space-y-4">                <div className="grid gap-4">
+                {isLoading ? (
+                    // Loading skeleton - show 3 skeleton cards
+                    Array.from({ length: 3 }).map((_, i) => (
+                        <Card key={i} className="p-6 animate-pulse">
+                            <div className="flex justify-between items-start mb-4">
+                                <div>
+                                    <div className="h-6 w-32 bg-gray-200 rounded"></div>
+                                    <div className="h-4 w-24 bg-gray-200 rounded mt-2"></div>
+                                </div>
+                            </div>
+                            <div className="space-y-4">
+                                <div className="h-12 bg-gray-200 rounded"></div>
+                                <div className="h-12 bg-gray-200 rounded"></div>
+                            </div>
+                        </Card>
+                    ))
+                ) : sortedOrders.map((order) => (
+                    <OpenOrderCard
+                        key={order.id}
+                        order={order}
+                        locationId={locationId}
+                        menuItemsMap={menuItemsMap}
+                        overlayComponent={orderOverlayCountdown.has(order.id) ? (
+                            <div className="w-full absolute inset-0 bg-background/80 backdrop-blur-sm rounded-lg flex items-center justify-center  z-50">
+                                <div className="w-full max-w-xs flex flex-col gap-1 ">
+                                    <p className="font-bold">Delivery status changed</p>
+                                    <p className="pb-3">Order #{order.id} will now move to Open Orders.</p>
+                                    <Progress value={orderOverlayCountdown.get(order.id)} className="w-full" />
+                                </div>
+                            </div>
+                        ) : null}
+                        onToggleExpanded={() => toggleExpanded(order.id)}
+                        onItemStatusChanged={() => handleItemStatusChanged(order.id)}
+                    />
+                ))}
+            </div>
             </div>
         </div>
     );
