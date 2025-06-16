@@ -245,3 +245,46 @@ export async function getOrderById(locationId: LocationId, orderId: OrderId): Pr
     };
     return orderWithItems;
 }
+
+export async function getMyActiveOrders(userId: string): Promise<PublicOrderWithItems[]> {
+    // For now, return all orders since we're not tracking user id and order status
+    const orders = await db.query.orders.findMany({
+        with: {
+            orderItems: true
+        },
+        orderBy: (orders, { desc }) => desc(orders.createdAt)
+    });
+
+    // Get location info to get currency
+    const locationIds = [...new Set(orders.map(order => order.locationId))];
+    const locations = await db.query.locations.findMany({
+        where: (locations, { inArray }) => inArray(locations.id, locationIds)
+    });
+    const locationMap = new Map(locations.map(loc => [loc.id, loc]));
+
+    return orders.map((order): PublicOrderWithItems => {
+        const items: PublicOrderItem[] = order.orderItems
+            .map((orderItem) => ({
+                menuItemId: orderItem.menuItemId,
+                orderItem: {
+                    id: orderItem.id,
+                    deliveryStatus: orderItem.deliveryStatus as OrderItem['deliveryStatus'],
+                    isPaid: orderItem.isPaid,
+                },
+            }))
+            .sort((a, b) => {
+                return (a.orderItem.id ?? 0) - (b.orderItem.id ?? 0);
+            });
+
+        return {
+            ...order,
+            currencyId: (locationMap.get(order.locationId)?.currencyId || 'USD') as CurrencyId,
+            items,
+        };
+    });
+}
+
+export async function getMyCompletedOrders(userId: string): Promise<PublicOrderWithItems[]> {
+    // For now, return no completed orders since we're not tracking completion status
+    return [];
+}
