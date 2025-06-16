@@ -1,7 +1,6 @@
-import { type InferSelectModel } from 'drizzle-orm';
 import { LayoutDashboard } from 'lucide-react';
 import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
-import { OpenOrdersList } from '~/app/u/[locationId]/live/_components/OpenOrdersList';
+import { OpenOrdersList } from '~/app/u/[locationId]/orders/open/_components/OpenOrdersList';
 import { type LocationId } from '~/domain/locations';
 import type { MenuItemId, MenuItem } from '~/domain/menu-items';
 import { AppError } from '~/lib/error-utils.server';

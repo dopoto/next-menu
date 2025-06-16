@@ -6,7 +6,7 @@ type RouteId =
     | 'ROOT'
     | 'dashboard'
     | 'locationManager'
-    | 'live'
+    | 'openOrders'
     | 'completedOrders'
     | 'tables'
     | 'reports'
@@ -38,11 +38,11 @@ export const NAV_ITEMS: Record<RouteId, NavItem> = {
         title: 'Dashboard',
         route: ROUTES.dashboard,
     },
-    live: {
-        id: 'live',
+    openOrders: {
+        id: 'openOrders',
         icon: <CircleDashedIcon size={16} />,
         title: 'Open orders',
-        route: ROUTES.live,
+        route: ROUTES.openOrders,
     },
     completedOrders: {
         id: 'completedOrders',
@@ -98,7 +98,7 @@ export const NAV_TREE: NavItem = {
             ...NAV_ITEMS.dashboard,
             children: [
                 //NAV_ITEMS.dashboard, 
-                NAV_ITEMS.live, NAV_ITEMS.completedOrders,
+                NAV_ITEMS.openOrders, NAV_ITEMS.completedOrders,
                 // NAV_ITEMS.tables
             ],
         },

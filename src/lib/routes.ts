@@ -27,7 +27,7 @@ export const ROUTES = {
     resetState: '/u/reset-state',
     location: (locationId: LocationId) => `/u/${locationId}/location`,
     dashboard: (locationId: LocationId) => `/u/${locationId}/dashboard`,
-    live: (locationId: LocationId) => `/u/${locationId}/live`,
+    openOrders: (locationId: LocationId) => `/u/${locationId}/orders/open`,
     completedOrders: (locationId: LocationId) => `/u/${locationId}/orders/completed`,
     tables: (locationId: LocationId) => `/u/${locationId}/tables`,
     reports: (locationId: LocationId) => `/u/${locationId}/reports`,

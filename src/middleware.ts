@@ -52,14 +52,14 @@ export default clerkMiddleware(
             const currentLocationId = req.cookies.get(CookieKey.CurrentLocationId)?.value;
             const validCurrentLocationId = getValidLocationId(currentLocationId);
             if (validCurrentLocationId) {
-                const myDashboardRoute = ROUTES.live(validCurrentLocationId);
+                const myDashboardRoute = ROUTES.openOrders(validCurrentLocationId);
                 console.log(`DBG-MDLW [/my] Redirecting from ${req.url} to ${myDashboardRoute}`);
                 return redirectTo(req, myDashboardRoute);
             } else {
                 // Fall back to the initial location id in the session claims
                 const validInitialLocationId = getValidLocationId(sessionClaims?.metadata?.initialLocationId);
                 if (validInitialLocationId) {
-                    const fallbackMyDashboardRoute = ROUTES.live(Number(validInitialLocationId));
+                    const fallbackMyDashboardRoute = ROUTES.openOrders(Number(validInitialLocationId));
                     const fallbackResponse = redirectTo(req, fallbackMyDashboardRoute);
                     fallbackResponse.cookies.set(
                         CookieKey.CurrentLocationId,
