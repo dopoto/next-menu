@@ -5,10 +5,10 @@ import 'jotai-devtools/styles.css';
 import { type ReactNode, useEffect } from 'react';
 import { type DevToolsProps } from 'jotai-devtools';
 import type { ComponentType } from 'react';
-import { completedOrdersAtom, menuItemsAtom, openOrdersAtom, isLoadingAtom, type OrderWithExpanded } from '../_state/atoms';
 import type { MenuItem } from '~/domain/menu-items';
 import type { PublicOrderWithItems } from '~/domain/orders';
 import dynamic from 'next/dynamic';
+import { completedOrdersAtom, isLoadingAtom, menuItemsAtom, openOrdersAtom } from '~/app/u/[locationId]/orders2/_state/atoms';
 
 let DevTools: ComponentType<DevToolsProps> | null = null;
 
@@ -34,8 +34,8 @@ function Initializer(props: {
             setOpenOrders(props.openOrders.map((order: PublicOrderWithItems) => ({ ...order, isExpanded: true })));
             setCompletedOrders(props.completedOrders.map((order: PublicOrderWithItems) => ({ ...order, isExpanded: false })));
             const x = new Map(props.menuItems.map((item: MenuItem) => [item.id, item]))
-            console.log(props.menuItems)
-            console.log(x)
+            // console.log(props.menuItems)
+            // console.log(x)
             setMenuItems(x);
         } catch (error) {
             //TODO

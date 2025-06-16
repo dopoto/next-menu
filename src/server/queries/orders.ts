@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { type z } from 'zod';
+import { CurrencyId } from '~/domain/currencies';
 import type { LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItem, type PublicOrderItem } from '~/domain/order-items';
 import {

@@ -14,12 +14,13 @@ export async function updateOrderItemStatus(
     const validLocation = await getLocationForCurrentUserOrThrow(locationId);
 
     // First verify that the order item belongs to this location through its order
+    // Fetch the order item and its related order to check location
     const orderItem = await db.query.orderItems.findFirst({
         where: eq(orderItems.id, orderItemId),
-        with: { order: { columns: { locationId: true } } },
-    });
+        with: { order: true },
+    }) as (OrderItem & { order: { locationId: LocationId } }) | null;
 
-    if (!orderItem || orderItem.order.locationId !== validLocation.id) {
+    if (!orderItem || !orderItem.order || orderItem.order.locationId !== validLocation.id) {
         throw new AppError({
             publicMessage: 'Order item not found.',
             internalMessage: `Order item ${orderItemId} not found or does not belong to location ${locationId}`,

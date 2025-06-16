@@ -3,7 +3,7 @@
 import { BanIcon, ChevronsDownIcon, ChevronsUpIcon, CircleCheckIcon, ClockIcon, EllipsisVerticalIcon, SoupIcon, SquareArrowDownIcon, WineIcon } from 'lucide-react';
 import { useState } from 'react';
 import { updateOrderItemDeliveryStatusAction } from '~/app/actions/updateOrderItemDeliveryStatusAction';
-import { CompletedOrderWithItems } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrdersList';
+
 import {
     ThreeStateToggle,
     type ThreeStateToggleMetadata,
@@ -15,6 +15,7 @@ import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 import { MenuItemImage } from '~/components/MenuItemImage';
 import { useAtom } from 'jotai';
 import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
+import { OrderWithExpanded } from '~/app/u/[locationId]/orders/_state/atoms';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     canceled: 0,
@@ -29,7 +30,7 @@ export function CompletedOrderCard({
     onToggleExpanded,
     onItemStatusChanged
 }: {
-    order: CompletedOrderWithItems;
+    order: OrderWithExpanded;
     locationId: LocationId;
     overlayComponent: React.ReactNode,
     onToggleExpanded: () => void
@@ -39,6 +40,7 @@ export function CompletedOrderCard({
     const [itemIdBeingUpdated, setItemIdBeingUpdated] = useState<OrderItemId | null>(null);
 
     const [menuItems] = useAtom(menuItemsAtom)
+    console.log('order card', menuItems)
 
     async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
         //TODO refactor, simplify
