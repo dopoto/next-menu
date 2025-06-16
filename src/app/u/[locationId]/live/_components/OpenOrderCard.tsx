@@ -1,9 +1,7 @@
 'use client';
 
-import { BanIcon, ChevronsDownIcon, ChevronsUpIcon, CircleCheckIcon, ClockIcon, EllipsisVerticalIcon, SoupIcon, SquareArrowDownIcon, WineIcon } from 'lucide-react';
+import { BanIcon, ChevronsDownIcon, ChevronsUpIcon, CircleCheckIcon, ClockIcon } from 'lucide-react';
 import { useState } from 'react';
-import { updateOrderItemDeliveryStatusAction } from '~/app/actions/updateOrderItemDeliveryStatusAction';
-import { CompletedOrderWithItems } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrdersList';
 import {
     ThreeStateToggle,
     type ThreeStateToggleMetadata,
@@ -13,7 +11,8 @@ import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 import type { MenuItem } from '~/domain/menu-items';
-import { MenuItemImage } from '~/components/MenuItemImage';
+import type { OpenOrderWithItems } from './OpenOrdersList'
+import { updateOrderItemDeliveryStatusAction } from '~/app/actions/updateOrderItemDeliveryStatusAction';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     canceled: 0,
@@ -21,18 +20,17 @@ const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     delivered: 2,
 };
 
-export function CompletedOrderCard({
+export function OpenOrderCard({
     order,
     locationId,
-    menuItemsMap,
-    overlayComponent,
+    menuItemsMap, overlayComponent,
     onToggleExpanded,
     onItemStatusChanged
 }: {
-    order: CompletedOrderWithItems;
+    order: OpenOrderWithItems;
     locationId: LocationId;
     menuItemsMap: Map<number, MenuItem>;
-    overlayComponent: React.ReactNode,
+    overlayComponent: React.ReactNode
     onToggleExpanded: () => void
     onItemStatusChanged: () => void
 }) {
@@ -110,12 +108,9 @@ export function CompletedOrderCard({
                             component: <CircleCheckIcon />,
                         };
 
-                        const { imageId } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
-
                         return (
-                            <div key={item.orderItem.id} className="flex  justify-between   gap-2">
-                                <MenuItemImage imageId={imageId} sizeInPx={40} />
-                                <div className="flex-1">
+                            <div key={item.orderItem.id} className="flex items-center justify-between border-b pb-2">
+                                <div>
                                     <p className="font-medium">
                                         {menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
                                     </p>

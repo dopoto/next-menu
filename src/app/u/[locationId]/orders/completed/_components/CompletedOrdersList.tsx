@@ -7,7 +7,7 @@ import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import type { MenuItemId, MenuItem } from '~/domain/menu-items';
 
-const OVERLAY_DURATION_IN_MS = 5000
+export const OVERLAY_DURATION_IN_MS = 5000
 
 export type CompletedOrderWithItems = PublicOrderWithItems & { isExpanded: boolean }
 
@@ -20,11 +20,7 @@ export function CompletedOrdersList({
     initialOrders: PublicOrderWithItems[];
     menuItemsMap: Map<MenuItemId, MenuItem>;
 }) {
-    const collapsedOrders: CompletedOrderWithItems[] = initialOrders.map(i => {
-        return {
-            ...i, isExpanded: false
-        }
-    });
+    const collapsedOrders: CompletedOrderWithItems[] = initialOrders.map(i => { return { ...i, isExpanded: false } });
     const [orders, setOrders] = useState<CompletedOrderWithItems[]>(collapsedOrders);
 
     // Track orders where the user changes delivery status, so we can show a 
