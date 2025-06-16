@@ -1,70 +1,68 @@
-import { type InferSelectModel } from 'drizzle-orm';
-import { LayoutDashboard } from 'lucide-react';
-import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
-import { LiveOrders } from '~/app/u/[locationId]/live/_components/LiveOrders';
+'use client';
+
+import { useEffect, useState } from 'react';
 import { type LocationId } from '~/domain/locations';
-import { AppError } from '~/lib/error-utils.server';
-import { getUsedFeatureQuota } from '~/lib/quota-utils.server-only';
-import { ROUTES } from '~/lib/routes';
-import { db } from '~/server/db';
-import { type menuItems } from '~/server/db/schema';
-import { getOpenOrdersByLocation } from '~/server/queries/orders';
+import { type PublicOrderWithItems } from '~/domain/orders';
+import { useToast } from '~/hooks/use-toast';
+import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
+import { OrderCard } from './OrderCard';
+import type { MenuItemId, MenuItem } from '~/domain/menu-items';
 
-export async function OpenOrdersList(props: { locationId: LocationId }) {
-    try {
-        const openOrders = await getOpenOrdersByLocation(props.locationId);
-        if (!openOrders) {
-            throw new AppError({
-                internalMessage: `Failed to fetch open orders for location ${props.locationId}`,
-                publicMessage: 'Failed to load orders. Please try refreshing the page.',
+export function OpenOrdersList({
+    locationId,
+    initialOrders = [],
+    menuItemsMap,
+}: {
+    locationId: LocationId;
+    initialOrders: PublicOrderWithItems[];
+    menuItemsMap: Map<MenuItemId, MenuItem>;
+}) {
+    const [orders, setOrders] = useState<PublicOrderWithItems[]>(initialOrders);
+    const { toast } = useToast();
+
+    // Subscribe to location-wide order updates
+    useEffect(() => {
+        const locationChannel = pusherClient.subscribe(CHANNELS.location(locationId));
+
+        // Handle new orders
+        locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
+            setOrders((current) => [...current, data]);
+            toast({
+                title: 'New Order Received',
+                description: `Order #${data.id} has been created`,
             });
-        }
+        });
 
-        const menuItemIds = openOrders.flatMap((order) => order.items.map((item) => item.menuItemId));
-        const menuItemsData = (await db.query.menuItems.findMany({
-            where: (menuItems, { inArray }) => inArray(menuItems.id, menuItemIds),
-            columns: {
-                id: true,
-                name: true,
-                price: true,
-            },
-        })) as InferSelectModel<typeof menuItems>[];
+        // Handle updates to any order
+        locationChannel.bind(EVENTS.ORDER_UPDATED, (data: PublicOrderWithItems) => {
+            setOrders((current) => current.map((order) => (order.id === data.id ? data : order)));
+        });
 
-        // Create a map of menuItemId to menuItem for quick lookup
-        const menuItemsMap = new Map<number, InferSelectModel<typeof menuItems>>(
-            menuItemsData.map((item) => [item.id, item]),
-        );
+        return () => {
+            try {
+                locationChannel.unsubscribe();
+            } catch (error) {
+                console.error('Error unsubscribing from Pusher channel:', error);
+            }
+        };
+    }, [locationId, toast]);
 
-        if (openOrders.length === 0) {
-            const hasAddedMenus = (await getUsedFeatureQuota('menus')) > 0;
-            const title = 'No open orders at the moment';
-            const secondary = hasAddedMenus
-                ? 'Please come back in a while.'
-                : 'For orders to flow in, start by adding one or more menus.';
-            return (
-                <EmptyState
-                    icon={<LayoutDashboard size={36} />}
-                    title={title}
-                    secondary={secondary}
-                    cta={hasAddedMenus ? undefined : 'Add menu'}
-                    ctaHref={hasAddedMenus ? undefined : ROUTES.menusAdd(props.locationId)}
-                />
-            );
-        }
-
-        return <LiveOrders locationId={props.locationId} initialOrders={openOrders} menuItemsMap={menuItemsMap} />;
-    } catch (error) {
-        //TODO revisit
-        console.error('Error in OpenOrdersList:', error);
-        throw error instanceof AppError
-            ? error
-            : new AppError({
-                  internalMessage: `Unexpected error in OpenOrdersList: ${
-                      typeof error === 'object' && error !== null && 'toString' in error
-                          ? (error as { toString: () => string }).toString()
-                          : String(error)
-                  }`,
-                  publicMessage: 'Failed to load orders. Please try refreshing the page.',
-              });
-    }
+    return (
+        <div className="flex flex-col space-y-8">
+            <div className="space-y-4">
+                <div className="grid gap-4">
+                    {orders
+                        //.filter((order) => order.items.some((i) => i.orderItem.deliveryStatus === 'pending'))
+                        .map((order) => (
+                            <OrderCard
+                                key={order.id}
+                                order={order}
+                                locationId={locationId}
+                                menuItemsMap={menuItemsMap}
+                            />
+                        ))}
+                </div>
+            </div>
+        </div>
+    );
 }

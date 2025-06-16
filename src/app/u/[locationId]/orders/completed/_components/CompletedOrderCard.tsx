@@ -4,7 +4,7 @@ import type { InferSelectModel } from 'drizzle-orm';
 import { BanIcon, ChevronsDownIcon, ChevronsUpIcon, CircleCheckIcon, ClockIcon, EllipsisVerticalIcon, SoupIcon, SquareArrowDownIcon, WineIcon } from 'lucide-react';
 import { useState } from 'react';
 import { updateOrderItemDeliveryStatusAction } from '~/app/actions/updateOrderItemDeliveryStatusAction';
-import { CompletedOrderWithItems } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrders';
+import { CompletedOrderWithItems } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrdersList';
 import {
     ThreeStateToggle,
     type ThreeStateToggleMetadata,
