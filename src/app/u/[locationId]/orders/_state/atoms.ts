@@ -34,5 +34,4 @@ export const pendingOrderItemsCountAtom = atom((get) => {
     );
 });
 
-// Utility atoms for loading states
 export const isLoadingAtom = atom(false);

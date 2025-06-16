@@ -1,24 +1,23 @@
 import JotaiProviderWrapper from './_components/JotaiProviderWrapper';
-import { redirect } from 'next/navigation';
 import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { getCompletedOrdersByLocation, getOpenOrdersByLocation } from '~/server/queries/orders';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 import { AppError } from '~/lib/error-utils.server';
-import type { LocationId } from '~/domain/locations';
+import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 
 //TODO
 // export const metadata: Metadata = {
 //     title: 'Orders - Next Menu',
 // };
 
-export default async function OrdersLayout({
-    children,
-    params,
-}: {
+type Params = Promise<{ locationId: string }>;
+
+export default async function OrdersLayout(props: {
     children: React.ReactNode;
-    params: { locationId: string };
+    params: Params;
 }) {
-    const locationId = Number(params.locationId) as LocationId;
+    const params = await props.params;
+    const locationId = getValidLocationIdOrThrow(params.locationId);
 
     try {
         await getLocationForCurrentUserOrThrow(locationId);
@@ -35,7 +34,7 @@ export default async function OrdersLayout({
                 completedOrders={completedOrders}
                 menuItems={menuItems}
             >
-                {children}
+                {props.children}
             </JotaiProviderWrapper>
         );
     } catch (error) {

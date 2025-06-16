@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
 import { LoadingSection } from '~/app/u/[locationId]/_components/LoadingSection';
-import { CompletedOrders } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrders';
+import { CompletedOrdersList2 } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrdersList2';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 
 type Params = Promise<{ locationId: string }>;
@@ -11,7 +11,7 @@ export default async function CompletedPage(props: { params: Params }) {
 
     return (
         <Suspense fallback={<LoadingSection />}>
-            <CompletedOrders locationId={locationId} />
+            <CompletedOrdersList2 locationId={locationId} />
         </Suspense>
     );
 }

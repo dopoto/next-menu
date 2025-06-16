@@ -17,18 +17,6 @@ if (process.env.NODE_ENV !== 'production') {
         .then((mod) => ({ default: mod.DevTools })), { ssr: false });
 }
 
-// Use dynamic import for NoSSR
-const InitializationWrapper = dynamic(() =>
-    Promise.resolve(({ children }: { children: ReactNode }) => {
-        const isLoading = useAtomValue(isLoadingAtom);
-
-        if (isLoading) return null;
-
-        return <>{children}</>;
-    }),
-    { ssr: false }
-);
-
 function Initializer(props: {
     openOrders: PublicOrderWithItems[];
     completedOrders: PublicOrderWithItems[];
@@ -71,12 +59,8 @@ export default function JotaiProviderWrapper(props: {
                 completedOrders={props.completedOrders}
                 menuItems={props.menuItems}
             />
-            {/* <div suppressHydrationWarning>
-                <InitializationWrapper> */}
             {DevTools && <DevTools />}
             {props.children}
-            {/* </InitializationWrapper>
-            </div> */}
         </Provider>
     );
 }

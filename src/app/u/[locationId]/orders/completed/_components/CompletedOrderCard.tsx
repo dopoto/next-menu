@@ -12,8 +12,9 @@ import {
 import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
-import type { MenuItem } from '~/domain/menu-items';
 import { MenuItemImage } from '~/components/MenuItemImage';
+import { useAtom } from 'jotai';
+import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     canceled: 0,
@@ -24,19 +25,20 @@ const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
 export function CompletedOrderCard({
     order,
     locationId,
-    menuItemsMap,
     overlayComponent,
     onToggleExpanded,
     onItemStatusChanged
 }: {
     order: CompletedOrderWithItems;
     locationId: LocationId;
-    menuItemsMap: Map<number, MenuItem>;
     overlayComponent: React.ReactNode,
     onToggleExpanded: () => void
     onItemStatusChanged: () => void
 }) {
+
     const [itemIdBeingUpdated, setItemIdBeingUpdated] = useState<OrderItemId | null>(null);
+
+    const [menuItems] = useAtom(menuItemsAtom)
 
     async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
         //TODO refactor, simplify
@@ -110,17 +112,17 @@ export function CompletedOrderCard({
                             component: <CircleCheckIcon />,
                         };
 
-                        const { imageId } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
+                        const { imageId } = menuItems.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
 
                         return (
                             <div key={item.orderItem.id} className="flex  justify-between   gap-2">
                                 <MenuItemImage imageId={imageId} sizeInPx={40} />
                                 <div className="flex-1">
                                     <p className="font-medium">
-                                        {menuItemsMap.get(item.menuItemId)?.name ?? 'Unknown Item'}
+                                        {menuItems.get(item.menuItemId)?.name ?? 'Unknown Item'}
                                     </p>
                                     <p className="text-sm text-gray-500">
-                                        ${menuItemsMap.get(item.menuItemId)?.price ?? 'Unknown Item'}
+                                        ${menuItems.get(item.menuItemId)?.price ?? 'Unknown Item'}
                                     </p>
                                 </div>
                                 <div className="flex items-center gap-2">
