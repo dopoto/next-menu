@@ -2,28 +2,30 @@
 
 import { Progress } from '~/components/ui/progress';
 import { useState, useEffect } from 'react';
-import { CompletedOrderCard } from '~/app/u/[locationId]/orders/completed/_components/CompletedOrderCard';
+
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { useAtom } from 'jotai';
-import { completedOrdersAtom } from '~/app/u/[locationId]/orders/_state/atoms';
 import { LocationId } from '~/domain/locations';
+import { completedOrdersAtom } from '~/app/u/[locationId]/orders2/_state/atoms';
+import { CompletedOrderCard } from '~/app/u/[locationId]/orders2/_components/CompletedOrderCard';
 
 export const OVERLAY_DURATION_IN_MS = 5000
 
 export function CompletedOrdersList(props: { locationId: LocationId }) {
-    const [orders, setOrders] = useAtom(completedOrdersAtom)
-    console.log('DBG-COL', orders)
+    const [completedOrders, setCompletedOrders] = useAtom(completedOrdersAtom)
+    console.log('DBG-COL2', completedOrders)
+
     // Track orders where the user changes delivery status, so we can show a 
     // confirmation overlay on them for a few seconds.
     const [orderOverlayCountdown, setOrderOverlayCountdown] = useState<Map<PublicOrderWithItems["id"], number>>(new Map());
 
     function toggleExpanded(orderId: number) {
-        const newOrders = orders.map(order =>
+        const newOrders = completedOrders.map(order =>
             order.id === orderId
                 ? { ...order, isExpanded: !order.isExpanded }
                 : order
         );
-        setOrders(newOrders);
+        setCompletedOrders(newOrders);
     }
 
     function handleItemStatusChanged(orderId: number) {
@@ -62,7 +64,7 @@ export function CompletedOrdersList(props: { locationId: LocationId }) {
 
                     if (newValue === 0) {
                         newProgress.delete(orderId);
-                        setOrders(prevOrders => prevOrders.filter(o => o.id !== orderId));
+                        setCompletedOrders(prevOrders => prevOrders.filter(o => o.id !== orderId));
                     } else {
                         newProgress.set(orderId, newValue);
                         hasUpdates = true;
@@ -84,7 +86,7 @@ export function CompletedOrdersList(props: { locationId: LocationId }) {
         <div className="flex flex-col space-y-8">
             <div className="space-y-4">
                 <div className="grid gap-4">
-                    {orders
+                    {completedOrders
                         .map((order) => (
                             <CompletedOrderCard
                                 key={order.id}

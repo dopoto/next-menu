@@ -13,9 +13,9 @@ import { Card } from '~/components/ui/card';
 import { type LocationId } from '~/domain/locations';
 import { type DeliveryStatusId, type OrderItemId } from '~/domain/order-items';
 import { MenuItemImage } from '~/components/MenuItemImage';
-import { useAtom } from 'jotai';
-import { menuItemsAtom } from '~/app/p/[locationSlug]/_state/menu-items-atom';
-import { OrderWithExpanded } from '~/app/u/[locationId]/orders/_state/atoms';
+import { useAtom, useSetAtom } from 'jotai';
+import { completedOrdersAtom, OrderWithExpanded } from '~/app/u/[locationId]/orders/_state/atoms';
+import { menuItemsAtom } from '~/app/u/[locationId]/orders2/_state/atoms';
 
 const ITEM_STATE: Record<DeliveryStatusId, ThreeStateToggleSelectedItem> = {
     canceled: 0,
@@ -40,6 +40,8 @@ export function CompletedOrderCard({
     const [itemIdBeingUpdated, setItemIdBeingUpdated] = useState<OrderItemId | null>(null);
 
     const [menuItems] = useAtom(menuItemsAtom)
+    const setCompletedOrders = useSetAtom(completedOrdersAtom);
+
     console.log('order card', menuItems)
 
     async function handleItemStateChange(state: ThreeStateToggleSelectedItem, orderItemId: OrderItemId) {
@@ -53,12 +55,13 @@ export function CompletedOrderCard({
         try {
             setItemIdBeingUpdated(orderItemId);
             await updateOrderItemDeliveryStatusAction(locationId, orderItemId, status);
+            setCompletedOrders(prev => prev.filter(o => o.id !== order.id))
         } catch (error) {
             //TODO proper error handling
             alert(`Failed to update order item\n${error?.toString()}`);
         } finally {
             setItemIdBeingUpdated(null);
-            onItemStatusChanged();
+            //onItemStatusChanged();
         }
     }
 
