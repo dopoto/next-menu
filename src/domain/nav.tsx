@@ -96,7 +96,11 @@ export const NAV_TREE: NavItem = {
     children: [
         {
             ...NAV_ITEMS.dashboard,
-            children: [NAV_ITEMS.dashboard, NAV_ITEMS.live, NAV_ITEMS.completedOrders, NAV_ITEMS.tables],
+            children: [
+                //NAV_ITEMS.dashboard, 
+                NAV_ITEMS.live, NAV_ITEMS.completedOrders,
+                // NAV_ITEMS.tables
+            ],
         },
         {
             ...NAV_ITEMS.locationManager,

@@ -80,7 +80,7 @@ export function CompletedOrderCard({
                         </div>
                         <p className="text-sm text-gray-500">{formattedDate}</p>
                     </div>
-                    <div className="w-[24px] h-[24px] py-2"><EllipsisVerticalIcon /></div>
+                    {/* <div className="w-[24px] h-[24px] py-2"><EllipsisVerticalIcon /></div> */}
                 </div>
                 {order.isExpanded && <div className="space-y-4">
                     {order.items.map((item) => {
@@ -111,7 +111,7 @@ export function CompletedOrderCard({
                             component: <CircleCheckIcon />,
                         };
 
-                        const { id, name, imageId, type } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
+                        const { imageId } = menuItemsMap.get(item.menuItemId) ?? { id: null, name: 'Unknown Item' };
 
                         return (
                             <div key={item.orderItem.id} className="flex  justify-between   gap-2">

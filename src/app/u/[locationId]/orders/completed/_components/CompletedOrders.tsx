@@ -8,7 +8,7 @@ import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { type menuItems } from '~/server/db/schema';
 
-const OVERLAY_DURATION_IN_MS = 3000
+const OVERLAY_DURATION_IN_MS = 5000
 
 export type CompletedOrderWithItems = PublicOrderWithItems & { isExpanded: boolean, hasBeenMarkedAsUncompleted: boolean }
 
@@ -52,9 +52,11 @@ export function CompletedOrders({
     useEffect(() => {
         const orderIds = Array.from(orderProgress.keys());
         if (orderIds.length === 0) return;
+
         const duration = OVERLAY_DURATION_IN_MS;
         const interval = 50; // Update every 50ms
-        const decrement = (100 / duration) * interval;
+        const steps = duration / interval;
+        const decrementPerStep = Math.ceil(100 / steps); // Round up to ensure we reach 0
 
         const timer = setInterval(() => {
             setOrderProgress(prev => {
@@ -62,13 +64,17 @@ export function CompletedOrders({
                 let hasUpdates = false;
 
                 for (const orderId of orderIds) {
-                    const currentProgress = prev.get(orderId) ?? 0;
-                    const newValue = currentProgress - decrement;
+                    const currentProgress = Math.round(prev.get(orderId) ?? 0);
+                    let newValue = Math.max(0, currentProgress - decrementPerStep);
 
-                    if (newValue <= 0) {
+                    // Ensure we don't get stuck due to rounding
+                    if (newValue < decrementPerStep) {
+                        newValue = 0;
+                    }
+
+                    if (newValue === 0) {
                         newProgress.delete(orderId);
-                        const newOrders = orders.filter(o => o.id !== orderId);
-                        setOrders(newOrders);
+                        setOrders(prevOrders => prevOrders.filter(o => o.id !== orderId));
                     } else {
                         newProgress.set(orderId, newValue);
                         hasUpdates = true;
@@ -100,12 +106,9 @@ export function CompletedOrders({
                                 overlayComponent={orderProgress.has(order.id) ? (
                                     <div className="w-full absolute inset-0 bg-background/80 backdrop-blur-sm rounded-lg flex items-center justify-center  z-50">
                                         <div className="w-full max-w-xs flex flex-col gap-1 ">
-                                            <p className="font-bold">Delivery status changed!</p>
+                                            <p className="font-bold">Delivery status changed</p>
                                             <p className="pb-3">Order #{order.id} will now move to Open Orders.</p>
                                             <Progress value={orderProgress.get(order.id)} className="w-full" />
-                                            <p className="text-center text-sm text-muted-foreground mt-2">
-                                                {Math.round(orderProgress.get(order.id) ?? 0)}%
-                                            </p>
                                         </div>
                                     </div>
                                 ) : null}
