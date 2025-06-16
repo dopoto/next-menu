@@ -18,12 +18,12 @@ menuItemsAtom.debugLabel = 'menuItemsAtom';
 // Derived atoms for computed state
 export const sortedOpenOrdersAtom = atom((get) => {
     const orders = get(openOrdersAtom);
-    return [...orders].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return [...orders].sort((a, b) => b.createdAt?.getTime() - a.createdAt?.getTime());
 });
 
 export const sortedCompletedOrdersAtom = atom((get) => {
     const orders = get(completedOrdersAtom);
-    return [...orders].sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    return [...orders].sort((a, b) => b.createdAt?.getTime() - a.createdAt?.getTime());
 });
 
 export const pendingOrderItemsCountAtom = atom((get) => {
