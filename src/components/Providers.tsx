@@ -3,6 +3,7 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { dark } from '@clerk/themes';
 import React, { useEffect, useState } from 'react';
+import { ConvexClientProvider } from '~/components/ConvexClientProvider';
 import { ThemeProvider, useTheme } from '~/components/ThemeProvider';
 
 interface ProviderConfig<P> {
@@ -37,8 +38,13 @@ function ClerkThemeWrapper({ children }: { children: React.ReactNode }) {
     );
 }
 
+
 export default function Providers({ children }: { children: React.ReactNode }) {
-    const AppProviders = composeProviders([{ Component: ThemeProvider }, { Component: ClerkThemeWrapper }]);
+    const AppProviders = composeProviders([
+        { Component: ThemeProvider },
+        { Component: ClerkThemeWrapper },
+        { Component: ConvexClientProvider }
+    ]);
 
     return <AppProviders>{children}</AppProviders>;
 }

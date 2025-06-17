@@ -24,6 +24,7 @@ export const env = createEnv({
         PUSHER_APP_SECRET: z.string(),
         PUSHER_CLUSTER: z.string(),
         CLOUDINARY_API_SECRET: z.string(),
+        CONVEX_DEPLOYMENT: z.string(),
     },
 
     /**
@@ -56,6 +57,7 @@ export const env = createEnv({
         NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
         NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: z.string(),
         NEXT_PUBLIC_CLOUDINARY_API_KEY: z.string(),
+        NEXT_PUBLIC_CONVEX_URL: z.string(),
     },
 
     /**
@@ -98,6 +100,8 @@ export const env = createEnv({
         NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
         NEXT_PUBLIC_CLOUDINARY_API_KEY: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
         CLOUDINARY_API_SECRET: process.env.CLOUDINARY_API_SECRET,
+        CONVEX_DEPLOYMENT: process.env.CONVEX_DEPLOYMENT,
+        NEXT_PUBLIC_CONVEX_URL: process.env.NEXT_PUBLIC_CONVEX_URL,
     },
     /**
      * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially
