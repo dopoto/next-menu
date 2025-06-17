@@ -1,11 +1,14 @@
 'use server';
 
+import { api } from 'convex/_generated/api';
+import { Id } from 'convex/_generated/dataModel';
+import { fetchMutation } from 'convex/nextjs';
 import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
 import { type MenuItemId, menuItemFormSchema } from '~/domain/menu-items';
 import { type FormState, processFormErrors } from '~/lib/form-state';
+import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { ROUTES } from '~/lib/routes';
-import { updateMenuItem } from '~/server/queries/menu-items';
 
 // TODO Sentry.withServerActionInstrumentation
 
@@ -19,7 +22,14 @@ export async function editMenuItemAction(
     }
 
     try {
-        await updateMenuItem(menuItemId, parsed.data);
+        const { name, description, imageId, price } = validateAndFormatMenuItemData(parsed.data);
+        await fetchMutation(api.menuItems.updateMenuItem, {
+            menuItemId: String(menuItemId) as Id<"menuItems">,
+            name,
+            price,
+            description,
+            imageId
+        });
         revalidatePath(ROUTES.menuItems(parsed.data.locationId));
         // TODO revalidate public path
         return { status: 'success' };

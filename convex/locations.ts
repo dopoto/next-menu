@@ -44,6 +44,8 @@ export const updateLocation = mutation({
         //     throw new Error(`Invalid currency: ${args.currencyId}`);
         // }
 
+        //TODO Security checks
+
         return await ctx.db.patch(args.locationId, {
             currencyId: args.currencyId,
             menuMode: args.menuMode,

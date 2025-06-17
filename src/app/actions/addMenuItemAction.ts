@@ -47,7 +47,7 @@ export async function addMenuItemAction(
         }
         revalidatePath(ROUTES.menuItems(parsed.data.locationId));
         // TODO revalidate public path
-        return { status: 'success', menuItemId: menuItem.id };
+        return { status: 'success', menuItemId: menuItem }; //TODO not a menu item id
     } catch (error) {
         return {
             status: 'error',

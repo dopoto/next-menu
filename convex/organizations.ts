@@ -1,6 +1,5 @@
 import { v } from "convex/values";
 import { mutation } from "./_generated/server";
-import { deliveryStatusValidator } from "./validators";
 
 export const createOrganization = mutation({
     args: {
