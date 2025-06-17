@@ -1,11 +1,13 @@
 'use server';
 
+import { api } from 'convex/_generated/api';
+import { Id } from 'convex/_generated/dataModel';
+import { fetchMutation } from 'convex/nextjs';
 import { revalidatePath } from 'next/cache';
 import { type LocationId } from '~/domain/locations';
 import { type menuFormSchema, type MenuId } from '~/domain/menus';
 import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
-import { deleteMenu } from '~/server/queries/menus';
 
 // TODO Sentry.withServerActionInstrumentation
 
@@ -14,7 +16,10 @@ export async function deleteMenuAction(
     menuId: MenuId,
 ): Promise<FormState<typeof menuFormSchema>> {
     try {
-        await deleteMenu(locationId, menuId);
+        //await deleteMenu(locationId, menuId);
+        await fetchMutation(api.menus.deleteMenu, {
+            menuId: String(menuId) as Id<"menus">
+        });
         revalidatePath(ROUTES.menuItems(locationId));
         return { status: 'success' };
     } catch (error) {

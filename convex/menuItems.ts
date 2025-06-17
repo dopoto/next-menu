@@ -1,6 +1,10 @@
 import { v } from "convex/values";
 import { mutation } from "./_generated/server";
 
+//TODO
+//     // Needed - performs security checks and throws on failure.
+//     await getLocationForCurrentUserOrThrow(data.locationId);
+
 export const createMenuItem = mutation({
     args: {
         locationId: v.id("locations"),

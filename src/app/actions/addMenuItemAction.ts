@@ -1,13 +1,16 @@
 'use server';
 
+import { api } from 'convex/_generated/api';
+import { Id } from 'convex/_generated/dataModel';
+import { fetchMutation } from 'convex/nextjs';
 import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { AppError } from '~/lib/error-utils.server';
 import { type FormState, processFormErrors } from '~/lib/form-state';
+import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
-import { createMenuItem } from '~/server/queries/menu-items';
 
 // TODO Sentry.withServerActionInstrumentation
 
@@ -28,7 +31,18 @@ export async function addMenuItemAction(
     }
 
     try {
-        const menuItem = await createMenuItem(parsed.data);
+        //const menuItem = await createMenuItem(parsed.data);
+        const { locationId, name, description, imageId, price, isNew } = validateAndFormatMenuItemData(parsed.data);
+        const menuItem = await fetchMutation(api.menuItems.createMenuItem, {
+            locationId: String(locationId) as Id<"locations">,
+            name,
+            description,
+            imageId,
+            price: Number(price), //TODO
+            isNew
+        });
+
+
         if (!menuItem) {
             throw new AppError({ internalMessage: `Could not save menu item` });
         }

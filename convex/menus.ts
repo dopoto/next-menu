@@ -1,8 +1,9 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 /**
- * Creates a menu and associates menu items with it
+ * Creates a menu and associates menu items with it.
  */
 export const createMenu = mutation({
     args: {
@@ -61,3 +62,96 @@ export const createMenu = mutation({
         return menuId;
     },
 });
+
+export const getMenu = query({
+    args: {
+        menuId: v.id("menus"),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            return null;
+        }
+
+        return await ctx.db.get(args.menuId);
+    },
+});
+
+export const listMenus = query({
+    args: {
+        locationId: v.id("locations"),
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            return [];
+        }
+
+        return await ctx.db
+            .query("menus")
+            .withIndex("by_location_id", (q) => q.eq("locationId", args.locationId))
+            .collect();
+    },
+});
+
+export const deleteMenu = mutation({
+    args: {
+        menuId: v.id("menus"),
+    },
+    handler: async (ctx, args) => {
+        // Check if user is authenticated
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            throw new Error("Not authenticated");
+        }
+
+        // Get user's organization from appUsers table
+        const user = await ctx.db.get(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const appUser = await ctx.db
+            .query("appUsers")
+            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+            .unique();
+
+        if (!appUser) {
+            throw new Error("User not found in organization");
+        }
+
+        // Verify the menu exists
+        const menu = await ctx.db.get(args.menuId);
+        if (!menu) {
+            throw new Error("Menu not found");
+        }
+
+        // Get the menu's location to check organization
+        const location = await ctx.db.get(menu.locationId);
+        if (!location) {
+            throw new Error("Menu location not found");
+        }
+
+        // Verify the menu's location belongs to the user's organization
+        if (location.orgId !== appUser.orgId) {
+            throw new Error("Menu not in your organization");
+        }
+
+        // Delete all menu item associations first
+        const menuItemAssociations = await ctx.db
+            .query("menuItemsToMenus")
+            .withIndex("by_menu_id", (q) => q.eq("menuId", args.menuId))
+            .collect();
+
+        // Delete each association
+        for (const association of menuItemAssociations) {
+            await ctx.db.delete(association._id);
+        }
+
+        // Finally, delete the menu itself
+        await ctx.db.delete(args.menuId);
+
+        return { success: true };
+    },
+});
+

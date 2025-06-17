@@ -37,7 +37,6 @@ export const addMenuAction = async (
                     };
                 }
 
-                //await createConvexMenu(parsedForm.data);
                 await fetchMutation(api.menus.createMenu, {
                     name: data.name,
                     locationId: data.locationId,
