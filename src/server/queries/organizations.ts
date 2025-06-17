@@ -1,105 +1,105 @@
-import { eq } from 'drizzle-orm';
-import { type CurrencyId } from '~/domain/currencies';
-import { type MenuModeId } from '~/domain/menu-modes';
-import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
-import { AppError } from '~/lib/error-utils.server';
-import { db } from '~/server/db';
-import { locations, organizations, users } from '~/server/db/schema';
+// import { eq } from 'drizzle-orm';
+// import { type CurrencyId } from '~/domain/currencies';
+// import { type MenuModeId } from '~/domain/menu-modes';
+// import { getValidClerkOrgIdOrThrow } from '~/lib/clerk-utils';
+// import { AppError } from '~/lib/error-utils.server';
+// import { db } from '~/server/db';
+// import { locations, organizations, users } from '~/server/db/schema';
 
-export async function createOrganization({
-    clerkUserId,
-    orgId,
-    stripeCustomerId,
-    locationName,
-    locationSlug,
-    menuMode,
-}: {
-    clerkUserId: string;
-    orgId: string;
-    stripeCustomerId?: string;
-    locationName: string;
-    locationSlug: string;
-    currencyId: CurrencyId;
-    menuMode: MenuModeId;
-}) {
-    const insertedLocation = await db.transaction(async (trx) => {
-        const [organization] = await trx
-            .insert(organizations)
-            .values({
-                clerkOrgId: orgId,
-                stripeCustomerId: stripeCustomerId,
-            })
-            .returning({
-                id: organizations.id,
-            });
+// export async function createOrganization({
+//     clerkUserId,
+//     orgId,
+//     stripeCustomerId,
+//     locationName,
+//     locationSlug,
+//     menuMode,
+// }: {
+//     clerkUserId: string;
+//     orgId: string;
+//     stripeCustomerId?: string;
+//     locationName: string;
+//     locationSlug: string;
+//     currencyId: CurrencyId;
+//     menuMode: MenuModeId;
+// }) {
+//     const insertedLocation = await db.transaction(async (trx) => {
+//         const [organization] = await trx
+//             .insert(organizations)
+//             .values({
+//                 clerkOrgId: orgId,
+//                 stripeCustomerId: stripeCustomerId,
+//             })
+//             .returning({
+//                 id: organizations.id,
+//             });
 
-        if (!organization) {
-            throw new AppError({ internalMessage: 'Failed to insert organization' });
-        }
+//         if (!organization) {
+//             throw new AppError({ internalMessage: 'Failed to insert organization' });
+//         }
 
-        const [user] = await trx
-            .insert(users)
-            .values({
-                clerkUserId: clerkUserId,
-                role: 'orgowner',
-                orgId: organization.id,
-            })
-            .returning({
-                id: users.id,
-                role: users.role,
-            });
+//         const [user] = await trx
+//             .insert(users)
+//             .values({
+//                 clerkUserId: clerkUserId,
+//                 role: 'orgowner',
+//                 orgId: organization.id,
+//             })
+//             .returning({
+//                 id: users.id,
+//                 role: users.role,
+//             });
 
-        if (!user) {
-            throw new AppError({ internalMessage: 'Failed to insert user' });
-        }
+//         if (!user) {
+//             throw new AppError({ internalMessage: 'Failed to insert user' });
+//         }
 
-        const [location] = await db
-            .insert(locations)
-            .values({
-                name: locationName,
-                slug: locationSlug,
-                menuMode,
-                orgId: organization.id,
-            })
-            .returning();
+//         const [location] = await db
+//             .insert(locations)
+//             .values({
+//                 name: locationName,
+//                 slug: locationSlug,
+//                 menuMode,
+//                 orgId: organization.id,
+//             })
+//             .returning();
 
-        if (!location) {
-            throw new AppError({ internalMessage: 'Failed to insert location' });
-        }
+//         if (!location) {
+//             throw new AppError({ internalMessage: 'Failed to insert location' });
+//         }
 
-        return location;
-    });
+//         return location;
+//     });
 
-    return insertedLocation;
-}
+//     return insertedLocation;
+// }
 
-export async function updateOrganizationStripeCustomerId({
-    clerkOrgId,
-    stripeCustomerId,
-}: {
-    clerkOrgId: string;
-    stripeCustomerId: string | null;
-}) {
-    // TODO Checks
+// export async function updateOrganizationStripeCustomerId({
+//     clerkOrgId,
+//     stripeCustomerId,
+// }: {
+//     clerkOrgId: string;
+//     stripeCustomerId: string | null;
+// }) {
+//     // TODO Checks
 
-    const [updatedOrganization] = await db
-        .update(organizations)
-        .set({
-            stripeCustomerId,
-        })
-        .where(eq(organizations.clerkOrgId, clerkOrgId))
-        .returning({ id: organizations.id });
-    return updatedOrganization;
-}
+//     const [updatedOrganization] = await db
+//         .update(organizations)
+//         .set({
+//             stripeCustomerId,
+//         })
+//         .where(eq(organizations.clerkOrgId, clerkOrgId))
+//         .returning({ id: organizations.id });
+//     return updatedOrganization;
+// }
 
-export async function getOrganizationByClerkOrgId(clerkOrgId: string) {
-    const validClerkOrgId = getValidClerkOrgIdOrThrow(clerkOrgId);
-    const item = await db.query.organizations.findFirst({
-        where: (model, { eq }) => eq(model.clerkOrgId, validClerkOrgId),
-    });
-    if (!item) {
-        throw new AppError({ internalMessage: `Org not found for clerkOrgId ${clerkOrgId}.` });
-    }
+// export async function getOrganizationByClerkOrgId(clerkOrgId: string) {
+//     const validClerkOrgId = getValidClerkOrgIdOrThrow(clerkOrgId);
+//     const item = await db.query.organizations.findFirst({
+//         where: (model, { eq }) => eq(model.clerkOrgId, validClerkOrgId),
+//     });
+//     if (!item) {
+//         throw new AppError({ internalMessage: `Org not found for clerkOrgId ${clerkOrgId}.` });
+//     }
 
-    return item;
-}
+//     return item;
+// }
