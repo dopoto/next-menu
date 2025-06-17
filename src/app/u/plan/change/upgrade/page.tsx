@@ -1,4 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import ProcessingPlanChange from '~/app/u/plan/change/_components/ProcessingPlanChange';
@@ -11,7 +13,6 @@ import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
 import { changePlanUpgradeCreateCheckoutSession } from '~/lib/stripe-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 type SearchParams = Promise<Record<'toTierId', string | undefined>>;
 
@@ -74,7 +75,7 @@ async function Step2StripeProcessing(props: { fromTier: PriceTier; toTier: Price
             internalMessage: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
         });
     }
-    const stripeCustomerId = (await getOrganizationByClerkOrgId(props.orgId)).stripeCustomerId;
+    const stripeCustomerId = (await fetchQuery(api.organizations.getOrganization, { clerkOrgId: props.orgId }))?.stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a stripeCustomerId in our db for ${props.orgId}, got null instead.`,

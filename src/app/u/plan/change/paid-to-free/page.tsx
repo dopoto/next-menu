@@ -1,4 +1,6 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { Stripe } from 'stripe';
@@ -12,7 +14,7 @@ import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-u
 import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
-import { getOrganizationByClerkOrgId, updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
+import { updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -63,7 +65,7 @@ async function Step1(props: { toTierId?: string }) {
 }
 
 async function Step2(props: { fromTier: PriceTier; toTier: PriceTier; orgId: string }) {
-    const stripeCustomerId = (await getOrganizationByClerkOrgId(props.orgId)).stripeCustomerId;
+    const stripeCustomerId = (await fetchQuery(api.organizations.getOrganization, { clerkOrgId: props.orgId }))?.stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Cannot find Stripe customer for organization ${props.orgId}`,

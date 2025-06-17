@@ -1,4 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import 'server-only';
 import Stripe from 'stripe';
 import { type PriceTierId } from '~/domain/price-tiers';
@@ -12,7 +14,6 @@ import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { obj2str } from '~/lib/string-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -30,7 +31,8 @@ export async function getActiveStripeSubscriptionItem(
         if (!orgId) {
             throw new AppError({ internalMessage: `No orgId found in auth.` });
         }
-        customerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId;
+        const organization = await fetchQuery(api.organizations.getOrganization, { clerkOrgId: orgId });
+        customerId = organization?.stripeCustomerId;
     }
 
     if (!customerId) {
@@ -106,7 +108,7 @@ export const changePlanUpgradeCreateCheckoutSession = async (props: {
         throw new AppError({ internalMessage: `No orgId found in auth.` });
     }
 
-    const stripeCustomerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId;
+    const stripeCustomerId = (await fetchQuery(api.organizations.getOrganization, { clerkOrgId: orgId }))?.stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,

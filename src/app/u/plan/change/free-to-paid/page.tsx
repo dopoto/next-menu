@@ -1,4 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import { Stripe } from 'stripe';
@@ -12,7 +14,6 @@ import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-u
 import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -77,7 +78,7 @@ async function Step2CreateStripeCustomerAndSubscription(props: {
             internalMessage: `Expected a non-empty Stripe price for ${obj2str(props.toTier)}.`,
         });
     }
-    const stripeCustomerId = (await getOrganizationByClerkOrgId(props.orgId)).stripeCustomerId;
+    const stripeCustomerId = (await fetchQuery(api.organizations.getOrganization, { clerkOrgId: props.orgId }))?.stripeCustomerId;
     if (stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a null stripeCustomerId in our db for ${props.orgId}, got ${stripeCustomerId} instead.`,

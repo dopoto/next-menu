@@ -1,14 +1,15 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import Stripe from 'stripe';
 import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';
 import { SplitScreenContainer } from '~/components/SplitScreenContainer';
-import { stripeCustomerIdSchema, type StripeSubscriptionId, type UpgradeTiersStripeMetadata } from '~/domain/stripe';
+import { stripeCustomerIdSchema, type StripeCustomerId, type StripeSubscriptionId, type UpgradeTiersStripeMetadata } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getPriceTierChangeScenario, getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { obj2str } from '~/lib/string-utils';
 import { getActiveStripeSubscriptionItem } from '~/lib/stripe-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -89,10 +90,11 @@ export default async function UpgradePostPaymentPage(props: { searchParams: Sear
     const parsedStripeCustomerId = stripeCustomerIdValidationResult.data;
 
     // Expecting the customer Id returned by Stripe for this sub to match our records
-    const dbCustomer = await getOrganizationByClerkOrgId(orgId ?? '');
-    if (parsedStripeCustomerId.toString() !== dbCustomer.stripeCustomerId) {
+    const dbCustomer = await fetchQuery(api.organizations.getOrganization, { clerkOrgId: orgId ?? '' });
+
+    if (parsedStripeCustomerId.toString() !== dbCustomer?.stripeCustomerId) {
         throw new AppError({
-            internalMessage: `Expected db match for Stripe customer id ${parsedStripeCustomerId}, got ${dbCustomer.stripeCustomerId}.`,
+            internalMessage: `Expected db match for Stripe customer id ${parsedStripeCustomerId}, got ${dbCustomer?.stripeCustomerId}.`,
         });
     }
 

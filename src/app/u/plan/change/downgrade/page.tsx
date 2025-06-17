@@ -1,4 +1,6 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 import Stripe from 'stripe';
@@ -14,7 +16,6 @@ import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
 import { getActiveStripeSubscriptionItem, getActiveSubscriptionItemId } from '~/lib/stripe-utils';
-import { getOrganizationByClerkOrgId } from '~/server/queries/organizations';
 
 const apiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(apiKey);
@@ -82,7 +83,7 @@ async function Step2StripeProcessing(props: { fromTier: PriceTier; toTier: Price
         });
     }
 
-    const stripeCustomerId = (await getOrganizationByClerkOrgId(orgId)).stripeCustomerId as StripeCustomerId;
+    const stripeCustomerId = (await fetchQuery(api.organizations.getOrganization, { clerkOrgId: props.orgId }))?.stripeCustomerId;
     if (!stripeCustomerId) {
         throw new AppError({
             internalMessage: `Expected a stripeCustomerId in our db for ${orgId}, got null instead.`,
