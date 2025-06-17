@@ -55,13 +55,16 @@ export function CompletedOrderCard({
         try {
             setItemIdBeingUpdated(orderItemId);
             await updateOrderItemDeliveryStatusAction(locationId, orderItemId, status);
-            setCompletedOrders(prev => prev.filter(o => o.id !== order.id))
+            setCompletedOrders(prev => {
+                const filtered = prev.filter(o => o.id !== order.id);
+                return [...filtered]; // Create a new array reference
+            });
+            // onItemStatusChanged(); // Re-enable this call
         } catch (error) {
             //TODO proper error handling
             alert(`Failed to update order item\n${error?.toString()}`);
         } finally {
             setItemIdBeingUpdated(null);
-            //onItemStatusChanged();
         }
     }
 
