@@ -1,12 +1,14 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
+import { api } from 'convex/_generated/api';
+import { Id } from 'convex/_generated/dataModel';
+import { fetchMutation } from 'convex/nextjs';
 import { headers } from 'next/headers';
 import { type z } from 'zod';
 import { locationFormSchema, type LocationId } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
-import { updateLocation } from '~/server/queries/locations';
 
 export const editLocationAction = async (
     locationId: LocationId,
@@ -25,8 +27,13 @@ export const editLocationAction = async (
                 if (!parsedForm.success) {
                     return processFormErrors(parsedForm.error, data);
                 }
-                const { currencyId, menuMode, name } = parsedForm.data
-                await updateLocation(locationId, currencyId, menuMode, name);
+                const { currencyId, menuMode, name } = parsedForm.data;
+                await fetchMutation(api.locations.updateLocation, {
+                    locationId: String(locationId) as Id<"locations">,
+                    currencyId,
+                    menuMode,
+                    name,
+                });
 
                 // TODO:
                 //revalidatePath(`/u/${locationId}/location`);

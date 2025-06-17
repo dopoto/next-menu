@@ -41,6 +41,7 @@ export const addMenuAction = async (
                     name: data.name,
                     locationId: data.locationId,
                     isPublished: true,
+                    // TODO validate data first
                     items: data.items?.map((item, index) => ({
                         id: item.id,
                         sortOrderIndex: index,

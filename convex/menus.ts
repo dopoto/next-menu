@@ -63,6 +63,107 @@ export const createMenu = mutation({
     },
 });
 
+export const updateMenu = mutation({
+    args: {
+        menuId: v.id("menus"),
+        name: v.optional(v.string()),
+        isPublished: v.optional(v.boolean()),
+        menuItems: v.optional(v.array(v.object({
+            menuItemId: v.id("menuItems"),
+            sortOrderIndex: v.number(),
+        }))),
+    },
+    handler: async (ctx, args) => {
+        // Check if user is authenticated
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            throw new Error("Not authenticated");
+        }
+
+        // Get user's organization from appUsers table
+        const user = await ctx.db.get(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const appUser = await ctx.db
+            .query("appUsers")
+            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+            .unique();
+
+        if (!appUser) {
+            throw new Error("User not found in organization");
+        }
+
+        // Verify the menu exists
+        const menu = await ctx.db.get(args.menuId);
+        if (!menu) {
+            throw new Error("Menu not found");
+        }
+
+        // Get the menu's location to check organization
+        const location = await ctx.db.get(menu.locationId);
+        if (!location) {
+            throw new Error("Menu location not found");
+        }
+
+        // Verify the menu's location belongs to the user's organization
+        if (location.orgId !== appUser.orgId) {
+            throw new Error("Menu not in your organization");
+        }
+
+        // Update menu properties if provided
+        const menuUpdates: Partial<{ name: string; isPublished: boolean }> = {};
+        if (args.name !== undefined) {
+            menuUpdates.name = args.name;
+        }
+        if (args.isPublished !== undefined) {
+            menuUpdates.isPublished = args.isPublished;
+        }
+
+        // Update the menu if there are changes
+        if (Object.keys(menuUpdates).length > 0) {
+            await ctx.db.patch(args.menuId, menuUpdates);
+        }
+
+        // Update menu items if provided
+        if (args.menuItems) {
+            // Verify all menu items belong to the same location
+            for (const item of args.menuItems) {
+                const menuItem = await ctx.db.get(item.menuItemId);
+                if (!menuItem) {
+                    throw new Error(`Menu item ${item.menuItemId} not found`);
+                }
+                if (menuItem.locationId !== menu.locationId) {
+                    throw new Error(`Menu item ${item.menuItemId} not in same location as menu`);
+                }
+            }
+
+            // Remove existing menu item associations
+            const existingAssociations = await ctx.db
+                .query("menuItemsToMenus")
+                .withIndex("by_menu_id", (q) => q.eq("menuId", args.menuId))
+                .collect();
+
+            for (const association of existingAssociations) {
+                await ctx.db.delete(association._id);
+            }
+
+            // Add new menu item associations
+            for (const item of args.menuItems) {
+                await ctx.db.insert("menuItemsToMenus", {
+                    menuId: args.menuId,
+                    menuItemId: item.menuItemId,
+                    sortOrderIndex: item.sortOrderIndex,
+                    updatedAt: Date.now()
+                });
+            }
+        }
+
+        return { success: true };
+    },
+});
+
 export const getMenu = query({
     args: {
         menuId: v.id("menus"),
