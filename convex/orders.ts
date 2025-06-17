@@ -15,6 +15,7 @@ export const createOrder = mutation({
     handler: async (ctx, args) => {
         return await ctx.db.insert("orders", {
             locationId: args.locationId,
+            updatedAt: Date.now()
         });
     },
 });

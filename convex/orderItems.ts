@@ -14,7 +14,8 @@ export const addOrderItem = mutation({
             orderId: args.orderId,
             menuItemId: args.menuItemId,
             deliveryStatus: args.deliveryStatus ?? "pending", // Default to "pending"
-            isPaid: args.isPaid ?? false, // Default to false
+            isPaid: args.isPaid ?? false,
+            updatedAt: Date.now()
         });
     },
 });

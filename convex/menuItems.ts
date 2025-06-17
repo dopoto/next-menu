@@ -21,7 +21,8 @@ export const createMenuItem = mutation({
             price: args.price,
             type: args.type ?? "dish", // Default to "dish"
             isNew: args.isNew ?? false, // Default to false
-            isPublished: args.isPublished ?? true, // Default to true
+            isPublished: args.isPublished ?? true,
+            updatedAt: Date.now()
         });
     },
 });

@@ -11,7 +11,8 @@ export const createMenu = mutation({
         return await ctx.db.insert("menus", {
             name: args.name,
             locationId: args.locationId,
-            isPublished: args.isPublished ?? true, // Default to true
+            isPublished: args.isPublished ?? true,
+            updatedAt: Date.now()
         });
     },
 });

@@ -23,6 +23,7 @@ export const createLocation = mutation({
             orgId: args.orgId,
             currencyId: args.currencyId,
             menuMode: args.menuMode ?? "noninteractive",
+            updatedAt: Date.now()
         });
     },
 });

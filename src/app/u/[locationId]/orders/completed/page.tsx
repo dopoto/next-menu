@@ -7,7 +7,7 @@ export default function Home() {
     const orders = useQuery(api.orders.get);
     return (
         <main className="flex  flex-col ">
-            {orders?.map(({ _id, status }) => <div key={_id}>{status}</div>)}
+            {orders?.map(({ _id, locationId }) => <div key={_id}>{locationId}</div>)}
         </main>
     );
 }

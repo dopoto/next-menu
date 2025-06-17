@@ -22,7 +22,8 @@ export const addItemToMenu = mutation({
         return await ctx.db.insert("menuItemsToMenus", {
             menuId: args.menuId,
             menuItemId: args.menuItemId,
-            sortOrderIndex: args.sortOrderIndex ?? 0, // Default to 0
+            sortOrderIndex: args.sortOrderIndex ?? 0,
+            updatedAt: Date.now()
         });
     },
 });
