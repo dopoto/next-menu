@@ -37,7 +37,7 @@ export type AddLocationFormData = {
 };
 
 export const locationFormSchema = z.object({
-    locationName: withMeta(
+    name: withMeta(
         z
             .string({
                 required_error: 'Location Name is required',

@@ -38,7 +38,7 @@ export const AddLocation = ({
         resolver: zodResolver(locationFormSchema),
         defaultValues: {
             currencyId: 'USD',
-            locationName: '',
+            name: '',
             menuMode: 'interactive',
         },
     });

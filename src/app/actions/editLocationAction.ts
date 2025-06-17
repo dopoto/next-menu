@@ -25,8 +25,8 @@ export const editLocationAction = async (
                 if (!parsedForm.success) {
                     return processFormErrors(parsedForm.error, data);
                 }
-
-                await updateLocation(locationId, parsedForm.data);
+                const { currencyId, menuMode, name } = parsedForm.data
+                await updateLocation(locationId, currencyId, menuMode, name);
 
                 // TODO:
                 //revalidatePath(`/u/${locationId}/location`);

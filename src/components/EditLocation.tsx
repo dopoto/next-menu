@@ -14,7 +14,7 @@ export function EditLocation(props: { location: Location }) {
         resolver: zodResolver(locationFormSchema),
         defaultValues: {
             currencyId: props.location.currencyId,
-            locationName: props.location.name,
+            name: props.location.name,
             menuMode: props.location.menuMode,
         },
     });

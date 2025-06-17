@@ -31,7 +31,6 @@ export async function addMenuItemAction(
     }
 
     try {
-        //const menuItem = await createMenuItem(parsed.data);
         const { locationId, name, description, imageId, price, isNew } = validateAndFormatMenuItemData(parsed.data);
         const menuItem = await fetchMutation(api.menuItems.createMenuItem, {
             locationId: String(locationId) as Id<"locations">,

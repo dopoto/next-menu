@@ -1,5 +1,6 @@
 import { v } from "convex/values";
 import { mutation } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 //TODO
 //     // Needed - performs security checks and throws on failure.
@@ -28,5 +29,66 @@ export const createMenuItem = mutation({
             isPublished: args.isPublished ?? true,
             updatedAt: Date.now()
         });
+    },
+});
+
+export const deleteMenuItem = mutation({
+    args: {
+        menuItemId: v.id("menuItems"),
+    },
+    handler: async (ctx, args) => {
+        // Check if user is authenticated
+        const userId = await getAuthUserId(ctx);
+        if (!userId) {
+            throw new Error("Not authenticated");
+        }
+
+        // Get user's organization from appUsers table
+        const user = await ctx.db.get(userId);
+        if (!user) {
+            throw new Error("User not found");
+        }
+
+        const appUser = await ctx.db
+            .query("appUsers")
+            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+            .unique();
+
+        if (!appUser) {
+            throw new Error("User not found in organization");
+        }
+
+        // Verify the menu item exists
+        const menuItem = await ctx.db.get(args.menuItemId);
+        if (!menuItem) {
+            throw new Error("Menu item not found");
+        }
+
+        // Get the menu's location to check organization
+        const location = await ctx.db.get(menuItem.locationId);
+        if (!location) {
+            throw new Error("Menu item location not found");
+        }
+
+        // Verify the menu's location belongs to the user's organization
+        if (location.orgId !== appUser.orgId) {
+            throw new Error("Menu not in your organization");
+        }
+
+        // Delete all menu item associations first
+        const menuItemAssociations = await ctx.db
+            .query("menuItemsToMenus")
+            .withIndex("by_menu_item_id", (q) => q.eq("menuItemId", args.menuItemId))
+            .collect();
+
+        // Delete each association
+        for (const association of menuItemAssociations) {
+            await ctx.db.delete(association._id);
+        }
+
+        // Finally, delete the menu itself
+        await ctx.db.delete(args.menuItemId);
+
+        return { success: true };
     },
 });

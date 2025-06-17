@@ -47,7 +47,7 @@ export const onboardCreateOrganizationAction = async (
                 }
 
                 const validatedFormFields = locationFormSchema.safeParse({
-                    locationName: data.locationName,
+                    locationName: data.name,
                     currencyId: data.currencyId,
                     menuMode: data.menuMode,
                 });
@@ -128,7 +128,7 @@ export const onboardCreateOrganizationAction = async (
                     clerkUserId: userId,
                     orgId,
                     stripeCustomerId: validatedStripeCustomerIdOrNull,
-                    locationName: validatedFormFields.data.locationName,
+                    locationName: validatedFormFields.data.name,
                     locationSlug: await generateUniqueLocationSlug(),
                     menuMode: validatedFormFields.data.menuMode,
                     currencyId: validatedFormFields.data.currencyId as CurrencyId,

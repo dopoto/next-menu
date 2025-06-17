@@ -16,7 +16,6 @@ export async function deleteMenuAction(
     menuId: MenuId,
 ): Promise<FormState<typeof menuFormSchema>> {
     try {
-        //await deleteMenu(locationId, menuId);
         await fetchMutation(api.menus.deleteMenu, {
             menuId: String(menuId) as Id<"menus">
         });
