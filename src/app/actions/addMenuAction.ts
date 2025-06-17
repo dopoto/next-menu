@@ -9,7 +9,8 @@ import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
-import { createMenu } from '~/server/queries/menus';
+import { fetchMutation } from "convex/nextjs";
+import { api } from 'convex/_generated/api';
 
 export const addMenuAction = async (
     data: z.infer<typeof menuFormSchema>,
@@ -35,7 +36,18 @@ export const addMenuAction = async (
                         rootError: 'Out of quota for menus.',
                     };
                 }
-                await createMenu(parsedForm.data);
+
+                //await createConvexMenu(parsedForm.data);
+                await fetchMutation(api.menus.createMenu, {
+                    name: data.name,
+                    locationId: data.locationId,
+                    isPublished: true,
+                    items: data.items?.map((item, index) => ({
+                        id: item.id,
+                        sortOrderIndex: index,
+                    })),
+                });
+
                 revalidatePath(ROUTES.menus(parsedForm.data.locationId));
                 // TODO revalidate public path
                 return { status: 'success' as const };
