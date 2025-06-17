@@ -85,6 +85,7 @@ const applicationTables = {
   orderItems: defineTable({
     orderId: v.id("orders"),
     menuItemId: v.id("menuItems"),
+    currencyId: v.string(),// TODO validator
     deliveryStatus: deliveryStatusValidator,
     isPaid: v.boolean(),
     updatedAt: v.number(),

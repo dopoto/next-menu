@@ -6,6 +6,7 @@ export const addOrderItem = mutation({
     args: {
         orderId: v.id("orders"),
         menuItemId: v.id("menuItems"),
+        currencyId: v.string(), // TODO validator
         deliveryStatus: deliveryStatusValidator,
         isPaid: v.optional(v.boolean()),
     },
@@ -13,9 +14,10 @@ export const addOrderItem = mutation({
         return await ctx.db.insert("orderItems", {
             orderId: args.orderId,
             menuItemId: args.menuItemId,
+            currencyId: args.currencyId,
             deliveryStatus: args.deliveryStatus ?? "pending", // Default to "pending"
             isPaid: args.isPaid ?? false,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
         });
     },
 });

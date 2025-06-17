@@ -1,21 +1,61 @@
 import { v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-
-export const get = query({
-    args: {},
-    handler: async (ctx) => {
-        return await ctx.db.query("orders").collect();
-    },
-});
+import { getAuthUserId } from "@convex-dev/auth/server";
+import { deliveryStatusValidator } from "./validators";
 
 export const createOrder = mutation({
     args: {
-        locationId: v.id("locations"),
+        currencyId: v.string(), //TODO validator
+        items: v.array(v.object({
+            menuItemId: v.id("menuItems"), // Use correct Id type
+            sortOrderIndex: v.optional(v.number())
+        })),
     },
     handler: async (ctx, args) => {
-        return await ctx.db.insert("orders", {
-            locationId: args.locationId,
+        // Security checks
+        const userId = await getAuthUserId(ctx);
+        if (!userId) { throw new Error("Not authenticated") }
+
+        const user = await ctx.db.get(userId);
+        if (!user) { throw new Error("User not found") }
+
+        const appUser = await ctx.db
+            .query("appUsers")
+            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+            .unique();
+        if (!appUser) { throw new Error("User not found in organization") }
+
+        const location = await ctx.db
+            .query("locations")
+            .filter((q) => q.eq(q.field("orgId"), appUser.orgId))
+            .unique();
+        if (!location) { throw new Error(`Location not found for current user.`) }
+
+        const orderId = await ctx.db.insert("orders", {
+            locationId: location._id,
             updatedAt: Date.now()
         });
+
+        await Promise.all(args.items.map((item, index) =>
+            ctx.db.insert("orderItems", {
+                orderId,
+                menuItemId: item.menuItemId,
+                currencyId: args.currencyId,
+                deliveryStatus: 'pending', //TODO validate 
+                isPaid: false,
+                updatedAt: Date.now()
+            })
+        ));
+
+
+        return orderId;
+    },
+});
+
+// TODO only as example
+export const getOrdersExample = query({
+    args: {},
+    handler: async (ctx) => {
+        return await ctx.db.query("orders").collect();
     },
 });
