@@ -1,7 +1,9 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import z from 'zod';
 import { type MenuItemId } from '../domain/menu-items';
-import { type orderItems } from '../server/db/schema';
+import { Doc, Id } from 'convex/_generated/dataModel';
+import { Location } from '~/domain/locations';
+
 
 // export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 // export const POSTPAID_STATUSES = ['draft', 'ordered', 'delivered', 'paid'] as const;
@@ -15,11 +17,16 @@ import { type orderItems } from '../server/db/schema';
 export const deliveryStatusValues = ['pending', 'delivered', 'canceled'] as const;
 export type DeliveryStatusId = (typeof deliveryStatusValues)[number];
 
-export type OrderItem = Omit<InferSelectModel<typeof orderItems>, 'deliveryStatus'> & {
+
+type OrderItemDoc = Doc<"orderItems">
+
+export type OrderItem = Omit<OrderItemDoc, 'deliveryStatus'> & {
     deliveryStatus?: DeliveryStatusId;
 };
 
-export type OrderItemId = OrderItem['id'];
+export type NewOrderItem = Omit<OrderItem, '_id'>;
+
+export type OrderItemId = Id<'orderItems'>
 export const orderItemIdSchema = z.custom<OrderItemId>();
 
 export interface PublicOrderItem {

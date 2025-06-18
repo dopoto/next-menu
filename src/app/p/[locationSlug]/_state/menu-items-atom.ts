@@ -1,6 +1,5 @@
-import type { InferSelectModel } from 'drizzle-orm';
 import { atom } from 'jotai';
-import { type menuItems } from '~/server/db/schema';
+import { MenuItem, MenuItemId } from '~/domain/menu-items';
 
-export const menuItemsAtom = atom<Map<number, InferSelectModel<typeof menuItems>>>(new Map());
+export const menuItemsAtom = atom<Map<MenuItemId, MenuItem>>(new Map());
 menuItemsAtom.debugLabel = 'menuItemsAtom';

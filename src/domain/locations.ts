@@ -3,10 +3,11 @@ import { z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import { withMeta } from '~/lib/form-validation';
 import { menuModeValues, type MenuModeId } from './menu-modes';
+import { MenuId } from '~/domain/menus';
 
 type LocationDoc = Doc<"locations">
 
-export interface Location extends Omit<LocationDoc, 'currencyId' | 'menuMode'> {
+export type Location = Omit<LocationDoc, 'currencyId' | 'menuMode'> & {
     currencyId: CurrencyId;
     menuMode: MenuModeId;
 }
@@ -14,6 +15,7 @@ export interface Location extends Omit<LocationDoc, 'currencyId' | 'menuMode'> {
 export type NewLocation = Omit<Location, '_id'>;
 
 export type LocationId = Id<"locations">;
+export const locationIdSchema = z.custom<LocationId>();
 
 export const locationZodSchema = z.object({
     _id: z.custom<Id<"locations">>(),

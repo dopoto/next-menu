@@ -4,8 +4,8 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 
 export const createLocation = mutation({
     args: {
-        name: v.string(),
         slug: v.string(),
+        name: v.string(),
         orgId: v.id("organizations"),
         currencyId: v.string(),
         menuMode: v.string(),
@@ -18,8 +18,8 @@ export const createLocation = mutation({
         }
 
         return await ctx.db.insert("locations", {
-            name: args.name,
             slug: args.slug,
+            name: args.name,
             orgId: args.orgId,
             currencyId: args.currencyId,
             menuMode: args.menuMode ?? "noninteractive",
@@ -53,6 +53,16 @@ export const updateLocation = mutation({
             name: args.name,
             updatedAt: Date.now()
         });
+    },
+});
+
+export const getLocation = query({
+    args: { id: v.id("locations") },
+    handler: async (ctx, { id }) => {
+        // TODO Security check?
+        const item = await ctx.db.get(id);
+        if (!item) throw new Error("Item not found");
+        return item;
     },
 });
 

@@ -1,14 +1,15 @@
-import { type InferSelectModel } from 'drizzle-orm';
+import { Doc, Id } from 'convex/_generated/dataModel';
 import { z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import { type PublicOrderItem } from '~/domain/order-items';
-import { type orders } from '~/server/db/schema';
 
 export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 
-export type Order = InferSelectModel<typeof orders>;
+type OrderDoc = Doc<"orders">;
 
-export type OrderId = Order['id'];
+export type Order = OrderDoc;
+
+export type OrderId = Id<'orders'>;
 export const orderIdSchema = z.custom<OrderId>();
 
 export const orderFormSchema = z.object({
@@ -21,6 +22,7 @@ export type PublicOrderWithItems = Order & {
     currencyId: CurrencyId;
     items: PublicOrderItem[];
 };
+export type NewPublicOrderWithItems = Omit<PublicOrderWithItems, '_id' | 'updatedAt'>;
 
 export const publicOrderWithItemsSchema = z.object({
     ...orderFormSchema.shape,

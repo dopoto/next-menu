@@ -1,23 +1,26 @@
-import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { withMeta } from '../lib/form-validation';
-import { type menuItems } from '../server/db/schema';
+import { Doc, Id } from 'convex/_generated/dataModel';
 
-export type MenuItem = InferSelectModel<typeof menuItems>;
-export type NewMenuItem = InferInsertModel<typeof menuItems>;
+type MenuItemDoc = Doc<"menuItems">
+
+export type MenuItem = MenuItemDoc
+export type NewMenuItem = Omit<MenuItem, '_id'>
 
 export type MenuItemWithSortOrder = MenuItem & {
     sortOrderIndex: number;
 };
 
-export const menuItemIdSchema = z.coerce.number().int().positive();
-export type MenuItemId = z.infer<typeof menuItemIdSchema>;
+export type MenuItemId = Id<"menuItems">;
 
 export const menuItemFormSchema = z.object({
-    imageId: withMeta(z.string().optional(), {
-        label: 'Image',
-        description: 'Upload an image for this menu item',
-    }),
+    _id: z.custom<Id<"menuItems">>(),
+    _creationTime: z.number(),
+    locationId: z
+        .number({
+            required_error: 'Location ID is required',
+        })
+        .min(0, 'Location Id must be positive'),
     name: withMeta(
         z
             .string({
@@ -36,6 +39,10 @@ export const menuItemFormSchema = z.object({
         placeholder: 'Enter a description (optional)',
         description: 'A brief description of the menu item',
     }),
+    imageId: withMeta(z.string().optional(), {
+        label: 'Image',
+        description: 'Upload an image for this menu item',
+    }),
     price: z
         .number({
             required_error: 'Price is required',
@@ -43,9 +50,4 @@ export const menuItemFormSchema = z.object({
         })
         .min(0, 'Price must be positive'),
     isNew: z.boolean(),
-    locationId: z
-        .number({
-            required_error: 'Location ID is required',
-        })
-        .min(0, 'Location Id must be positive'),
 });

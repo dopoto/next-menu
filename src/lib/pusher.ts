@@ -1,5 +1,6 @@
 import PusherServer from 'pusher';
 import PusherClient from 'pusher-js';
+import { LocationId } from '~/domain/locations';
 import { type OrderId } from '~/domain/orders';
 import { env } from '~/env';
 
@@ -32,6 +33,6 @@ export const EVENTS = {
 
 // Channel types
 export const CHANNELS = {
-    location: (locationId: number) => `location-${locationId}`,
+    location: (locationId: LocationId) => `location-${locationId}`,
     order: (orderId: OrderId) => `order-${orderId}`,
 } as const;

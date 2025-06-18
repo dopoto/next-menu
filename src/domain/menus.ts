@@ -1,23 +1,24 @@
-import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
 import { withMeta } from '~/lib/form-validation';
-import { type menus } from '~/server/db/schema';
 import { type MenuItem, type MenuItemWithSortOrder } from './menu-items';
+import { Doc, Id } from 'convex/_generated/dataModel';
 
-export type Menu = InferSelectModel<typeof menus> & {
-    items?: MenuItem[];
-};
+type MenuDoc = Doc<"menus">;
 
-export type MenuWithItems = InferSelectModel<typeof menus> & {
+export type Menu = MenuDoc
+
+export type MenuWithItems = Menu & {
     items: MenuItemWithSortOrder[];
 };
 
-export type NewMenu = InferInsertModel<typeof menus>;
+export type NewMenu = Omit<Menu, '_id'>;
 
-export const menuIdSchema = z.coerce.number().int().positive();
-export type MenuId = z.infer<typeof menuIdSchema>;
+export type MenuId = Id<'menus'>;
+export const menuIdSchema = z.custom<MenuId>();
 
 export const menuFormSchema = z.object({
+    _id: z.custom<Id<"menus">>(),
+    _creationTime: z.number(),
     name: withMeta(
         z
             .string({

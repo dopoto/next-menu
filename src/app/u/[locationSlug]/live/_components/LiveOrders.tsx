@@ -1,13 +1,12 @@
 'use client';
 
-import type { InferSelectModel } from 'drizzle-orm';
 import { useEffect, useState } from 'react';
 import { type LocationId } from '~/domain/locations';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
-import { type menuItems } from '~/server/db/schema';
 import { OrderCard } from './OrderCard';
+import { MenuItemId, MenuItem } from '~/domain/menu-items';
 
 export function LiveOrders({
     locationId,
@@ -16,7 +15,7 @@ export function LiveOrders({
 }: {
     locationId: LocationId;
     initialOrders: PublicOrderWithItems[];
-    menuItemsMap: Map<number, InferSelectModel<typeof menuItems>>;
+    menuItemsMap: Map<MenuItemId, MenuItem>;
 }) {
     const [orders, setOrders] = useState<PublicOrderWithItems[]>(initialOrders);
     const { toast } = useToast();
@@ -30,7 +29,7 @@ export function LiveOrders({
             setOrders((current) => [...current, data]);
             toast({
                 title: 'New Order Received',
-                description: `Order #${data.id} has been created`,
+                description: `Order #${data.userFriendlyId} has been created`,
             });
         });
 
