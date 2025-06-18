@@ -3,11 +3,12 @@ import Link from 'next/link';
 import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
 import MenuCard from '~/app/u/[locationId]/menus/_components/MenuCard';
 import { type LocationId } from '~/domain/locations';
+import { Menu } from '~/domain/menus';
 import { ROUTES } from '~/lib/routes';
-import { getMenusByLocation } from '~/server/queries/menus';
+//import { getMenusByLocation } from '~/server/queries/menus';
 
 export async function MenusList(props: { locationId: LocationId }) {
-    const items = await getMenusByLocation(props.locationId);
+    const items: Menu[] = []; // TODO await getMenusByLocation(props.locationId);
 
     return (
         <div className="flex h-full flex-col gap-2">

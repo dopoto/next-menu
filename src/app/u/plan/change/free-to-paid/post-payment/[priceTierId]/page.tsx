@@ -6,7 +6,7 @@ import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-utils';
 import { obj2str } from '~/lib/string-utils';
-import { updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
+//import { updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -81,7 +81,7 @@ export default async function FreeToPaidPostPaymentPage(props: { params: Params;
             internalMessage: `Expected string format for Stripe customer id: ${obj2str(stripeCustomerId)}`,
         });
     }
-    await updateOrganizationStripeCustomerId({ clerkOrgId: orgId, stripeCustomerId });
+    // TODO await updateOrganizationStripeCustomerId({ clerkOrgId: orgId, stripeCustomerId });
 
     // Update Clerk with new tier
     const clerk = await clerkClient();

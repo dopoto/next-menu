@@ -25,7 +25,7 @@ export const ROUTES = {
     my: '/my',
     userRoot: '/u',
     resetState: '/u/reset-state',
-    location: (locationId: LocationId) => `/u/${locationId}/location`,
+    location: (slug: LocationSlug) => `/u/${slug}/location`,
     live: (locationId: LocationId) => `/u/${locationId}/live`,
     reports: (locationId: LocationId) => `/u/${locationId}/reports`,
     menus: (locationId: LocationId) => `/u/${locationId}/menus`,

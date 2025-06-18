@@ -11,7 +11,8 @@ type Params = Promise<{ locationId: string }>;
 export default async function ReportsPage(props: { params: Params }) {
     const params = await props.params;
 
-    const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId: params.locationId })
+    // TODO const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId: params.locationId })
+    const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId: 1 })
 
 
     const { userId, orgId } = await auth();
@@ -29,12 +30,12 @@ export default async function ReportsPage(props: { params: Params }) {
             <Suspense
                 fallback={<LocationViewsCard mode="placeholder" locationId={0} organizationId={0} locationSlug={''} />}
             >
-                <LocationViewsCard
+                {/* TODO <LocationViewsCard
                     mode={mode}
                     locationId={validLocation._id}
                     organizationId={validLocation.orgId}
                     locationSlug={validLocation.slug}
-                />
+                /> */}
             </Suspense>
         </div>
     );

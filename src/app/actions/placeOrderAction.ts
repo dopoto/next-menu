@@ -38,17 +38,28 @@ export const placeOrderAction = async (
                 }
                 //const orderWithItems = await createOrder(parsedForm.data);
                 const { currencyId, items } = parsedForm.data
-                const orderWithItems = await fetchMutation(api.orders.createOrder, {
-                    // currencyId: CurrencyId;
-                    // locationId: number;
-                    // items: PublicOrderItem[];
-                    // id?: number | undefined;
+                const orderId = await fetchMutation(api.orders.createOrder, {
                     currencyId,
                     items: items?.map((item, index) => ({
                         menuItemId: String(item.menuItemId) as Id<"menuItems">,
                         sortOrderIndex: index,
                     })),
-                });
+                });                // Construct the order object for notification
+                const orderWithItems: PublicOrderWithItems = {
+                    id: parseInt(orderId.slice(orderId.indexOf('_') + 1)), // Convert Convex ID to number
+                    locationId: parsedForm.data.locationId,
+                    currencyId: parsedForm.data.currencyId,
+                    createdAt: new Date(),
+                    updatedAt: null,
+                    items: items?.map((item, index) => ({
+                        menuItemId: item.menuItemId,
+                        orderItem: {
+                            id: 0, // This will be updated when we load the full order
+                            deliveryStatus: 'pending',
+                            isPaid: false,
+                        }
+                    })) ?? [],
+                };
 
                 await notifyOrderCreated(parsedForm.data.locationId, orderWithItems);
 

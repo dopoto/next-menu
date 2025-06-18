@@ -4,11 +4,12 @@ import { EmptyState } from '~/app/u/[locationId]/_components/EmptyState';
 import MenuItemCard from '~/app/u/[locationId]/menu-items/_components/MenuItemCard';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
+import type { MenuItem } from '~/domain/menu-items';
 import { ROUTES } from '~/lib/routes';
-import { getMenuItemsByLocation } from '~/server/queries/menu-items';
+//import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 
 export async function MenusItemsList(props: { locationId: LocationId; currencyId: CurrencyId }) {
-    const items = await getMenuItemsByLocation(props.locationId);
+    const items = [] as MenuItem[]; //TODO await getMenuItemsByLocation(props.locationId);
     return (
         <div className="flex h-full flex-col gap-0">
             <Link

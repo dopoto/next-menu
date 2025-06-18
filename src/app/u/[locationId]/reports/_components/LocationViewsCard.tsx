@@ -17,7 +17,7 @@ export async function LocationViewsCard(props: {
     const footer = (
         <div className="text-muted-foreground">
             Visitors of your{' '}
-            <a className="blue-link" href={ROUTES.location(props.locationId)}>
+            <a className="blue-link" href={ROUTES.location(props.locationSlug)}>
                 public location page
             </a>
         </div>

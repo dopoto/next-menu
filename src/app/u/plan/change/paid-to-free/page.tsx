@@ -14,7 +14,7 @@ import { getValidFreePriceTier, getValidPaidPriceTier } from '~/lib/price-tier-u
 import { getExceededFeatures } from '~/lib/price-tier-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { obj2str } from '~/lib/string-utils';
-import { updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
+//import { updateOrganizationStripeCustomerId } from '~/server/queries/organizations';
 
 const stripe = new Stripe(env.STRIPE_SECRET_KEY);
 
@@ -123,10 +123,11 @@ async function FinalStep(props: { stripeSubscription: Stripe.Subscription; fromT
     });
 
     // Delete their Stripe customer id from our records.
-    await updateOrganizationStripeCustomerId({
-        clerkOrgId: orgId,
-        stripeCustomerId: null,
-    });
+    // TODO
+    // await updateOrganizationStripeCustomerId({
+    //     clerkOrgId: orgId,
+    //     stripeCustomerId: null,
+    // });
 
     // Update Clerk with new tier
     const clerk = await clerkClient();

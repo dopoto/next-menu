@@ -90,7 +90,7 @@ async function Step2StripeProcessing(props: { fromTier: PriceTier; toTier: Price
         });
     }
 
-    const activeStripeSubItem = await getActiveStripeSubscriptionItem(stripeCustomerId);
+    const activeStripeSubItem = { price: { id: "1" } } as Stripe.SubscriptionItem // TODO await getActiveStripeSubscriptionItem(stripeCustomerId);
 
     if (!activeStripeSubItem) {
         throw new AppError({ internalMessage: `Active sub item missing.` });

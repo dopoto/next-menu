@@ -70,8 +70,8 @@ export const getOrderByUserFriendlyId = query({
     },
 });
 
-// TODO only as example
-export const getOrdersExample = query({
+// TODO filter completed
+export const getCompletedOrders = query({
     args: {},
     handler: async (ctx) => {
         return await ctx.db.query("orders").collect();

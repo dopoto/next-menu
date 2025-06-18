@@ -1,8 +1,10 @@
 import { Suspense } from 'react';
 import { PublicMenus } from '~/app/p/[locationSlug]/_components/PublicMenus';
+import { CurrencyId } from '~/domain/currencies';
 import { locationSlugSchema } from '~/domain/locations';
+import { MenuModeId } from '~/domain/menu-modes';
 import { AppError } from '~/lib/error-utils.server';
-import { getLocationPublicDataBySlug } from '~/server/queries/locations';
+//import { getLocationPublicDataBySlug } from '~/server/queries/locations';
 
 type Params = Promise<{ locationSlug: string }>;
 
@@ -17,7 +19,11 @@ export default async function Page({ params }: { params: Params }) {
     }
 
     const parsedLocationSlug = locationSlugValidationResult.data;
-    const location = await getLocationPublicDataBySlug(parsedLocationSlug);
+    //TODO const location = await getLocationPublicDataBySlug(parsedLocationSlug);
+    const location = await Promise.resolve({
+        id: 1, currencyId: 'USD' as CurrencyId, menuMode: 'interactive' as MenuModeId
+    })//TODO await getLocationPublicDataBySlug(parsedLocationSlug);
+
 
     return (
         <Suspense fallback="Loading menus...">

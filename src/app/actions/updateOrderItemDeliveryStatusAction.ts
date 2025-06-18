@@ -5,10 +5,9 @@ import { api } from 'convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { headers } from 'next/headers';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
-import { orderItemIdSchema, type DeliveryStatusId } from '~/domain/order-items';
+import { OrderItem, orderItemIdSchema, type DeliveryStatusId } from '~/domain/order-items';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
-import { updateOrderItemStatus } from '~/server/queries/order-items';
 
 export const updateOrderItemDeliveryStatusAction = async (
     locationId: number,
@@ -33,31 +32,32 @@ export const updateOrderItemDeliveryStatusAction = async (
 
             const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId })
 
-            const updatedItem = await updateOrderItemStatus(locationId, validatedOrderItemId, status);
+            const updatedItem = { orderId: "1" } as unknown as OrderItem // TODO  = await updateOrderItemStatus(locationId, validatedOrderItemId, status);
             if (!updatedItem) {
                 throw new AppError({ internalMessage: 'Could not update order item' });
             }
 
-            //const ordersss = await getOrderById(locationId, updatedItem.orderId);
-            const order = await fetchQuery(api.orders.getOrderByUserFriendlyId, { userFriendlyOrderId: updatedItem.orderId })
+            //const order = await getOrderById(locationId, updatedItem.orderId);
+            const order = await fetchQuery(api.orders.getOrderByUserFriendlyId, { userFriendlyOrderId: updatedItem.orderId.toString() }) //TODO
 
             if (!order) {
                 throw new AppError({ internalMessage: 'Order not found after update' });
             }
 
-            await notifyOrderUpdated(locationId, {
-                ...order,
-                items: order.items.map((item) => ({
-                    menuItemId: item.menuItemId,
-                    orderItem: {
-                        id: item.orderItem.id,
-                        deliveryStatus: item.orderItem.deliveryStatus,
-                        isPaid: item.orderItem.isPaid,
-                    },
-                })),
-            });
+            //TODO 
+            // await notifyOrderUpdated(locationId, {
+            //     ...order,
+            //     items: order.items.map((item) => ({
+            //         menuItemId: item.menuItemId,
+            //         orderItem: {
+            //             id: item.orderItem.id,
+            //             deliveryStatus: item.orderItem.deliveryStatus,
+            //             isPaid: item.orderItem.isPaid,
+            //         },
+            //     })),
+            // });
 
-            return order;
+            return order as unknown as PublicOrderWithItems; //TODO
         },
     );
 };

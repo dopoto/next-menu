@@ -8,7 +8,6 @@ import { type menuFormSchema } from '~/domain/menus';
 import { publicOrderWithItemsSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
-import { updateOrder } from '~/server/queries/orders';
 
 export const updateOrderAction = async (
     data: z.infer<typeof publicOrderWithItemsSchema>,
@@ -34,7 +33,7 @@ export const updateOrderAction = async (
                         rootError: 'Out of quota for orders.',
                     };
                 }
-                const orderWithItems = await updateOrder(parsedForm.data);
+                const orderWithItems = {} as PublicOrderWithItems //TODO await updateOrder(parsedForm.data);
 
                 await notifyOrderUpdated(parsedForm.data.locationId, orderWithItems);
 

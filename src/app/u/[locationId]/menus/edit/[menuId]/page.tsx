@@ -4,6 +4,9 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { EditMenu } from '~/app/u/[locationId]/menus/_components/EditMenu';
+import { CurrencyId } from '~/domain/currencies';
+import { MenuItem } from '~/domain/menu-items';
+import { Menu } from '~/domain/menus';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { getValidMenuIdOrThrow } from '~/lib/menu-utils';
 // import { getMenuItemsByLocation } from '~/server/queries/menu-items';
@@ -16,12 +19,12 @@ export default async function EditMenuPage(props: { params: Params }) {
     const validLocationId = getValidLocationIdOrThrow(params.locationId);
     const validMenuId = getValidMenuIdOrThrow(params.menuId);
 
-    const menu = await getMenuById(validLocationId, validMenuId);
+    const menu = {} as Menu; //TODO = await getMenuById(validLocationId, validMenuId);
     if (!menu) {
         return notFound();
     }
 
-    const allMenuItems = await getMenuItemsByLocation(validLocationId);
+    const allMenuItems = [] as MenuItem[]; //TODO await getMenuItemsByLocation(validLocationId);
     const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId: validLocationId })
 
     return (
@@ -29,7 +32,8 @@ export default async function EditMenuPage(props: { params: Params }) {
             <Suspense fallback={<LoadingSection />}>
                 <EditMenu
                     locationId={validLocationId}
-                    currencyId={validLocation.currencyId}
+                    // TODO revisit
+                    currencyId={validLocation.currencyId as CurrencyId}
                     menu={menu}
                     allMenuItems={allMenuItems}
                 />

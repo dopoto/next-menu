@@ -7,9 +7,11 @@ import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import { CookieKey } from '~/domain/cookies';
 import { locationSlugSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
-import { getLocationPublicDataBySlug } from '~/server/queries/locations';
-import { getMenuItemsByLocation } from '~/server/queries/menu-items';
+// import { getLocationPublicDataBySlug } from '~/server/queries/locations';
+// import { getMenuItemsByLocation } from '~/server/queries/menu-items';
 import { capturePublicLocationVisit } from './_actions/captureAnalytics';
+import type { MenuItem } from '~/domain/menu-items';
+import { CurrencyId } from '~/domain/currencies';
 
 //TODO Use cache
 
@@ -26,9 +28,9 @@ export default async function Layout({ params, children }: { params: Params; chi
     }
 
     const parsedLocationSlug = locationSlugValidationResult.data;
-    const location = await getLocationPublicDataBySlug(parsedLocationSlug);
+    const location = await Promise.resolve({ id: 1, orgId: 1, clerkOrgId: "2", currencyId: 'USD' as CurrencyId, name: 'test', menuMode: 'interactive' })//TODO await getLocationPublicDataBySlug(parsedLocationSlug);
 
-    const menuItems = await getMenuItemsByLocation(location.id);
+    const menuItems = [] as MenuItem[]; //TODO await getMenuItemsByLocation(location.id);
 
     const cookieStore = cookies();
     const machineId = (await cookieStore).get(CookieKey.MachineId)?.value;

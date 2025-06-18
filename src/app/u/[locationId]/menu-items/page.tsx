@@ -2,15 +2,17 @@ import { Suspense } from 'react';
 import { FormTitle } from '~/app/u/[locationId]/_components/FormTitle';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';
 import { MenusItemsList } from '~/app/u/[locationId]/menu-items/_components/MenuItemsList';
+import { CurrencyId } from '~/domain/currencies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
-import { getLocationPublicDataById } from '~/server/queries/locations';
+//import { getLocationPublicDataById } from '~/server/queries/locations';
 
 type Params = Promise<{ locationId: string }>;
 
 export default async function MenuItemsPage(props: { params: Params }) {
     const params = await props.params;
     const parsedlocationId = getValidLocationIdOrThrow(params.locationId);
-    const location = await getLocationPublicDataById(parsedlocationId);
+    //const location = await getLocationPublicDataById(parsedlocationId);
+    const location = { currencyId: 'USD' as CurrencyId } // TODO await getLocationForCurrentUserOrThrow(parsedLocationId);
 
     return (
         <div className="flex h-full flex-col gap-2">

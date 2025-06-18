@@ -1,13 +1,18 @@
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { ChevronsUpDown } from 'lucide-react';
 import { SidebarMenuButton } from '~/components/ui/sidebar';
 import { ROUTES } from '~/lib/routes';
-import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
 export async function SidebarLocationManager(props: { locationId: number }) {
-    const location = await getLocationForCurrentUserOrThrow(props.locationId);
+    //const location = await getLocationForCurrentUserOrThrow(props.locationId);
+
+    const location = await fetchQuery(
+        api.locations.getLocationForCurrentUserOrThrow, { locationId: props.locationId })
+
     return (
-        <a href={ROUTES.location(location.id)}>
+        <a href={ROUTES.location(location.slug)}>
             <SidebarMenuButton
                 size="lg"
                 className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"

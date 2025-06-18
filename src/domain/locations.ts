@@ -12,6 +12,7 @@ export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'cu
 export type NewLocation = InferInsertModel<typeof locations>;
 
 export type LocationId = Location['id'];
+
 export const locationIdSchema = z
     .union([
         z.number().int().min(1),
