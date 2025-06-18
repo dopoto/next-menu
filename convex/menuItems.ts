@@ -19,7 +19,7 @@ export const createMenuItem = mutation({
     },
     handler: async (ctx, args) => {
         //TODO security checks
-        return await ctx.db.insert("menuItems", {
+        const menuItemId = await ctx.db.insert("menuItems", {
             locationId: args.locationId,
             name: args.name,
             description: args.description,
@@ -30,6 +30,8 @@ export const createMenuItem = mutation({
             isPublished: args.isPublished ?? true,
             updatedAt: Date.now()
         });
+
+        return menuItemId;
     },
 });
 
@@ -87,8 +89,6 @@ export const updateMenuItem = mutation({
             imageId: args.imageId,
             updatedAt: Date.now()
         });
-
-        return { success: true };
     },
 });
 

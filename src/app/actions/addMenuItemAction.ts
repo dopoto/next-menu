@@ -16,7 +16,7 @@ import { ROUTES } from '~/lib/routes';
 
 export async function addMenuItemAction(
     data: z.infer<typeof menuItemFormSchema>,
-): Promise<FormState<typeof menuItemFormSchema> & { menuItemId?: number }> {
+): Promise<FormState<typeof menuItemFormSchema> & { menuItemId?: Id<"menuItems"> }> {
     const parsed = menuItemFormSchema.safeParse(data);
     if (!parsed.success) {
         return processFormErrors(parsed.error, data);
@@ -32,7 +32,7 @@ export async function addMenuItemAction(
 
     try {
         const { locationId, name, description, imageId, price, isNew } = validateAndFormatMenuItemData(parsed.data);
-        const menuItem = await fetchMutation(api.menuItems.createMenuItem, {
+        const menuItemId = await fetchMutation(api.menuItems.createMenuItem, {
             locationId: String(locationId) as Id<"locations">,
             name,
             description,
@@ -42,12 +42,12 @@ export async function addMenuItemAction(
         });
 
 
-        if (!menuItem) {
+        if (!menuItemId) {
             throw new AppError({ internalMessage: `Could not save menu item` });
         }
         revalidatePath(ROUTES.menuItems(parsed.data.locationId));
         // TODO revalidate public path
-        return { status: 'success', menuItemId: menuItem }; //TODO not a menu item id
+        return { status: 'success', menuItemId };
     } catch (error) {
         return {
             status: 'error',
