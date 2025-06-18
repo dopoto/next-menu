@@ -3,10 +3,10 @@ import StickyTabs, { type Section } from '~/app/p/[locationSlug]/_components/Sti
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuModeId } from '~/domain/menu-modes';
-import { getPublicMenusByLocation } from '~/server/queries/menus';
+import { MenuWithItems } from '~/domain/menus';
 
 export async function PublicMenus(props: { locationId: LocationId; menuMode: MenuModeId; currencyId: CurrencyId }) {
-    const menus = await getPublicMenusByLocation(props.locationId);
+    const menus = [] as MenuWithItems[] //TODO await getPublicMenusByLocation(props.locationId);
     const sections: Section[] = menus.map((m) => {
         return {
             id: m.id.toString(),

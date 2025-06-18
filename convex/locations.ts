@@ -71,27 +71,29 @@ export const getLocationBySlug = query({
 
 // TODO
 
-// export const canCurrentUserAccessLocation = query({
-//     args: {
-//         locationId: v.id("locations")
-//     },
-//     handler: async (ctx, args) => {
-//         const userId = await getAuthUserId(ctx);
-//         if (!userId) { throw new Error("Not authenticated") }
+export const getLocationForCurrentUserOrThrow = query({
+    args: {
+        locationId: v.number()
+    },
+    handler: async (ctx, args) => {
+        const userId = await getAuthUserId(ctx);
+        if (!userId) { throw new Error("Not authenticated") }
 
-//         const user = await ctx.db.get(userId);
-//         if (!user) { throw new Error("User not found") }
+        const user = await ctx.db.get(userId);
+        if (!user) { throw new Error("User not found") }
 
-//         const appUser = await ctx.db
-//             .query("appUsers")
-//             .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
-//             .unique();
-//         if (!appUser) { throw new Error("User not found in organization") }
+        const appUser = await ctx.db
+            .query("appUsers")
+            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+            .unique();
+        if (!appUser) { throw new Error("User not found in organization") }
 
-//         const location = await ctx.db
-//             .query("locations")
-//             .filter((q) => q.eq(q.field("orgId"), appUser.orgId))
-//             .unique();
-//         if (!location) { throw new Error(`Location not found for current user.`) }
-//     },
-// });
+        const location = await ctx.db
+            .query("locations")
+            .filter((q) => q.eq(q.field("orgId"), appUser.orgId))
+            .unique();
+        if (!location) { throw new Error(`Location not found for current user.`) }
+
+        return location;
+    },
+});

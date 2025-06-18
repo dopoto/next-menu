@@ -1,4 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { ExternalLinkIcon } from 'lucide-react';
 import QRCode from 'react-qr-code';
 import truncateMiddle from 'truncate-middle';
@@ -8,7 +10,7 @@ import { type LocationId } from '~/domain/locations';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
 import { ROUTES } from '~/lib/routes';
-import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
+
 
 export async function LocationDetails(props: { id: LocationId }) {
     const { userId, orgId } = await auth();
@@ -18,15 +20,15 @@ export async function LocationDetails(props: { id: LocationId }) {
         });
     }
 
-    const locationData = await getLocationForCurrentUserOrThrow(props.id);
+    const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId: props.id })
 
-    if (!locationData.slug) {
+    if (!validLocation.slug) {
         throw new AppError({
             internalMessage: `Missing slug for location ${props.id}`,
         });
     }
 
-    const locationUrl = `${env.NEXT_PUBLIC_APP_URL}${ROUTES.publicLocation(locationData.slug)}`;
+    const locationUrl = `${env.NEXT_PUBLIC_APP_URL}${ROUTES.publicLocation(validLocation.slug)}`;
 
     return (
         <div className="flex w-full flex-col flex-nowrap gap-4">

@@ -33,7 +33,8 @@ export const createOrder = mutation({
 
         const orderId = await ctx.db.insert("orders", {
             locationId: location._id,
-            updatedAt: Date.now()
+            updatedAt: Date.now(),
+            userFriendlyId: "" //TODO
         });
 
         await Promise.all(args.items.map((item) =>

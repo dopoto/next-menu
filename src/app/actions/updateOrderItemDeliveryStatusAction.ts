@@ -1,14 +1,14 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { headers } from 'next/headers';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
 import { orderItemIdSchema, type DeliveryStatusId } from '~/domain/order-items';
 import { type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
-import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 import { updateOrderItemStatus } from '~/server/queries/order-items';
-
 
 export const updateOrderItemDeliveryStatusAction = async (
     locationId: number,
@@ -31,15 +31,16 @@ export const updateOrderItemDeliveryStatusAction = async (
             }
             const validatedOrderItemId = orderItemIdValidationResult.data;
 
-            // Verify that the location belongs to the current user's organization
-            await getLocationForCurrentUserOrThrow(locationId);
+            const validLocation = await fetchQuery(api.locations.getLocationForCurrentUserOrThrow, { locationId })
 
             const updatedItem = await updateOrderItemStatus(locationId, validatedOrderItemId, status);
             if (!updatedItem) {
                 throw new AppError({ internalMessage: 'Could not update order item' });
             }
 
-            const order = await getOrderById(locationId, updatedItem.orderId);
+            //const ordersss = await getOrderById(locationId, updatedItem.orderId);
+            const order = await fetchQuery(api.orders.getOrderByUserFriendlyId, { userFriendlyOrderId: updatedItem.orderId })
+
             if (!order) {
                 throw new AppError({ internalMessage: 'Order not found after update' });
             }
