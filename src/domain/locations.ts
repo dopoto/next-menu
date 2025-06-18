@@ -1,83 +1,51 @@
-import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { Doc, type Id } from 'convex/_generated/dataModel';
 import { z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
 import { withMeta } from '~/lib/form-validation';
-import { type locations } from '~/server/db/schema';
 import { menuModeValues, type MenuModeId } from './menu-modes';
 
-export type Location = Omit<InferSelectModel<typeof locations>, 'menuMode' | 'currencyId'> & {
-    menuMode: MenuModeId;
+type LocationDoc = Doc<"locations">
+
+export interface Location extends Omit<LocationDoc, 'currencyId' | 'menuMode'> {
     currencyId: CurrencyId;
-};
-export type NewLocation = InferInsertModel<typeof locations>;
+    menuMode: MenuModeId;
+}
 
-export type LocationId = Location['id'];
+export type NewLocation = Omit<Location, '_id'>;
 
-export const locationIdSchema = z
-    .union([
-        z.number().int().min(1),
-        z
-            .string()
-            .regex(/^\d+$/)
-            .transform((val) => parseInt(val, 10)),
-    ])
-    .refine((val) => Number.isSafeInteger(val) && val > 0, {
-        message: 'Location ID must be a positive integer',
-    });
+export type LocationId = Id<"locations">;
 
-export const LOCATION_SLUG_LENGTH = 8;
-export const locationSlugSchema = z.coerce
-    .string()
-    .length(LOCATION_SLUG_LENGTH, { message: `Slug must be exactly ${LOCATION_SLUG_LENGTH} characters long` });
-export type LocationSlug = z.infer<typeof locationSlugSchema>;
-
-export type AddLocationFormData = {
-    locationName: string;
-    priceTierId: string;
-    stripeSessionId: string;
-};
-
-export const locationFormSchema = z.object({
+export const locationZodSchema = z.object({
+    _id: z.custom<Id<"locations">>(),
+    _creationTime: z.number(),
     name: withMeta(
-        z
-            .string({
-                required_error: 'Location Name is required',
-                invalid_type_error: 'Location Name must be a string',
-            })
-            .min(2, {
-                message: 'Location Name must be 2 or more characters long',
-            })
-            .max(256, {
-                message: 'Location Name must be 256 or fewer characters long',
-            }),
+        z.string().min(2).max(256),
         {
             label: 'Location name',
             placeholder: 'My fancy restaurant',
             description: 'The name of your location',
-        },
+        }
     ),
+    slug: z.string(),
     currencyId: withMeta(
-        z
-            .string({
-                required_error: 'Currency is required',
-            })
-            .min(3, 'Currency must be 3 characters')
-            .max(3, 'Currency must be 3 characters'),
+        z.string().length(3),
         {
             label: 'Currency',
             placeholder: 'Choose the currency name',
             description: 'The currency shown for menu items',
-        },
+        }
     ),
-
     menuMode: withMeta(
-        z.enum(menuModeValues, {
-            required_error: 'Menu mode is required',
-        }),
+        z.enum(menuModeValues),
         {
             label: 'Menu mode',
             placeholder: 'Choose the menu mode',
             description: 'The operation mode of menus in this location',
-        },
+        }
     ),
-});
+    orgId: z.custom<Id<"organizations">>(),
+    updatedAt: z.number(),
+}) satisfies z.ZodType<LocationDoc>;
+
+// TODO usage? Type assertion to ensure our Zod schema matches our Location type
+//type ValidateLocationTypes = typeof locationZodSchema._type extends Location ? true : never;

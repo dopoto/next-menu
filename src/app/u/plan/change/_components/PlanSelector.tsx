@@ -1,6 +1,6 @@
 import { auth } from '@clerk/nextjs/server';
 import Link from 'next/link';
-import { ComparePlansButton } from '~/app/u/[locationId]/_components/ComparePlansButton';
+import { ComparePlansButton } from '~/app/u/[locationSlug]/_components/ComparePlansButton';
 import {
     getCurrentPlanCardCustomizations,
     getExceededPlanCardCustomizations,
@@ -34,8 +34,8 @@ export async function PlanSelector() {
                 const cardCustomizations = isCurrent
                     ? getCurrentPlanCardCustomizations()
                     : exceededFeatures.length > 0
-                      ? getExceededPlanCardCustomizations()
-                      : undefined;
+                        ? getExceededPlanCardCustomizations()
+                        : undefined;
 
                 const footerCta = isCurrent ? (
                     <Link href={ROUTES.viewPlan} className="w-full">
