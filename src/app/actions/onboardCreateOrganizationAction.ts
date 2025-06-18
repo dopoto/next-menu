@@ -2,6 +2,8 @@
 
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import * as Sentry from '@sentry/nextjs';
+import { api } from 'convex/_generated/api';
+import { fetchMutation } from 'convex/nextjs';
 import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';
 import { type z } from 'zod';
@@ -12,9 +14,8 @@ import { type PriceTierId } from '~/domain/price-tiers';
 import { stripeCustomerIdSchema } from '~/domain/stripe';
 import { env } from '~/env';
 import { AppError } from '~/lib/error-utils.server';
+import { generateUniqueLocationSlug } from '~/lib/location-utils';
 import { getValidPriceTier, isPaidPriceTier } from '~/lib/price-tier-utils';
-import { generateUniqueLocationSlug } from '~/server/queries/locations';
-import { createOrganization } from '~/server/queries/organizations';
 
 const stripeApiKey = env.STRIPE_SECRET_KEY;
 const stripe = new Stripe(stripeApiKey);
@@ -124,14 +125,14 @@ export const onboardCreateOrganizationAction = async (
                 //   };
                 // }
 
-                const currentLocation = await createOrganization({
+                const { locationId } = await fetchMutation(api.organizations.provisionOrganization, {
                     clerkUserId: userId,
-                    orgId,
+                    orgId: '',
+                    currencyId: validatedFormFields.data.currencyId as CurrencyId,
                     stripeCustomerId: validatedStripeCustomerIdOrNull,
                     locationName: validatedFormFields.data.name,
                     locationSlug: await generateUniqueLocationSlug(),
                     menuMode: validatedFormFields.data.menuMode,
-                    currencyId: validatedFormFields.data.currencyId as CurrencyId,
                 });
 
                 // TODO send analytics
@@ -147,7 +148,7 @@ export const onboardCreateOrganizationAction = async (
                     metadata: {
                         tier: validPriceTier.id,
                         orgName,
-                        initialLocationId: currentLocation.id.toString(),
+                        initialLocationId: locationId,
                     },
                 };
                 const res = await client.users.updateUser(userId, {
@@ -155,8 +156,8 @@ export const onboardCreateOrganizationAction = async (
                 });
 
                 cookieStore.delete(CookieKey.OnboardPlan);
-                cookieStore.set(CookieKey.CurrentLocationId, currentLocation.id.toString());
-                cookieStore.set(CookieKey.CurrentLocationName, currentLocation.name.toString());
+                cookieStore.set(CookieKey.CurrentLocationId, locationId);
+                cookieStore.set(CookieKey.CurrentLocationName, locationId);
 
                 return { message: res.publicMetadata };
             } catch (error) {

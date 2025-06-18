@@ -1,5 +1,6 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 
 export const createLocation = mutation({
     args: {
@@ -54,3 +55,43 @@ export const updateLocation = mutation({
         });
     },
 });
+
+export const getLocationBySlug = query({
+    args: {
+        slug: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const locations = await ctx.db
+            .query("locations")
+            .withIndex("by_slug", (q) => q.eq("slug", args.slug))
+            .collect();
+        return locations[0] ?? null;
+    },
+});
+
+// TODO
+
+// export const canCurrentUserAccessLocation = query({
+//     args: {
+//         locationId: v.id("locations")
+//     },
+//     handler: async (ctx, args) => {
+//         const userId = await getAuthUserId(ctx);
+//         if (!userId) { throw new Error("Not authenticated") }
+
+//         const user = await ctx.db.get(userId);
+//         if (!user) { throw new Error("User not found") }
+
+//         const appUser = await ctx.db
+//             .query("appUsers")
+//             .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+//             .unique();
+//         if (!appUser) { throw new Error("User not found in organization") }
+
+//         const location = await ctx.db
+//             .query("locations")
+//             .filter((q) => q.eq(q.field("orgId"), appUser.orgId))
+//             .unique();
+//         if (!location) { throw new Error(`Location not found for current user.`) }
+//     },
+// });

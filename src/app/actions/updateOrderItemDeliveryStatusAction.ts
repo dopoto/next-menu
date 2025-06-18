@@ -8,7 +8,7 @@ import { type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 import { updateOrderItemStatus } from '~/server/queries/order-items';
-import { getOrderById } from '~/server/queries/orders';
+
 
 export const updateOrderItemDeliveryStatusAction = async (
     locationId: number,

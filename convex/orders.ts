@@ -21,7 +21,7 @@ export const createOrder = mutation({
 
         const appUser = await ctx.db
             .query("appUsers")
-            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || ""))
+            .withIndex("by_clerk_user_id", (q) => q.eq("clerkUserId", user.email || "")) //TODO user email
             .unique();
         if (!appUser) { throw new Error("User not found in organization") }
 
@@ -36,7 +36,7 @@ export const createOrder = mutation({
             updatedAt: Date.now()
         });
 
-        await Promise.all(args.items.map((item, index) =>
+        await Promise.all(args.items.map((item) =>
             ctx.db.insert("orderItems", {
                 orderId,
                 menuItemId: item.menuItemId,
@@ -49,6 +49,23 @@ export const createOrder = mutation({
 
 
         return orderId;
+    },
+});
+
+export const getOrderByUserFriendlyId = query({
+    args: {
+        userFriendlyOrderId: v.string(),
+    },
+    handler: async (ctx, args) => {
+        const order = await ctx.db
+            .query("orders")
+            .filter((q) => q.eq(q.field("userFriendlyId"), args.userFriendlyOrderId))
+            .unique();
+        if (!order) { return null }
+
+        //TODO Security check 
+
+        return order
     },
 });
 

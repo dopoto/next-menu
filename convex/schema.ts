@@ -78,9 +78,11 @@ const applicationTables = {
 
   orders: defineTable({
     locationId: v.id("locations"),
+    userFriendlyId: v.string(),
     updatedAt: v.number(),
   })
-    .index("by_location_id", ["locationId"]),
+    .index("by_location_id", ["locationId"])
+    .index("by_user_friendly_id", ["userFriendlyId"]),
 
   orderItems: defineTable({
     orderId: v.id("orders"),
