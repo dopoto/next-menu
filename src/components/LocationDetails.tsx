@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { ExternalLinkIcon } from 'lucide-react';
 import QRCode from 'react-qr-code';

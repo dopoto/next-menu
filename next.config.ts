@@ -74,6 +74,15 @@ const nextConfig: NextConfig = {
 
     // This is required to support PostHog trailing slash API requests
     skipTrailingSlashRedirect: true,
+
+    webpack: (config, { isServer }) => {
+        config.resolve = config.resolve || {};
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            'convex/_generated/api': './convex/_generated/api',
+        };
+        return config;
+    },
 };
 
 const config =

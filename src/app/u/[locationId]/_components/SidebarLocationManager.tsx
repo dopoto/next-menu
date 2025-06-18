@@ -1,5 +1,5 @@
 import { DropdownMenuLabel } from '@radix-ui/react-dropdown-menu';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { ChevronsUpDown } from 'lucide-react';
 import { SidebarMenuButton } from '~/components/ui/sidebar';

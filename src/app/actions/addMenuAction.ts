@@ -10,7 +10,7 @@ import { processFormErrors, type FormState } from '~/lib/form-state';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
 import { ROUTES } from '~/lib/routes';
 import { fetchMutation } from "convex/nextjs";
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 
 export const addMenuAction = async (
     data: z.infer<typeof menuFormSchema>,

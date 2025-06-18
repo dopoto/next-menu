@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { Labeled } from '~/components/Labeled';
 import { OverviewCard } from '~/components/OverviewCard';

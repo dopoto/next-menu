@@ -1,5 +1,5 @@
 import { auth, clerkClient } from '@clerk/nextjs/server';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import Stripe from 'stripe';
 import { PlanChanged } from '~/app/u/plan/change/_components/PlanChanged';

@@ -1,5 +1,5 @@
 import { auth } from '@clerk/nextjs/server';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { Suspense } from 'react';
 import { LocationViewsCard } from '~/app/u/[locationId]/reports/_components/LocationViewsCard';

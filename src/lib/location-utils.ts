@@ -1,4 +1,4 @@
-import { api } from 'convex/_generated/api';
+import { api } from '../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { LOCATION_SLUG_LENGTH, type LocationId, locationIdSchema, LocationSlug } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';

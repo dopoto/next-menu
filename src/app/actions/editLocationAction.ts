@@ -1,7 +1,7 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { Id } from 'convex/_generated/dataModel';
 import { fetchMutation } from 'convex/nextjs';
 import { headers } from 'next/headers';

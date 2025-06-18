@@ -1,7 +1,7 @@
 import type { InferSelectModel } from 'drizzle-orm';
 import z from 'zod';
-import { type MenuItemId } from '~/domain/menu-items';
-import { type orderItems } from '~/server/db/schema';
+import { type MenuItemId } from '../domain/menu-items';
+import { type orderItems } from '../server/db/schema';
 
 // export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 // export const POSTPAID_STATUSES = ['draft', 'ordered', 'delivered', 'paid'] as const;

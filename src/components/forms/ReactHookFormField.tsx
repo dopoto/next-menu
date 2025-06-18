@@ -26,6 +26,10 @@ export function ReactHookFormField(props: { schema: ZodObject<ZodRawShape>; form
     const maxLength = shape ? getMaxLength(shape as ZodString | ZodOptional<ZodString>) : 0;
     const { label, placeholder, description } = shape?._def?.meta ?? { label: '', placeholder: '', description: '' };
 
+    console.log(props.fieldName);
+    console.log(JSON.stringify(props.schema, null, 2));
+    console.log(shape);
+
     return (
         <FormField
             control={form.control}

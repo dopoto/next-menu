@@ -1,7 +1,7 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { headers } from 'next/headers';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';

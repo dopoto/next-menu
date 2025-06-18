@@ -2,7 +2,7 @@
 
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import * as Sentry from '@sentry/nextjs';
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchMutation } from 'convex/nextjs';
 import { cookies, headers } from 'next/headers';
 import Stripe from 'stripe';

@@ -1,4 +1,4 @@
-import { api } from 'convex/_generated/api';
+import { api } from '../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { Suspense } from 'react';
 import LoadingSection from '~/app/u/[locationId]/_components/LoadingSection';

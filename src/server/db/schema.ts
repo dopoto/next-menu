@@ -3,8 +3,8 @@
 
 import { relations, sql } from 'drizzle-orm';
 import { boolean, decimal, index, integer, pgTableCreator, primaryKey, timestamp, varchar } from 'drizzle-orm/pg-core';
-import { MENU_MODES, type MenuModeId } from '~/domain/menu-modes';
-import { type DeliveryStatusId, deliveryStatusValues } from '~/domain/order-items';
+import { MENU_MODES, type MenuModeId } from '../../domain/menu-modes';
+import { type DeliveryStatusId, deliveryStatusValues } from '../../domain/order-items';
 import { CURRENCIES, type CurrencyId } from '../../domain/currencies';
 
 /**

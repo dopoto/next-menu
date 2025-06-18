@@ -1,7 +1,7 @@
 import { type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
 import { z } from 'zod';
-import { withMeta } from '~/lib/form-validation';
-import { type menuItems } from '~/server/db/schema';
+import { withMeta } from '../lib/form-validation';
+import { type menuItems } from '../server/db/schema';
 
 export type MenuItem = InferSelectModel<typeof menuItems>;
 export type NewMenuItem = InferInsertModel<typeof menuItems>;
