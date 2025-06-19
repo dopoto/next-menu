@@ -1,6 +1,7 @@
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { LocationDialog } from '~/app/u/[locationSlug]/location/_components/LocationDialog';
+import { UserRouteParamsPromise } from '~/app/u/[locationSlug]/params';
 import { EditLocation } from '~/components/EditLocation';
 import { LocationDetails } from '~/components/LocationDetails';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '~/components/ui/tabs';
@@ -8,9 +9,7 @@ import { AppError } from '~/lib/error-utils.server';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 //import { getLocationForCurrentUserOrThrow } from '~/server/queries/locations';
 
-type Params = Promise<{ locationId: string }>;
-
-export default async function LocationPage(props: { params: Params }) {
+export default async function LocationPage(props: { params: UserRouteParamsPromise }) {
     const params = await props.params;
     const validLocationId = getValidLocationIdOrThrow(params.locationId); //TODO validate inside convex fn instead    
     const validLocation = (await fetchQuery(

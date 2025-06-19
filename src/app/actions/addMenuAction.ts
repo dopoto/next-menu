@@ -1,20 +1,17 @@
 'use server';
 
 import * as Sentry from '@sentry/nextjs';
-import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { type z } from 'zod';
-import { menuFormSchema } from '~/domain/menus';
+import { MenuWithItemsForm, menuWithItemsFormSchema } from '~/domain/menus';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
-import { ROUTES } from '~/lib/routes';
 import { fetchMutation } from "convex/nextjs";
 import { api } from '../../../convex/_generated/api';
 
 export const addMenuAction = async (
-    data: z.infer<typeof menuFormSchema>,
-): Promise<FormState<typeof menuFormSchema>> => {
+    data: MenuWithItemsForm,
+): Promise<FormState<typeof menuWithItemsFormSchema>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'addMenuAction',
@@ -24,7 +21,7 @@ export const addMenuAction = async (
         },
         async () => {
             try {
-                const parsedForm = menuFormSchema.safeParse(data);
+                const parsedForm = menuWithItemsFormSchema.safeParse(data);
                 if (!parsedForm.success) {
                     return processFormErrors(parsedForm.error, data);
                 }
@@ -43,12 +40,12 @@ export const addMenuAction = async (
                     isPublished: true,
                     // TODO validate data first
                     items: data.items?.map((item, index) => ({
-                        id: item.id,
+                        id: Number(item._id),
                         sortOrderIndex: index,
                     })),
                 });
-
-                revalidatePath(ROUTES.menus(parsedForm.data.locationId));
+                // TODO revisit revalidate Path
+                //revalidatePath(ROUTES.menus(parsedForm.data.locationId));
                 // TODO revalidate public path
                 return { status: 'success' as const };
             } catch (error) {

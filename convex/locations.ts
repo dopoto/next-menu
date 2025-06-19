@@ -83,7 +83,7 @@ export const getLocationBySlug = query({
 
 export const getLocationForCurrentUserOrThrow = query({
     args: {
-        locationId: v.number()
+        locationId: v.id("locations")
     },
     handler: async (ctx, args) => {
         const userId = await getAuthUserId(ctx);

@@ -3,19 +3,17 @@
 import { api } from '../../../convex/_generated/api';
 import { Id } from 'convex/_generated/dataModel';
 import { fetchMutation } from 'convex/nextjs';
-import { revalidatePath } from 'next/cache';
 import { type z } from 'zod';
 import { menuItemFormSchema } from '~/domain/menu-items';
 import { AppError } from '~/lib/error-utils.server';
 import { type FormState, processFormErrors } from '~/lib/form-state';
 import { validateAndFormatMenuItemData } from '~/lib/menu-item-utils';
 import { getAvailableFeatureQuota } from '~/lib/quota-utils.server-only';
-import { ROUTES } from '~/lib/routes';
 
 // TODO Sentry.withServerActionInstrumentation
 
 export async function addMenuItemAction(
-    data: z.infer<typeof menuItemFormSchema>,
+    data: z.infer<typeof menuItemFormSchema>, //TODO revisit infer
 ): Promise<FormState<typeof menuItemFormSchema> & { menuItemId?: Id<"menuItems"> }> {
     const parsed = menuItemFormSchema.safeParse(data);
     if (!parsed.success) {
@@ -45,7 +43,8 @@ export async function addMenuItemAction(
         if (!menuItemId) {
             throw new AppError({ internalMessage: `Could not save menu item` });
         }
-        revalidatePath(ROUTES.menuItems(parsed.data.locationId));
+        // TODO revisit revalidate Path
+        //revalidatePath(ROUTES.menuItems(parsed.data.locationId));
         // TODO revalidate public path
         return { status: 'success', menuItemId };
     } catch (error) {

@@ -5,7 +5,7 @@ import JotaiProviderWrapper from '~/app/p/[locationSlug]/_components/JotaiProvid
 import { PublicFooterInteractiveMode } from '~/app/p/[locationSlug]/_components/PublicFooterInteractiveMode';
 import { AnalyticsEventSender } from '~/components/AnalyticsEventSender';
 import { CookieKey } from '~/domain/cookies';
-import { locationSlugSchema } from '~/domain/locations';
+import { LocationId, locationSlugSchema } from '~/domain/locations';
 import { AppError } from '~/lib/error-utils.server';
 // import { getLocationPublicDataBySlug } from '~/server/queries/locations';
 // import { getMenuItemsByLocation } from '~/server/queries/menu-items';
@@ -28,7 +28,11 @@ export default async function Layout({ params, children }: { params: Params; chi
     }
 
     const parsedLocationSlug = locationSlugValidationResult.data;
-    const location = await Promise.resolve({ id: 1, orgId: 1, clerkOrgId: "2", currencyId: 'USD' as CurrencyId, name: 'test', menuMode: 'interactive' })//TODO await getLocationPublicDataBySlug(parsedLocationSlug);
+    const location = await Promise.resolve({
+        _id: "1" as LocationId, orgId: 1, clerkOrgId: "2", currencyId: 'USD' as CurrencyId,
+        name: 'test', menuMode: 'interactive'
+    })
+    //TODO await getLocationPublicDataBySlug(parsedLocationSlug);
 
     const menuItems = [] as MenuItem[]; //TODO await getMenuItemsByLocation(location.id);
 
@@ -42,7 +46,7 @@ export default async function Layout({ params, children }: { params: Params; chi
     await capturePublicLocationVisit(machineId, location.orgId, parsedLocationSlug);
 
     return (
-        <JotaiProviderWrapper locationId={location.id} currencyId={location.currencyId} menuItems={menuItems}>
+        <JotaiProviderWrapper locationId={location._id} currencyId={location.currencyId} menuItems={menuItems}>
             <div className="mx-auto max-w-7xl px-2 pt-2 lg:px-8">
                 <header className="w-full flex flex-row  items-center-safe gap-3">
                     <Image src={logo} alt="Logo" width={96} height={96} className=" w-24 h-24" />

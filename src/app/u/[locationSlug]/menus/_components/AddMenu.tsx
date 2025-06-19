@@ -11,11 +11,10 @@ import { AddEditMenuForm } from '~/app/u/[locationSlug]/menus/_components/AddEdi
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
-import { menuFormSchema } from '~/domain/menus';
+import { menuWithItemsFormSchema } from '~/domain/menus';
 import { toast } from '~/hooks/use-toast';
 import { handleReactHookFormErrors } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
-import { type locations } from '~/server/db/schema';
 
 export function AddMenu(props: {
     locationId: LocationId;
@@ -25,15 +24,15 @@ export function AddMenu(props: {
     location: InferSelectModel<typeof locations>;
 }) {
     const router = useRouter();
-    const form = useForm<z.infer<typeof menuFormSchema>>({
-        resolver: zodResolver(menuFormSchema),
+    const form = useForm<z.infer<typeof menuWithItemsFormSchema>>({
+        resolver: zodResolver(menuWithItemsFormSchema),
         defaultValues: {
             name: '',
             locationId: props.locationId,
         },
     });
 
-    async function onSubmit(values: z.infer<typeof menuFormSchema>) {
+    async function onSubmit(values: z.infer<typeof menuWithItemsFormSchema>) {
         const res = await addMenuAction(values);
         if (res.status === 'success') {
             toast({ title: `Menu  added` });

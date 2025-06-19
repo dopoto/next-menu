@@ -73,14 +73,14 @@ export default function MenuItemCard(props: { locationId: LocationId; currencyId
             <div className="flex w-full flex-row">
                 <PublicMenuItem
                     item={{
-                        id: props.item.id,
+                        _id: props.item._id,
+                        _creationTime: props.item._creationTime,
                         name: props.item.name,
-                        createdAt: props.item.createdAt,
                         updatedAt: props.item.updatedAt,
                         locationId: props.item.locationId,
                         description: props.item.description,
                         imageId: props.item.imageId,
-                        price: props.item.price.toString(),
+                        price: props.item.price,
                         type: props.item.type,
                         isNew: props.item.isNew,
                         isPublished: props.item.isPublished,

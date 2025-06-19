@@ -9,7 +9,7 @@ export async function PublicMenus(props: { locationId: LocationId; menuMode: Men
     const menus = [] as MenuWithItems[] //TODO await getPublicMenusByLocation(props.locationId);
     const sections: Section[] = menus.map((m) => {
         return {
-            id: m.id.toString(),
+            id: m._id.toString(),
             title: m.name ?? '',
             content: (
                 <PublicMenu

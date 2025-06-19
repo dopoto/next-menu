@@ -23,8 +23,8 @@ export async function MenusList(props: { locationId: LocationId }) {
                 <EmptyState icon={<ScanQrCodeIcon size={36} />} title={'No menus found'} secondary={''} />
             )}
             {items.map((item) => (
-                <div className="   w-full" key={item.id}>
-                    <MenuCard key={item.id} locationId={props.locationId} item={item} />
+                <div className="   w-full" key={item._id}>
+                    <MenuCard key={item._id} locationId={props.locationId} item={item} />
                 </div>
             ))}
         </div>

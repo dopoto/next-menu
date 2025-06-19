@@ -1,5 +1,5 @@
 import { v } from "convex/values";
-import { mutation } from "./_generated/server";
+import { mutation, query } from "./_generated/server";
 import { getAuthUserId } from "@convex-dev/auth/server";
 
 //TODO
@@ -150,5 +150,17 @@ export const deleteMenuItem = mutation({
         await ctx.db.delete(args.menuItemId);
 
         return { success: true };
+    },
+});
+
+export const listPublicMenuItems = query({
+    args: {
+        locationId: v.id("locations"),
+    },
+    handler: async (ctx, args) => {
+        return await ctx.db
+            .query("menuItems")
+            .withIndex("by_location_id", (q) => q.eq("locationId", args.locationId))
+            .collect();
     },
 });

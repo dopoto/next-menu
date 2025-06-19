@@ -10,7 +10,7 @@ import { Form } from '~/components/ui/form';
 import { type CurrencyId } from '~/domain/currencies';
 import { type LocationId } from '~/domain/locations';
 import { type MenuItem } from '~/domain/menu-items';
-import { menuFormSchema } from '~/domain/menus';
+import { menuWithItemsFormSchema } from '~/domain/menus';
 import { ROUTES } from '~/lib/routes';
 
 export function AddEditMenuForm({
@@ -21,8 +21,8 @@ export function AddEditMenuForm({
     allMenuItems,
     initialItems = [],
 }: {
-    form: UseFormReturn<z.infer<typeof menuFormSchema>>;
-    onSubmit: (values: z.infer<typeof menuFormSchema>) => Promise<void>;
+    form: UseFormReturn<z.infer<typeof menuWithItemsFormSchema>>;
+    onSubmit: (values: z.infer<typeof menuWithItemsFormSchema>) => Promise<void>;
     locationId: LocationId;
     currencyId: CurrencyId;
     allMenuItems: MenuItem[];
@@ -31,7 +31,7 @@ export function AddEditMenuForm({
     const [items, setItems] = useState<MenuItem[]>(initialItems);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (values: z.infer<typeof menuFormSchema>) => {
+    const handleSubmit = async (values: z.infer<typeof menuWithItemsFormSchema>) => {
         setIsSubmitting(true);
         try {
             await onSubmit({ ...values, items });
@@ -50,7 +50,7 @@ export function AddEditMenuForm({
                         </div>
                     )}
 
-                    <ReactHookFormField schema={menuFormSchema} form={form} fieldName={'name'} />
+                    <ReactHookFormField schema={menuWithItemsFormSchema} form={form} fieldName={'name'} />
 
                     <MenuItemsManager
                         locationId={locationId}

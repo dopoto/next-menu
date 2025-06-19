@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
-import { type z } from 'zod';
 import { ReactHookFormField } from '~/components/forms/ReactHookFormField';
 import { SelectControl, type SelectControlOptions } from '~/components/SelectControl';
 import { Badge } from '~/components/ui/badge';
@@ -11,16 +10,16 @@ import { Form, FormDescription, FormField, FormItem, FormLabel, FormMessage } fr
 import { Label } from '~/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '~/components/ui/radio-group';
 import { CURRENCIES } from '~/domain/currencies';
-import { locationFormSchema } from '~/domain/locations';
+import { LocationForm, locationFormSchema } from '~/domain/locations';
 import { MENU_MODES } from '~/domain/menu-modes';
 
 export function AddEditLocationForm(props: {
-    form: UseFormReturn<z.infer<typeof locationFormSchema>>;
-    onSubmit: (values: z.infer<typeof locationFormSchema>) => Promise<void>;
+    form: UseFormReturn<LocationForm>;
+    onSubmit: (values: LocationForm) => Promise<void>;
 }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleSubmit = async (values: z.infer<typeof locationFormSchema>) => {
+    const handleSubmit = async (values: LocationForm) => {
         setIsSubmitting(true);
         try {
             await props.onSubmit({ ...values });

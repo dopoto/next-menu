@@ -1,22 +1,22 @@
-import { type LocationId } from '~/domain/locations';
+import { type LocationSlug } from '~/domain/locations';
 import { type NAV_TREE } from '~/domain/nav';
 import { type UserRouteFn } from '~/lib/routes';
 
 export function findNavItemByPath(
     node: typeof NAV_TREE,
     pathname: string,
-    locationId: LocationId,
+    locationSlug: LocationSlug,
 ): typeof NAV_TREE | undefined {
     if (node.route) {
         const itemFn = node.route as UserRouteFn;
-        if (itemFn(locationId) === pathname) {
+        if (itemFn(locationSlug) === pathname) {
             return node;
         }
     }
 
     if (node.children) {
         for (const child of node.children) {
-            const found = findNavItemByPath(child, pathname, locationId);
+            const found = findNavItemByPath(child, pathname, locationSlug);
             if (found) return found;
         }
     }

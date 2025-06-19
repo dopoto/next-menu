@@ -5,7 +5,7 @@ import { Id } from 'convex/_generated/dataModel';
 import { fetchMutation } from 'convex/nextjs';
 import { revalidatePath } from 'next/cache';
 import { type LocationId } from '~/domain/locations';
-import { type menuFormSchema, type MenuId } from '~/domain/menus';
+import { type menuWithItemsFormSchema, type MenuId } from '~/domain/menus';
 import { type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 
@@ -14,7 +14,7 @@ import { ROUTES } from '~/lib/routes';
 export async function deleteMenuAction(
     locationId: LocationId,
     menuId: MenuId,
-): Promise<FormState<typeof menuFormSchema>> {
+): Promise<FormState<typeof menuWithItemsFormSchema>> {
     try {
         await fetchMutation(api.menus.deleteMenu, {
             menuId: String(menuId) as Id<"menus">

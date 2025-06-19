@@ -2,12 +2,13 @@
 
 import { useParams, usePathname } from 'next/navigation';
 import { TopBreadcrumb } from '~/app/u/[locationSlug]/@breadcrumb/_components/TopBreadcrumb';
+import { UserRouteParams } from '~/app/u/[locationSlug]/params';
 import { NAV_TREE } from '~/domain/nav';
 import { findNavItemByPath, getBreadcrumbPath } from '~/lib/nav-utils';
 
 export default function BreadcrumbCatchAllSlot() {
     const pathname = usePathname();
-    const { locationId } = useParams<{ locationId: string }>();
+    const { locationSlug } = useParams<UserRouteParams>();
     const parsedLocationId = Number(locationId); //TODO Better validation
 
     const currentItem = findNavItemByPath(NAV_TREE, pathname, parsedLocationId);

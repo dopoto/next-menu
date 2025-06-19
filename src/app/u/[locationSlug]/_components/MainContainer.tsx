@@ -17,6 +17,7 @@ import { NAV_TREE, type NavItem } from '~/domain/nav';
 import { type UserRouteFn } from '~/lib/routes';
 
 import { cn } from '~/lib/utils';
+import { UserRouteParams } from '~/app/u/[locationSlug]/params';
 
 interface CustomSidebarProps {
     isSidebarExpanded?: boolean;
@@ -31,8 +32,8 @@ export function MainContainer({
     breadcrumb,
     children,
 }: CustomSidebarProps) {
-    const params = useParams();
-    const { locationId } = params as { locationId: string };
+    const params = useParams<UserRouteParams>();
+    const { locationId } = params;
 
     const dashboardMenuSection = NAV_TREE.children?.find((i) => i.id === 'dashboard')?.children ?? [];
     const locationManagerMenuSection = NAV_TREE.children?.find((i) => i.id === 'locationManager')?.children ?? [];

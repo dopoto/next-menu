@@ -8,7 +8,7 @@ import { getAuthUserId } from "@convex-dev/auth/server";
 export const createMenu = mutation({
     args: {
         name: v.optional(v.string()),
-        locationId: v.number(),  // Accept numeric ID from Drizzle
+        locationId: v.id("locations"),
         isPublished: v.optional(v.boolean()),
         items: v.optional(v.array(v.object({
             id: v.number(),  // Accept numeric ID from Drizzle

@@ -4,14 +4,14 @@ import * as Sentry from '@sentry/nextjs';
 import { headers } from 'next/headers';
 import { type z } from 'zod';
 import { notifyOrderUpdated } from '~/app/api/realtime/notifications';
-import { type menuFormSchema } from '~/domain/menus';
+import { type menuWithItemsFormSchema } from '~/domain/menus';
 import { publicOrderWithItemsSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 
 export const updateOrderAction = async (
     data: z.infer<typeof publicOrderWithItemsSchema>,
-): Promise<FormState<typeof menuFormSchema, { orderWithItems: PublicOrderWithItems }>> => {
+): Promise<FormState<typeof menuWithItemsFormSchema, { orderWithItems: PublicOrderWithItems }>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'updateOrderAction',

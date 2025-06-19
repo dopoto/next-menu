@@ -40,7 +40,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const { toast } = useToast();
 
     // Add real-time updates
-    useRealTimeOrderUpdates(order.id, props.locationId);
+    useRealTimeOrderUpdates(order.userFriendlyId, props.locationId);
 
     //const totalAmount = order.items.reduce((sum, item) => sum + parseFloat(item.menuItem?.price ?? '0'), 0);
 
@@ -58,14 +58,16 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
                 const orderWithItems = res.fields?.orderWithItems;
                 toast({
                     title: 'Order placed successfully',
-                    description: `Your order number is ${orderWithItems?.id}`,
+                    description: `Your order number is ${orderWithItems?.userFriendlyId}`,
                     variant: 'default',
                     className: getTopPositionedToast(),
                 });
                 setOrder((prevOrder) => {
                     const newOrder: PublicOrderWithItems = {
                         ...prevOrder,
-                        id: orderWithItems?.id ?? 0,
+                        _id: orderWithItems?._id ?? prevOrder._id,
+                        updatedAt: orderWithItems?.updatedAt ?? Date.now(),
+                        userFriendlyId: orderWithItems?.userFriendlyId ?? '',
                         items: orderWithItems?.items ?? [],
                     };
                     return newOrder;
@@ -99,14 +101,13 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
                 const orderWithItems = res.fields?.orderWithItems;
                 toast({
                     title: 'Order updated successfully',
-                    description: `Your order number is ${orderWithItems?.id}`,
+                    description: `Your order number is ${orderWithItems?._id}`,
                     variant: 'default',
                     className: getTopPositionedToast(),
                 });
                 setOrder((prevOrder) => {
                     return {
                         ...prevOrder,
-                        orderId: orderWithItems?.id ? String(orderWithItems.id) : undefined, //TODO review
                         items: orderWithItems?.items ?? [],
                     };
                 });
@@ -126,7 +127,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     };
 
     const filteredItems = (deliveryStatus: DeliveryStatusId | null) => {
-        return order.items.filter((item) => {
+        return order.items?.filter((item) => {
             return item.orderItem.deliveryStatus == deliveryStatus;
         });
     };
@@ -139,7 +140,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const draftItemsSummary = (
         <OrderSummaryItem quantity={draftItems.length} description={'Your cart'}>
             {draftItems.length > 0 &&
-                (order.id ? (
+                (order._id ? (
                     <Button onClick={updateOrder} disabled={isLoading}>
                         {isLoading ? 'Ordering...' : 'Add to order'}
                     </Button>
@@ -166,7 +167,7 @@ export function PublicFooterInteractiveMode(props: { currencyId: CurrencyId; loc
     const collapsedContent = (
         <div className=" flex flex-col w-full h-full p-3">
             <div className="flex flex-row justify-between">
-                <Labeled label={'Your order'} text={order.id ?? 'No order number yet'} />
+                <Labeled label={'Your order'} text={order.userFriendlyId ?? 'No order number yet'} />
                 <ChevronsUpIcon />
             </div>
             <div className="flex flex-row w-full h-full gap-4 items-center-safe justify-center">

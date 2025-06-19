@@ -34,5 +34,5 @@ export const EVENTS = {
 // Channel types
 export const CHANNELS = {
     location: (locationId: LocationId) => `location-${locationId}`,
-    order: (orderId: OrderId) => `order-${orderId}`,
+    order: (orderUserFriendlyId: string) => `order-${orderUserFriendlyId}`,
 } as const;

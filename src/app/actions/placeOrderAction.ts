@@ -7,14 +7,14 @@ import { fetchMutation } from 'convex/nextjs';
 import { headers } from 'next/headers';
 import { type z } from 'zod';
 import { notifyOrderCreated } from '~/app/api/realtime/notifications';
-import { type menuFormSchema } from '~/domain/menus';
+import { type menuWithItemsFormSchema } from '~/domain/menus';
 import { publicOrderWithItemsSchema, type PublicOrderWithItems } from '~/domain/orders';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 
 export const placeOrderAction = async (
     data: z.infer<typeof publicOrderWithItemsSchema>,
-): Promise<FormState<typeof menuFormSchema, { orderWithItems: PublicOrderWithItems }>> => {
+): Promise<FormState<typeof menuWithItemsFormSchema, { orderWithItems: PublicOrderWithItems }>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'placeOrderAction',
@@ -50,11 +50,12 @@ export const placeOrderAction = async (
                     locationId: parsedForm.data.locationId,
                     currencyId: parsedForm.data.currencyId,
                     createdAt: new Date(),
-                    updatedAt: null,
+
                     items: items?.map((item, index) => ({
                         menuItemId: item.menuItemId,
                         orderItem: {
-                            id: 0, // This will be updated when we load the full order
+                            // Use undefined or a placeholder string for id, as OrderItemId is likely a string type
+                            id: undefined,
                             deliveryStatus: 'pending',
                             isPaid: false,
                         }

@@ -7,15 +7,15 @@ import { fetchMutation } from 'convex/nextjs';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { type z } from 'zod';
-import { menuFormSchema } from '~/domain/menus';
+import { menuWithItemsFormSchema } from '~/domain/menus';
 import { AppError } from '~/lib/error-utils.server';
 import { processFormErrors, type FormState } from '~/lib/form-state';
 import { ROUTES } from '~/lib/routes';
 
 export const editMenuAction = async (
     menuId: number,
-    data: z.infer<typeof menuFormSchema>,
-): Promise<FormState<typeof menuFormSchema>> => {
+    data: z.infer<typeof menuWithItemsFormSchema>,
+): Promise<FormState<typeof menuWithItemsFormSchema>> => {
     'use server';
     return await Sentry.withServerActionInstrumentation(
         'editMenuAction',
@@ -25,7 +25,7 @@ export const editMenuAction = async (
         },
         async () => {
             try {
-                const parsedForm = menuFormSchema.safeParse(data);
+                const parsedForm = menuWithItemsFormSchema.safeParse(data);
                 if (!parsedForm.success) {
                     return processFormErrors(parsedForm.error, data);
                 }
@@ -35,12 +35,13 @@ export const editMenuAction = async (
                     menuId: String(menuId) as Id<"menus">,
                     name,
                     menuItems: items?.map((item, index) => ({
-                        menuItemId: String(item.id) as Id<"menuItems">, // TODO
+                        menuItemId: String(item._id) as Id<"menuItems">, // TODO
                         sortOrderIndex: index,
                     })),
                 });
-                revalidatePath(ROUTES.menus(parsedForm.data.locationId));
-                // TODO revalidate public path
+                // TODO revisit revalidate Path
+                // TODO revalidate public Path?
+                //revalidatePath(ROUTES.menus(parsedForm.data.locationId));
                 return { status: 'success' as const };
             } catch (error) {
                 if (error instanceof AppError) {

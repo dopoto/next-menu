@@ -1,14 +1,13 @@
-import { api } from '../../../convex/_generated/api';
+import { api } from '../../../../../convex/_generated/api';
 import { fetchQuery } from 'convex/nextjs';
 import { Suspense } from 'react';
 import { FormTitle } from '~/app/u/[locationSlug]/_components/FormTitle';
 import LoadingSection from '~/app/u/[locationSlug]/_components/LoadingSection';
 import { MenusList } from '~/app/u/[locationSlug]/menus/_components/MenusList';
+import { UserRouteParamsPromise } from '~/app/u/[locationSlug]/params';
 import { ROUTES } from '~/lib/routes';
 
-type Params = Promise<{ locationId: string }>;
-
-export default async function MenusPage(props: { params: Params }) {
+export default async function MenusPage(props: { params: UserRouteParamsPromise }) {
     const params = await props.params;
     //const locationId = getValidLocationIdOrThrow(params.locationId);
     //TODO

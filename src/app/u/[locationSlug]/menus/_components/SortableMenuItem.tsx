@@ -16,7 +16,7 @@ interface SortableMenuItemProps {
 
 export function SortableMenuItem({ item, currencyId, onDelete }: SortableMenuItemProps) {
     const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-        id: item.id,
+        id: item._id,
         data: {
             type: 'menu-item',
             item,
@@ -43,7 +43,7 @@ export function SortableMenuItem({ item, currencyId, onDelete }: SortableMenuIte
             <div className="flex-grow touch-none">
                 {/* TODO menumode */}
                 <PublicMenuItem
-                    item={{ ...item, price: item.price.toString() }}
+                    item={item}
                     currencyId={currencyId}
                     menuMode={'noninteractive'}
                 />

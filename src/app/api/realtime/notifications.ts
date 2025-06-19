@@ -14,5 +14,5 @@ export async function notifyOrderUpdated(locationId: LocationId, order: PublicOr
     await pusher.trigger(CHANNELS.location(locationId), EVENTS.ORDER_UPDATED, order);
 
     // Also notify clients specifically listening to this order
-    await pusher.trigger(CHANNELS.order(order.id), EVENTS.ORDER_UPDATED, order);
+    await pusher.trigger(CHANNELS.order(order.userFriendlyId), EVENTS.ORDER_UPDATED, order);
 }

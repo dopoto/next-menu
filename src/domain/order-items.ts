@@ -1,9 +1,6 @@
-import type { InferSelectModel } from 'drizzle-orm';
 import z from 'zod';
 import { type MenuItemId } from '../domain/menu-items';
 import { Doc, Id } from 'convex/_generated/dataModel';
-import { Location } from '~/domain/locations';
-
 
 // export const PREPAID_STATUSES = ['draft', 'paid'] as const;
 // export const POSTPAID_STATUSES = ['draft', 'ordered', 'delivered', 'paid'] as const;

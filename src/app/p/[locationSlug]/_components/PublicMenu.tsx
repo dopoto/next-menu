@@ -50,7 +50,7 @@ export function PublicMenu(props: {
             {props.items?.map((item) => {
                 return (
                     <PublicMenuItem
-                        key={item.id}
+                        key={item._id}
                         item={item}
                         currencyId={props.currencyId}
                         menuMode={props.menuMode}
@@ -60,7 +60,7 @@ export function PublicMenu(props: {
                                     <PlusIcon
                                         strokeWidth={2}
                                         className="cursor-pointer text-white transition-colors"
-                                        onClick={() => addToOrder(item.id, item.name ?? 'Item')}
+                                        onClick={() => addToOrder(item._id, item.name ?? 'Item')}
                                     />
                                 </div>
                             ) : null

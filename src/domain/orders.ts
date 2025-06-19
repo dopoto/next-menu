@@ -1,6 +1,7 @@
 import { Doc, Id } from 'convex/_generated/dataModel';
 import { z } from 'zod';
 import { type CurrencyId } from '~/domain/currencies';
+import { LocationId } from '~/domain/locations';
 import { type PublicOrderItem } from '~/domain/order-items';
 
 export const PREPAID_STATUSES = ['draft', 'paid'] as const;
@@ -14,7 +15,7 @@ export const orderIdSchema = z.custom<OrderId>();
 
 export const orderFormSchema = z.object({
     id: orderIdSchema.optional(),
-    locationId: z.number({ required_error: 'Location ID is required' }).min(0, 'Location Id must be positive'),
+    locationId: z.custom<LocationId>(),
     items: z.array(z.custom<PublicOrderItem>()),
 });
 

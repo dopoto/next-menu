@@ -1,5 +1,5 @@
 import { type z } from 'zod';
-import { menuFormSchema, type MenuId, menuIdSchema } from '~/domain/menus';
+import { menuWithItemsFormSchema, type MenuId, menuIdSchema } from '~/domain/menus';
 import { AppError } from '~/lib/error-utils.server';
 
 export function getValidMenuIdOrThrow(candidate?: string): MenuId {
@@ -15,8 +15,8 @@ export function getValidMenuIdOrThrow(candidate?: string): MenuId {
 /**
   Formats the data for database insertion.
  */
-export function validateAndFormatMenuData(data: z.infer<typeof menuFormSchema>) {
-    const validationResult = menuFormSchema.safeParse(data);
+export function validateAndFormatMenuData(data: z.infer<typeof menuWithItemsFormSchema>) {
+    const validationResult = menuWithItemsFormSchema.safeParse(data);
     if (!validationResult.success) {
         throw new AppError({
             internalMessage: `Invalid menu data: ${JSON.stringify(validationResult.error)}`,

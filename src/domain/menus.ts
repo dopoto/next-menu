@@ -2,23 +2,22 @@ import { z } from 'zod';
 import { withMeta } from '~/lib/form-validation';
 import { type MenuItem, type MenuItemWithSortOrder } from './menu-items';
 import { Doc, Id } from 'convex/_generated/dataModel';
+import { Location, LocationForm } from '~/domain/locations';
 
 type MenuDoc = Doc<"menus">;
 
 export type Menu = MenuDoc
+export type NewMenu = Omit<Menu, '_id'>;
 
 export type MenuWithItems = Menu & {
     items: MenuItemWithSortOrder[];
 };
 
-export type NewMenu = Omit<Menu, '_id'>;
-
 export type MenuId = Id<'menus'>;
 export const menuIdSchema = z.custom<MenuId>();
 
-export const menuFormSchema = z.object({
-    _id: z.custom<Id<"menus">>(),
-    _creationTime: z.number(),
+export type MenuWithItemsForm = Omit<MenuWithItems, '_id' | '_creationTime'>;
+export const menuWithItemsFormSchema = z.object({
     name: withMeta(
         z
             .string({
@@ -38,4 +37,4 @@ export const menuFormSchema = z.object({
         })
         .min(0, 'Location Id must be positive'),
     items: z.array(z.custom<MenuItem>()).optional(),
-});
+}) satisfies z.ZodType<MenuWithItemsForm>;

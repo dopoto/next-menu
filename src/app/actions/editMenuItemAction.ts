@@ -30,7 +30,8 @@ export async function editMenuItemAction(
             description,
             imageId
         });
-        revalidatePath(ROUTES.menuItems(parsed.data.locationId));
+        // TODO revisit revalidate Path
+        //revalidatePath(ROUTES.menuItems(parsed.data.locationId));
         // TODO revalidate public path
         return { status: 'success' };
     } catch (error) {

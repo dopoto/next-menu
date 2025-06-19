@@ -1,27 +1,28 @@
 import { useAtom } from 'jotai';
 import { useEffect } from 'react';
 import { orderAtom } from '~/app/p/[locationSlug]/_state/order-atom';
+import { LocationId } from '~/domain/locations';
 import { type OrderId, type PublicOrderWithItems } from '~/domain/orders';
 import { useToast } from '~/hooks/use-toast';
 import { CHANNELS, EVENTS, pusherClient } from '~/lib/pusher';
 import { getTopPositionedToast } from '~/lib/toast-utils';
 
-export function useRealTimeOrderUpdates(orderId: OrderId | undefined, locationId: number) {
+export function useRealTimeOrderUpdates(orderUserFriendlyId: string | undefined, locationId: LocationId) {
     const [order, setOrder] = useAtom(orderAtom);
     const { toast } = useToast();
 
     useEffect(() => {
-        if (!orderId || !locationId) return;
+        if (!orderUserFriendlyId || !locationId) return;
 
         // Subscribe to both location-wide and order-specific channels
         const locationChannel = pusherClient.subscribe(CHANNELS.location(locationId));
-        const orderChannel = pusherClient.subscribe(CHANNELS.order(orderId));
+        const orderChannel = pusherClient.subscribe(CHANNELS.order(orderUserFriendlyId));
 
         // Handle new orders in the location
         locationChannel.bind(EVENTS.ORDER_CREATED, () => {
             toast({
                 title: 'New Order',
-                description: `Order #${orderId} has been created`,
+                description: `Order #${orderUserFriendlyId} has been created`,
                 className: getTopPositionedToast(),
             });
         });
@@ -31,7 +32,7 @@ export function useRealTimeOrderUpdates(orderId: OrderId | undefined, locationId
             setOrder(data);
             toast({
                 title: 'Order Updated',
-                description: `Order #${orderId} has been updated`,
+                description: `Order #${orderUserFriendlyId} has been updated`,
                 className: getTopPositionedToast(),
             });
         });
@@ -45,10 +46,10 @@ export function useRealTimeOrderUpdates(orderId: OrderId | undefined, locationId
             locationChannel.unsubscribe();
             orderChannel.unsubscribe();
         };
-    }, [orderId, locationId, toast, setOrder, order.currencyId]);
+    }, [orderUserFriendlyId, locationId, toast, setOrder, order.currencyId]);
 }
 
-export function useRealTimeLocationUpdates(locationId: number) {
+export function useRealTimeLocationUpdates(locationId: LocationId) {
     const { toast } = useToast();
 
     useEffect(() => {
@@ -60,7 +61,7 @@ export function useRealTimeLocationUpdates(locationId: number) {
         locationChannel.bind(EVENTS.ORDER_CREATED, (data: PublicOrderWithItems) => {
             toast({
                 title: 'New Order',
-                description: `Order #${data.id} has been created`,
+                description: `Order #${data.userFriendlyId} has been created`,
                 className: getTopPositionedToast(),
             });
         });
@@ -69,7 +70,7 @@ export function useRealTimeLocationUpdates(locationId: number) {
         locationChannel.bind(EVENTS.ORDER_UPDATED, (data: PublicOrderWithItems) => {
             toast({
                 title: 'Order Updated',
-                description: `Order #${data.id} has been updated`,
+                description: `Order #${data.userFriendlyId} has been updated`,
                 className: getTopPositionedToast(),
             });
         });

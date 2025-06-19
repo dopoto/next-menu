@@ -1,9 +1,12 @@
+import { api } from 'convex/_generated/api';
+import { fetchQuery } from 'convex/nextjs';
 import { House, MessageCircleQuestion } from 'lucide-react';
 import { cookies } from 'next/headers';
 import Link from 'next/link';
 import React from 'react';
 import { MainContainer } from '~/app/u/[locationSlug]/_components/MainContainer';
 import { SidebarLocationManager } from '~/app/u/[locationSlug]/_components/SidebarLocationManager';
+import { UserRouteParamsPromise } from '~/app/u/[locationSlug]/params';
 import { AppVersion } from '~/components/AppVersion';
 import { Separator } from '~/components/ui/separator';
 import { SidebarInset } from '~/components/ui/sidebar';
@@ -13,14 +16,12 @@ import { CookieKey } from '~/domain/cookies';
 import { getValidLocationIdOrThrow } from '~/lib/location-utils';
 import { ROUTES } from '~/lib/routes';
 
-type Params = Promise<{ locationId: string }>;
-
 export default async function Layout({
     params,
     breadcrumb,
     children,
 }: {
-    params: Params;
+    params: UserRouteParamsPromise;
     breadcrumb: React.ReactNode;
     children: React.ReactNode;
 }) {
@@ -28,8 +29,11 @@ export default async function Layout({
     // valid stripe and clerk?
     // valid location id, matches claims?
 
-    const locationId = (await params).locationId;
-    const validLocationId = getValidLocationIdOrThrow(locationId);
+    const locationSlug = (await params).locationSlug;
+    const validLocationId = getValidLocationIdOrThrow(locationSlug);
+
+    const location = await fetchQuery(
+        api.locations.getLocationForCurrentUserOrThrow, { locationId: validLocationId })
 
     const sidebarStateCookie = (await cookies()).get(CookieKey.SidebarState);
     const isSidebarExpanded = sidebarStateCookie ? sidebarStateCookie.value === 'true' : true;
@@ -37,7 +41,7 @@ export default async function Layout({
     return (
         <MainContainer
             isSidebarExpanded={isSidebarExpanded}
-            locationManager={<SidebarLocationManager locationId={validLocationId} />}
+            locationManager={<SidebarLocationManager locationSlug={location.slug} locationName={location.name} />}
             breadcrumb={breadcrumb}
         >
             <SidebarInset>
